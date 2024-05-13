@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "corsweb-28db5"
-  }
+  },
+  "targets": {},
+  "etags": {
+    "corsweb-28db5": {
+      "extensionInstances": {
+        "firestore-send-email": "611bb248b0b5b365ecb2ec2cb0ee91cc922a3da136f7028f7f4fd73aa8790179"
+      }
+    }
+  },
+  "dataconnectEmulatorConfig": {}
 }
