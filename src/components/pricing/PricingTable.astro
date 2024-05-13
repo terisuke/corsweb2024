@@ -1,0 +1,94 @@
+---
+const article = [
+  {
+    name: 'Note',
+    description:
+      '理念、ビジョン、ミッション・ステートメントなど、技術的なこと以外のことをまとめます。',
+    icon: '/assets/Note.webp',
+    action: 'https://note.com/cor_instrument',
+  },
+  {
+    name: 'Qiita',
+    description: '主に、フレームワークやライブラリなどのテクノロジーの使い方について書いています。',
+    isFlagged: true,
+    icon: '/assets/Qiita.webp',
+    action: 'https://qiita.com/terisuke',
+  },
+  {
+    name: 'Zenn',
+    description: '主に、新しく導入された技術に関するチュートリアルを執筆しています。',
+    icon: '/assets/Zenn.webp',
+    action: 'https://zenn.dev/terisuke',
+  },
+];
+const youtube = [
+  {
+    name: 'Youtube',
+    description:
+      '実際に作成した資料や動画による説明など、視覚的に理解できる自社の資料を提供します。',
+    isFlagged: true,
+    icon: 'public/assets/Youtube.webp',
+    id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
+  },
+];
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-3">
+      {
+        article.map((item) => (
+          <div
+            class:list={[
+              'relative flex flex-col gap-8 rounded-3xl p-8',
+              item.isFlagged && 'bg-primary-500/10 dark:bg-primary-400/10',
+            ]}
+          >
+            <div class="flex-1">
+              <img class="mx-auto" src={item.icon} alt={item.name} />
+              <div class="py-6" />
+              <h2 class="text-center text-4xl font-medium">{item.name}</h2>
+              <p class="mt-6 text-primary-950/70 dark:text-primary-200/70">{item.description}</p>
+            </div>
+            <a
+              href={item.action}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex w-full items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
+            >
+              Go {item.name}
+            </a>
+          </div>
+        ))
+      }
+    </div>
+    <div class="py-16"></div>
+    <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-1">
+      {
+        youtube.map((item) => (
+          <div
+            class:list={[
+              'relative flex flex-col gap-8 rounded-3xl p-8',
+              item.isFlagged && 'bg-primary-500/10 dark:bg-primary-400/10',
+            ]}
+          >
+            <div class="flex-1">
+              <iframe
+                id="player"
+                class="aspect-video w-full flex-1"
+                src={`https://www.youtube.com/embed/${
+                  item.id[Math.floor(Math.random() * item.id.length)]
+                }`}
+              />
+              <div class="py-4" />
+              <h2 class="text-center text-4xl font-medium">{item.name}</h2>
+              <p class="mt-6 text-center text-primary-950/70 dark:text-primary-200/70">
+                {item.description}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
