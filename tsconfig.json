@@ -1,7 +1,8 @@
 {
-  "extends": "astro/tsconfigs/strict",
+  "extends": "./node_modules/astro/tsconfigs/strict",
   "compilerOptions": {
     "typeRoots": ["./node_modules/@types", "./types", "./src"],
-    "types": ["types"]
+    "types": ["types"],
+  "module": "ES2022",
   }
 }

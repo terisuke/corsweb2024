@@ -13,14 +13,12 @@ declare module 'alpinejs' {
         store: (name: string, value: object) => any;
         start: () => void;
     }
-    const alpine: Alpine;
-    export = alpine;
 }
 
 // @ts-ignore
 declare global {
     interface Window {
-        Alpine: typeof import('alpinejs').Alpine;
+        Alpine: typeof import('alpinejs');
     }
     interface Alpine {
         $store: {

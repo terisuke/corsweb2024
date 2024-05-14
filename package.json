@@ -16,7 +16,7 @@
     "@astrojs/tailwind": "4.0.0",
     "@fontsource/inter": "5.0.8",
     "@types/alpinejs": "3.7.2",
-    "alpinejs": "^3.13.3",
+    "alpinejs": "^3.13.10",
     "astro": "^4.0.7",
     "astro-compress": "^2.2.5",
     "firebase": "^10.7.1",
