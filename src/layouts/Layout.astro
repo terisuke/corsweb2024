@@ -43,8 +43,8 @@ const { description, title } = Astro.props;
     </style>
     <!-- Alpine.jsの読み込み時に、type="module"をつける+lang="ts"をつけることで、typescriptを使うことができる -->
     <script type="module" lang="ts">
-      import Alpine from './node_modules/alpinejs/dist/module.esm.js';
-      import collapse from './node_modules/@alpinejs/collapse/dist/module.esm.js';
+      import Alpine from 'https://esm.sh/alpinejs@3.14.0';
+      import collapse from 'https://esm.sh/@alpinejs/collapse@3.12.3';
 
       Alpine.plugin(collapse);
 

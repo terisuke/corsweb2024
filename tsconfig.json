@@ -3,6 +3,11 @@
     "typeRoots": ["./node_modules/@types", "./types", "./src"],
     "types": ["types"],
     "module": "ES2022",
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      },
+    ],
+  },
 }
