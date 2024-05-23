@@ -6,23 +6,29 @@
           <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">
             Pioneering Collaboration Through Innovation
           </h1>
-          <p class="text-primary-950/70 dark:text-primary-200/70 text-lg sm:text-xl">
+          <p class="text-lg text-primary-950/70 dark:text-primary-200/70 sm:text-xl">
             技術を通じて、これまでにない価値ある体験を。
           </p>
         </div>
         <a
           href="/pricing"
-          class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          class="inline-flex items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
         >
           Our Products & Insights
         </a>
       </div>
       <img
         class="h-auto w-full rounded-3xl"
-        width="1280"
-        height="640"
-        src="/assets/hero.webp"
+        src="/assets/hero-480w.avif"
+        srcset="/assets/hero-480w.avif 480w,
+          /assets/hero-800w.avif 800w,
+          /assets/hero.avif 1600w"
+        sizes="(max-width: 768px) 100vw,
+          (max-width: 1200px) 100vw,
+          1280px"
         alt="Hero picture"
+        width="1280"
+        height="853"
       />
     </div>
   </div>

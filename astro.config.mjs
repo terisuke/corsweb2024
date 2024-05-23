@@ -5,9 +5,6 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  experimental: {
-    optimizeHoistedScript: true,
-  },
   site: 'https://cor-jp.com',
-  integrations: [tailwind(), compress(), sitemap()],
+  integrations: [tailwind(), compress(), sitemap(),],
 });

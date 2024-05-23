@@ -43,9 +43,9 @@ const { description, title } = Astro.props;
     </style>
     <!-- Alpine.jsの読み込み時に、type="module"をつける+lang="ts"をつけることで、typescriptを使うことができる -->
     <script type="module" lang="ts">
-      //インポート先にhttps://esm.sh/をつけることで、CDNからモジュールを読み込むことができる
-      import Alpine from 'https://esm.sh/alpinejs';
-      import collapse from 'https://esm.sh/@alpinejs/collapse';
+      import Alpine from './node_modules/alpinejs/dist/module.esm.js';
+      import collapse from './node_modules/@alpinejs/collapse/dist/module.esm.js';
+
       Alpine.plugin(collapse);
 
       Alpine.store('theme', {
@@ -66,6 +66,7 @@ const { description, title } = Astro.props;
           localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
         },
       });
+
       window.Alpine = Alpine;
       Alpine.start();
     </script>

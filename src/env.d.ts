@@ -15,6 +15,4 @@ declare module 'alpinejs' {
         store: (name: string, value: object) => any;
         start: () => void;
     }
-    const Alpine: Alpine;
-    export default Alpine;
 }
