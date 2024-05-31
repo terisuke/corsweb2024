@@ -3,21 +3,17 @@ import tailwind from '@astrojs/tailwind';
 import compress from 'astro-compress';
 import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
 export default defineConfig({
   experimental: {
     optimizeHoistedScript: true,
   },
   site: 'https://cor-jp.com',
-  integrations: [tailwind(), compress(), sitemap(),],
-  // Viteのカスタム設定を追加
+  integrations: [tailwind(), compress(), sitemap()],
   vite: {
-    // Viteの設定をここに記述
     resolve: {
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
     },
     optimizeDeps: {
-      // 依存関係の事前バンドルに関する設定
       include: ['alpinejs', '@alpinejs/collapse']
     },
     build: {
@@ -25,6 +21,7 @@ export default defineConfig({
     },
     plugins: [
       // 必要に応じてViteプラグインを追加
-    ]
+    ],
+    envPrefix: 'PUBLIC_'  // クライアントサイドで利用可能な環境変数のプレフィックス
   },
 });
