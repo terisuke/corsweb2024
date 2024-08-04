@@ -2,13 +2,14 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import compress from 'astro-compress';
 import sitemap from '@astrojs/sitemap';
+import compressor from "astro-compressor";
 
 export default defineConfig({
   experimental: {
     optimizeHoistedScript: true,
   },
   site: 'https://cor-jp.com',
-  integrations: [tailwind(), compress(), sitemap()],
+  integrations: [tailwind(), compress(), sitemap(), compressor()],
   vite: {
     resolve: {
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
