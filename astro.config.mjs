@@ -5,9 +5,6 @@ import sitemap from '@astrojs/sitemap';
 import compressor from "astro-compressor";
 
 export default defineConfig({
-  experimental: {
-    optimizeHoistedScript: true,
-  },
   site: 'https://cor-jp.com',
   integrations: [tailwind(), compress(), sitemap(), compressor()],
   vite: {
