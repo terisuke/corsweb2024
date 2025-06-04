@@ -4,6 +4,7 @@ import '@fontsource/inter/latin-500.css';
 import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
+import WebVitals from '../components/performance/WebVitals.astro';
 
 interface Props {
   description: string;
@@ -25,7 +26,10 @@ const { description, title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="preconnect" href="https://esm.sh" crossorigin>
+    <link rel="preconnect" href="https://www.google.com" crossorigin>
+    <link rel="dns-prefetch" href="https://ssgform.com"></link>
+
     <title>{title}</title>
     <ViewTransitions />
   </head>
@@ -37,15 +41,50 @@ const { description, title } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <WebVitals />
     <style is:global>
       [x-cloak] {
         display: none !important;
       }
+      
+      @font-face {
+        font-family: 'Inter';
+        font-display: swap;
+      }
+      
+      /* Critical CSS for above-the-fold content */
+      .hero-critical {
+        font-family: 'Inter', sans-serif;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+      }
+      
+      .header-critical {
+        background-color: rgb(249 250 251);
+        transition: all 0.15s ease-in-out;
+      }
+      
+      .dark .header-critical {
+        background-color: rgb(23 23 23);
+      }
+      
+      .btn-primary-critical {
+        background-color: rgb(37 99 235);
+        color: white;
+        border-radius: 9999px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 500;
+        transition: background-color 0.15s ease-in-out;
+      }
+      
+      .btn-primary-critical:hover {
+        background-color: rgb(29 78 216);
+      }
     </style>
     <!-- Alpine.jsの読み込み時に、type="module"をつける+lang="ts"をつけることで、typescriptを使うことができる -->
-    <script type="module" lang="ts">
-      import Alpine from 'https://esm.sh/alpinejs@3.14.0';
-      import collapse from 'https://esm.sh/@alpinejs/collapse@3.12.3';
+    <script type="module" lang="ts" is:inline>
+      import Alpine from 'alpinejs';
+      import collapse from '@alpinejs/collapse';
 
       Alpine.plugin(collapse);
 

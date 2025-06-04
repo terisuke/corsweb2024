@@ -37,7 +37,7 @@ const team = [
                   <picture>
                     <!-- <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> -->
                     <!-- <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> -->
-                    <img class="mx-auto h-auto w-16 rounded-full" src={item.image} alt={item.name} width="64" height="64" />
+                    <img class="mx-auto h-auto w-16 rounded-full" src={item.image} alt={item.name} width="64" height="64" loading="lazy" />
                   </picture>
                 </a>
                 <div class="text-center">
