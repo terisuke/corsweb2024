@@ -1,22 +1,39 @@
 ---
+const products = [
+  {
+    name: 'Cloudia Chat',
+    description: '自社サイト問い合わせを自動応答する AI キャラクター',
+    demo: 'https://github.com/terisuke/miho',
+  },
+  {
+    name: 'WebAR 名刺',
+    description: 'スマホをかざすと 3D キャラが飛び出す NFC 名刺',
+    demo: 'https://zenn.dev/cloudia/articles/webar-business-card',
+  },
+  {
+    name: '記事ライティング AI エージェント',
+    description: 'Note 記事下書きを自動生成する社内ツール',
+    demo: 'GitHub Private (近日公開)',
+  },
+];
+
 const article = [
   {
     name: 'Note',
-    description:
-      '理念、ビジョン、ミッション・ステートメントなど、技術的なこと以外のことをまとめます。',
+    description: '生成 AI 活用術や経営視点コラムを発信',
     icon: '/assets/Note.avif',
     action: 'https://note.com/cor_instrument',
   },
   {
     name: 'Qiita',
-    description: '開発中によくあるエラーなどの解決方法などを中心に書いていきます',
+    description: 'エラー解決と技術検証ログを公開',
     isFlagged: true,
     icon: '/assets/Qiita.avif',
-    action: 'https://qiita.com/Cloudia_Cor_Inc',
+    action: 'https://qiita.com/terisuke',
   },
   {
     name: 'Zenn',
-    description: '新しく開発したシステムやプロダクトについて書いていきます。',
+    description: '開発中プロダクトの舞台裏を連載',
     icon: '/assets/Zenn.avif',
     action: 'https://zenn.dev/cloudia',
   },
@@ -35,6 +52,33 @@ const youtube = [
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <!-- Products Section -->
+    <div class="mb-16">
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-8">プロダクト一覧</h2>
+      <div class="grid gap-8 lg:grid-cols-3">
+        {
+          products.map((product) => (
+            <div class="relative flex flex-col gap-8 rounded-3xl p-8 bg-primary-500/10 dark:bg-primary-400/10">
+              <div class="flex-1">
+                <h3 class="text-xl font-medium mb-4">{product.name}</h3>
+                <p class="text-primary-950/70 dark:text-primary-200/70 mb-4">{product.description}</p>
+                <a
+                  href={product.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-primary-600 hover:underline text-sm"
+                >
+                  Demo / Repo
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    
+    <!-- Media Section -->
+    <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-8">メディア紹介</h2>
     <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-3">
       {
         article.map((item) => (

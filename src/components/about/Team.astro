@@ -10,9 +10,11 @@ const team = [
   {
     name: 'Cloudia Sorano',
     image: '/assets/cloudia.avif',
-    job: 'Ambassador',
+    job: 'AI アンバサダー',
+    description: '福岡弁で技術ネタを発信する社内 AI。Zenn・X で 51 週連続 LT に挑戦中。',
     comingSoon: false,
-    link: 'https://lit.link/cloudia2024'
+    link: 'https://x.com/cor_cloudia',
+    zennLink: 'https://zenn.dev/cloudia'
   },
   {
     name: 'Coming Soon...',
@@ -43,6 +45,16 @@ const team = [
                 <div class="text-center">
                   <h3 class="text-lg font-medium">{item.comingSoon ? 'Coming Soon...' : item.name}</h3>
                   <p class={`text-primary-950/70 dark:text-primary-200/70 text-base ${item.comingSoon ? 'hidden' : ''}`}>{item.job}</p>
+                  {item.description && (
+                    <p class="text-primary-950/70 dark:text-primary-200/70 text-sm mt-2">{item.description}</p>
+                  )}
+                  {item.zennLink && (
+                    <div class="mt-2 space-x-2">
+                      <a href={item.link} target="_blank" class="text-primary-600 hover:underline text-sm">X</a>
+                      <span class="text-primary-950/50">•</span>
+                      <a href={item.zennLink} target="_blank" class="text-primary-600 hover:underline text-sm">Zenn</a>
+                    </div>
+                  )}
                 </div>
               </div>
             </li>
