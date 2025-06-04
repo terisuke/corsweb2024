@@ -12,7 +12,7 @@ export default defineConfig({
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
     },
     optimizeDeps: {
-      include: ['alpinejs', '@alpinejs/collapse']
+      exclude: ['astro:*']
     },
     build: {
       // ビルドプロセスに関する追加の設定
