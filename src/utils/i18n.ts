@@ -332,7 +332,37 @@ const translations = {
       about: { title: "About · Cor.inc", description: "Find more our history, values, mission and more. We are a group of people who share the same values." },
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
-      "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." }
+      "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
+      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." }
+    },
+    privacy: {
+      title: "プライバシーポリシー",
+      lastUpdate: "Last update: May 13 , 2025",
+      intro: "Cor.incでは、お客様のプライバシーを最優先し、その保護に努めています。本プライバシーポリシーでは、ウェブ解析ツール、Flutterアプリ、機械学習ソリューションなど、弊社のサービスをご利用いただく際の個人情報の収集、使用、保護に関する弊社のアプローチについて詳しく説明します。当社の取り組みをご理解いただくため、本ポリシーをご確認いただくことをお勧めします。",
+      section1: {
+        title: "1. 当社が収集する情報",
+        description: "当社のサービスをご利用いただく際に、当社は以下のような様々な種類の個人情報を収集することがあります：",
+        items: [
+          "お客様が提供する情報：これには、お客様がアカウントを作成したり、当社サービスの特定の機能を利用したりする際に、お客様の氏名、Eメールアドレス、連絡先、その他の関連データが含まれる場合があります。",
+          "利用データ：当社は、お客様のIPアドレス、ブラウザの種類、デバイス情報、訪問したページ、および当社サービスとのインタラクションを含む、お客様の当社サービスの利用に関するデータを収集します。",
+          "クッキーおよび類似技術：ユーザーエクスペリエンスを向上させ、利用パターンを把握するため、当社サービスではクッキーおよび類似の技術を利用しています。"
+        ]
+      },
+      section2: {
+        title: "2. お客様の情報の使用方法",
+        description: "当社は、お客様の個人情報を以下の目的で利用することがあります：",
+        items: [
+          "サービスの提供と改善：当社では、パーソナライズされた体験を提供し、当社サービスの機能を向上させるためにお客様のデータを使用します。",
+          "コミュニケーション：お客様のEメールアドレスおよび連絡先情報は、最新情報、ニュースレター、販促資料の送付に使用されることがあります。これらの通信を拒否するオプションがあります。",
+          "アナリティクス：ユーザーの行動をよりよく理解し、当社のサービスを向上させるために、当社は集計および匿名化されたデータを分析します。"
+        ]
+      },
+      contact: {
+        title: "お問い合わせ",
+        description: "当社の個人情報保護方針についてご質問やご不明な点がございましたら、",
+        linkText: "お問い合わせフォーム",
+        suffix: "までご連絡ください。"
+      }
     }
   },
   en: {
@@ -654,7 +684,37 @@ const translations = {
       about: { title: "About · Cor.inc", description: "Find more our history, values, mission and more. We are a group of people who share the same values." },
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
-      "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." }
+      "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
+      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." }
+    },
+    privacy: {
+      title: "Privacy Policy",
+      lastUpdate: "Last update: May 13 , 2025",
+      intro: "At Cor.inc, we prioritize your privacy and are committed to protecting it. This privacy policy details our approach to collecting, using, and protecting personal information when you use our services, including web analytics tools, Flutter apps, and machine learning solutions. We recommend reviewing this policy to understand our commitment.",
+      section1: {
+        title: "1. Information We Collect",
+        description: "When you use our services, we may collect various types of personal information, including:",
+        items: [
+          "Information you provide: This may include your name, email address, contact details, and other relevant data when you create an account or use specific features of our services.",
+          "Usage data: We collect data about your use of our services, including your IP address, browser type, device information, pages visited, and interactions with our services.",
+          "Cookies and similar technologies: Our services use cookies and similar technologies to enhance user experience and understand usage patterns."
+        ]
+      },
+      section2: {
+        title: "2. How We Use Your Information",
+        description: "We may use your personal information for the following purposes:",
+        items: [
+          "Service provision and improvement: We use your data to provide personalized experiences and enhance the functionality of our services.",
+          "Communication: Your email address and contact information may be used to send updates, newsletters, and promotional materials. You have the option to opt out of these communications.",
+          "Analytics: We analyze aggregated and anonymized data to better understand user behavior and improve our services."
+        ]
+      },
+      contact: {
+        title: "Contact Us",
+        description: "If you have any questions or concerns about our privacy policy, please contact us through our",
+        linkText: "contact form",
+        suffix: "."
+      }
     }
   }
 } as const;
