@@ -337,7 +337,7 @@ const translations = {
     },
     privacy: {
       title: "プライバシーポリシー",
-      lastUpdate: "Last update: May 13 , 2025",
+      lastUpdate: "Last update: May 13, 2024",
       intro: "Cor.incでは、お客様のプライバシーを最優先し、その保護に努めています。本プライバシーポリシーでは、ウェブ解析ツール、Flutterアプリ、機械学習ソリューションなど、弊社のサービスをご利用いただく際の個人情報の収集、使用、保護に関する弊社のアプローチについて詳しく説明します。当社の取り組みをご理解いただくため、本ポリシーをご確認いただくことをお勧めします。",
       section1: {
         title: "1. 当社が収集する情報",
@@ -701,7 +701,7 @@ const translations = {
     },
     privacy: {
       title: "Privacy Policy",
-      lastUpdate: "Last update: May 13 , 2025",
+      lastUpdate: "Last update: May 13, 2024",
       intro: "At Cor.inc, we prioritize your privacy and are committed to protecting it. This privacy policy details our approach to collecting, using, and protecting personal information when you use our services, including web analytics tools, Flutter apps, and machine learning solutions. We recommend reviewing this policy to understand our commitment.",
       section1: {
         title: "1. Information We Collect",

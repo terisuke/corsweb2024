@@ -28,10 +28,11 @@ params.set('ctz', calendarTz);
 
 // calendarParamsが存在する場合はパースして追加
 if (calendarParams) {
-  // 既にクエリ形式（例: key1=val1&key2=val2）であることを想定
   const extraParams = new URLSearchParams(calendarParams);
   for (const [key, value] of extraParams.entries()) {
-    params.set(key, value);
+    if (!params.has(key)) {
+      params.set(key, value);
+    }
   }
 }
 url.search = params.toString();

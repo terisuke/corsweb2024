@@ -4,6 +4,7 @@ interface JaTranslation {
     about: string;
     products: string;
     contact: string;
+    privacy: string;
   };
   hero: {
     title: string;
@@ -78,6 +79,7 @@ interface JaTranslation {
     contact: { title: string; description: string; };
     products: { title: string; description: string; };
     "404": { title: string; description: string; };
+    privacy: { title: string; description: string; };
   };
   faq: {
     questions: Array<{
