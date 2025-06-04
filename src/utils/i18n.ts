@@ -190,6 +190,139 @@ const translations = {
         description: "私たちの製品やサービスに関する最新情報や、業界のトレンド、お役立ち情報をお届けします。"
       }
     },
+    homeCta: {
+      title: "お問い合わせ",
+      description: "ご質問やご相談、お見積もりのご依頼など、お気軽にお問い合わせください。",
+      button: "Contact us"
+    },
+    productsTable: {
+      title: "プロダクト一覧",
+      demoLabel: "Demo / Repo",
+      mediaTitle: "メディア紹介",
+      products: [
+        {
+          name: 'なんちゃってZOOM',
+          description: 'ZOOM のようなビデオ通話アプリ',
+          demo: 'https://zoom-clone-navy-eta.vercel.app/',
+        },
+        {
+          name: 'Constellation Creator',
+          description: '画像をアップロードするとオリジナル星座を作成するアプリ',
+          demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
+        },
+        {
+          name: 'エンジニアカフェナビゲーター',
+          description: 'Mastraベースのエンジニアカフェ自動受付システム(現在開発中)',
+          demo: 'https://github.com/terisuke/engineer-cafe-navigator',
+        },
+      ],
+      articles: [
+        {
+          name: 'Note',
+          description: '生成 AI 活用術や経営視点コラムを発信',
+          icon: '/assets/Note.avif',
+          action: 'https://note.com/cor_instrument',
+        },
+        {
+          name: 'Qiita',
+          description: 'エラー解決と技術検証ログを公開',
+          isFlagged: true,
+          icon: '/assets/Qiita.avif',
+          action: 'https://qiita.com/terisuke',
+        },
+        {
+          name: 'Zenn',
+          description: '開発中プロダクトの舞台裏を連載',
+          icon: '/assets/Zenn.avif',
+          action: 'https://zenn.dev/cloudia',
+        },
+      ],
+      youtube: [
+        {
+          name: 'Youtube',
+          description: '実際に作成した資料や動画による説明など、視覚的に理解できる自社の資料を提供します。',
+          isFlagged: true,
+          icon: 'public/assets/Youtube.avif',
+          id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
+        },
+      ]
+    },
+    contactInfo: {
+      address: {
+        label: "Postal address",
+        value: "810-0001 福岡県 福岡市\n中央区天神2丁目3-10\n天神パインクレスト719号"
+      },
+      phone: {
+        label: "Phone number",
+        value: "Coming soon..."
+      },
+      chat: {
+        label: "Email",
+        value: "Chat with AI Cloudia"
+      }
+    },
+    valuesData: [
+      [
+        {
+          ref: '01',
+          name: 'まずは行動',
+          description: '思うだけなら誰でもできる。正解は後の人が判断することと割り切り、決めたらとにかく最善に向かって素早く行動すること。',
+        },
+        {
+          ref: '02',
+          name: '常に自問自答する',
+          description: '幸せの形は常に変化する。本当の幸せを追求するためには常に「これがベストか？」を自分自身に問いかけ、思考停止せずに動き続かなければいけない。',
+        },
+        {
+          ref: '03',
+          name: '相手も自分も幸せになる',
+          description: '幸せな人しか相手を幸せにできない。何かを犠牲にすることなく、自分も相手もwin-winになる行動を常に考え抜くこと。',
+        },
+      ],
+      [
+        {
+          ref: '04',
+          name: '意思表示ははっきりと',
+          description: 'どっちつかずな行動は無駄であり双方にメリットがない。何事も自分自身でしっかり決めて、全力で取り組むこと。',
+        },
+        {
+          ref: '05',
+          name: '柔軟性のあるサービス',
+          description: '少しでも多くのステークホルダーに幸せになってもらう。そのためにあえて定型サービスを設けず、個々のタスクに合わせて最適なサービスを構築する。(例) WebAR 名刺や AI チャットボットを顧客要件に合わせ即時カスタマイズ',
+        },
+        {
+          ref: '06',
+          name: '自分の運命は自分で拓く',
+          description: '成否に関わらず、自分の行動は自分で責任をとる。成果も反省も全て自分の行動の結果、笑って受け入れる。',
+        },
+      ],
+    ],
+    teamData: [
+      {
+        name: 'Kousuke Terada',
+        image: '/assets/k-terada.avif',
+        job: 'CEO',
+        description: '音大卒 → 楽器メーカー営業 → メガベンチャーで法人営業 → IT へ転身という異色の経歴を活かし、"技術と言葉の橋渡し" に挑戦しています。',
+        comingSoon: false,
+        link: 'https://lit.link/terisuke',
+      },
+      {
+        name: 'Cloudia Sorano',
+        image: '/assets/cloudia.avif',
+        job: 'AI アンバサダー',
+        description: '福岡弁で技術ネタを発信する社内 AI。Zenn・X で 51 週連続 LT に挑戦中。',
+        comingSoon: false,
+        link: 'https://x.com/Cloudia_Cor',
+        zennLink: 'https://zenn.dev/cloudia',
+      },
+      {
+        name: 'Coming Soon...',
+        image: '/assets/coming-soon.avif',
+        job: '',
+        comingSoon: true,
+        link: '#',
+      },
+    ],
     meta: {
       home: { title: "Cor.inc · Pioneering Collaboration Through Innovation", description: "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world." },
       about: { title: "About · Cor.inc", description: "Find more our history, values, mission and more. We are a group of people who share the same values." },
@@ -375,6 +508,139 @@ const translations = {
         description: "Detailed information about our products, services, and technical insights."
       }
     },
+    homeCta: {
+      title: "Contact Us",
+      description: "Feel free to contact us for any questions, consultations, or quote requests.",
+      button: "Contact us"
+    },
+    productsTable: {
+      title: "Product List",
+      demoLabel: "Demo / Repo",
+      mediaTitle: "Media Coverage",
+      products: [
+        {
+          name: 'Fake ZOOM',
+          description: 'Video calling app like ZOOM',
+          demo: 'https://zoom-clone-navy-eta.vercel.app/',
+        },
+        {
+          name: 'Constellation Creator',
+          description: 'App that creates original constellations from uploaded images',
+          demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
+        },
+        {
+          name: 'Engineer Cafe Navigator',
+          description: 'Mastra-based engineer cafe automatic reception system (currently in development)',
+          demo: 'https://github.com/terisuke/engineer-cafe-navigator',
+        },
+      ],
+      articles: [
+        {
+          name: 'Note',
+          description: 'Publishing generative AI utilization techniques and management perspective columns',
+          icon: '/assets/Note.avif',
+          action: 'https://note.com/cor_instrument',
+        },
+        {
+          name: 'Qiita',
+          description: 'Publishing error resolution and technical verification logs',
+          isFlagged: true,
+          icon: '/assets/Qiita.avif',
+          action: 'https://qiita.com/terisuke',
+        },
+        {
+          name: 'Zenn',
+          description: 'Serializing behind-the-scenes of products in development',
+          icon: '/assets/Zenn.avif',
+          action: 'https://zenn.dev/cloudia',
+        },
+      ],
+      youtube: [
+        {
+          name: 'Youtube',
+          description: 'We provide visually understandable company materials through actual created materials and video explanations.',
+          isFlagged: true,
+          icon: 'public/assets/Youtube.avif',
+          id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
+        },
+      ]
+    },
+    contactInfo: {
+      address: {
+        label: "Postal address",
+        value: "810-0001 Fukuoka Prefecture, Fukuoka City\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
+      },
+      phone: {
+        label: "Phone number",
+        value: "Coming soon..."
+      },
+      chat: {
+        label: "Email",
+        value: "Chat with AI Cloudia"
+      }
+    },
+    valuesData: [
+      [
+        {
+          ref: '01',
+          name: 'Take Action First',
+          description: 'Anyone can just think. Accept that the right answer will be judged by future people, and once decided, act quickly toward the best outcome.',
+        },
+        {
+          ref: '02',
+          name: 'Always Self-Reflect',
+          description: 'The form of happiness is constantly changing. To pursue true happiness, we must always ask ourselves "Is this the best?" and continue moving without stopping our thinking.',
+        },
+        {
+          ref: '03',
+          name: 'Make Both Others and Yourself Happy',
+          description: 'Only happy people can make others happy. Always think through actions that create win-win situations for both yourself and others without sacrificing anything.',
+        },
+      ],
+      [
+        {
+          ref: '04',
+          name: 'Express Intentions Clearly',
+          description: 'Indecisive actions are wasteful and benefit no one. Make firm decisions yourself and commit fully to everything.',
+        },
+        {
+          ref: '05',
+          name: 'Flexible Services',
+          description: 'Help as many stakeholders as possible become happy. For this purpose, we deliberately avoid standardized services and build optimal services tailored to individual tasks. (Example) Instantly customize WebAR business cards and AI chatbots according to customer requirements',
+        },
+        {
+          ref: '06',
+          name: 'Forge Your Own Destiny',
+          description: 'Regardless of success or failure, take responsibility for your own actions. Accept all results and reflections from your actions with a smile.',
+        },
+      ],
+    ],
+    teamData: [
+      {
+        name: 'Kousuke Terada',
+        image: '/assets/k-terada.avif',
+        job: 'CEO',
+        description: 'Music college graduate → Musical instrument manufacturer sales → Corporate sales at mega-venture → Career change to IT. Leveraging this unique background to challenge "bridging technology and language."',
+        comingSoon: false,
+        link: 'https://lit.link/terisuke',
+      },
+      {
+        name: 'Cloudia Sorano',
+        image: '/assets/cloudia.avif',
+        job: 'AI Ambassador',
+        description: 'In-house AI that shares technical topics in Fukuoka dialect. Currently challenging 51 consecutive weeks of Lightning Talks on Zenn and X.',
+        comingSoon: false,
+        link: 'https://x.com/Cloudia_Cor',
+        zennLink: 'https://zenn.dev/cloudia',
+      },
+      {
+        name: 'Coming Soon...',
+        image: '/assets/coming-soon.avif',
+        job: '',
+        comingSoon: true,
+        link: '#',
+      },
+    ],
     meta: {
       home: { title: "Cor.inc · Pioneering Collaboration Through Innovation", description: "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world." },
       about: { title: "About · Cor.inc", description: "Find more our history, values, mission and more. We are a group of people who share the same values." },

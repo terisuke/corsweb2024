@@ -1,63 +1,18 @@
 ---
-const products = [
-  {
-    name: 'なんちゃってZOOM',
-    description: 'ZOOM のようなビデオ通話アプリ',
-    demo: 'https://zoom-clone-navy-eta.vercel.app/',
-  },
-  {
-    name: 'Constellation Creator',
-    description: '画像をアップロードするとオリジナル星座を作成するアプリ',
-    demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
-  },
-  {
-    name: 'エンジニアカフェナビゲーター',
-    description: 'Mastraベースのエンジニアカフェ自動受付システム(現在開発中)',
-    demo: 'https://github.com/terisuke/engineer-cafe-navigator',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
 
-const article = [
-  {
-    name: 'Note',
-    description: '生成 AI 活用術や経営視点コラムを発信',
-    icon: '/assets/Note.avif',
-    action: 'https://note.com/cor_instrument',
-  },
-  {
-    name: 'Qiita',
-    description: 'エラー解決と技術検証ログを公開',
-    isFlagged: true,
-    icon: '/assets/Qiita.avif',
-    action: 'https://qiita.com/terisuke',
-  },
-  {
-    name: 'Zenn',
-    description: '開発中プロダクトの舞台裏を連載',
-    icon: '/assets/Zenn.avif',
-    action: 'https://zenn.dev/cloudia',
-  },
-];
-const youtube = [
-  {
-    name: 'Youtube',
-    description:
-      '実際に作成した資料や動画による説明など、視覚的に理解できる自社の資料を提供します。',
-    isFlagged: true,
-    icon: 'public/assets/Youtube.avif',
-    id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
-  },
-];
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <!-- Products Section -->
     <div class="mb-16">
-      <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">プロダクト一覧</h2>
+      <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.title}</h2>
       <div class="grid gap-8 lg:grid-cols-3">
         {
-          products.map((product) => (
+          t.productsTable.products.map((product) => (
             <div class="relative flex flex-col gap-8 rounded-3xl bg-primary-500/10 p-8 dark:bg-primary-400/10">
               <div class="flex-1">
                 <h3 class="mb-4 text-xl font-medium">{product.name}</h3>
@@ -70,7 +25,7 @@ const youtube = [
                   rel="noopener noreferrer"
                   class="text-sm text-primary-600 hover:underline"
                 >
-                  Demo / Repo
+                  {t.productsTable.demoLabel}
                 </a>
               </div>
             </div>
@@ -80,10 +35,10 @@ const youtube = [
     </div>
 
     <!-- Media Section -->
-    <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">メディア紹介</h2>
+    <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.mediaTitle}</h2>
     <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-3">
       {
-        article.map((item) => (
+        t.productsTable.articles.map((item) => (
           <div
             class:list={[
               'relative flex flex-col gap-8 rounded-3xl p-8',
@@ -111,7 +66,7 @@ const youtube = [
     <div class="py-16"></div>
     <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-1">
       {
-        youtube.map((item) => (
+        t.productsTable.youtube.map((item) => (
           <div
             class:list={[
               'relative flex flex-col gap-8 rounded-3xl p-8',
