@@ -1,4 +1,9 @@
 ---
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
 const team = [
   {
     name: 'Kousuke Terada',
@@ -48,7 +53,7 @@ function extractLinks(item) {
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="sm:space-8 space-y-12">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Meet our team</h2>
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.team.title}</h2>
       <ul role="list" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           team.map((item) => (

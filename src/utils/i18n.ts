@@ -36,6 +36,10 @@ const translations = {
       title: "お気軽にご相談ください！",
       description1: "お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡させていただきます。今しばらくお待ちください。",
       description2: "上記期間内に返信がない場合は、送信トラブルの可能性がございます。お手数をおかけいたしますが、再度ご連絡いただけますようお願い申し上げます。",
+      heading: {
+        title: "お問い合わせ",
+        description: "ご質問やご相談、お見積もりのご依頼など、お気軽にお問い合わせください。"
+      },
       form: {
         title: "お気軽にご相談ください！",
         description1: "お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡させていただきます。今しばらくお待ちください。",
@@ -112,6 +116,80 @@ const translations = {
       title: "About",
       subtitle: "世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。"
     },
+    values: {
+      title: "Our Values"
+    },
+    team: {
+      title: "Meet our team"
+    },
+    faq: {
+      title: "FAQ",
+      questions: [
+        {
+          question: "開発プロセスはどのように進められるのですか？プロジェクト完了までの一般的なスケジュールを教えてください。",
+          answer: "開発プロセスでは、エンジニアがオンラインでお客様のご要望をお伺いし、必要なシステムや要件を定義します。また、初回のお打ち合わせから1週間以内に、各商品の価格を算出し、お客様のご了解をいただいた後、価格の作成に入ります。下請け会社を一切持たず、すべての案件を自社で責任を持って作成するため、通常の納期よりも平均で約20％早く商品を作ることができます。また、大型案件の場合は、プロジェクトに共感できるフリーランスのエンジニアをアサインすることで、より早く、より低コストで商品を提供することが可能です。"
+        },
+        {
+          question: "プロジェクト費用はどのように計算されますか？支払いはどのように行われますか？",
+          answer: "価格については、企業様ごとにご要望が異なりますので、初回お打ち合わせ後にお見積もりをお送りさせていただきます。同業種の類似案件と比較し、15％程度コストを抑えてご提案させていただくことが多いです。お支払い方法は、銀行振込やPaypal決済など、様々なお支払い方法に対応しております。初回打ち合わせ時にご希望のお支払い方法をスタッフにお伝えください。"
+        },
+        {
+          question: "React、Flutter、Pythonを使うメリットは？FirebaseやSupaBaseなどのBaaSの利点は？",
+          answer: "React、Flutter、Pythonは、最先端言語ゆえの拡張性、世界中にいる多くのユーザーのコミュニティサポートにより短期間で大規模なシステム/アプリ開発を可能にします。これらの言語は柔軟性があり、初心者にも理解しやすく、豊富なライブラリを持っています。また、FirebaseやSupaBaseのようなBaaSは、リアルタイムのデータ同期、様々な組み込み機能、スケーラビリティ、透明性、セキュリティなど拡張性の高いバックエンドを提供します。これらの技術を組み合わせることで、効率的で高品質なアプリケーション開発が可能になります。"
+        },
+        {
+          question: "要件によってどこまでタスクをカスタマイズできますか?また変更が必要な場合はどのように対応しますか?",
+          answer: "プロジェクトごとにお客様のご要望をお伺いし、オーダーメイドで製作するため、カスタマイズ性はほぼ無限です。ただし、納期を早め、致命的なシステムエラーを避けるため、制作途中でのご要望変更は基本お受けしておりません。打ち合わせまでに、お客様のご要望を十分にまとめ、ご対応いただきますようお願い申し上げます。"
+        },
+        {
+          question: "開発後のメンテナンスやサポートはどのように行われますか?追加費用はありますか?",
+          answer: "弊社は開発が本業のため、大規模なカスタマイズ以外の保守・サポートは行っておりません。開発完了後、弊社が提携している保守・サポート専門の会社をご紹介いたしますので、費用についてはご相談ください。"
+        },
+        {
+          question: "データのセキュリティとプライバシーはどのように保証されますか?",
+          answer: "データのセキュリティとプライバシーの保証のために、高度な暗号化技術を使用し、FirebaseやSupaBaseなどのBaaSのセキュリティ機能を最大限に活用します。アクセスコントロールについては、企業ごとに専用アカウントを設定し、必要最小限の権限で管理します。また、データ保護ポリシーの厳守と定期的なセキュリティ監査により、お客様のデータの安全を守ります。その結果、開発から提供、保守まで一貫して顧客データを保護する体制を確立しています。"
+        }
+      ]
+    },
+    calendar: {
+      title: "代表スケジュール",
+      description: "代表の公開スケジュールです。ミーティングのご依頼などの際にご参照ください。",
+      ariaLabel: "代表スケジュールカレンダー",
+      note: "* ミーティングのご依頼は下記のお問い合わせフォームよりご連絡ください。"
+    },
+    testimonials: {
+      title: "Skilled code",
+      items: [
+        {
+          name: "Python",
+          description: "サーバーサイド&機械学習",
+          image: "/assets/python.avif",
+          message: "Pythonは1991年に開発された、汎用性の高いプログラミング言語です。初心者にも分かりやすい書き方で、データの分析、ブロックチェーンの開発、自動で仕事をするプログラム、AI（人工知能）の開発にもよく使われます。世界中に多くのコミュニティがあり、さまざまな人が開発したパッケージを使ってスピーディーに多機能なシステム開発をすることが可能です。"
+        },
+        {
+          name: "Flutter",
+          description: "モバイルアプリ開発",
+          image: "/assets/flutter.avif",
+          message: "Flutterは2018年にGoogleによって開発されたオープンソースのソフトウェア開発キットです。一つのコードベースからiOS、Android、Web、デスクトップアプリケーションを同時に構築することが可能です。多くのパッケージが開発者から発表されており、それらのパッケージを組み合わせてユーザーフレンドリーなアプリ開発を少ないコードで実現できます。"
+        },
+        {
+          name: "React",
+          description: "Webアプリ開発",
+          image: "/assets/react.avif",
+          message: "ReactはJavaScriptを用いた最も有名なフレームワークです。2013年にMeta(旧Facebook)により発表され、TypeScriptにも対応しています。コンポーネントベースのアーキテクチャを採用しており、再利用可能なUIパーツを作成し、それらを組み合わせることで、大規模かつパフォーマンスの高いWebアプリケーションを効率的に開発することができます。"
+        }
+      ]
+    },
+    cta: {
+      title: "より詳細な情報を希望ですか?",
+      description: "お気軽にお問い合わせください。さらに詳しい情報が必要である場合や、具体的なご質問がございましたら、私たちのチームがサポートいたします。"
+    },
+    products: {
+      heading: {
+        title: "Products & Insights",
+        description: "私たちの製品やサービスに関する最新情報や、業界のトレンド、お役立ち情報をお届けします。"
+      }
+    },
     meta: {
       home: { title: "Cor.inc · Pioneering Collaboration Through Innovation", description: "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world." },
       about: { title: "About · Cor.inc", description: "Find more our history, values, mission and more. We are a group of people who share the same values." },
@@ -155,6 +233,10 @@ const translations = {
       title: "Feel free to contact us!",
       description1: "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
       description2: "If you do not receive a reply within the above period, there may be a transmission problem. We apologize for the inconvenience, but please contact us again.",
+      heading: {
+        title: "Contact Us",
+        description: "For questions, consultations, quote requests, and more, please feel free to contact us."
+      },
       form: {
         title: "Feel free to contact us!",
         description1: "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
@@ -230,6 +312,68 @@ const translations = {
     aboutPage: {
       title: "About",
       subtitle: "Being the company that thinks most about 'happiness' in the world, and being the company that seeks true happiness and co-creates society the most in the world."
+    },
+    values: {
+      title: "Our Values"
+    },
+    team: {
+      title: "Meet our team"
+    },
+    faq: {
+      title: "FAQ",
+      questions: [
+        {
+          question: "What technology stack do you use?",
+          answer: "We primarily use Python, Flutter, React, and TypeScript. We select the optimal technology based on project requirements."
+        },
+        {
+          question: "How long does development take?",
+          answer: "It varies depending on the project scale, but typically 2-3 months for MVP and around 6 months for full-scale applications."
+        },
+        {
+          question: "Can you tell me about your pricing structure?",
+          answer: "We primarily use a fixed-price system based on projects. Please contact us for details."
+        }
+      ]
+    },
+    calendar: {
+      title: "CEO Schedule",
+      description: "This is the CEO's public schedule. If you would like to schedule a meeting, please check available time slots and contact us.",
+      ariaLabel: "CEO Schedule Calendar",
+      note: "* Please contact us through the contact form below for meeting requests."
+    },
+    testimonials: {
+      title: "Technical Expertise",
+      items: [
+        {
+          name: "Python",
+          description: "Server-side & Machine Learning",
+          image: "/assets/python.avif",
+          message: "Python is a versatile programming language developed in 1991. With its beginner-friendly syntax, it's widely used for data analysis, blockchain development, automation, and AI development. With numerous communities worldwide and various packages developed by contributors, it enables speedy development of multifunctional systems."
+        },
+        {
+          name: "Flutter",
+          description: "Mobile App Development",
+          image: "/assets/flutter.avif",
+          message: "Flutter is an open-source software development kit developed by Google in 2018. It allows simultaneous development of iOS, Android, Web, and desktop applications from a single codebase. With many packages released by developers, it enables user-friendly app development with minimal code by combining these packages."
+        },
+        {
+          name: "React",
+          description: "Web App Development",
+          image: "/assets/react.avif",
+          message: "React is the most famous framework using JavaScript. Released by Meta (formerly Facebook) in 2013, it also supports TypeScript. It adopts a component-based architecture, allowing creation of reusable UI parts and efficient development of large-scale, high-performance web applications by combining them."
+        }
+      ]
+    },
+    cta: {
+      title: "Need more detailed information?",
+      description: "Feel free to contact us. If you need more detailed information or have specific questions, our team will support you."
+    },
+    products: {
+      heading: {
+        title: "Products & Insights",
+        description: "Detailed information about our products, services, and technical insights."
+      }
     },
     meta: {
       home: { title: "Cor.inc · Pioneering Collaboration Through Innovation", description: "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world." },

@@ -1,40 +1,23 @@
 ---
-const testimonials = [
-  {
-    name: 'Python',
-    description: 'サーバーサイド&機械学習',
-    image: '/assets/python.avif',
-    message:
-      'Pythonは1991年に開発された、汎用性の高いプログラミング言語です。初心者にも分かりやすい書き方で、データの分析、ブロックチェーンの開発、自動で仕事をするプログラム、AI（人工知能）の開発にもよく使われます。世界中に多くのコミュニティがあり、さまざまな人が開発したパッケージを使ってスピーディーに多機能なシステム開発をすることが可能です。',
-  },
-  {
-    name: 'Flutter',
-    description: 'モバイルアプリ開発',
-    image: '/assets/flutter.avif',
-    message:
-      'Flutterは2018年にGoogleによって開発されたオープンソースのソフトウェア開発キットです。一つのコードベースからiOS、Android、Web、デスクトップアプリケーションを同時に構築することが可能です。多くのパッケージが開発者から発表されており、それらのパッケージを組み合わせてユーザーフレンドリーなアプリ開発を少ないコードで実現できます。',
-  },
-  {
-    name: 'React',
-    description: 'Webアプリ開発',
-    image: '/assets/react.avif',
-    message:
-      'ReactはJavaScriptを用いた最も有名なフレームワークです。2013年にMeta(旧Facebook)により発表され、TypeScriptにも対応しています。コンポーネントベースのアーキテクチャを採用しており、再利用可能なUIパーツを作成し、それらを組み合わせることで、大規模かつパフォーマンスの高いWebアプリケーションを効率的に開発することができます。',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+
 ---
 
 <section class="py-16 sm:py-20">
   <div class="v mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col items-center gap-12 lg:gap-20">
       <h2 class="mx-auto max-w-xl text-center text-3xl font-medium tracking-tight sm:text-4xl">
-        Skilled code
+        {t.testimonials.title}
       </h2>
       <div
         class="grid divide-y divide-primary-900/10 dark:divide-primary-300/10 lg:grid-cols-3 lg:divide-x lg:divide-y-0"
       >
         {
-          testimonials.map((testimonial) => (
+          t.testimonials.items.map((testimonial) => (
             <figure class="mx-auto flex max-w-lg flex-col items-center gap-6 py-8 lg:px-8 lg:py-0">
               <div class="flex flex-row gap-2">
                 {[...Array(3)].map(() => (
