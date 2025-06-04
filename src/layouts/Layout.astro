@@ -3,6 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
+import { getCurrentLocale } from '../utils/i18n';
 
 interface Props {
   description: string;
@@ -10,10 +11,11 @@ interface Props {
 }
 
 const { description, title } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
 ---
 
 <!doctype html>
-<html lang="en" x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
+<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -106,6 +108,23 @@ const { description, title } = Astro.props;
             document.documentElement.classList.toggle('dark', this.isDark);
             localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
           },
+        });
+        
+        window.Alpine.store('lang', {
+          current: '{currentLocale}'.replace('{currentLocale}', document.documentElement.lang),
+          toggle() {
+            const newLang = this.current === 'ja' ? 'en' : 'ja';
+            const currentPath = window.location.pathname;
+            let newPath;
+            
+            if (newLang === 'en') {
+              newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
+            } else {
+              newPath = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+            }
+            
+            window.location.href = newPath;
+          }
         });
       });
     </script>

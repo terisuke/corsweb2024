@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "products": "Products&Insights",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Swifter than any, to the horizon beyond.",
+    "subtitle": "言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。",
+    "cta": "実績とプロダクトを見る"
+  },
+  "services": {
+    "title": "Services",
+    "items": [
+      {
+        "step": "01",
+        "name": "IT コンサルティング・データ分析",
+        "description": "Python ベースのスクレイピングと BI 分析で現状を可視化し、戦略立案から実装まで伴走する DX 支援サービスです。"
+      },
+      {
+        "step": "02",
+        "name": "Web・モバイルアプリ開発",
+        "description": "Flutter・React など最新 FW を駆使し、高速かつリッチな UX の B2B/B2C アプリをワンストップで提供します。"
+      },
+      {
+        "step": "03",
+        "name": "AI ソリューション開発",
+        "description": "生成 AI／LLM・画像認識・音声処理を活用し、お客様の課題に最適化した知的アプリや自動化ツールを開発します。"
+      }
+    ]
+  },
+  "about": {
+    "title": "About",
+    "description": "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
+    "cta": "More details"
+  },
+  "mission": {
+    "title": "Our mission",
+    "description1": "誤解のないコミュニケーションを AI で実現し、誰もが自分の価値を発揮できる世界をつくる。",
+    "description2": "Cor.inc は、ITを通じて「幸せ」を追求する世界一の企業として、コミュニケーションの課題を解決し、ユーザー間の共感と共通理解を促進するシステムや仕組みを開発しています。私たちの使命は、日々進化するテクノロジーを活用して、関わる全ての人々が自らの価値を明確に自覚し、真の幸せを追求し達成できるように支援することです。私たちは、すべてのステークホルダーがより幸せな社会を目指して協働し、技術力を駆使して共に真の幸せを共創する未来を創造していきます。",
+    "stats": [
+      {
+        "name": "設立から",
+        "value": "2年"
+      },
+      {
+        "name": "使える言語",
+        "value": "10"
+      },
+      {
+        "name": "プロジェクト",
+        "value": "15"
+      },
+      {
+        "name": "提供サービス",
+        "value": "App Develop<br />IT/AI Strategy"
+      }
+    ]
+  },
+  "contact": {
+    "title": "お気軽にご相談ください！",
+    "description1": "お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡させていただきます。今しばらくお待ちください。",
+    "description2": "上記期間内に返信がない場合は、送信トラブルの可能性がございます。お手数をおかけいたしますが、再度ご連絡いただけますようお願い申し上げます。",
+    "form": {
+      "name": "Your name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Submit",
+      "reset": "Reset"
+    }
+  },
+  "footer": {
+    "description": "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
+    "copyright": "© 2025 Cor.inc"
+  },
+  "header": {
+    "mobileMenuDescription": "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
+  },
+  "404": {
+    "title": "404",
+    "subtitle": "ページが見つかりません",
+    "description": "URLをご確認の上、再度お試しください。",
+    "cta": "ホームに戻る"
+  },
+  "aboutPage": {
+    "title": "About",
+    "subtitle": "世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。"
+  },
+  "meta": {
+    "home": {
+      "title": "Cor.inc · Pioneering Collaboration Through Innovation",
+      "description": "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world."
+    },
+    "about": {
+      "title": "About · Cor.inc",
+      "description": "Find more our history, values, mission and more. We are a group of people who share the same values."
+    },
+    "contact": {
+      "title": "Contact · Cor.inc",
+      "description": "Contact our team to learn more about how we can help you."
+    },
+    "products": {
+      "title": "Products&Insights · Cor.inc",
+      "description": "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions."
+    },
+    "404": {
+      "title": "Not found · Cor.inc",
+      "description": "Page not found. Please check the URL in the address bar and try again."
+    }
+  }
+}

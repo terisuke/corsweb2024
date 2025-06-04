@@ -4,11 +4,15 @@ import Faq from '../components/products/Faq.astro';
 import Heading from '../components/products/Heading.astro';
 import ProductsTable from '../components/products/ProductsTable.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCurrentLocale, getTranslations } from '../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 <Layout
-  description="Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions."
-  title="Products&Insights · Cor.inc"
+  description={t.meta.products.description}
+  title={t.meta.products.title}
 >
   <Heading />
   <ProductsTable />
