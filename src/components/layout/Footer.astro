@@ -1,7 +1,12 @@
 ---
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
 const bottomLinks = [
   {
-    header: 'Social',
+    header: t.footer.social,
     links: [
       {
         name: 'Github',
@@ -10,52 +15,52 @@ const bottomLinks = [
       },
       {
         name: 'X(Twitter)',
-        href: 'https://x.com/Cloudia_Cor',
+        href: 'https://x.com/cor_terisuke',
         isExternal: true,
       },
       {
-        name: 'Instagram',
-        href: 'https://www.instagram.com/cloudiasoramo/',
+        name: 'Qiita',
+        href: 'https://qiita.com/terisuke',
         isExternal: true,
       },
       {
-        name: 'Facebook',
-        href: 'https://www.facebook.com/kousuke.terada.35',
+        name: 'Zenn',
+        href: 'https://zenn.dev/cloudia',
         isExternal: true,
       },
     ],
   },
   {
-    header: 'Company',
+    header: t.footer.company,
     links: [
       {
-        name: 'Home',
-        href: '/',
+        name: t.footer.links.home,
+        href: getLocalizedUrl('/', currentLocale),
         isExternal: false,
       },
       {
-        name: 'About',
-        href: '/about',
+        name: t.footer.links.about,
+        href: getLocalizedUrl('/about', currentLocale),
         isExternal: false,
       },
       {
-        name: 'Products&Insights',
-        href: '/pricing',
+        name: t.footer.links.products,
+        href: getLocalizedUrl('/products', currentLocale),
         isExternal: false,
       },
       {
-        name: 'Contact',
-        href: '/contact',
+        name: t.footer.links.contact,
+        href: getLocalizedUrl('/contact', currentLocale),
         isExternal: false,
       },
     ],
   },
   {
-    header: 'Legal',
+    header: t.footer.legal,
     links: [
       {
-        name: 'Privacy',
-        href: '/privacy',
+        name: t.footer.links.privacy,
+        href: getLocalizedUrl('/privacy', currentLocale),
         isExternal: false,
       },
     ],
@@ -67,16 +72,15 @@ const bottomLinks = [
   class="mt-16 bg-primary-500/10 py-16 dark:bg-primary-400/10 lg:mt-20 lg:py-20"
   aria-labelledby="footer-heading"
 >
-  <h2 id="footer-heading" class="sr-only">Footer</h2>
+  <h2 id="footer-heading" class="sr-only">{t.footer.title}</h2>
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col justify-between gap-12 sm:gap-16 lg:flex-row">
       <div class="flex max-w-sm flex-col items-start gap-6 sm:gap-8">
         <img class="h-20 w-auto" width="65" height="40" :src="'/assets/logo.avif'" alt="Cor.inc" loading="lazy" />
         <p class="text-base text-primary-950/70 dark:text-primary-200/70">
-          Cor.inc
-          は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。
+          {t.footer.description}
         </p>
-        <p class="text-sm text-primary-950/70 dark:text-primary-200/70">© 2024 Cor.inc</p>
+        <p class="text-sm text-primary-950/70 dark:text-primary-200/70">{t.footer.copyright}</p>
       </div>
 
       <!-- Bottom links -->

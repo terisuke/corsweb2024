@@ -1,98 +1,64 @@
 ---
-const features = [
-  {
-    id: 'uniqueness-1',
-    name: 'デジタル技術の統合',
-    description:
-      'Pythonで収集した情報をもとにIT戦略を立案、MVPのWebアプリを開発してテストマーケティングを行う...このような複数の技術・工程にまたがったプロジェクトを全て私たち1社でカバーすることができます。',
-  },
-  {
-    id: 'uniqueness-2',
-    name: 'ワンストップなサービス',
-    description:
-      '企画立案から開発、テストリリース、サービス提供開始まで一貫して私たちが担当します。同じチームが担当するので、認識の食い違いが起きにくく、よりローコストでスピーディーな開発を提供します。',
-  },
-  {
-    id: 'uniqueness-3',
-    name: 'カスタマーファーストな開発',
-    description:
-      '私たちの開発で最も重視することは「顧客の解像度」。細やかなフィードバックやテストマーケティング、マイルストーンを通じて顧客の本当に求めているものを見抜き、Win-Winなビジネスパートナーになれる関係性を築いていきます。',
-  },
-  {
-    id: 'uniqueness-4',
-    name: '「最速でスマート」な体験を',
-    description:
-      '私たちは新たなトレンドや知識を常に鋭く捉えます。関係者全員にとって有益なソリューションを素早く提案に反映し、これまでにない新しい体験を提供します。',
-  },
-  {
-    id: 'uniqueness-5',
-    name: '新しい価値観の創造',
-    description:
-      '従来の概念にとらわれることなく、新しい視点やアイデアに真摯に向き合います。スタートアップ特有の「スピード感」を最大限に活かして、生まれたばかりの価値観にテクノロジーを通じて声を与えます。',
-  },
-  {
-    id: 'uniqueness-6',
-    name: '独自視点による社会課題の解決',
-    description:
-      '人類の進歩への情熱は止まるところを知りません。私たちは、テクノロジーを利用してギャップを埋め、有意義なコミュニケーションを促進しながら、進歩に伴う社会問題の解決に積極的に取り組んでいます。',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+const features = (t.features && Array.isArray(t.features.items)) ? t.features.items : [];
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="grid gap-12 lg:grid-cols-3 lg:gap-8">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Features</h2>
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.features?.title ?? '特徴'}</h2>
       <div class="lg:col-span-2">
         <dl
           class="-mt-3"
           x-data="{ selected: null, toggle(value) { this.selected = this.selected === value ? null : value } }"
         >
-          {
-            features.map((feature, index) => (
-              <div
-                class="rounded-3xl px-4 transition"
-                x-data={`{ id: ${index}, get isOpen() { return this.id === this.selected }, get isNextOpen() { return (this.id + 1) === this.selected } }`}
-                x-bind:class="{ 'bg-primary-500/10 dark:bg-primary-400/10': isOpen }"
+          {features.map((feature, index) => (
+            <div
+              class="rounded-3xl px-4 transition"
+              x-data={`{ id: ${index}, get isOpen() { return this.id === this.selected }, get isNextOpen() { return (this.id + 1) === this.selected } }`}
+              x-bind:class="{ 'bg-primary-500/10 dark:bg-primary-400/10': isOpen }"
+            >
+              <dt
+                class="border-b text-lg transition"
+                x-cloak
+                x-bind:class="{ 'border-transparent': isOpen || isNextOpen, 'border-primary-900/10 dark:border-primary-300/10': !(isOpen || isNextOpen) }"
               >
-                <dt
-                  class="border-b text-lg transition"
-                  x-cloak
-                  x-bind:class="{ 'border-transparent': isOpen || isNextOpen, 'border-primary-900/10 dark:border-primary-300/10': !(isOpen || isNextOpen) }"
+                <button
+                  type="button"
+                  class="group block w-full py-6 text-left transition focus-visible:outline-none"
+                  aria-controls={feature.id}
+                  x-on:click="toggle(id)"
+                  aria-expanded="false"
+                  x-bind:aria-expanded="isOpen.toString()"
                 >
-                  <button
-                    type="button"
-                    class="group block w-full py-6 text-left transition focus-visible:outline-none"
-                    aria-controls={feature.id}
-                    x-on:click="toggle(id)"
-                    aria-expanded="false"
-                    x-bind:aria-expanded="isOpen.toString()"
-                  >
-                    <div class="flex items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
-                      <span class="font-medium">{feature.name}</span>
-                      <span class="ml-6 flex h-7 items-center">
-                        <svg
-                          class="h-6 w-6 rotate-0 transform text-primary-600 transition duration-200 ease-in-out dark:text-primary-400"
-                          x-bind:class="{ '-rotate-180': isOpen, 'rotate-0': !isOpen }"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" />
-                        </svg>
-                      </span>
-                    </div>
-                  </button>
-                </dt>
-                <dd class="pb-6 pr-6" id={feature.id} x-show="isOpen" x-cloak x-collapse>
-                  <p class="text-base text-primary-950/70 dark:text-primary-200/70">
-                    {feature.description}
-                  </p>
-                </dd>
-              </div>
-            ))
-          }
+                  <div class="flex items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
+                    <span class="font-medium">{feature.name}</span>
+                    <span class="ml-6 flex h-7 items-center">
+                      <svg
+                        class="h-6 w-6 rotate-0 transform text-primary-600 transition duration-200 ease-in-out dark:text-primary-400"
+                        x-bind:class="{ '-rotate-180': isOpen, 'rotate-0': !isOpen }"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z" />
+                      </svg>
+                    </span>
+                  </div>
+                </button>
+              </dt>
+              <dd class="pb-6 pr-6" id={feature.id} x-show="isOpen" x-cloak x-collapse>
+                <p class="text-base text-primary-950/70 dark:text-primary-200/70">
+                  {feature.description}
+                </p>
+              </dd>
+            </div>
+          ))}
         </dl>
       </div>
     </div>

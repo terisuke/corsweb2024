@@ -6,12 +6,16 @@ import Services from '../components/home/Services.astro';
 import Testimonials from '../components/home/Testimonials.astro';
 import Layout from '../layouts/Layout.astro';
 import Expertise from '../components/home/Expertise.astro';
+import { getCurrentLocale, getTranslations } from '../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 
 <Layout
-  description="Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world."
-  title="Cor.inc · Pioneering Collaboration Through Innovation"
+  description={t.meta.home.description}
+  title={t.meta.home.title}
 >
   <Hero />
   <Services />

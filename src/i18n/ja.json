@@ -1,0 +1,157 @@
+{
+  "nav": { "home": "Home", "about": "About", "products": "Products&Insights", "contact": "Contact", "privacy": "プライバシーポリシー" },
+  "hero": {
+    "title": "Swifter than any, to the horizon beyond.",
+    "subtitle": "言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。",
+    "cta": "実績とプロダクトを見る"
+  },
+  "services": {
+    "title": "Services",
+    "items": [
+      { "step": "01", "name": "IT コンサルティング・データ分析", "description": "Python ベースのスクレイピングと BI 分析で現状を可視化し、戦略立案から実装まで伴走する DX 支援サービスです。" },
+      { "step": "02", "name": "Web・モバイルアプリ開発", "description": "Flutter・React など最新 FW を駆使し、高速かつリッチな UX の B2B/B2C アプリをワンストップで提供します。" },
+      { "step": "03", "name": "AI ソリューション開発", "description": "生成 AI／LLM・画像認識・音声処理を活用し、お客様の課題に最適化した知的アプリや自動化ツールを開発します。" }
+    ]
+  },
+  "about": {
+    "title": "About",
+    "description": "Cor株式会社（Cor.inc）は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。株式会社Cor、Cor 株式会社として「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
+    "cta": "More details",
+    "heading": {
+      "title": "About",
+      "description": "Cor株式会社（Cor.inc）は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。株式会社Cor、Cor 株式会社として「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
+    }
+  },
+  "mission": {
+    "title": "ミッション",
+    "description1": "競争ではなく共創を通じて未来を切り拓き、",
+    "description2": "幸福な社会を実現する。",
+    "stats": [
+      {
+        "name": "設立",
+        "value": "2022年"
+      },
+      {
+        "name": "代表取締役",
+        "value": "寺田康佑"
+      },
+      {
+        "name": "拠点",
+        "value": "福岡・全国対応"
+      },
+      {
+        "name": "専門分野",
+        "value": "AI・DX・アプリ開発"
+      }
+    ]
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "description1": "ご質問やご相談がございましたら、",
+    "description2": "お気軽にお問い合わせください。",
+    "form": {
+      "name": "お名前",
+      "email": "メールアドレス",
+      "message": "メッセージ",
+      "submit": "送信する",
+      "reset": "リセット"
+    }
+  },
+  "footer": {
+    "title": "Cor.inc",
+    "social": "ソーシャル",
+    "company": "会社情報",
+    "legal": "法的情報",
+    "links": {
+      "home": "ホーム",
+      "about": "会社概要",
+      "products": "プロダクト&インサイト",
+      "contact": "お問い合わせ",
+      "privacy": "プライバシーポリシー"
+    },
+    "description": "Cor株式会社（Cor.inc）は競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現します。株式会社Cor、Cor 株式会社として、AIとテクノロジーで企業のDXを支援。",
+    "copyright": "© 2024 Cor.inc. All rights reserved."
+  },
+  "header": {
+    "mobileMenuDescription": "メニュー"
+  },
+  "404": {
+    "title": "404",
+    "subtitle": "ページが見つかりません",
+    "description": "お探しのページは存在しないか、移動した可能性があります。",
+    "cta": "ホームに戻る"
+  },
+  "aboutPage": {
+    "title": "会社概要",
+    "subtitle": "共創を通じて未来を切り拓く"
+  },
+  "faq": {
+    "questions": [
+      {
+        "id": "1",
+        "question": "どのようなサービスを提供していますか？",
+        "answer": "IT戦略コンサルティング、Pythonデータ分析、Web・モバイルアプリ開発、AI・機械学習ソリューションなど、幅広いDX支援サービスを提供しています。"
+      },
+      {
+        "id": "2",
+        "question": "対応可能な地域はどこですか？",
+        "answer": "福岡を拠点としていますが、オンラインでの対応により全国のお客様にサービスを提供しています。"
+      },
+      {
+        "id": "3",
+        "question": "プロジェクトの期間はどのくらいですか？",
+        "answer": "プロジェクトの規模や内容により異なりますが、小規模なものは1〜2ヶ月、大規模なシステム開発は6ヶ月以上かかる場合があります。詳細は個別にご相談ください。"
+      },
+      {
+        "id": "4",
+        "question": "料金体系について教えてください。",
+        "answer": "プロジェクトの内容や規模に応じて、月額契約、プロジェクト単位での契約など、お客様のニーズに合わせた柔軟な料金体系をご提案しています。"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "お客様の声",
+    "items": [
+      {
+        "id": "1",
+        "name": "山田太郎",
+        "role": "株式会社ABC 代表取締役",
+        "message": "Cor.incのスピード感と技術力には本当に驚かされました。私たちのビジネス課題を深く理解し、最適なソリューションを提供してくれました。"
+      },
+      {
+        "id": "2",
+        "name": "佐藤花子",
+        "role": "XYZ商事 DX推進部長",
+        "message": "データ分析から実装まで一貫してサポートいただき、社内のDXが大きく前進しました。特にPythonを活用した業務自動化は効果絶大でした。"
+      },
+      {
+        "id": "3",
+        "name": "鈴木一郎",
+        "role": "テックスタートアップ CTO",
+        "message": "FlutterとReactを使った開発で、想像以上に高品質なアプリを短期間で完成させていただきました。技術選定から実装まで的確でした。"
+      }
+    ]
+  },
+  "meta": {
+    "home": { 
+      "title": "Cor.inc（Cor株式会社） - AIとDXで未来を共創する",
+      "description": "Cor株式会社（Cor.inc）は、Pythonデータ分析、Web・モバイルアプリ開発、AI開発を通じて企業のDXを支援。株式会社Cor、Cor 株式会社としても活動。福岡を拠点に全国対応。"
+    },
+    "about": { 
+      "title": "会社概要 | Cor.inc（Cor株式会社）",
+      "description": "Cor株式会社（Cor.inc）の会社概要。共創を通じて未来を切り拓くIT戦略コンサルティング企業。株式会社Cor、Cor 株式会社として、DX支援・AI開発・アプリ開発サービスを提供。"
+    },
+    "contact": { 
+      "title": "お問い合わせ | Cor.inc（Cor株式会社）",
+      "description": "Cor株式会社（Cor.inc）へのお問い合わせはこちら。DX支援、AI開発、アプリ開発のご相談を承ります。株式会社Cor、Cor 株式会社として全国対応可能。"
+    },
+    "products": { 
+      "title": "プロダクト&インサイト | Cor.inc（Cor株式会社）",
+      "description": "Cor株式会社（Cor.inc）のプロダクト・サービス一覧。Pythonデータ分析、Flutter・Reactアプリ開発、生成AI・LLMソリューションなど。株式会社Cor、Cor 株式会社の実績紹介。"
+    },
+    "404": { 
+      "title": "ページが見つかりません | Cor.inc（Cor株式会社）",
+      "description": "お探しのページは見つかりませんでした。Cor株式会社（Cor.inc）、株式会社Cor、Cor 株式会社のトップページへお戻りください。"
+    }
+  }
+}

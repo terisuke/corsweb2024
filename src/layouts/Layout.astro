@@ -3,6 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
+import { getCurrentLocale } from '../utils/i18n';
 
 interface Props {
   description: string;
@@ -10,20 +11,70 @@ interface Props {
 }
 
 const { description, title } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
 ---
 
 <!doctype html>
-<html lang="en" x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
+<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32×32.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/logo.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/logo.png" />
+    
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Cor.inc",
+        "alternateName": ["Cor株式会社", "株式会社Cor", "Cor 株式会社"],
+        "url": "https://corweb.co.jp",
+        "logo": "https://corweb.co.jp/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+81-000-000-0000",
+          "contactType": "customer service",
+          "availableLanguage": ["Japanese", "English"]
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "福岡市",
+          "addressRegion": "福岡県",
+          "addressCountry": "JP"
+        },
+        "sameAs": [],
+        "founder": {
+          "@type": "Person",
+          "name": "寺田康佑",
+          "alternateName": ["寺田 康佑", "Kosuke Terada", "Terada Kosuke"],
+          "jobTitle": "代表取締役",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Cor.inc"
+          }
+        }
+      }
+    </script>
     <!-- DNS prefetch and preconnect -->
     <link rel="preconnect" href="https://esm.sh" crossorigin>
     <link rel="preconnect" href="https://www.google.com" crossorigin>
@@ -82,18 +133,18 @@ const { description, title } = Astro.props;
     </main>
     <Footer />
     <WebVitals />
-    <!-- Alpine.js Collapseプラグイン（先に読み込む） -->
-    <script 
-      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.0/dist/cdn.min.js"
-      defer
-      integrity="sha384-NArNwzWsUSF+kY2lgW4YriEkjLqi+J+za6HrENUn/3nZqkBnWbxV22kCJEK5Uu6n"
-      crossorigin="anonymous"
-    ></script>
-    <!-- Alpine.js本体（後に読み込む） -->
+    <!-- Alpine.js本体（先に読み込む） -->
     <script 
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
       defer
       integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Alpine.js Collapseプラグイン（後に読み込む） -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.0/dist/cdn.min.js"
+      defer
+      integrity="sha384-NArNwzWsUSF+kY2lgW4YriEkjLqi+J+za6HrENUn/3nZqkBnWbxV22kCJEK5Uu6n"
       crossorigin="anonymous"
     ></script>
     <!-- Alpine.js初期化用スクリプト -->
@@ -106,6 +157,23 @@ const { description, title } = Astro.props;
             document.documentElement.classList.toggle('dark', this.isDark);
             localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
           },
+        });
+        
+        window.Alpine.store('lang', {
+          current: document.documentElement.lang,
+          toggle() {
+            const newLang = this.current === 'ja' ? 'en' : 'ja';
+            const currentPath = window.location.pathname;
+            let newPath;
+            
+            if (newLang === 'en') {
+              newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
+            } else {
+              newPath = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+            }
+            
+            window.location.href = newPath;
+          }
         });
       });
     </script>

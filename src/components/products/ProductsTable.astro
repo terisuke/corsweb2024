@@ -1,43 +1,44 @@
 ---
-const article = [
-  {
-    name: 'Note',
-    description:
-      '理念、ビジョン、ミッション・ステートメントなど、技術的なこと以外のことをまとめます。',
-    icon: '/assets/Note.avif',
-    action: 'https://note.com/cor_instrument',
-  },
-  {
-    name: 'Qiita',
-    description: '開発中によくあるエラーなどの解決方法などを中心に書いていきます',
-    isFlagged: true,
-    icon: '/assets/Qiita.avif',
-    action: 'https://qiita.com/Cloudia_Cor_Inc',
-  },
-  {
-    name: 'Zenn',
-    description: '新しく開発したシステムやプロダクトについて書いていきます。',
-    icon: '/assets/Zenn.avif',
-    action: 'https://zenn.dev/cloudia',
-  },
-];
-const youtube = [
-  {
-    name: 'Youtube',
-    description:
-      '実際に作成した資料や動画による説明など、視覚的に理解できる自社の資料を提供します。',
-    isFlagged: true,
-    icon: 'public/assets/Youtube.avif',
-    id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <!-- Products Section -->
+    <div class="mb-16">
+      <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.title}</h2>
+      <div class="grid gap-8 lg:grid-cols-3">
+        {
+          t.productsTable.products.map((product) => (
+            <div class="relative flex flex-col gap-8 rounded-3xl bg-primary-500/10 p-8 dark:bg-primary-400/10">
+              <div class="flex-1">
+                <h3 class="mb-4 text-xl font-medium">{product.name}</h3>
+                <p class="mb-4 text-primary-950/70 dark:text-primary-200/70">
+                  {product.description}
+                </p>
+                <a
+                  href={product.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm text-primary-600 hover:underline"
+                >
+                  {t.productsTable.demoLabel}
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Media Section -->
+    <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.mediaTitle}</h2>
     <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-3">
       {
-        article.map((item) => (
+        t.productsTable.articles.map((item) => (
           <div
             class:list={[
               'relative flex flex-col gap-8 rounded-3xl p-8',
@@ -65,7 +66,7 @@ const youtube = [
     <div class="py-16"></div>
     <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-1">
       {
-        youtube.map((item) => (
+        t.productsTable.youtube.map((item) => (
           <div
             class:list={[
               'relative flex flex-col gap-8 rounded-3xl p-8',
