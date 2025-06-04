@@ -1,19 +1,10 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
-import 'alpinejs';
-declare module '@alpinejs/collapse' {
-    export default function (): void;
-}
+
 declare global {
     interface Window {
-        Alpine: any;
+        Alpine: import('alpinejs').Alpine;
     }
 }
-declare module 'alpinejs' {
-    export interface Alpine {
-        plugin: (plugin: any) => void;
-        //引数をanyにすると、エラーが出なくなる
-        store: (name: string, value: object) => any;
-        start: () => void;
-    }
-}
+
+export {};

@@ -17,19 +17,33 @@
           Our Products & Insights
         </a>
       </div>
-      <img
-        class="h-auto w-full rounded-3xl"
-        src="/assets/hero-480w.avif"
-        srcset="/assets/hero-480w.avif 480w,
-          /assets/hero-800w.avif 800w,
-          /assets/hero.avif 1600w"
-        sizes="(max-width: 768px) 100vw,
-          (max-width: 1200px) 100vw,
-          1280px"
-        alt="Hero picture"
-        width="1280"
-        height="853"
-      />
+      <picture>
+        <source
+          srcset="/assets/hero-480w.avif 480w,
+            /assets/hero-800w.avif 800w,
+            /assets/hero.avif 1600w"
+          sizes="(max-width: 768px) 100vw,
+            (max-width: 1200px) 100vw,
+            1280px"
+          type="image/avif"
+        />
+        <source
+          srcset="/assets/hero-480w.webp 480w,
+            /assets/hero-800w.webp 800w,
+            /assets/hero.webp 1600w"
+          sizes="(max-width: 768px) 100vw,
+            (max-width: 1200px) 100vw,
+            1280px"
+          type="image/webp"
+        />
+        <img
+          class="h-auto w-full rounded-3xl"
+          src="/assets/hero-480w.jpg"
+          alt="Hero picture"
+          width="1280"
+          height="853"
+        />
+      </picture>
     </div>
   </div>
 </section>

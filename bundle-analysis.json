@@ -1,0 +1,10 @@
+{
+  "totalSize": 0,
+  "files": [],
+  "recommendations": [
+    "Consider code splitting for non-critical Alpine.js plugins",
+    "Implement service worker for asset caching",
+    "Add preload hints for critical resources",
+    "Consider lazy loading of non-critical JavaScript"
+  ]
+}
