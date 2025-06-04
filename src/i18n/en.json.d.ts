@@ -198,6 +198,26 @@ interface EnTranslation {
     link: string;
     zennLink?: string;
   }>;
+  privacy: {
+    intro: string;
+    lastUpdate?: string;
+    section1?: {
+      title?: string;
+      description?: string;
+      items?: string[];
+    };
+    section2?: {
+      title?: string;
+      description?: string;
+      items?: string[];
+    };
+    contact?: {
+      title?: string;
+      description?: string;
+      linkText?: string;
+      suffix?: string;
+    };
+  };
 }
 declare const value: EnTranslation;
 export default value;

@@ -8,15 +8,21 @@ const calendarId = import.meta.env.PUBLIC_GCAL_ID;
 const calendarTz = import.meta.env.PUBLIC_GCAL_TZ;
 const calendarParams = import.meta.env.PUBLIC_GCAL_PARAMS;
 
-// 環境変数のバリデーション
+// 多言語エラーメッセージ
+const errorMessages = {
+  gcalId: currentLocale === 'ja' ? '環境変数 PUBLIC_GCAL_ID が設定されていません。' : 'Environment variable PUBLIC_GCAL_ID is not set.',
+  gcalTz: currentLocale === 'ja' ? '環境変数 PUBLIC_GCAL_TZ が設定されていません。' : 'Environment variable PUBLIC_GCAL_TZ is not set.',
+  gcalParams: currentLocale === 'ja' ? '環境変数 PUBLIC_GCAL_PARAMS が設定されていません。' : 'Environment variable PUBLIC_GCAL_PARAMS is not set.',
+};
+
 if (!calendarId) {
-  throw new Error('環境変数 PUBLIC_GCAL_ID が設定されていません。');
+  throw new Error(errorMessages.gcalId);
 }
 if (!calendarTz) {
-  throw new Error('環境変数 PUBLIC_GCAL_TZ が設定されていません。');
+  throw new Error(errorMessages.gcalTz);
 }
 if (!calendarParams) {
-  throw new Error('環境変数 PUBLIC_GCAL_PARAMS が設定されていません。');
+  throw new Error(errorMessages.gcalParams);
 }
 
 // URLとURLSearchParamsを使って安全にクエリを構築
