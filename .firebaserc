@@ -2,11 +2,17 @@
   "projects": {
     "default": "corsweb-28db5"
   },
-  "targets": {},
-  "etags": {
-    "corsweb-28db5": {
-      
+  "targets": {
+    "cor-jp-web": {
+      "hosting": {
+        "main": [
+          "cor-jp-main"
+        ]
+      }
     }
+  },
+  "etags": {
+    "corsweb-28db5": {}
   },
   "dataconnectEmulatorConfig": {}
 }
