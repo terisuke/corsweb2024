@@ -1,6 +1,11 @@
 ---
-// Googleカレンダー埋め込み用コンポーネント
+const calendarId = import.meta.env.PUBLIC_GCAL_ID;
+const calendarTz = import.meta.env.PUBLIC_GCAL_TZ;
+const calendarParams = import.meta.env.PUBLIC_GCAL_PARAMS;
+const calendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarId)}&ctz=${encodeURIComponent(calendarTz)}&${calendarParams}`;
 ---
+
+// Googleカレンダー埋め込み用コンポーネント
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -19,16 +24,20 @@
           <!-- レスポンシブ対応のためのコンテナ -->
           <div class="relative pb-[56.25%] h-0"> <!-- 16:9 アスペクト比 -->
             <iframe
-              src="https://calendar.google.com/calendar/embed?src=c_9d0f643537f7450176df49a778a8ddbde0f7a2704c4b417597600275df988560%40group.calendar.google.com&ctz=Asia%2FTokyo&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0&mode=WEEK&height=400&wkst=1&bgcolor=%23ffffff"
+              src={calendarSrc}
               style="border: 0"
               class="absolute top-0 left-0 w-full h-full"
               frameborder="0"
               scrolling="no"
               title="代表スケジュール"
               loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer"
+              role="region"
+              aria-label="代表スケジュールカレンダー"
             ></iframe>
           </div>
-        </>
+        </div>
         
         <!-- カレンダー下部の説明 -->
         <div class="mt-6 text-center">

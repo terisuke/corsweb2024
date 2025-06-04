@@ -26,6 +26,23 @@ const team = [
     link: '#',
   },
 ];
+
+// リンクタイプ判定関数
+function extractLinks(item) {
+  const links = [];
+  if (item.link) {
+    if (item.link.includes('lit.link')) {
+      links.push({ type: 'LitLink', url: item.link });
+    }
+    if (item.link.includes('x.com') || item.link.includes('twitter.com')) {
+      links.push({ type: 'X', url: item.link });
+    }
+  }
+  if (item.zennLink) {
+    links.push({ type: 'Zenn', url: item.zennLink });
+  }
+  return links;
+}
 ---
 
 <section class="py-16 sm:py-20">
@@ -34,21 +51,8 @@ const team = [
       <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Meet our team</h2>
       <ul role="list" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
-          team.map((item) => {
-            // 表示するリンクを決定
-            const linksToDisplay = [];
-            if (item.link && item.link.includes('lit.link')) {
-              linksToDisplay.push({ type: 'LitLink', url: item.link });
-            } else if (
-              item.link &&
-              (item.link.includes('x.com') || item.link.includes('twitter.com')) &&
-              item.zennLink
-            ) {
-              linksToDisplay.push({ type: 'X', url: item.link });
-              linksToDisplay.push({ type: 'Zenn', url: item.zennLink });
-            }
-
-            return (
+          team.map((item) => (
+            <Fragment key={item.name}>
               <li
                 class={`rounded-3xl border border-primary-900/10 px-6 py-8 dark:border-primary-300/10 ${
                   item.comingSoon ? 'bg-gray-200 dark:bg-gray-700' : ''
@@ -87,11 +91,11 @@ const team = [
                       </p>
                     )}
 
-                    {/* linksToDisplay配列に基づいてリンクを表示 */}
-                    {linksToDisplay.length > 0 && (
+                    {/* リンク配列を関数で取得しmapで表示 */}
+                    {extractLinks(item).length > 0 && (
                       <div class="mt-2 space-x-2">
-                        {linksToDisplay.map((link, index) => (
-                          <>
+                        {extractLinks(item).map((link, idx, arr) => (
+                          <Fragment key={link.type}>
                             <a
                               href={link.url}
                               target="_blank"
@@ -99,19 +103,18 @@ const team = [
                             >
                               {link.type}
                             </a>
-                            {/* 最後のリンクでなければ区切り文字を表示 */}
-                            {index < linksToDisplay.length - 1 && (
+                            {idx < arr.length - 1 && (
                               <span class="text-primary-950/50">•</span>
                             )}
-                          </>
+                          </Fragment>
                         ))}
                       </div>
                     )}
                   </div>
                 </div>
               </li>
-            );
-          })
+            </Fragment>
+          ))
         }
       </ul>
     </div>
