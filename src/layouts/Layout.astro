@@ -26,6 +26,55 @@ const currentLocale = getCurrentLocale(Astro.url);
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/logo.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/logo.png" />
+    
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Cor.inc",
+        "alternateName": ["Cor株式会社", "株式会社Cor", "Cor 株式会社"],
+        "url": "https://corweb.co.jp",
+        "logo": "https://corweb.co.jp/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+81-000-000-0000",
+          "contactType": "customer service",
+          "availableLanguage": ["Japanese", "English"]
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "福岡市",
+          "addressRegion": "福岡県",
+          "addressCountry": "JP"
+        },
+        "sameAs": [],
+        "founder": {
+          "@type": "Person",
+          "name": "寺田康佑",
+          "alternateName": ["寺田 康佑", "Kosuke Terada", "Terada Kosuke"],
+          "jobTitle": "代表取締役",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Cor.inc"
+          }
+        }
+      }
+    </script>
     <!-- DNS prefetch and preconnect -->
     <link rel="preconnect" href="https://esm.sh" crossorigin>
     <link rel="preconnect" href="https://www.google.com" crossorigin>

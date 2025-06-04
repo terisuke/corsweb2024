@@ -21,5 +21,133 @@
       "title": "About",
       "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
     }
+  },
+  "mission": {
+    "title": "Mission",
+    "description1": "Pioneer the future through co-creation rather than competition,",
+    "description2": "realizing a happy society.",
+    "stats": [
+      {
+        "name": "Founded",
+        "value": "2022"
+      },
+      {
+        "name": "Location",
+        "value": "Fukuoka, Japan / Nationwide"
+      },
+      {
+        "name": "Expertise",
+        "value": "AI, DX, App Development"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "description1": "If you have any questions or inquiries,",
+    "description2": "please feel free to contact us.",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Submit",
+      "reset": "Reset"
+    }
+  },
+  "footer": {
+    "title": "Cor.inc",
+    "social": "Social",
+    "company": "Company",
+    "legal": "Legal",
+    "links": {
+      "home": "Home",
+      "about": "About",
+      "products": "Products & Insights",
+      "contact": "Contact",
+      "privacy": "Privacy Policy"
+    },
+    "description": "Pioneer the future through co-creation rather than competition, realizing a happy society.",
+    "copyright": "© 2024 Cor.inc. All rights reserved."
+  },
+  "header": {
+    "mobileMenuDescription": "Menu"
+  },
+  "404": {
+    "title": "404",
+    "subtitle": "Page not found",
+    "description": "The page you are looking for doesn't exist or has been moved.",
+    "cta": "Go to Homepage"
+  },
+  "aboutPage": {
+    "title": "About Us",
+    "subtitle": "Pioneering the future through co-creation"
+  },
+  "faq": {
+    "questions": [
+      {
+        "id": "1",
+        "question": "What services do you provide?",
+        "answer": "We provide a wide range of DX support services including IT strategy consulting, Python data analysis, web and mobile app development, and AI/machine learning solutions."
+      },
+      {
+        "id": "2",
+        "question": "What regions do you serve?",
+        "answer": "While based in Fukuoka, we provide services to customers nationwide through online support."
+      },
+      {
+        "id": "3",
+        "question": "How long do projects typically take?",
+        "answer": "Project duration varies by scale and content. Small projects take 1-2 months, while large system development may take 6 months or more. Please contact us for specific details."
+      },
+      {
+        "id": "4",
+        "question": "What is your pricing structure?",
+        "answer": "We offer flexible pricing structures including monthly contracts and project-based contracts, tailored to meet customer needs based on project content and scale."
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "Client Testimonials",
+    "items": [
+      {
+        "id": "1",
+        "name": "Taro Yamada",
+        "role": "CEO, ABC Corporation",
+        "message": "I was truly amazed by Cor.inc's speed and technical capabilities. They deeply understood our business challenges and provided optimal solutions."
+      },
+      {
+        "id": "2",
+        "name": "Hanako Sato",
+        "role": "Head of DX Promotion, XYZ Trading",
+        "message": "With their support from data analysis to implementation, our internal DX has made significant progress. The business automation using Python was particularly effective."
+      },
+      {
+        "id": "3",
+        "name": "Ichiro Suzuki",
+        "role": "CTO, Tech Startup",
+        "message": "They completed a higher quality app than expected in a short time using Flutter and React. Their technology selection and implementation were precise."
+      }
+    ]
+  },
+  "meta": {
+    "home": { 
+      "title": "Cor.inc - Co-creating the Future with AI and DX",
+      "description": "Cor.inc supports enterprise DX through Python data analysis, web/mobile app development, and AI development. Based in Fukuoka, serving nationwide."
+    },
+    "about": { 
+      "title": "About | Cor.inc",
+      "description": "About Cor.inc. An IT strategy consulting company pioneering the future through co-creation. Providing DX support, AI development, and app development services."
+    },
+    "contact": { 
+      "title": "Contact | Cor.inc",
+      "description": "Contact Cor.inc. We welcome inquiries about DX support, AI development, and app development. Serving nationwide."
+    },
+    "products": { 
+      "title": "Products & Insights | Cor.inc",
+      "description": "Cor.inc products and services. Python data analysis, Flutter/React app development, generative AI/LLM solutions, and more."
+    },
+    "404": { 
+      "title": "Page Not Found | Cor.inc",
+      "description": "The page you are looking for could not be found. Please return to the Cor.inc homepage."
+    }
   }
 }
