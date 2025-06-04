@@ -4,22 +4,26 @@ const team = [
     name: 'Kousuke Terada',
     image: '/assets/k-terada.avif',
     job: 'CEO',
+    description:
+      '音大卒 → 楽器メーカー営業 → メガベンチャーで法人営業 → IT へ転身という異色の経歴を活かし、"技術と言葉の橋渡し" に挑戦しています。',
     comingSoon: false,
-    link: 'https://lit.link/terisuke'
+    link: 'https://lit.link/terisuke',
   },
   {
     name: 'Cloudia Sorano',
     image: '/assets/cloudia.avif',
-    job: 'Ambassador',
+    job: 'AI アンバサダー',
+    description: '福岡弁で技術ネタを発信する社内 AI。Zenn・X で 51 週連続 LT に挑戦中。',
     comingSoon: false,
-    link: 'https://lit.link/cloudia2024'
+    link: 'https://x.com/Cloudia_Cor',
+    zennLink: 'https://zenn.dev/cloudia',
   },
   {
     name: 'Coming Soon...',
     image: '/assets/coming-soon.avif',
     job: '',
     comingSoon: true,
-    link: '#'
+    link: '#',
   },
 ];
 ---
@@ -30,23 +34,84 @@ const team = [
       <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Meet our team</h2>
       <ul role="list" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
-          team.map((item) => (
-            <li class={`border-primary-900/10 dark:border-primary-300/10 rounded-3xl border px-6 py-8 ${item.comingSoon ? 'bg-gray-200 dark:bg-gray-700' : ''}`}>
-              <div class="space-y-6">
-                <a href={item.link} target="_blank">
-                  <picture>
-                    <!-- <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> -->
-                    <!-- <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> -->
-                    <img class="mx-auto h-auto w-16 rounded-full" src={item.image} alt={item.name} width="64" height="64" loading="lazy" />
-                  </picture>
-                </a>
-                <div class="text-center">
-                  <h3 class="text-lg font-medium">{item.comingSoon ? 'Coming Soon...' : item.name}</h3>
-                  <p class={`text-primary-950/70 dark:text-primary-200/70 text-base ${item.comingSoon ? 'hidden' : ''}`}>{item.job}</p>
+          team.map((item) => {
+            // 表示するリンクを決定
+            const linksToDisplay = [];
+            if (item.link && item.link.includes('lit.link')) {
+              linksToDisplay.push({ type: 'LitLink', url: item.link });
+            } else if (
+              item.link &&
+              (item.link.includes('x.com') || item.link.includes('twitter.com')) &&
+              item.zennLink
+            ) {
+              linksToDisplay.push({ type: 'X', url: item.link });
+              linksToDisplay.push({ type: 'Zenn', url: item.zennLink });
+            }
+
+            return (
+              <li
+                class={`rounded-3xl border border-primary-900/10 px-6 py-8 dark:border-primary-300/10 ${
+                  item.comingSoon ? 'bg-gray-200 dark:bg-gray-700' : ''
+                }`}
+              >
+                <div class="space-y-6">
+                  {/* 画像はitem.linkにリンク */}
+                  <a href={item.link} target="_blank">
+                    <picture>
+                      {/* <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> */}
+                      {/* <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> */}
+                      <img
+                        class="mx-auto h-auto w-16 rounded-full"
+                        src={item.image}
+                        alt={item.name}
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                      />
+                    </picture>
+                  </a>
+                  <div class="text-center">
+                    <h3 class="text-lg font-medium">
+                      {item.comingSoon ? 'Coming Soon...' : item.name}
+                    </h3>
+                    <p
+                      class={`text-base text-primary-950/70 dark:text-primary-200/70 ${
+                        item.comingSoon ? 'hidden' : ''
+                      }`}
+                    >
+                      {item.job}
+                    </p>
+                    {item.description && (
+                      <p class="mt-2 text-sm text-primary-950/70 dark:text-primary-200/70">
+                        {item.description}
+                      </p>
+                    )}
+
+                    {/* linksToDisplay配列に基づいてリンクを表示 */}
+                    {linksToDisplay.length > 0 && (
+                      <div class="mt-2 space-x-2">
+                        {linksToDisplay.map((link, index) => (
+                          <>
+                            <a
+                              href={link.url}
+                              target="_blank"
+                              class="text-sm text-primary-600 hover:underline"
+                            >
+                              {link.type}
+                            </a>
+                            {/* 最後のリンクでなければ区切り文字を表示 */}
+                            {index < linksToDisplay.length - 1 && (
+                              <span class="text-primary-950/50">•</span>
+                            )}
+                          </>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))
+              </li>
+            );
+          })
         }
       </ul>
     </div>

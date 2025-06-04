@@ -2,21 +2,21 @@
 const services = [
   {
     step: '01',
-    name: 'Web マーケティング & Biz Dev',
+    name: 'IT コンサルティング & データ分析',
     description:
-      'Pythonを使ったWeb分析、およびそのデータに基づいた顧客のDX推進をサポートしていきます。その過程で、顧客の強みを再発見し、新しいビジネス機会を顧客と共に探求する戦略的コンサルタントとしてもお手伝いできます。',
+      'Python ベースのスクレイピングと BI 分析で現状を可視化し、戦略立案から実装まで伴走する DX 支援サービスです。',
   },
   {
     step: '02',
-    name: 'Web&モバイル アプリ開発',
+    name: 'Web・モバイルアプリ開発',
     description:
-      '顧客のニーズに沿って、toB向けのWebアプリ開発、toC向けのモバイルアプリの開発を企画立案からリリースまで提供します。上流工程から下流工程まで一貫して行うので、コストを抑えたスピーディーな開発ができます。',
+      'Flutter・React など最新 FW を駆使し、高速かつリッチな UX の B2B/B2C アプリをワンストップで提供します。',
   },
   {
     step: '03',
-    name: 'AI & 機械学習',
+    name: 'AI ソリューション開発',
     description:
-      'ローカルLLMやクラウドAIを活用した機械学習モデルの開発、運用を行います。また、そのモデルを活用したアプリケーションの開発も行います。AIを活用した新しいビジネスモデルの構築をお手伝いします。',
+      '生成 AI／LLM・画像認識・音声処理を活用し、お客様の課題に最適化した知的アプリや自動化ツールを開発します。',
   },
 ];
 ---
@@ -28,7 +28,7 @@ const services = [
       <div class="grid gap-8 lg:grid-cols-3">
         {
           services.map((service) => (
-            <div class="bg-primary-500/10 dark:bg-primary-400/10 flex flex-col gap-12 rounded-3xl px-6 py-8">
+            <div class="bg-primary-500/10 dark:bg-primary-400/10 flex flex-col gap-6 rounded-3xl px-6 py-8">
               <p class="text-sm">{service.step}</p>
               <div class="flex flex-col gap-4">
                 <h3 class="text-xl font-medium">{service.name}</h3>
