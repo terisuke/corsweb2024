@@ -19,29 +19,28 @@
       </div>
       <picture>
         <source
-          srcset="/assets/hero-480w.avif 480w,
-            /assets/hero-800w.avif 800w,
-            /assets/hero.avif 1600w"
-          sizes="(max-width: 768px) 100vw,
-            (max-width: 1200px) 100vw,
-            1280px"
+          media="(max-width: 768px)"
+          srcset="/assets/hero-480w.avif"
           type="image/avif"
         />
         <source
-          srcset="/assets/hero-480w.webp 480w,
-            /assets/hero-800w.webp 800w,
-            /assets/hero.webp 1600w"
-          sizes="(max-width: 768px) 100vw,
-            (max-width: 1200px) 100vw,
-            1280px"
+          media="(max-width: 768px)"
+          srcset="/assets/hero-480w.webp"
           type="image/webp"
+        />
+        <source
+          srcset="/assets/hero.avif"
+          type="image/avif"
         />
         <img
           class="h-auto w-full rounded-3xl"
-          src="/assets/hero-480w.jpg"
+          src="/assets/hero.avif"
           alt="Hero picture"
           width="1280"
           height="853"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
         />
       </picture>
     </div>

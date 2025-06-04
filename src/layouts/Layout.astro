@@ -1,6 +1,4 @@
 ---
-import '@fontsource/inter/latin-400.css';
-import '@fontsource/inter/latin-500.css';
 import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
@@ -26,12 +24,54 @@ const { description, title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- DNS prefetch and preconnect -->
     <link rel="preconnect" href="https://esm.sh" crossorigin>
     <link rel="preconnect" href="https://www.google.com" crossorigin>
-    <link rel="dns-prefetch" href="https://ssgform.com"></link>
+    <link rel="dns-prefetch" href="https://ssgform.com">
 
     <title>{title}</title>
     <ViewTransitions />
+    
+    <!-- Critical inline CSS for fastest initial render -->
+    <style is:inline>
+      /* System font stack for immediate text rendering */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* Inter font with optional display - won't block render */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-display: optional;
+        src: url('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-display: optional;
+        src: url('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      
+      /* Apply Inter when loaded */
+      .font-loaded body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      
+      /* Prevent layout shift */
+      [x-cloak] { display: none !important; }
+      
+      /* TailwindのユーティリティクラスはHTMLのclass属性で指定、または@apply推奨 */
+    </style>
   </head>
   <body
     class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200"
@@ -42,73 +82,59 @@ const { description, title } = Astro.props;
     </main>
     <Footer />
     <WebVitals />
-    <style is:global>
-      [x-cloak] {
-        display: none !important;
-      }
-      
-      @font-face {
-        font-family: 'Inter';
-        font-display: swap;
-      }
-      
-      /* Critical CSS for above-the-fold content */
-      .hero-critical {
-        font-family: 'Inter', sans-serif;
-        line-height: 1.2;
-        letter-spacing: -0.025em;
-      }
-      
-      .header-critical {
-        background-color: rgb(249 250 251);
-        transition: all 0.15s ease-in-out;
-      }
-      
-      .dark .header-critical {
-        background-color: rgb(23 23 23);
-      }
-      
-      .btn-primary-critical {
-        background-color: rgb(37 99 235);
-        color: white;
-        border-radius: 9999px;
-        padding: 0.75rem 1.25rem;
-        font-weight: 500;
-        transition: background-color 0.15s ease-in-out;
-      }
-      
-      .btn-primary-critical:hover {
-        background-color: rgb(29 78 216);
-      }
-    </style>
-    <!-- Alpine.jsの読み込み時に、type="module"をつける+lang="ts"をつけることで、typescriptを使うことができる -->
-    <script type="module" lang="ts" is:inline>
-      import Alpine from 'alpinejs';
-      import collapse from '@alpinejs/collapse';
-
-      Alpine.plugin(collapse);
-
-      Alpine.store('theme', {
-        isDark: false,
-        init() {
-          this.isDark = (() => {
-            if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-              return localStorage.getItem('theme') === 'dark';
-            }
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              return true;
-            }
-            return false;
-          })();
-        },
-        toggle() {
-          this.isDark = !this.isDark;
-          localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
-        },
+    <!-- Alpine.js Collapseプラグイン（先に読み込む） -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.0/dist/cdn.min.js"
+      defer
+      integrity="sha384-NArNwzWsUSF+kY2lgW4YriEkjLqi+J+za6HrENUn/3nZqkBnWbxV22kCJEK5Uu6n"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Alpine.js本体（後に読み込む） -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
+      defer
+      integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Alpine.js初期化用スクリプト -->
+    <script defer>
+      document.addEventListener('alpine:init', () => {
+        window.Alpine.store('theme', {
+          isDark: document.documentElement.classList.contains('dark'),
+          toggle() {
+            this.isDark = !this.isDark;
+            document.documentElement.classList.toggle('dark', this.isDark);
+            localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+          },
+        });
       });
-
-      window.Alpine = Alpine;
-      Alpine.start();
+    </script>
+    <!-- no-JS fallback -->
+    <noscript>
+      <style>[x-cloak]{ display: block !important; }</style>
+      <div style="background:#fff3cd;color:#856404;padding:1em;border-radius:8px;margin:1em 0;text-align:center;">
+        JavaScriptが無効なため、一部機能がご利用いただけません。
+      </div>
+    </noscript>
+    <!-- CSP例: script-src 'self' https://cdn.jsdelivr.net; -->
+    <script>
+      // ダークモードの初期設定（ちらつき防止）
+      (() => {
+        const theme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (theme === 'dark' || (!theme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    
+    <script>
+      // フォント読み込み検知
+      if ('fonts' in document) {
+        document.fonts.ready.then(() => {
+          document.documentElement.classList.add('font-loaded');
+        });
+      }
     </script>
   </body>
 </html>
