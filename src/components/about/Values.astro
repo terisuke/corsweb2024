@@ -52,14 +52,14 @@ const values = [
           values.map((column, index) => (
             <div class:list={['space-y-8', index === 1 && 'lg:mt-16']}>
               {column.map((value) => (
-                <div class="flex flex-col gap-12 rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
-                  <p class="text-sm">{value.ref}</p>
+                <div class="flex flex-col gap-4 rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
                   <div class="flex flex-col gap-4">
+                    <p class="text-sm">{value.ref}</p>
                     <h3 class="text-xl font-medium">{value.name}</h3>
-                    <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
-                      {value.description}
-                    </p>
                   </div>
+                  <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
+                    {value.description}
+                  </p>
                 </div>
               ))}
             </div>

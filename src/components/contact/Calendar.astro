@@ -1,0 +1,42 @@
+---
+// Googleカレンダー埋め込み用コンポーネント
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col gap-8">
+      <div class="text-center">
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          代表スケジュール
+        </h2>
+        <p class="mt-4 text-lg text-primary-950/70 dark:text-primary-200/70">
+          代表の公開スケジュールです。ミーティングのご依頼などの際にご参照ください。
+        </p>
+      </div>
+      
+      <div class="mx-auto w-full max-w-4xl">
+        <div class="relative overflow-hidden rounded-3xl bg-white shadow-lg dark:bg-primary-900">
+          <!-- レスポンシブ対応のためのコンテナ -->
+          <div class="relative pb-[56.25%] h-0"> <!-- 16:9 アスペクト比 -->
+            <iframe
+              src="https://calendar.google.com/calendar/embed?src=c_9d0f643537f7450176df49a778a8ddbde0f7a2704c4b417597600275df988560%40group.calendar.google.com&ctz=Asia%2FTokyo&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0&mode=WEEK&height=400&wkst=1&bgcolor=%23ffffff"
+              style="border: 0"
+              class="absolute top-0 left-0 w-full h-full"
+              frameborder="0"
+              scrolling="no"
+              title="代表スケジュール"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+        
+        <!-- カレンダー下部の説明 -->
+        <div class="mt-6 text-center">
+          <p class="text-sm text-primary-950/60 dark:text-primary-200/60">
+            * ミーティングのご依頼は下記のお問い合わせフォームよりご連絡ください。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

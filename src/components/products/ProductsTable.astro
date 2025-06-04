@@ -1,19 +1,19 @@
 ---
 const products = [
   {
-    name: 'Cloudia Chat',
-    description: '自社サイト問い合わせを自動応答する AI キャラクター',
-    demo: 'https://github.com/terisuke/miho',
+    name: 'なんちゃってZOOM',
+    description: 'ZOOM のようなビデオ通話アプリ',
+    demo: 'https://zoom-clone-navy-eta.vercel.app/',
   },
   {
-    name: 'WebAR 名刺',
-    description: 'スマホをかざすと 3D キャラが飛び出す NFC 名刺',
-    demo: 'https://zenn.dev/cloudia/articles/webar-business-card',
+    name: 'Constellation Creator',
+    description: '画像をアップロードするとオリジナル星座を作成するアプリ',
+    demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
   },
   {
-    name: '記事ライティング AI エージェント',
-    description: 'Note 記事下書きを自動生成する社内ツール',
-    demo: 'GitHub Private (近日公開)',
+    name: 'エンジニアカフェナビゲーター',
+    description: 'Mastraベースのエンジニアカフェ自動受付システム(現在開発中)',
+    demo: 'https://github.com/terisuke/engineer-cafe-navigator',
   },
 ];
 
@@ -54,19 +54,21 @@ const youtube = [
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <!-- Products Section -->
     <div class="mb-16">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-8">プロダクト一覧</h2>
+      <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">プロダクト一覧</h2>
       <div class="grid gap-8 lg:grid-cols-3">
         {
           products.map((product) => (
-            <div class="relative flex flex-col gap-8 rounded-3xl p-8 bg-primary-500/10 dark:bg-primary-400/10">
+            <div class="relative flex flex-col gap-8 rounded-3xl bg-primary-500/10 p-8 dark:bg-primary-400/10">
               <div class="flex-1">
-                <h3 class="text-xl font-medium mb-4">{product.name}</h3>
-                <p class="text-primary-950/70 dark:text-primary-200/70 mb-4">{product.description}</p>
+                <h3 class="mb-4 text-xl font-medium">{product.name}</h3>
+                <p class="mb-4 text-primary-950/70 dark:text-primary-200/70">
+                  {product.description}
+                </p>
                 <a
                   href={product.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-primary-600 hover:underline text-sm"
+                  class="text-sm text-primary-600 hover:underline"
                 >
                   Demo / Repo
                 </a>
@@ -76,9 +78,9 @@ const youtube = [
         }
       </div>
     </div>
-    
+
     <!-- Media Section -->
-    <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-8">メディア紹介</h2>
+    <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">メディア紹介</h2>
     <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-3">
       {
         article.map((item) => (
