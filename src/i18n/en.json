@@ -152,6 +152,10 @@
     "404": { 
       "title": "Page Not Found | Cor.inc",
       "description": "The page you are looking for could not be found. Please return to the Cor.inc homepage."
+    },
+    "privacy": {
+      "title": "Privacy Policy | Cor.inc",
+      "description": "Read Cor.inc's privacy policy to learn how we collect, use, and protect your personal information."
     }
   }
 }
