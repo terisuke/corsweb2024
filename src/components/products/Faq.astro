@@ -22,7 +22,7 @@ const t = getTranslations(currentLocale);
             t.faq.questions.map((question, index) => (
               <div
                 class="rounded-3xl px-4 transition"
-                x-data={`{ id: ${index}, get isOpen() { return this.id === this.selected }, get isNextOpen() { return (this.id + 1) === this.selected } }`}
+                x-data={`{ id: ${index}, get isOpen() { return this.id === $root.selected }, get isNextOpen() { return (this.id + 1) === $root.selected } }`}
                 x-bind:class="{ 'bg-primary-500/10 dark:bg-primary-400/10': isOpen }"
               >
                 <dt

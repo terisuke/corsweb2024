@@ -40,7 +40,7 @@ const t = getTranslations(currentLocale);
             t.mission.stats.map((stat) => (
               <div class="rounded-3xl border border-primary-900/10 p-6 dark:border-primary-300/10">
                 <dt class="text-base">{stat.name}</dt>
-                <dd class="text-3xl font-medium tracking-tight" set:html={stat.value}></dd>
+                <dd class="text-3xl font-medium tracking-tight">{stat.value}</dd>
               </div>
             ))
           }

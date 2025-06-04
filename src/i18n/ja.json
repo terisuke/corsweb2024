@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Home", "about": "About", "products": "Products&Insights", "contact": "Contact" },
+  "nav": { "home": "Home", "about": "About", "products": "Products&Insights", "contact": "Contact", "privacy": "プライバシーポリシー" },
   "hero": {
     "title": "Swifter than any, to the horizon beyond.",
     "subtitle": "言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。",
