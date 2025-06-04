@@ -3,12 +3,15 @@ language: "ja"                   # すべて日本語でレビュー
 
 reviews:
   auto_review:
-    enabled: true
-    drafts: false
-  profile: "assertive"
+    enabled: true                # 自動レビュー ON
+    drafts: false                # Draft PR は対象外
+    bot_review: true             # Botユーザーのレビューを許可
+  profile: "assertive"           # 指摘多め（必要に応じて "chill"）
   request_changes_workflow: true
   commit_status: true
   fail_commit_status: true
+
+output:
   high_level_summary: true
   high_level_summary_placeholder: "@coderabbitai summary"
   collapse_walkthrough: true
