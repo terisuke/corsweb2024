@@ -70,11 +70,7 @@ const { description, title } = Astro.props;
       /* Prevent layout shift */
       [x-cloak] { display: none !important; }
       
-      /* Critical layout styles */
-      .mx-auto { margin-left: auto; margin-right: auto; }
-      .max-w-7xl { max-width: 80rem; }
-      .px-4 { padding-left: 1rem; padding-right: 1rem; }
-      .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+      /* TailwindのユーティリティクラスはHTMLのclass属性で指定、または@apply推奨 */
     </style>
   </head>
   <body
@@ -86,7 +82,41 @@ const { description, title } = Astro.props;
     </main>
     <Footer />
     <WebVitals />
-    <!-- Alpine.jsの遅延読み込み -->
+    <!-- Alpine.js Collapseプラグイン（先に読み込む） -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.0/dist/cdn.min.js"
+      defer
+      integrity="sha384-NArNwzWsUSF+kY2lgW4YriEkjLqi+J+za6HrENUn/3nZqkBnWbxV22kCJEK5Uu6n"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Alpine.js本体（後に読み込む） -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
+      defer
+      integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Alpine.js初期化用スクリプト -->
+    <script defer>
+      document.addEventListener('alpine:init', () => {
+        window.Alpine.store('theme', {
+          isDark: document.documentElement.classList.contains('dark'),
+          toggle() {
+            this.isDark = !this.isDark;
+            document.documentElement.classList.toggle('dark', this.isDark);
+            localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+          },
+        });
+      });
+    </script>
+    <!-- no-JS fallback -->
+    <noscript>
+      <style>[x-cloak]{ display: block !important; }</style>
+      <div style="background:#fff3cd;color:#856404;padding:1em;border-radius:8px;margin:1em 0;text-align:center;">
+        JavaScriptが無効なため、一部機能がご利用いただけません。
+      </div>
+    </noscript>
+    <!-- CSP例: script-src 'self' https://cdn.jsdelivr.net; -->
     <script>
       // ダークモードの初期設定（ちらつき防止）
       (() => {
@@ -99,31 +129,6 @@ const { description, title } = Astro.props;
     </script>
     
     <script>
-      // Alpine.jsの非同期読み込み
-      document.addEventListener('DOMContentLoaded', () => {
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.textContent = `
-          import Alpine from 'https://esm.sh/alpinejs@3.14.0';
-          import collapse from 'https://esm.sh/@alpinejs/collapse@3.14.0';
-
-          Alpine.plugin(collapse);
-
-          Alpine.store('theme', {
-            isDark: document.documentElement.classList.contains('dark'),
-            toggle() {
-              this.isDark = !this.isDark;
-              document.documentElement.classList.toggle('dark', this.isDark);
-              localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
-            },
-          });
-
-          window.Alpine = Alpine;
-          Alpine.start();
-        `;
-        document.body.appendChild(script);
-      });
-      
       // フォント読み込み検知
       if ('fonts' in document) {
         document.fonts.ready.then(() => {
