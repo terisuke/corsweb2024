@@ -8,9 +8,10 @@ const calendarId = import.meta.env.PUBLIC_GCAL_ID;
 const calendarTz = import.meta.env.PUBLIC_GCAL_TZ;
 const calendarParams = import.meta.env.PUBLIC_GCAL_PARAMS;
 const calendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarId)}&ctz=${encodeURIComponent(calendarTz)}&${calendarParams}`;
----
 
 // Googleカレンダー埋め込み用コンポーネント
+
+---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">

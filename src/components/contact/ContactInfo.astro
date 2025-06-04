@@ -8,12 +8,14 @@ const t = getTranslations(currentLocale);
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <dl class="grid gap-6 lg:grid-cols-3">
-      <!-- Address -->
+      {/* Address */}
       <div class="rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
         <dt class="sr-only">{t.contactInfo.address.label}</dt>
-        <dd class="flex h-full flex-col justify-between gap-12">
+        {/* gap-12 から gap-6 に変更 */}
+        <dd class="flex h-full flex-col justify-between gap-6">
+          {/* h-6 w-6 から h-8 w-8 に変更 */}
           <svg
-            class="h-6 w-6 text-primary-600 dark:text-primary-400"
+            class="h-8 w-8 text-primary-600 dark:text-primary-400"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
@@ -34,12 +36,14 @@ const t = getTranslations(currentLocale);
         </dd>
       </div>
 
-      <!-- Phone number -->
+      {/* Phone number */}
       <div class="rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
         <dt class="sr-only">{t.contactInfo.phone.label}</dt>
-        <dd class="flex h-full flex-col justify-between gap-12">
+        {/* gap-12 から gap-6 に変更 */}
+        <dd class="flex h-full flex-col justify-between gap-6">
+          {/* h-6 w-6 から h-8 w-8 に変更 */}
           <svg
-            class="h-6 w-6 text-primary-600 dark:text-primary-400"
+            class="h-8 w-8 text-primary-600 dark:text-primary-400"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
@@ -53,17 +57,20 @@ const t = getTranslations(currentLocale);
         </dd>
       </div>
 
-      <!-- Email -->
+      {/* Chat */}
+      {/* aタグがdivをラップするように構造を変更し、スタイルをdivに移動 */}
       <a
         href="https://miibo.jp/chat/8b17da34-3051-4645-ad93-1556b02c04cb18f83c6e2b3ea?name=Cloudia"
         target="_blank"
-        class="block rounded-3xl bg-primary-500/10 px-6 py-8 no-underline dark:bg-primary-400/10"
+        class="block no-underline"
       >
         <div class="rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
           <dt class="sr-only">{t.contactInfo.chat.label}</dt>
-          <dd class="flex h-full flex-col justify-between gap-12">
+          {/* gap-12 から gap-6 に変更 */}
+          <dd class="flex h-full flex-col justify-between gap-6">
+            {/* h-6 w-6 から h-8 w-8 に変更 */}
             <svg
-              class="h-6 w-6 text-primary-600 dark:text-primary-400"
+              class="h-8 w-8 text-primary-600 dark:text-primary-400"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
