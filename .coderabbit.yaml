@@ -5,7 +5,6 @@ reviews:
   auto_review:
     enabled: true                # 自動レビュー ON
     drafts: false                # Draft PR は対象外
-    bot_review: true             # Botユーザーのレビューを許可
   profile: "assertive"           # 指摘多め（必要に応じて "chill"）
   request_changes_workflow: true
   commit_status: true
