@@ -1,8 +1,20 @@
 ---
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
 
-const currentLocale = getCurrentLocale(Astro.url);
-const t = getTranslations(currentLocale);
+/** @type {'ja' | 'en'} */
+let currentLocale = 'ja';
+let t = getTranslations('ja');
+try {
+  // getCurrentLocaleはstring | null | undefinedを返す可能性があるため、
+  // || 'ja' の結果は string と推論されます。
+  // getTranslationsは 'ja' | 'en' 型 (Locale型) を期待しているため、
+  // 型アサーションを使用して型エラーを解消します。
+  currentLocale = getCurrentLocale(Astro.url) || 'ja';
+  t = getTranslations(currentLocale as 'ja' | 'en');
+} catch (e) {
+  // エラー時はデフォルト値を利用
+  console.warn('ロケールまたは翻訳取得に失敗しました。デフォルト値を使用します:', e);
+}
 ---
 
 <section class="py-16 sm:py-20">
@@ -12,17 +24,17 @@ const t = getTranslations(currentLocale);
     >
       <div class="flex flex-col gap-4 sm:gap-6">
         <h2 class="mx-auto max-w-sm text-3xl font-medium tracking-tight sm:text-4xl">
-          {t.homeCta.title}
+          {t.homeCta?.title ?? 'タイトル未設定'}
         </h2>
         <p class="text-primary-950/70 dark:text-primary-200/70 mx-auto max-w-2xl text-lg">
-          {t.homeCta.description}
+          {t.homeCta?.description ?? '説明文が設定されていません'}
         </p>
       </div>
       <a
         href="/contact"
         class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
-        {t.homeCta.button}
+        {t.homeCta?.button ?? 'お問い合わせ'}
       </a>
     </div>
   </div>

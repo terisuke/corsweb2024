@@ -8,14 +8,17 @@ const team = t.teamData;
 
 // リンクタイプ判定関数
 function extractLinks(item) {
+  const linkPatterns = [
+    { type: 'LitLink', pattern: /lit\.link/ },
+    { type: 'X', pattern: /(?:x\.com|twitter\.com)/ },
+  ];
   const links = [];
   if (item.link) {
-    if (item.link.includes('lit.link')) {
-      links.push({ type: 'LitLink', url: item.link });
-    }
-    if (item.link.includes('x.com') || item.link.includes('twitter.com')) {
-      links.push({ type: 'X', url: item.link });
-    }
+    linkPatterns.forEach(({ type, pattern }) => {
+      if (pattern.test(item.link)) {
+        links.push({ type, url: item.link });
+      }
+    });
   }
   if (item.zennLink) {
     links.push({ type: 'Zenn', url: item.zennLink });
@@ -31,53 +34,56 @@ function extractLinks(item) {
       <ul role="list" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           team.map((item) => (
-            <Fragment key={item.name}>
-              <li
-                class={`rounded-3xl border border-primary-900/10 px-6 py-8 dark:border-primary-300/10 ${
-                  item.comingSoon ? 'bg-gray-200 dark:bg-gray-700' : ''
-                }`}
-              >
-                <div class="space-y-6">
-                  {/* 画像はitem.linkにリンク */}
-                  <a href={item.link} target="_blank">
-                    <picture>
-                      {/* <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> */}
-                      {/* <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> */}
-                      <img
-                        class="mx-auto h-auto w-16 rounded-full"
-                        src={item.image}
-                        alt={item.name}
-                        width="64"
-                        height="64"
-                        loading="lazy"
-                      />
-                    </picture>
-                  </a>
-                  <div class="text-center">
-                    <h3 class="text-lg font-medium">
-                      {item.comingSoon ? 'Coming Soon...' : item.name}
-                    </h3>
-                    <p
-                      class={`text-base text-primary-950/70 dark:text-primary-200/70 ${
-                        item.comingSoon ? 'hidden' : ''
-                      }`}
-                    >
-                      {item.job}
+            <li
+              class={`rounded-3xl border border-primary-900/10 px-6 py-8 dark:border-primary-300/10 ${
+                item.comingSoon ? 'bg-gray-200 dark:bg-gray-700' : ''
+              }`}
+            >
+              <div class="space-y-6">
+                {/* 画像はitem.linkにリンク */}
+                <a href={item.link} target="_blank" rel="noopener noreferrer" aria-label={`${item.name}のプロフィールページを新しいタブで開く`}>
+                  <picture>
+                    {/* <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> */}
+                    {/* <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> */}
+                    <img
+                      class="mx-auto h-auto w-16 rounded-full"
+                      src={item.image}
+                      alt={item.name}
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                    />
+                  </picture>
+                </a>
+                <div class="text-center">
+                  <h3 class="text-lg font-medium">
+                    {item.comingSoon ? 'Coming Soon...' : item.name}
+                  </h3>
+                  <p
+                    class={`text-base text-primary-950/70 dark:text-primary-200/70 ${
+                      item.comingSoon ? 'hidden' : ''
+                    }`}
+                  >
+                    {item.job}
+                  </p>
+                  {item.description && (
+                    <p class="mt-2 text-sm text-primary-950/70 dark:text-primary-200/70">
+                      {item.description}
                     </p>
-                    {item.description && (
-                      <p class="mt-2 text-sm text-primary-950/70 dark:text-primary-200/70">
-                        {item.description}
-                      </p>
-                    )}
+                  )}
 
-                    {/* リンク配列を関数で取得しmapで表示 */}
-                    {extractLinks(item).length > 0 && (
+                  {/* リンク配列を関数で取得しmapで表示 */}
+                  {(() => {
+                    const links = extractLinks(item);
+                    return links.length > 0 && (
                       <div class="mt-2 space-x-2">
-                        {extractLinks(item).map((link, idx, arr) => (
+                        {links.map((link, idx, arr) => (
                           <Fragment key={link.type}>
                             <a
                               href={link.url}
                               target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`${item.name}の${link.type}ページを新しいタブで開く`}
                               class="text-sm text-primary-600 hover:underline"
                             >
                               {link.type}
@@ -88,11 +94,11 @@ function extractLinks(item) {
                           </Fragment>
                         ))}
                       </div>
-                    )}
-                  </div>
+                    );
+                  })()}
                 </div>
-              </li>
-            </Fragment>
+              </div>
+            </li>
           ))
         }
       </ul>

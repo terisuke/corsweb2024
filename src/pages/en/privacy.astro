@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
-const currentLocale = getCurrentLocale(Astro.url);
-const t = getTranslations(currentLocale);
+const locale = Astro.props.locale || getCurrentLocale(Astro.url);
+const t = getTranslations(locale);
 ---
 
 <Layout
@@ -43,7 +43,7 @@ const t = getTranslations(currentLocale);
       <p class="mb-4">
         {t.privacy.contact.description}<br />
         <span class="font-medium">
-          <a href="/contact">{t.privacy.contact.linkText}</a>
+          <a href={getLocalizedUrl('/contact', locale)}>{t.privacy.contact.linkText}</a>
         </span>
         {t.privacy.contact.suffix}
       </p>

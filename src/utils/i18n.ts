@@ -246,7 +246,7 @@ const translations = {
           name: 'Youtube',
           description: '実際に作成した資料や動画による説明など、視覚的に理解できる自社の資料を提供します。',
           isFlagged: true,
-          icon: 'public/assets/Youtube.avif',
+          icon: '/assets/Youtube.avif',
           id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
         },
       ]
@@ -598,7 +598,7 @@ const translations = {
           name: 'Youtube',
           description: 'We provide visually understandable company materials through actual created materials and video explanations.',
           isFlagged: true,
-          icon: 'public/assets/Youtube.avif',
+          icon: '/assets/Youtube.avif',
           id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
         },
       ]

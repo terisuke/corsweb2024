@@ -111,7 +111,7 @@ const currentLocale = getCurrentLocale(Astro.url);
         });
         
         window.Alpine.store('lang', {
-          current: '{currentLocale}'.replace('{currentLocale}', document.documentElement.lang),
+          current: document.documentElement.lang,
           toggle() {
             const newLang = this.current === 'ja' ? 'en' : 'ja';
             const currentPath = window.location.pathname;

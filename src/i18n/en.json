@@ -1,10 +1,5 @@
 {
-  "nav": {
-    "home": "Home",
-    "about": "About",
-    "products": "Products&Insights",
-    "contact": "Contact"
-  },
+  "nav": { "home": "Home", "about": "About", "products": "Products&Insights", "contact": "Contact" },
   "hero": {
     "title": "Swifter than any, to the horizon beyond.",
     "subtitle": "Breaking down language and cultural barriers with AI to create a society where people truly understand each other.",
@@ -13,100 +8,18 @@
   "services": {
     "title": "Services",
     "items": [
-      {
-        "step": "01",
-        "name": "IT Consulting & Data Analysis",
-        "description": "DX support service that visualizes current status through Python-based scraping and BI analysis, accompanying from strategy planning to implementation."
-      },
-      {
-        "step": "02",
-        "name": "Web & Mobile App Development",
-        "description": "One-stop provision of high-speed, rich UX B2B/B2C apps using the latest frameworks like Flutter and React."
-      },
-      {
-        "step": "03",
-        "name": "AI Solution Development",
-        "description": "Developing intelligent apps and automation tools optimized for customer challenges using generative AI/LLM, image recognition, and voice processing."
-      }
+      { "step": "01", "name": "IT Consulting & Data Analysis", "description": "DX support service that visualizes current status through Python-based scraping and BI analysis, accompanying from strategy planning to implementation." },
+      { "step": "02", "name": "Web & Mobile App Development", "description": "One-stop provision of high-speed, rich UX B2B/B2C apps using the latest frameworks like Flutter and React." },
+      { "step": "03", "name": "AI Solution Development", "description": "Developing intelligent apps and automation tools optimized for customer challenges using generative AI/LLM, image recognition, and voice processing." }
     ]
   },
   "about": {
     "title": "About",
     "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
-    "cta": "More details"
-  },
-  "mission": {
-    "title": "Our mission",
-    "description1": "Realizing miscommunication-free communication through AI, creating a world where everyone can demonstrate their value.",
-    "description2": "As the world's leading company pursuing 'happiness' through IT, Cor.inc develops systems and mechanisms that solve communication challenges and promote empathy and mutual understanding among users. Our mission is to support all involved parties in clearly recognizing their own value and pursuing and achieving true happiness by utilizing ever-evolving technology. We create a future where all stakeholders collaborate toward a happier society and co-create true happiness together using our technical capabilities.",
-    "stats": [
-      {
-        "name": "Since Founded",
-        "value": "2 years"
-      },
-      {
-        "name": "Languages",
-        "value": "10"
-      },
-      {
-        "name": "Projects",
-        "value": "15"
-      },
-      {
-        "name": "Services",
-        "value": "App Develop<br />IT/AI Strategy"
-      }
-    ]
-  },
-  "contact": {
-    "title": "Feel free to contact us!",
-    "description1": "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
-    "description2": "If you do not receive a reply within the above period, there may be a transmission problem. We apologize for the inconvenience, but please contact us again.",
-    "form": {
-      "name": "Your name",
-      "email": "Email",
-      "message": "Message",
-      "submit": "Submit",
-      "reset": "Reset"
-    }
-  },
-  "footer": {
-    "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
-    "copyright": "© 2025 Cor.inc"
-  },
-  "header": {
-    "mobileMenuDescription": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
-  },
-  "404": {
-    "title": "404",
-    "subtitle": "Page not found",
-    "description": "Please check the URL in the address bar and try again.",
-    "cta": "Go back home"
-  },
-  "aboutPage": {
-    "title": "About",
-    "subtitle": "Being the company that thinks most about 'happiness' in the world, and being the company that seeks true happiness and co-creates society the most in the world."
-  },
-  "meta": {
-    "home": {
-      "title": "Cor.inc · Pioneering Collaboration Through Innovation",
-      "description": "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world."
-    },
-    "about": {
-      "title": "About · Cor.inc",
-      "description": "Find more our history, values, mission and more. We are a group of people who share the same values."
-    },
-    "contact": {
-      "title": "Contact · Cor.inc",
-      "description": "Contact our team to learn more about how we can help you."
-    },
-    "products": {
-      "title": "Products&Insights · Cor.inc",
-      "description": "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions."
-    },
-    "404": {
-      "title": "Not found · Cor.inc",
-      "description": "Page not found. Please check the URL in the address bar and try again."
+    "cta": "More details",
+    "heading": {
+      "title": "About",
+      "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
     }
   }
 }

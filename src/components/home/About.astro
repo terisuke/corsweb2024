@@ -1,8 +1,15 @@
 ---
-import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+
+let aboutUrl = '/about';
+try {
+  aboutUrl = getLocalizedUrl('/about', currentLocale) || '/about';
+} catch (e) {
+  console.warn('getLocalizedUrlの取得に失敗したため、/aboutにフォールバックします:', e);
+}
 ---
 
 <section class="py-16 sm:py-20">
@@ -14,7 +21,7 @@ const t = getTranslations(currentLocale);
           {t.about.description}
         </p>
         <a
-          href={getLocalizedUrl('/about', currentLocale)}
+          href={aboutUrl}
           class="inline-flex items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
         >
           {t.about.cta}

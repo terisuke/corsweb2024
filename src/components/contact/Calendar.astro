@@ -7,7 +7,35 @@ const t = getTranslations(currentLocale);
 const calendarId = import.meta.env.PUBLIC_GCAL_ID;
 const calendarTz = import.meta.env.PUBLIC_GCAL_TZ;
 const calendarParams = import.meta.env.PUBLIC_GCAL_PARAMS;
-const calendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarId)}&ctz=${encodeURIComponent(calendarTz)}&${calendarParams}`;
+
+// 環境変数のバリデーション
+if (!calendarId) {
+  throw new Error('環境変数 PUBLIC_GCAL_ID が設定されていません。');
+}
+if (!calendarTz) {
+  throw new Error('環境変数 PUBLIC_GCAL_TZ が設定されていません。');
+}
+if (!calendarParams) {
+  throw new Error('環境変数 PUBLIC_GCAL_PARAMS が設定されていません。');
+}
+
+// URLとURLSearchParamsを使って安全にクエリを構築
+const baseUrl = 'https://calendar.google.com/calendar/embed';
+const url = new URL(baseUrl);
+const params = new URLSearchParams();
+params.set('src', calendarId);
+params.set('ctz', calendarTz);
+
+// calendarParamsが存在する場合はパースして追加
+if (calendarParams) {
+  // 既にクエリ形式（例: key1=val1&key2=val2）であることを想定
+  const extraParams = new URLSearchParams(calendarParams);
+  for (const [key, value] of extraParams.entries()) {
+    params.set(key, value);
+  }
+}
+url.search = params.toString();
+const calendarSrc = url.toString();
 
 // Googleカレンダー埋め込み用コンポーネント
 
@@ -31,10 +59,8 @@ const calendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIC
           <div class="relative pb-[56.25%] h-0"> <!-- 16:9 アスペクト比 -->
             <iframe
               src={calendarSrc}
-              style="border: 0"
+              style="border: 0; overflow: hidden;"
               class="absolute top-0 left-0 w-full h-full"
-              frameborder="0"
-              scrolling="no"
               title={t.calendar.title}
               loading="lazy"
               allowfullscreen
