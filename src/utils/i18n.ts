@@ -494,16 +494,28 @@ const translations = {
       title: "FAQ",
       questions: [
         {
-          question: "What technology stack do you use?",
-          answer: "We primarily use Python, Flutter, React, and TypeScript. We select the optimal technology based on project requirements."
+          question: "How is the development process carried out? What is the typical schedule until project completion?",
+          answer: "In the development process, our engineers will listen to your requirements online and define the necessary systems and requirements. Within one week of the initial meeting, we will calculate the price for each product, and after your approval, we will proceed with the quotation. Since we do not outsource any work and handle all projects in-house, we can deliver products about 20% faster than the average delivery time. For large projects, we can assign freelance engineers who resonate with the project, enabling faster and more cost-effective delivery."
         },
         {
-          question: "How long does development take?",
-          answer: "It varies depending on the project scale, but typically 2-3 months for MVP and around 6 months for full-scale applications."
+          question: "How are project costs calculated? How do payments work?",
+          answer: "Pricing varies depending on the client's requirements, so we will send you a quote after the initial meeting. Compared to similar projects in the same industry, we often offer proposals at about 15% lower cost. Payment methods include bank transfer, Paypal, and more. Please let our staff know your preferred payment method during the initial meeting."
         },
         {
-          question: "Can you tell me about your pricing structure?",
-          answer: "We primarily use a fixed-price system based on projects. Please contact us for details."
+          question: "What are the benefits of using React, Flutter, and Python? What are the advantages of BaaS like Firebase or SupaBase?",
+          answer: "React, Flutter, and Python offer extensibility as cutting-edge languages and enable large-scale system/app development in a short period thanks to global community support. These languages are flexible, beginner-friendly, and have rich libraries. BaaS like Firebase and SupaBase provide highly scalable backends with real-time data sync, built-in features, scalability, transparency, and security. Combining these technologies enables efficient, high-quality app development."
+        },
+        {
+          question: "How much can tasks be customized according to requirements? How do you handle changes if needed?",
+          answer: "We listen to your requirements for each project and create tailor-made solutions, so customization is virtually unlimited. However, to speed up delivery and avoid critical system errors, we generally do not accept changes to requirements during production. Please summarize your requirements thoroughly before the meeting."
+        },
+        {
+          question: "How is maintenance and support handled after development? Are there any additional costs?",
+          answer: "As our main business is development, we do not provide maintenance or support except for major customizations. After development is complete, we can introduce you to our partner companies specializing in maintenance and support. Please consult us regarding costs."
+        },
+        {
+          question: "How do you ensure data security and privacy?",
+          answer: "To ensure data security and privacy, we use advanced encryption technologies and maximize the security features of BaaS like Firebase and SupaBase. For access control, we set up dedicated accounts for each client and manage them with the minimum necessary privileges. We strictly adhere to data protection policies and conduct regular security audits to protect your data throughout development, delivery, and maintenance."
         }
       ]
     },
@@ -720,12 +732,12 @@ const translations = {
 } as const;
 
 export function getTranslations(locale: Locale) {
-  return translations[locale] || translations.ja;
+  return translations[locale];
 }
 
 export function getCurrentLocale(url: URL): Locale {
   const pathname = url.pathname;
-  if (pathname.startsWith('/en/') || pathname === '/en') {
+  if (/^\/en(\/|$)/.test(pathname)) {
     return 'en';
   }
   return 'ja';
@@ -736,8 +748,6 @@ export function getOtherLocale(currentLocale: Locale): Locale {
 }
 
 export function getLocalizedUrl(path: string, locale: Locale): string {
-  if (locale === 'ja') {
-    return path === '/' ? '/' : path;
-  }
-  return `/en${path === '/' ? '' : path}`;
+  if (locale === 'ja') return path;
+  return path === '/' ? '/en' : `/en${path}`;
 }

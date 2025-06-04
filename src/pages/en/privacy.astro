@@ -25,7 +25,7 @@ const t = getTranslations(locale);
       </p>
       <ul class="list-inside list-disc space-y-4">
         {
-          t.privacy.section1.items.map((item) => (
+          Array.isArray(t.privacy.section1?.items) && t.privacy.section1.items.map((item) => (
             <li>{item}</li>
           ))
         }
@@ -34,7 +34,7 @@ const t = getTranslations(locale);
       <p class="mb-4">{t.privacy.section2.description}</p>
       <ul class="list-inside list-disc space-y-4">
         {
-          t.privacy.section2.items.map((item) => (
+          Array.isArray(t.privacy.section2?.items) && t.privacy.section2.items.map((item) => (
             <li>{item}</li>
           ))
         }
