@@ -258,7 +258,7 @@ const translations = {
       },
       phone: {
         label: "Phone number",
-        value: "Coming soon..."
+        value: "070-8561-1659"
       },
       chat: {
         label: "Email",
@@ -622,7 +622,7 @@ const translations = {
       },
       phone: {
         label: "Phone number",
-        value: "Coming soon..."
+        value: "070-8561-1659"
       },
       chat: {
         label: "Email",

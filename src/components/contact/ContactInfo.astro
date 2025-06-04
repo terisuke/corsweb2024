@@ -28,8 +28,7 @@ const t = getTranslations(currentLocale);
           <div class="text-base font-medium">
             <div class="text-base font-medium">
               <a href="https://maps.app.goo.gl/N9oa3j9ewUWqjs427"
-                >{t.contactInfo.address.value}<br
-                /></a
+                >{t.contactInfo.address.value}<br /></a
               >
             </div>
           </div>
@@ -58,32 +57,30 @@ const t = getTranslations(currentLocale);
       </div>
 
       {/* Chat */}
-      {/* aタグがdivをラップするように構造を変更し、スタイルをdivに移動 */}
-      <a
-        href="https://miibo.jp/chat/8b17da34-3051-4645-ad93-1556b02c04cb18f83c6e2b3ea?name=Cloudia"
-        target="_blank"
-        class="block no-underline"
-      >
-        <div class="rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
-          <dt class="sr-only">{t.contactInfo.chat.label}</dt>
-          {/* gap-12 から gap-6 に変更 */}
-          <dd class="flex h-full flex-col justify-between gap-6">
-            {/* h-6 w-6 から h-8 w-8 に変更 */}
-            <svg
-              class="h-8 w-8 text-primary-600 dark:text-primary-400"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="M7.29117 20.8242L2 22L3.17581 16.7088C2.42544 15.3056 2 13.7025 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C10.2975 22 8.6944 21.5746 7.29117 20.8242ZM7.58075 18.711L8.23428 19.0605C9.38248 19.6745 10.6655 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 13.3345 4.32549 14.6175 4.93949 15.7657L5.28896 16.4192L4.63416 19.3658L7.58075 18.711Z"
-              ></path>
-            </svg>
+      <div class="rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
+        <dt class="sr-only">{t.contactInfo.chat.label}</dt>
+        <dd class="flex h-full flex-col justify-between gap-6">
+          {/* h-6 w-6 から h-8 w-8 に変更 */}
+          <svg
+            class="h-8 w-8 text-primary-600 dark:text-primary-400"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M7.29117 20.8242L2 22L3.17581 16.7088C2.42544 15.3056 2 13.7025 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C10.2975 22 8.6944 21.5746 7.29117 20.8242ZM7.58075 18.711L8.23428 19.0605C9.38248 19.6745 10.6655 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 13.3345 4.32549 14.6175 4.93949 15.7657L5.28896 16.4192L4.63416 19.3658L7.58075 18.711Z"
+            ></path>
+          </svg>
+          <a
+            href="https://3d-emotional-chat.netlify.app/"
+            target="_blank"
+            class="block no-underline"
+          >
             <p class="text-base font-medium">{t.contactInfo.chat.value}</p>
-          </dd>
-        </div>
-      </a>
+          </a>
+        </dd>
+      </div>
     </dl>
   </div>
 </section>

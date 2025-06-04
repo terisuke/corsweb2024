@@ -4,7 +4,7 @@ import { getCurrentLocale, getTranslations } from '../../utils/i18n';
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
-const values = t.valuesData;
+const values = Array.isArray(t.valuesData) ? t.valuesData : [];
 ---
 
 <section class="py-16 sm:py-20">
