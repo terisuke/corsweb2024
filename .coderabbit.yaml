@@ -7,29 +7,22 @@ reviews:
     drafts: false                # Draft PR は対象外
     bot_review: true             # Botユーザーのレビューを許可
   profile: "assertive"           # 指摘多め（必要に応じて "chill"）
-
-workflow:
-  approve_after_resolved: true   # すべて解決で自動 Approve
-  commit_status:
-    enabled: true
-    fail_on_error: true
-  review_status: false           # Bot検出メッセージを無効化
+  request_changes_workflow: true
+  commit_status: true
+  fail_commit_status: true
 
 output:
   high_level_summary: true
   high_level_summary_placeholder: "@coderabbitai summary"
-  walkthrough:
-    collapse: true
-    changed_files_summary: true
-    sequence_diagrams: true
-    related_issues: true
-    suggested_labels: true
-    suggested_reviewers: true
-
-# レビュー対象から除外したいパス
-path_filters:
-  - "!dist/**"
-  - "!build/**"
-  - "!node_modules/**"
-  - "!**/*.{png,jpg,jpeg,svg}"
-  - "src/**"
+  collapse_walkthrough: true
+  changed_files_summary: true
+  sequence_diagrams: true
+  related_issues: true
+  suggested_labels: true
+  suggested_reviewers: true
+  path_filters:
+    - "!dist/**"
+    - "!build/**"
+    - "!node_modules/**"
+    - "!**/*.{png,jpg,jpeg,svg}"
+    - "src/**"
