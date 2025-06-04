@@ -1,22 +1,8 @@
 ---
-const stats = [
-  {
-    name: '設立から',
-    value: '2年',
-  },
-  {
-    name: '使える言語',
-    value: '10',
-  },
-  {
-    name: 'プロジェクト',
-    value: '15',
-  },
-  {
-    name: '提供サービス',
-    value: 'App Develop<br />IT/AI Strategy',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 <section class="py-16 sm:py-20">
@@ -37,15 +23,13 @@ const stats = [
       <div class="flex flex-col gap-10">
         <!-- Mission description -->
         <div class="space-y-8 sm:space-y-12">
-          <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Our mission</h2>
+          <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.mission.title}</h2>
           <div class="space-y-6">
             <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
-              誤解のないコミュニケーションを AI で実現し、誰もが自分の価値を発揮できる世界をつくる。
+              {t.mission.subtitle}
             </p>
             <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
-              Cor.inc は、ITを通じて「幸せ」を追求する世界一の企業として、コミュニケーションの課題を解決し、ユーザー間の共感と共通理解を促進するシステムや仕組みを開発しています。
-              私たちの使命は、日々進化するテクノロジーを活用して、関わる全ての人々が自らの価値を明確に自覚し、真の幸せを追求し達成できるように支援することです。
-              私たちは、すべてのステークホルダーがより幸せな社会を目指して協働し、技術力を駆使して共に真の幸せを共創する未来を創造していきます。
+              {t.mission.description}
             </p>
           </div>
         </div>
@@ -53,7 +37,7 @@ const stats = [
         <!-- Stats -->
         <dl class="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {
-            stats.map((stat) => (
+            t.mission.stats.map((stat) => (
               <div class="rounded-3xl border border-primary-900/10 p-6 dark:border-primary-300/10">
                 <dt class="text-base">{stat.name}</dt>
                 <dd class="text-3xl font-medium tracking-tight" set:html={stat.value}></dd>

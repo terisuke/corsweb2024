@@ -1,20 +1,27 @@
+---
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col gap-16">
       <div class="flex flex-col items-center gap-8 sm:gap-10">
         <div class="flex max-w-none flex-col items-center gap-4 sm:gap-6">
           <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">
-            Swifter than any, to the horizon beyond.
+            {t.hero.title}
           </h1>
           <p class="text-lg text-primary-950/70 dark:text-primary-200/70 sm:text-xl">
-            言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。
+            {t.hero.subtitle}
           </p>
         </div>
         <a
-          href="/products"
+          href={getLocalizedUrl('/products', currentLocale)}
           class="inline-flex items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
         >
-          実績とプロダクトを見る
+          {t.hero.cta}
         </a>
       </div>
       <picture>

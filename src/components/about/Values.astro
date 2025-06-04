@@ -1,52 +1,16 @@
 ---
-const values = [
-  [
-    {
-      ref: '01',
-      name: 'まずは行動',
-      description:
-        '思うだけなら誰でもできる。正解は後の人が判断することと割り切り、決めたらとにかく最善に向かって素早く行動すること。',
-    },
-    {
-      ref: '02',
-      name: '常に自問自答する',
-      description:
-        '幸せの形は常に変化する。本当の幸せを追求するためには常に「これがベストか？」を自分自身に問いかけ、思考停止せずに動き続かなければいけない。',
-    },
-    {
-      ref: '03',
-      name: '相手も自分も幸せになる',
-      description:
-        '幸せな人しか相手を幸せにできない。何かを犠牲にすることなく、自分も相手もwin-winになる行動を常に考え抜くこと。',
-    },
-  ],
-  [
-    {
-      ref: '04',
-      name: '意思表示ははっきりと',
-      description:
-        'どっちつかずな行動は無駄であり双方にメリットがない。何事も自分自身でしっかり決めて、全力で取り組むこと。',
-    },
-    {
-      ref: '05',
-      name: '柔軟性のあるサービス',
-      description:
-        '少しでも多くのステークホルダーに幸せになってもらう。そのためにあえて定型サービスを設けず、個々のタスクに合わせて最適なサービスを構築する。(例) WebAR 名刺や AI チャットボットを顧客要件に合わせ即時カスタマイズ',
-    },
-    {
-      ref: '06',
-      name: '自分の運命は自分で拓く',
-      description:
-        '成否に関わらず、自分の行動は自分で責任をとる。成果も反省も全て自分の行動の結果、笑って受け入れる。',
-    },
-  ],
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+const values = t.valuesData;
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col gap-8 lg:gap-12">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Our Values</h2>
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.values.title}</h2>
       <div class="grid gap-8 lg:grid-cols-2">
         {
           values.map((column, index) => (

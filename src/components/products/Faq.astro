@@ -1,51 +1,17 @@
 ---
-const questions = [
-  {
-    id: 'faq-1',
-    title:
-      '開発プロセスはどのように進められるのですか？プロジェクト完了までの一般的なスケジュールを教えてください。',
-    answer:
-      '開発プロセスでは、エンジニアがオンラインでお客様のご要望をお伺いし、必要なシステムや要件を定義します。また、初回のお打ち合わせから1週間以内に、各商品の価格を算出し、お客様のご了解をいただいた後、価格の作成に入ります。下請け会社を一切持たず、すべての案件を自社で責任を持って作成するため、通常の納期よりも平均で約20％早く商品を作ることができます。また、大型案件の場合は、プロジェクトに共感できるフリーランスのエンジニアをアサインすることで、より早く、より低コストで商品を提供することが可能です。',
-  },
-  {
-    id: 'faq-2',
-    title: 'プロジェクト費用はどのように計算されますか？支払いはどのように行われますか？',
-    answer:
-      '価格については、企業様ごとにご要望が異なりますので、初回お打ち合わせ後にお見積もりをお送りさせていただきます。同業種の類似案件と比較し、15％程度コストを抑えてご提案させていただくことが多いです。お支払い方法は、銀行振込やPaypal決済など、様々なお支払い方法に対応しております。初回打ち合わせ時にご希望のお支払い方法をスタッフにお伝えください。',
-  },
-  {
-    id: 'faq-3',
-    title: 'React、Flutter、Pythonを使うメリットは？FirebaseやSupaBaseなどのBaaSの利点は？',
-    answer:
-      'React、Flutter、Pythonは、最先端言語ゆえの拡張性、世界中にいる多くのユーザーのコミュニティサポートにより短期間で大規模なシステム/アプリ開発を可能にします。これらの言語は柔軟性があり、初心者にも理解しやすく、豊富なライブラリを持っています。また、FirebaseやSupaBaseのようなBaaSは、リアルタイムのデータ同期、様々な組み込み機能、スケーラビリティ、透明性、セキュリティなど拡張性の高いバックエンドを提供します。これらの技術を組み合わせることで、効率的で高品質なアプリケーション開発が可能になります。',
-  },
-  {
-    id: 'faq-4',
-    title:
-      '要件によってどこまでタスクをカスタマイズできますか?また変更が必要な場合はどのように対応しますか?',
-    answer:
-      'プロジェクトごとにお客様のご要望をお伺いし、オーダーメイドで製作するため、カスタマイズ性はほぼ無限です。ただし、納期を早め、致命的なシステムエラーを避けるため、制作途中でのご要望変更は基本お受けしておりません。打ち合わせまでに、お客様のご要望を十分にまとめ、ご対応いただきますようお願い申し上げます。',
-  },
-  {
-    id: 'faq-5',
-    title: '開発後のメンテナンスやサポートはどのように行われますか?追加費用はありますか?',
-    answer:
-      '弊社は開発が本業のため、大規模なカスタマイズ以外の保守・サポートは行っておりません。開発完了後、弊社が提携している保守・サポート専門の会社をご紹介いたしますので、費用についてはご相談ください。',
-  },
-  {
-    id: 'faq-6',
-    title: 'データのセキュリティとプライバシーはどのように保証されますか?',
-    answer:
-      'データのセキュリティとプライバシーの保証のために、高度な暗号化技術を使用し、FirebaseやSupaBaseなどのBaaSのセキュリティ機能を最大限に活用します。アクセスコントロールについては、企業ごとに専用アカウントを設定し、必要最小限の権限で管理します。また、データ保護ポリシーの厳守と定期的なセキュリティ監査により、お客様のデータの安全を守ります。その結果、開発から提供、保守まで一貫して顧客データを保護する体制を確立しています。',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="grid gap-12 lg:grid-cols-3 lg:gap-8">
       <div>
-        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">FAQ</h2>
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.faq.title}</h2>
       </div>
       <div class="lg:col-span-2">
         <dl
@@ -53,7 +19,7 @@ const questions = [
           x-data="{ selected: null, toggle(value) { this.selected = this.selected === value ? null : value } }"
         >
           {
-            questions.map((question, index) => (
+            t.faq.questions.map((question, index) => (
               <div
                 class="rounded-3xl px-4 transition"
                 x-data={`{ id: ${index}, get isOpen() { return this.id === this.selected }, get isNextOpen() { return (this.id + 1) === this.selected } }`}
@@ -73,7 +39,7 @@ const questions = [
                     x-bind:aria-expanded="isOpen.toString()"
                   >
                     <div class="flex items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
-                      <span class="font-medium">{question.title}</span>
+                      <span class="font-medium">{question.question}</span>
                       <span class="ml-6 flex h-7 items-center">
                         <svg
                           class="h-6 w-6 rotate-0 transform text-primary-600 transition duration-200 ease-in-out dark:text-primary-400"

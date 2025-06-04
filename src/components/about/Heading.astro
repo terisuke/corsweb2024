@@ -1,9 +1,16 @@
+---
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col gap-4 sm:gap-6">
-      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">About</h1>
+      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">{t.about.heading.title}</h1>
       <p class="mx-auto max-w-none text-lg text-primary-950/70 dark:text-primary-200/70 sm:text-xl">
-        世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。
+        {t.about.heading.description}
       </p>
     </div>
   </div>

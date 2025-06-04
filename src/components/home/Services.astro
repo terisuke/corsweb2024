@@ -1,33 +1,17 @@
 ---
-const services = [
-  {
-    step: '01',
-    name: 'IT コンサルティング・データ分析',
-    description:
-      'Python ベースのスクレイピングと BI 分析で現状を可視化し、戦略立案から実装まで伴走する DX 支援サービスです。',
-  },
-  {
-    step: '02',
-    name: 'Web・モバイルアプリ開発',
-    description:
-      'Flutter・React など最新 FW を駆使し、高速かつリッチな UX の B2B/B2C アプリをワンストップで提供します。',
-  },
-  {
-    step: '03',
-    name: 'AI ソリューション開発',
-    description:
-      '生成 AI／LLM・画像認識・音声処理を活用し、お客様の課題に最適化した知的アプリや自動化ツールを開発します。',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col gap-12 sm:gap-16">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Services</h2>
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.services.title}</h2>
       <div class="grid gap-8 lg:grid-cols-3">
         {
-          services.map((service) => (
+          t.services.items.map((service) => (
             <div class="bg-primary-500/10 dark:bg-primary-400/10 flex flex-col gap-6 rounded-3xl px-6 py-8">
               <p class="text-sm">{service.step}</p>
               <div class="flex flex-col gap-4">

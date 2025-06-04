@@ -1,31 +1,10 @@
 ---
-const team = [
-  {
-    name: 'Kousuke Terada',
-    image: '/assets/k-terada.avif',
-    job: 'CEO',
-    description:
-      '音大卒 → 楽器メーカー営業 → メガベンチャーで法人営業 → IT へ転身という異色の経歴を活かし、"技術と言葉の橋渡し" に挑戦しています。',
-    comingSoon: false,
-    link: 'https://lit.link/terisuke',
-  },
-  {
-    name: 'Cloudia Sorano',
-    image: '/assets/cloudia.avif',
-    job: 'AI アンバサダー',
-    description: '福岡弁で技術ネタを発信する社内 AI。Zenn・X で 51 週連続 LT に挑戦中。',
-    comingSoon: false,
-    link: 'https://x.com/Cloudia_Cor',
-    zennLink: 'https://zenn.dev/cloudia',
-  },
-  {
-    name: 'Coming Soon...',
-    image: '/assets/coming-soon.avif',
-    job: '',
-    comingSoon: true,
-    link: '#',
-  },
-];
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+const team = t.teamData;
 
 // リンクタイプ判定関数
 function extractLinks(item) {
@@ -48,7 +27,7 @@ function extractLinks(item) {
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="sm:space-8 space-y-12">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Meet our team</h2>
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.team.title}</h2>
       <ul role="list" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           team.map((item) => (

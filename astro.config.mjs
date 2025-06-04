@@ -6,6 +6,13 @@ import compressor from "astro-compressor";
 
 export default defineConfig({
   site: 'https://cor-jp.com',
+  i18n: {
+    locales: ["ja", "en"],
+    defaultLocale: "ja",
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
   integrations: [tailwind(), compress(), sitemap(), compressor()],
   vite: {
     resolve: {
@@ -20,6 +27,9 @@ export default defineConfig({
     plugins: [
       // 必要に応じてViteプラグインを追加
     ],
-    envPrefix: 'PUBLIC_'  // クライアントサイドで利用可能な環境変数のプレフィックス
+    envPrefix: 'PUBLIC_',  // クライアントサイドで利用可能な環境変数のプレフィックス
+    json: {
+      stringify: false
+    }
   },
 });
