@@ -133,21 +133,13 @@ const currentLocale = getCurrentLocale(Astro.url);
     </main>
     <Footer />
     <WebVitals />
-    <!-- Alpine.js Collapseプラグイン（先に読み込む） -->
-    <script 
-      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.0/dist/cdn.min.js"
-      defer
-      integrity="sha384-NArNwzWsUSF+kY2lgW4YriEkjLqi+J+za6HrENUn/3nZqkBnWbxV22kCJEK5Uu6n"
-      crossorigin="anonymous"
-    ></script>
-    <!-- Alpine.js本体（後に読み込む） -->
+    <!-- Alpine.js本体 -->
     <script 
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
       defer
       integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
       crossorigin="anonymous"
     ></script>
-    <!-- Alpine.js初期化用スクリプト -->
     <script defer>
       document.addEventListener('alpine:init', () => {
         window.Alpine.store('theme', {

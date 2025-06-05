@@ -14,36 +14,33 @@ const t = getTranslations(currentLocale);
         <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.faq.title}</h2>
       </div>
       <div class="lg:col-span-2">
-        <dl
-          class="-mt-3"
-          x-data="{ selected: null, toggle(value) { this.selected = this.selected === value ? null : value } }"
-        >
+        <dl class="-mt-3">
           {
             t.faq.questions.map((question, index) => (
               <div
                 class="rounded-3xl px-4 transition"
-                x-data={`{ id: ${index}, get isOpen() { return this.id === $root.selected }, get isNextOpen() { return (this.id + 1) === $root.selected } }`}
-                x-bind:class="{ 'bg-primary-500/10 dark:bg-primary-400/10': isOpen }"
+                x-data={`{ open: false }`}
+                x-bind:class="{ 'bg-primary-500/10 dark:bg-primary-400/10': open }"
               >
                 <dt
                   class="border-b text-lg transition"
                   x-cloak
-                  x-bind:class="{ 'border-transparent': isOpen || isNextOpen, 'border-primary-900/10 dark:border-primary-300/10': !(isOpen || isNextOpen) }"
+                  x-bind:class="{ 'border-transparent': open, 'border-primary-900/10 dark:border-primary-300/10': !open }"
                 >
                   <button
                     type="button"
                     class="group block w-full py-6 text-left transition focus-visible:outline-none"
                     aria-controls={question.id}
-                    x-on:click="toggle(id)"
+                    x-on:click="open = !open"
                     aria-expanded="false"
-                    x-bind:aria-expanded="isOpen.toString()"
+                    x-bind:aria-expanded="open.toString()"
                   >
                     <div class="flex items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
                       <span class="font-medium">{question.question}</span>
                       <span class="ml-6 flex h-7 items-center">
                         <svg
                           class="h-6 w-6 rotate-0 transform text-primary-600 transition duration-200 ease-in-out dark:text-primary-400"
-                          x-bind:class="{ '-rotate-180': isOpen, 'rotate-0': !isOpen }"
+                          x-bind:class="{ '-rotate-180': open, 'rotate-0': !open }"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
@@ -55,7 +52,18 @@ const t = getTranslations(currentLocale);
                     </div>
                   </button>
                 </dt>
-                <dd class="pb-6 pr-6" id={question.id} x-show="isOpen" x-cloak x-collapse>
+                <dd 
+                  class="pb-6 pr-6 overflow-hidden transition-all duration-300"
+                  id={question.id}
+                  x-show="open"
+                  x-transition:enter="transition ease-out duration-300"
+                  x-transition:enter-start="opacity-0 transform scale-95"
+                  x-transition:enter-end="opacity-100 transform scale-100"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform scale-100"
+                  x-transition:leave-end="opacity-0 transform scale-95"
+                  x-cloak
+                >
                   <p class="text-base text-primary-950/70 dark:text-primary-200/70">
                     {question.answer}
                   </p>

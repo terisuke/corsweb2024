@@ -158,12 +158,16 @@ const links = [
 
   <!-- Menu content -->
   <div
-    class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+    class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 overflow-hidden transition-all"
     id="website-menu"
     x-cloak
     x-show="open"
-    x-collapse
-    x-collapse.duration.500ms
+    x-transition:enter="transition ease-out duration-500"
+    x-transition:enter-start="opacity-0 transform scale-95"
+    x-transition:enter-end="opacity-100 transform scale-100"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 transform scale-100"
+    x-transition:leave-end="opacity-0 transform scale-95"
   >
     <div class="grid grid-cols-1 gap-16 pb-24 pt-6 lg:grid-cols-2 lg:pt-12">
       <div
