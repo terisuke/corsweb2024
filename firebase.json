@@ -40,11 +40,15 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=0, must-revalidate"
+            "value": "no-cache, no-store, must-revalidate"
           },
           {
-            "key": "CF-Cache-Tag",
-            "value": "html-content"
+            "key": "Pragma",
+            "value": "no-cache"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
           }
         ]
       },
