@@ -25,8 +25,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run type checking
+      - name: Run type checking and build
         run: npm run build
+        env:
+          PUBLIC_GCAL_ID: ${{ secrets.PUBLIC_GCAL_ID || '' }}
+          PUBLIC_GCAL_TZ: ${{ secrets.PUBLIC_GCAL_TZ || 'Asia/Tokyo' }}
+          PUBLIC_GCAL_PARAMS: ${{ secrets.PUBLIC_GCAL_PARAMS || '' }}
 
       - name: Deploy to Firebase Hosting (Preview)
         if: github.event_name == 'pull_request'
