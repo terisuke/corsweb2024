@@ -54,13 +54,13 @@ const links = [
         type="button"
         class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
         x-data
-        @click="$store.theme && $store.theme.toggle()"
+        @click="$store.theme?.toggle()"
       >
         <span class="sr-only">Toggle theme mode</span>
         <svg
           x-cloak
           class="h-6 w-6"
-          :class="{ 'hidden': !($store.theme && $store.theme.isDark) }"
+          :class="{ 'hidden': !($store.theme?.isDark) }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ const links = [
         <svg
           x-cloak
           class="h-6 w-6"
-          :class="{ 'hidden': $store.theme && $store.theme.isDark }"
+          :class="{ 'hidden': $store.theme?.isDark }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 24 24"
@@ -86,14 +86,14 @@ const links = [
       </button>
       <!-- Language switch -->
       <button
-        @click="$store.lang && $store.lang.toggle()"
+        @click="$store.lang?.toggle()"
         class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
       >
         <span class="sr-only">Language switch</span>
         <svg
           x-cloak
           class="h-10 w-10"
-          :class="{ 'hidden': $store.theme && $store.theme.isDark }"
+          :class="{ 'hidden': $store.theme?.isDark }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 640 512"
@@ -106,7 +106,7 @@ const links = [
         <svg
           x-cloak
           class="h-10 w-10"
-          :class="{ 'hidden': !($store.theme && $store.theme.isDark) }"
+          :class="{ 'hidden': !($store.theme?.isDark) }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 640 512"
