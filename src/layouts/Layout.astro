@@ -207,7 +207,14 @@ const currentLocale = getCurrentLocale(Astro.url);
     </main>
     <Footer />
     <WebVitals />
-    <script>
+    <script data-cfasync="false">
+      // Global store fallback - ストアが未定義の場合のデフォルト値
+      // @ts-ignore
+      window.alpineStoreDefaults = {
+        theme: { isDark: false, toggle: () => {} },
+        lang: { current: 'ja', toggle: () => {} }
+      };
+
       // Alpine.jsストア初期化 - 確実にAlpine読み込み前に実行
       // @ts-ignore
       window.alpineInitStores = function() {
@@ -230,7 +237,7 @@ const currentLocale = getCurrentLocale(Astro.url);
           toggle() {
             const newLang = this.current === 'ja' ? 'en' : 'ja';
             const currentPath = window.location.pathname;
-            let newPath: string;
+            let newPath;
             
             if (newLang === 'en') {
               newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
@@ -241,29 +248,45 @@ const currentLocale = getCurrentLocale(Astro.url);
             window.location.href = newPath;
           }
         });
+        
+        // @ts-ignore
+        console.log('Alpine stores initialized:', !!Alpine.store('theme'), !!Alpine.store('lang'));
       };
 
-      // 最優先 - Alpine.js初期化イベントで実行
+      // Alpine.js読み込み前にストア初期化を確実に実行
       // @ts-ignore
-      document.addEventListener('alpine:init', window.alpineInitStores);
-      
-      // 二重保護 - Alpine.js読み込み確認の待機ループ
-      (function waitForAlpine() {
+      document.addEventListener('alpine:init', function() {
         // @ts-ignore
-        if (window.Alpine) {
+        window.alpineInitStores();
+      });
+      
+      // 代替手段 - scriptタグ実行直後に待機開始
+      (function ensureAlpineStores() {
+        // @ts-ignore
+        if (window.Alpine && typeof window.Alpine.store === 'function') {
           // @ts-ignore
           window.alpineInitStores();
         } else {
-          setTimeout(waitForAlpine, 10);
+          setTimeout(ensureAlpineStores, 5);
         }
       })();
+      
+      // 最終手段 - DOMContentLoadedでも確認
+      document.addEventListener('DOMContentLoaded', function() {
+        // @ts-ignore
+        if (window.Alpine && typeof window.alpineInitStores === 'function') {
+          // @ts-ignore
+          window.alpineInitStores();
+        }
+      });
     </script>
-    <!-- Alpine.js本体 -->
+    <!-- Alpine.js本体 - Cloudflare Rocket Loader無効化 -->
     <script 
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
-      defer
       integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
       crossorigin="anonymous"
+      data-cfasync="false"
+      defer
     ></script>
     <!-- no-JS fallback -->
     <noscript>
@@ -273,7 +296,7 @@ const currentLocale = getCurrentLocale(Astro.url);
       </div>
     </noscript>
     <!-- CSP例: script-src 'self' https://cdn.jsdelivr.net; -->
-    <script>
+    <script data-cfasync="false">
       // ダークモードの初期設定（ちらつき防止）
       (() => {
         const theme = localStorage.getItem('theme');
@@ -284,7 +307,7 @@ const currentLocale = getCurrentLocale(Astro.url);
       })();
     </script>
     
-    <script>
+    <script data-cfasync="false">
       // フォント読み込み検知
       if ('fonts' in document) {
         document.fonts.ready.then(() => {
