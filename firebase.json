@@ -41,6 +41,10 @@
           {
             "key": "Cache-Control",
             "value": "public, max-age=0, must-revalidate"
+          },
+          {
+            "key": "CF-Cache-Tag",
+            "value": "html-content"
           }
         ]
       },
