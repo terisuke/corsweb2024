@@ -15,7 +15,7 @@ const currentLocale = getCurrentLocale(Astro.url);
 ---
 
 <!doctype html>
-<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme && $store.theme.isDark }">
+<html lang={currentLocale} x-cloak x-data :class="{ 'dark': ($store.theme && $store.theme.isDark) || false }">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -208,9 +208,9 @@ const currentLocale = getCurrentLocale(Astro.url);
     <Footer />
     <WebVitals />
     <script>
-      // ストア初期化をAlpine.js読み込み前に実行
-      document.addEventListener('alpine:init', () => {
-        // テーマストアの初期化
+      // Alpine.jsストア初期化 - 必ずAlpine読み込み前に実行
+      // @ts-ignore
+      window.alpineInitStores = function() {
         // @ts-ignore
         Alpine.store('theme', {
           isDark: document.documentElement.classList.contains('dark'),
@@ -221,7 +221,6 @@ const currentLocale = getCurrentLocale(Astro.url);
           },
         });
         
-        // 言語ストアの初期化
         // @ts-ignore
         Alpine.store('lang', {
           current: document.documentElement.lang,
@@ -239,6 +238,19 @@ const currentLocale = getCurrentLocale(Astro.url);
             window.location.href = newPath;
           }
         });
+      };
+
+      // Alpine.js初期化イベントで必ず実行
+      // @ts-ignore
+      document.addEventListener('alpine:init', window.alpineInitStores);
+      
+      // フォールバック - DOMContentLoadedでもチェック
+      document.addEventListener('DOMContentLoaded', () => {
+        // @ts-ignore
+        if (window.Alpine && typeof window.alpineInitStores === 'function') {
+          // @ts-ignore
+          window.alpineInitStores();
+        }
       });
     </script>
     <!-- Alpine.js本体 -->
