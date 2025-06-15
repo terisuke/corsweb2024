@@ -15,7 +15,7 @@ const currentLocale = getCurrentLocale(Astro.url);
 ---
 
 <!doctype html>
-<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
+<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme?.isDark || false }">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -214,8 +214,10 @@ const currentLocale = getCurrentLocale(Astro.url);
       integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
       crossorigin="anonymous"
     ></script>
-    <script defer>
+    <script>
+      // ストア初期化をAlpine.js読み込み前に実行
       document.addEventListener('alpine:init', () => {
+        // テーマストアの初期化
         window.Alpine.store('theme', {
           isDark: document.documentElement.classList.contains('dark'),
           toggle() {
@@ -225,6 +227,7 @@ const currentLocale = getCurrentLocale(Astro.url);
           },
         });
         
+        // 言語ストアの初期化
         window.Alpine.store('lang', {
           current: document.documentElement.lang,
           toggle() {
