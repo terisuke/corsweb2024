@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "cor-jp-web",
+    "site": "cor-jp-main",
     "public": "dist",
     "ignore": [
       "firebase.json",
