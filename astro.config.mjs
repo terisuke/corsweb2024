@@ -13,7 +13,26 @@ export default defineConfig({
       prefixDefaultLocale: false
     }
   },
-  integrations: [tailwind(), compress(), sitemap(), compressor()],
+  integrations: [
+    tailwind(), 
+    compress({
+      CSS: true,
+      HTML: {
+        'remove-comments': true,
+        'remove-tags': ['script[type="application/ld+json"]'],
+        'minify-js': true,
+        'minify-css': true
+      },
+      Image: false,
+      JavaScript: true,
+      SVG: true
+    }), 
+    sitemap(), 
+    compressor({
+      gzip: true,
+      brotli: true
+    })
+  ],
   vite: {
     resolve: {
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
@@ -22,7 +41,15 @@ export default defineConfig({
       exclude: ['astro:*']
     },
     build: {
-      // ビルドプロセスに関する追加の設定
+      minify: 'terser',
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+          entryFileNames: '_astro/[name].[hash].js',
+          chunkFileNames: '_astro/[name].[hash].js',
+          assetFileNames: '_astro/[name].[hash].[ext]'
+        }
+      }
     },
     plugins: [
       // 必要に応じてViteプラグインを追加
