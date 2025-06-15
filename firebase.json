@@ -49,6 +49,10 @@
           {
             "key": "Expires",
             "value": "0"
+          },
+          {
+            "key": "Content-Encoding",
+            "value": "gzip"
           }
         ]
       },
