@@ -15,7 +15,7 @@ const currentLocale = getCurrentLocale(Astro.url);
 ---
 
 <!doctype html>
-<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme?.isDark || false }">
+<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme && $store.theme.isDark }">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -207,18 +207,12 @@ const currentLocale = getCurrentLocale(Astro.url);
     </main>
     <Footer />
     <WebVitals />
-    <!-- Alpine.js本体 -->
-    <script 
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
-      defer
-      integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
-      crossorigin="anonymous"
-    ></script>
     <script>
       // ストア初期化をAlpine.js読み込み前に実行
       document.addEventListener('alpine:init', () => {
         // テーマストアの初期化
-        window.Alpine.store('theme', {
+        // @ts-ignore
+        Alpine.store('theme', {
           isDark: document.documentElement.classList.contains('dark'),
           toggle() {
             this.isDark = !this.isDark;
@@ -228,12 +222,13 @@ const currentLocale = getCurrentLocale(Astro.url);
         });
         
         // 言語ストアの初期化
-        window.Alpine.store('lang', {
+        // @ts-ignore
+        Alpine.store('lang', {
           current: document.documentElement.lang,
           toggle() {
             const newLang = this.current === 'ja' ? 'en' : 'ja';
             const currentPath = window.location.pathname;
-            let newPath;
+            let newPath: string;
             
             if (newLang === 'en') {
               newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
@@ -246,6 +241,13 @@ const currentLocale = getCurrentLocale(Astro.url);
         });
       });
     </script>
+    <!-- Alpine.js本体 -->
+    <script 
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
+      defer
+      integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
+      crossorigin="anonymous"
+    ></script>
     <!-- no-JS fallback -->
     <noscript>
       <style>[x-cloak]{ display: block !important; }</style>
