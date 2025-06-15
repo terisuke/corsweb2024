@@ -18,7 +18,12 @@ const currentLocale = getCurrentLocale(Astro.url);
 <html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Cor.inc" />
+    <meta name="theme-color" content="#0f172a" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -26,6 +31,22 @@ const currentLocale = getCurrentLocale(Astro.url);
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    
+    <!-- Hreflang tags for bilingual SEO -->
+    {currentLocale === 'ja' ? (
+      <>
+        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="ja" />
+        <link rel="alternate" href={new URL(`/en${Astro.url.pathname}`, Astro.site)} hreflang="en" />
+        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="x-default" />
+      </>
+    ) : (
+      <>
+        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="ja" />
+        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="en" />
+        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="x-default" />
+      </>
+    )}
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -33,13 +54,18 @@ const currentLocale = getCurrentLocale(Astro.url);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content="/logo.png" />
+    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
+    <meta property="og:site_name" content="Cor.inc" />
+    <meta property="article:author" content="寺田康佑" />
     
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@cor_terisuke" />
+    <meta name="twitter:creator" content="@cor_terisuke" />
+    <meta name="twitter:url" content={Astro.url} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/logo.png" />
     
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
@@ -47,9 +73,9 @@ const currentLocale = getCurrentLocale(Astro.url);
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Cor.inc",
-        "alternateName": ["Cor株式会社", "株式会社Cor", "Cor 株式会社"],
-        "url": "https://corweb.co.jp",
-        "logo": "https://corweb.co.jp/logo.png",
+        "alternateName": ["Cor株式会社"],
+        "url": "https://cor-jp.com",
+        "logo": "https://cor-jp.com/logo.png",
         "contactPoint": {
           "@type": "ContactPoint",
           "telephone": "+81-70-8561-1659",
@@ -58,15 +84,25 @@ const currentLocale = getCurrentLocale(Astro.url);
         },
         "address": {
           "@type": "PostalAddress",
+          "streetAddress": "福岡県福岡市中央区天神",
           "addressLocality": "福岡市",
           "addressRegion": "福岡県",
+          "postalCode": "810-0001",
           "addressCountry": "JP"
         },
-        "sameAs": [],
+        "sameAs": [
+          "https://github.com/terisuke",
+          "https://x.com/cor_terisuke",
+          "https://www.linkedin.com/in/kousuketerada/",
+          "https://www.facebook.com/kousuke.terada.35",
+          "https://note.com/cor_instrument",
+          "https://qiita.com/terisuke",
+          "https://zenn.dev/cloudia"
+        ],
         "founder": {
           "@type": "Person",
           "name": "寺田康佑",
-          "alternateName": ["寺田 康佑", "Kosuke Terada", "Terada Kosuke"],
+          "alternateName": ["寺田 康佑", "Kosuke Terada", "Terada Kosuke", "寺田 康佑 CEO", "寺田康佑 代表取締役", "テラダコウスケ", "terisuke", "テリスケ"],
           "jobTitle": "代表取締役",
           "worksFor": {
             "@type": "Organization",
@@ -75,10 +111,48 @@ const currentLocale = getCurrentLocale(Astro.url);
         }
       }
     </script>
-    <!-- DNS prefetch and preconnect -->
-    <link rel="preconnect" href="https://esm.sh" crossorigin>
-    <link rel="preconnect" href="https://www.google.com" crossorigin>
-    <link rel="dns-prefetch" href="https://ssgform.com">
+    
+    <!-- FAQ Schema for better search visibility -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "どのようなサービスを提供していますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "IT戦略コンサルティング、Pythonデータ分析、Web・モバイルアプリ開発、AI・機械学習ソリューションなど、幅広いDX支援サービスを提供しています。"
+            }
+          },
+          {
+            "@type": "Question", 
+            "name": "対応可能な地域はどこですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "福岡を拠点としていますが、オンラインでの対応により全国のお客様にサービスを提供しています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "代表取締役の寺田康佑について教えてください",
+            "acceptedAnswer": {
+              "@type": "Answer", 
+              "text": "寺田康佑（terisuke）は、AI・DX分野の専門家として、Python開発、機械学習、アプリ開発において豊富な経験を持ち、企業のデジタル変革を支援しています。"
+            }
+          }
+        ]
+      }
+    </script>
+    <!-- Performance optimizations -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://esm.sh" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="//ssgform.com" />
 
     <title>{title}</title>
     <ViewTransitions />

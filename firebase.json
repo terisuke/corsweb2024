@@ -1,11 +1,23 @@
 {
   "hosting": {
-    "target": "main",
+    "site": "cor-jp-web",
     "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/pricing",
+        "destination": "/products",
+        "type": 301
+      },
+      {
+        "source": "/pricing/",
+        "destination": "/products",
+        "type": 301
+      }
     ],
     "rewrites": [
       {
