@@ -20,6 +20,25 @@ if (!process.env.GEMINI_API_KEY) {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
+// -----------------------------------------------------------------------------
+// Utility helpers
+// -----------------------------------------------------------------------------
+
+/**
+ * Escape a string so that it can be safely wrapped in double quotes inside
+ * YAML front-matter. The function currently escapes backslashes and double
+ * quotes, which are the only two characters that need special handling inside
+ * double-quoted YAML scalars (single quotes are fine inside double quotes).
+ *
+ * NOTE: We purposefully do not touch newlines – if a title/description ever
+ * contains one the caller should handle that case separately.
+ */
+function escapeYAMLString(str) {
+  return str
+    .replace(/\\/g, "\\\\") // Escape backslashes first
+    .replace(/"/g, '\\"');     // Escape remaining double quotes
+}
+
 async function translateBlogPost(japaneseContent) {
   const prompt = `Translate the following Japanese blog post to English. Translate technical terms appropriately and make it readable English. Return only the translated content without any additional explanations:
 
@@ -173,17 +192,17 @@ function createEnglishFrontmatter(japaneseFrontmatter, translatedTitle, translat
           tagsArray = [value];
         }
       }
-      frontmatterStr += `${key}: [${tagsArray.map(tag => `"${tag}"`).join(', ')}]\n`;
+      frontmatterStr += `${key}: [${tagsArray.map(tag => `"${escapeYAMLString(tag)}"`).join(', ')}]\n`;
     } else if (typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date)) {
       // Handle nested objects (like image)
       if (Object.keys(value).length > 0) {
         frontmatterStr += `${key}:\n`;
         for (const [subKey, subValue] of Object.entries(value)) {
-          if (typeof subValue === 'string' && subValue.includes('"')) {
-            const escapedSubValue = subValue.replace(/'/g, "''");
-            frontmatterStr += `  ${subKey}: '${escapedSubValue}'\n`;
+          if (typeof subValue === 'string') {
+            const escapedSubValue = escapeYAMLString(subValue);
+            frontmatterStr += `  ${subKey}: "${escapedSubValue}"\n`;
           } else {
-            frontmatterStr += `  ${subKey}: "${subValue}"\n`;
+            frontmatterStr += `  ${subKey}: ${subValue}\n`;
           }
         }
       }
@@ -194,16 +213,11 @@ function createEnglishFrontmatter(japaneseFrontmatter, translatedTitle, translat
       // Handle date values
       frontmatterStr += `${key}: ${value.toISOString().split('T')[0]}\n`;
     } else if (typeof value === 'string') {
-      // Handle string values with proper YAML escaping
-      if (value.includes('"')) {
-        // Use single quotes if string contains double quotes
-        const escapedValue = value.replace(/'/g, "''");
-        frontmatterStr += `${key}: '${escapedValue}'\n`;
-      } else {
-        frontmatterStr += `${key}: "${value}"\n`;
-      }
+      // Handle string values using unified escaping (always double-quoted)
+      const escapedValue = escapeYAMLString(value);
+      frontmatterStr += `${key}: "${escapedValue}"\n`;
     } else {
-      // Handle other values
+      // Handle other scalar values (numbers, null, etc.)
       frontmatterStr += `${key}: ${value}\n`;
     }
   }
@@ -252,10 +266,7 @@ ${titleAndDescription}`;
             (translatedTitle.startsWith("'") && translatedTitle.endsWith("'"))) {
           translatedTitle = translatedTitle.slice(1, -1);
         }
-        // Handle quotes for YAML safety - use single quotes instead
-        if (translatedTitle.includes('"')) {
-          translatedTitle = translatedTitle.replace(/'/g, "''"); // Escape single quotes in YAML
-        }
+        // No further escaping here – will be handled uniformly later
       } else if (line.toLowerCase().startsWith('description:')) {
         translatedDescription = line.substring(line.indexOf(':') + 1).trim();
         // Remove quotes if present
@@ -263,10 +274,7 @@ ${titleAndDescription}`;
             (translatedDescription.startsWith("'") && translatedDescription.endsWith("'"))) {
           translatedDescription = translatedDescription.slice(1, -1);
         }
-        // Handle quotes for YAML safety - use single quotes instead  
-        if (translatedDescription.includes('"')) {
-          translatedDescription = translatedDescription.replace(/'/g, "''"); // Escape single quotes in YAML
-        }
+        // No further escaping here – will be handled uniformly later
       }
     }
     
