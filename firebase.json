@@ -1,10 +1,23 @@
 {
   "hosting": {
+    "site": "cor-jp-main",
     "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/pricing",
+        "destination": "/products",
+        "type": 301
+      },
+      {
+        "source": "/pricing/",
+        "destination": "/products",
+        "type": 301
+      }
     ],
     "rewrites": [
       {
@@ -14,7 +27,20 @@
     ],
     "headers": [
       {
-        "source": "**/*.@(jpg|jpeg|png|gif|webp|css|js|avif)",
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          },
+          {
+            "key": "Content-Encoding",
+            "value": "gzip"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|png|gif|webp|avif|svg)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -27,16 +53,32 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=0, must-revalidate"
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
+          },
+          {
+            "key": "Content-Encoding",
+            "value": "gzip"
           }
         ]
       },
       {
-        "source": "**/*.@(json|xml|txt)",
+        "source": "**/*.@(json|xml|txt|svg)",
         "headers": [
           {
             "key": "Cache-Control",
             "value": "public, max-age=86400"
+          },
+          {
+            "key": "Content-Encoding",
+            "value": "gzip"
           }
         ]
       },
@@ -45,7 +87,7 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=86400"
+            "value": "public, max-age=3600"
           }
         ]
       }

@@ -2,7 +2,7 @@ export type Locale = 'ja' | 'en';
 
 const translations = {
   ja: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", contact: "Contact" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
     hero: {
       title: "Swifter than any, to the horizon beyond.",
       subtitle: "言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。",
@@ -33,7 +33,7 @@ const translations = {
         { name: "設立から", value: "2年" },
         { name: "使える言語", value: "10" },
         { name: "プロジェクト", value: "15" },
-        { name: "提供サービス", value: "App Develop<br />IT/AI Strategy" }
+        { name: "提供サービス", value: "App Develop & IT/AI Strategy" }
       ]
     },
     contact: {
@@ -366,7 +366,7 @@ const translations = {
     }
   },
   en: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", contact: "Contact" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
     hero: {
       title: "Swifter than any, to the horizon beyond.",
       subtitle: "Breaking down language and cultural barriers with AI to create a society where people truly understand each other.",
@@ -397,7 +397,7 @@ const translations = {
         { name: "Since Founded", value: "2 years" },
         { name: "Languages", value: "10" },
         { name: "Projects", value: "15" },
-        { name: "Services", value: "App Develop<br />IT/AI Strategy" }
+        { name: "Services", value: "App Develop & IT/AI Strategy" }
       ]
     },
     contact: {

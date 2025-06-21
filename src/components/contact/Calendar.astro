@@ -5,86 +5,77 @@ const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
 const calendarId = import.meta.env.PUBLIC_GCAL_ID;
-const calendarTz = import.meta.env.PUBLIC_GCAL_TZ;
-const calendarParams = import.meta.env.PUBLIC_GCAL_PARAMS;
+const calendarTz = import.meta.env.PUBLIC_GCAL_TZ || 'Asia/Tokyo';
+const calendarParams = import.meta.env.PUBLIC_GCAL_PARAMS || '';
 
-// 多言語エラーメッセージ
-const errorMessages = {
-  gcalId: currentLocale === 'ja' ? '環境変数 PUBLIC_GCAL_ID が設定されていません。' : 'Environment variable PUBLIC_GCAL_ID is not set.',
-  gcalTz: currentLocale === 'ja' ? '環境変数 PUBLIC_GCAL_TZ が設定されていません。' : 'Environment variable PUBLIC_GCAL_TZ is not set.',
-  gcalParams: currentLocale === 'ja' ? '環境変数 PUBLIC_GCAL_PARAMS が設定されていません。' : 'Environment variable PUBLIC_GCAL_PARAMS is not set.',
-};
+// カレンダーIDが設定されていない場合は表示しない
+const showCalendar = !!calendarId;
 
-if (!calendarId) {
-  throw new Error(errorMessages.gcalId);
-}
-if (!calendarTz) {
-  throw new Error(errorMessages.gcalTz);
-}
-if (!calendarParams) {
-  throw new Error(errorMessages.gcalParams);
-}
+// カレンダーIDが設定されている場合のみURL構築
+let calendarSrc = '';
+if (showCalendar) {
+  const baseUrl = 'https://calendar.google.com/calendar/embed';
+  const url = new URL(baseUrl);
+  const params = new URLSearchParams();
+  params.set('src', calendarId);
+  params.set('ctz', calendarTz);
 
-// URLとURLSearchParamsを使って安全にクエリを構築
-const baseUrl = 'https://calendar.google.com/calendar/embed';
-const url = new URL(baseUrl);
-const params = new URLSearchParams();
-params.set('src', calendarId);
-params.set('ctz', calendarTz);
-
-// calendarParamsが存在する場合はパースして追加
-if (calendarParams) {
-  const extraParams = new URLSearchParams(calendarParams);
-  for (const [key, value] of extraParams.entries()) {
-    if (!params.has(key)) {
-      params.set(key, value);
+  // calendarParamsが存在する場合はパースして追加
+  if (calendarParams) {
+    const extraParams = new URLSearchParams(calendarParams);
+    for (const [key, value] of extraParams.entries()) {
+      if (!params.has(key)) {
+        params.set(key, value);
+      }
     }
   }
+  url.search = params.toString();
+  calendarSrc = url.toString();
 }
-url.search = params.toString();
-const calendarSrc = url.toString();
 
 // Googleカレンダー埋め込み用コンポーネント
 
 ---
 
-<section class="py-16 sm:py-20">
-  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="flex flex-col gap-8">
-      <div class="text-center">
-        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
-          {t.calendar.title}
-        </h2>
-        <p class="mt-4 text-lg text-primary-950/70 dark:text-primary-200/70">
-          {t.calendar.description}
-        </p>
-      </div>
-      
-      <div class="mx-auto w-full max-w-4xl">
-        <div class="relative overflow-hidden rounded-3xl bg-white shadow-lg dark:bg-primary-900">
-          <!-- レスポンシブ対応のためのコンテナ -->
-          <div class="relative pb-[56.25%] h-0"> <!-- 16:9 アスペクト比 -->
-            <iframe
-              src={calendarSrc}
-              style="border: 0; overflow: hidden;"
-              class="absolute top-0 left-0 w-full h-full"
-              title={t.calendar.title}
-              loading="lazy"
-              allowfullscreen
-              referrerpolicy="no-referrer"
-              role="region"
-              aria-label={t.calendar.ariaLabel}
-            ></iframe>
-          </div>
+{showCalendar && (
+  <section class="py-16 sm:py-20">
+    <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div class="flex flex-col gap-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+            {t.calendar.title}
+          </h2>
+          <p class="mt-4 text-lg text-primary-950/70 dark:text-primary-200/70">
+            {t.calendar.description}
+          </p>
         </div>
         
-        <!-- カレンダー下部の説明 -->
-        <div class="mt-6 text-center">
-          <p class="text-sm text-primary-950/60 dark:text-primary-200/60">
-            {t.calendar.note}
-          </p>
+        <div class="mx-auto w-full max-w-4xl">
+          <div class="relative overflow-hidden rounded-3xl bg-white shadow-lg dark:bg-primary-900">
+            <!-- レスポンシブ対応のためのコンテナ -->
+            <div class="relative pb-[56.25%] h-0"> <!-- 16:9 アスペクト比 -->
+              <iframe
+                src={calendarSrc}
+                style="border: 0; overflow: hidden;"
+                class="absolute top-0 left-0 w-full h-full"
+                title={t.calendar.title}
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer"
+                role="region"
+                aria-label={t.calendar.ariaLabel}
+              ></iframe>
+            </div>
+          </div>
+          
+          <!-- カレンダー下部の説明 -->
+          <div class="mt-6 text-center">
+            <p class="text-sm text-primary-950/60 dark:text-primary-200/60">
+              {t.calendar.note}
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+)}

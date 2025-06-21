@@ -22,6 +22,11 @@ const links = [
   },
   {
     ref: '04',
+    name: t.nav.blog,
+    href: getLocalizedUrl('/blog', currentLocale),
+  },
+  {
+    ref: '05',
     name: t.nav.contact,
     href: getLocalizedUrl('/contact', currentLocale),
   },
@@ -54,13 +59,13 @@ const links = [
         type="button"
         class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
         x-data
-        @click="$store.theme.toggle()"
+        @click="$store.theme?.toggle()"
       >
         <span class="sr-only">Toggle theme mode</span>
         <svg
           x-cloak
           class="h-6 w-6"
-          :class="{ 'hidden': !($store.theme.isDark) }"
+          :class="{ 'hidden': !($store.theme?.isDark) }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 24 24"
@@ -73,7 +78,7 @@ const links = [
         <svg
           x-cloak
           class="h-6 w-6"
-          :class="{ 'hidden': $store.theme.isDark }"
+          :class="{ 'hidden': $store.theme?.isDark }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 24 24"
@@ -86,14 +91,14 @@ const links = [
       </button>
       <!-- Language switch -->
       <button
-        @click="$store.lang.toggle()"
+        @click="$store.lang?.toggle()"
         class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
       >
         <span class="sr-only">Language switch</span>
         <svg
           x-cloak
           class="h-10 w-10"
-          :class="{ 'hidden': $store.theme.isDark }"
+          :class="{ 'hidden': $store.theme?.isDark }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 640 512"
@@ -106,7 +111,7 @@ const links = [
         <svg
           x-cloak
           class="h-10 w-10"
-          :class="{ 'hidden': !($store.theme.isDark) }"
+          :class="{ 'hidden': !($store.theme?.isDark) }"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 640 512"
@@ -158,12 +163,16 @@ const links = [
 
   <!-- Menu content -->
   <div
-    class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+    class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 overflow-hidden transition-all"
     id="website-menu"
     x-cloak
     x-show="open"
-    x-collapse
-    x-collapse.duration.500ms
+    x-transition:enter="transition ease-out duration-500"
+    x-transition:enter-start="opacity-0 transform scale-95"
+    x-transition:enter-end="opacity-100 transform scale-100"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 transform scale-100"
+    x-transition:leave-end="opacity-0 transform scale-95"
   >
     <div class="grid grid-cols-1 gap-16 pb-24 pt-6 lg:grid-cols-2 lg:pt-12">
       <div

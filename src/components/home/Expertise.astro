@@ -52,7 +52,18 @@ const features = (t.features && Array.isArray(t.features.items)) ? t.features.it
                   </div>
                 </button>
               </dt>
-              <dd class="pb-6 pr-6" id={feature.id} x-show="isOpen" x-cloak x-collapse>
+              <dd 
+                class="pb-6 pr-6 overflow-hidden transition-all duration-300"
+                id={feature.id}
+                x-show="isOpen"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-95"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-95"
+                x-cloak
+              >
                 <p class="text-base text-primary-950/70 dark:text-primary-200/70">
                   {feature.description}
                 </p>

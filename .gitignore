@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # vscode folder
 .vscode
+
+# firebase files
+@hosting.ZGlzdA.cache

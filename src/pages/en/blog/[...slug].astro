@@ -1,0 +1,104 @@
+---
+import { type CollectionEntry } from 'astro:content';
+import CategoryBadge from '../../../components/blog/CategoryBadge.astro';
+import ShareButtons from '../../../components/blog/ShareButtons.astro';
+import TableOfContents from '../../../components/blog/TableOfContents.astro';
+import TipButton from '../../../components/blog/TipButton.astro';
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { getCurrentLocale } from '../../../utils/i18n';
+
+export async function getStaticPaths() {
+  const modules = await Astro.glob('../../../content/blog/en/*.md');
+
+  return modules.map((postMod: any) => {
+    const rawSlug = postMod.slug ?? postMod.file?.split('/').pop()?.replace('.md', '');
+    const postObj = {
+      slug: rawSlug,
+      data: {
+        ...postMod.frontmatter,
+        pubDate: new Date(postMod.frontmatter.pubDate),
+        updatedDate: postMod.frontmatter.updatedDate ? new Date(postMod.frontmatter.updatedDate) : undefined,
+      },
+      async render() {
+        return {
+          Content: postMod.Content,
+          headings: typeof postMod.getHeadings === 'function' ? postMod.getHeadings() : [],
+        };
+      },
+    } as any;
+
+    return {
+      params: { slug: rawSlug },
+      props: { post: postObj },
+    };
+  });
+}
+
+interface Props { post: CollectionEntry<'blog'> }
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+const currentLocale = getCurrentLocale(Astro.url);
+
+const relatedPosts: CollectionEntry<'blog'>[] = [];
+const nextPost = undefined;
+const prevPost = undefined;
+
+const formattedPubDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const formattedUpdatedDate = post.data.updatedDate ? new Date(post.data.updatedDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}) : null;
+
+const readingTime = 5;
+const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+---
+
+<BlogLayout post={post} relatedPosts={relatedPosts} nextPost={nextPost} prevPost={prevPost}>
+  <article class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2 text-sm text-stone-600 dark:text-stone-400">
+        <li><a href="/en" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a></li>
+        <li class="before:content-['/'] before:mx-2"><a href="/en/blog" class="hover:text-blue-600 dark:hover:text-blue-400">Blog</a></li>
+        <li class="before:content-['/'] before:mx-2"><span class="text-stone-900 dark:text-stone-100">{post.data.title}</span></li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-8">
+      <div class="mb-4 flex items-center gap-4 text-sm">
+        <CategoryBadge category={post.data.category} />
+        <time datetime={post.data.pubDate.toISOString()} class="text-stone-500 dark:text-stone-400">{formattedPubDate}</time>
+        <span class="text-stone-500 dark:text-stone-400">{readingTime} min read</span>
+      </div>
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">{post.data.title}</h1>
+      <p class="mb-6 text-lg text-stone-600 dark:text-stone-300">{post.data.description}</p>
+      <div class="flex items-center justify-between border-b border-stone-200 pb-6 dark:border-stone-700">
+        <div class="text-sm font-medium text-stone-900 dark:text-stone-100">{post.data.author}</div>
+        <ShareButtons title={post.data.title} url={fullUrl} />
+      </div>
+    </header>
+
+    {post.data.image && (
+      <div class="mb-8 overflow-hidden rounded-2xl">
+        <img src={post.data.image.url} alt={post.data.image.alt} class="h-auto w-full" loading="eager" decoding="async" />
+      </div>
+    )}
+
+    {headings.length > 3 && <div class="mb-8"><TableOfContents headings={headings} /></div>}
+
+    <div class="prose prose-lg prose-stone mx-auto dark:prose-invert">
+      <Content />
+    </div>
+
+    <div class="mx-auto mt-12 max-w-3xl"><TipButton /></div>
+  </article>
+</BlogLayout> 

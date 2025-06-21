@@ -13,16 +13,65 @@ export default defineConfig({
       prefixDefaultLocale: false
     }
   },
-  integrations: [tailwind(), compress(), sitemap(), compressor()],
+  markdown: {
+    remarkPlugins: [
+      'remark-gfm',
+      'remark-math',
+      ['remark-link-card-plus', { 
+        cache: true,
+        shortenUrl: true,
+        showImage: true,
+        imagePosition: 'right'
+      }],
+    ],
+    rehypePlugins: [
+      'rehype-slug',
+      ['rehype-autolink-headings', { behavior: 'append', properties: { class: 'heading-link' } }],
+      'rehype-katex',
+    ],
+    shikiConfig: {
+      theme: 'dracula',
+      langs: [],
+      wrap: true,
+    },
+  },
+  integrations: [
+    tailwind(), 
+    compress({
+      CSS: true,
+      HTML: {
+        'remove-comments': true,
+        'remove-tags': ['script[type="application/ld+json"]'],
+        'minify-js': true,
+        'minify-css': true
+      },
+      Image: false,
+      JavaScript: true,
+      SVG: true
+    }), 
+    sitemap(), 
+    compressor({
+      gzip: true,
+      brotli: true
+    })
+  ],
   vite: {
     resolve: {
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
     },
     optimizeDeps: {
-      exclude: ['astro:*']
+      exclude: []
     },
     build: {
-      // ビルドプロセスに関する追加の設定
+      minify: 'terser',
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+          entryFileNames: '_astro/[name].[hash].js',
+          chunkFileNames: '_astro/[name].[hash].js',
+          assetFileNames: '_astro/[name].[hash].[ext]'
+        }
+      }
     },
     plugins: [
       // 必要に応じてViteプラグインを追加
