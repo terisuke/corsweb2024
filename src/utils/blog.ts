@@ -53,24 +53,5 @@ export const allPosts = [
       image: null,
       lang: "ja"
     }
-  },
-  // Additional dummy posts for pagination testing
-  ...Array.from({ length: 15 }, (_, i) => ({
-    slug: `sample-post-${i + 5}`,
-    data: {
-      title: `サンプル記事 ${i + 5}`,
-      description: `これはページネーションのテスト用のサンプル記事 ${i + 5} です。`,
-      pubDate: new Date(`2024-02-${String(i + 1).padStart(2, '0')}`),
-      author: "Terisuke",
-      category: [
-        "ai-driven-futures",
-        "high-performance-engineering",
-        "founders-journey",
-        "tech-lab-creativity",
-      ][i % 4],
-      tags: ["テスト", "サンプル", "ページネーション"],
-      image: null,
-      lang: "ja",
-    },
-  }))
+  }
 ]; 

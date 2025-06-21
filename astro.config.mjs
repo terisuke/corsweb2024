@@ -20,7 +20,8 @@ export default defineConfig({
       ['remark-link-card-plus', { 
         cache: true,
         shortenUrl: true,
-        classPrefix: 'rlc-'
+        showImage: true,
+        imagePosition: 'right'
       }],
     ],
     rehypePlugins: [

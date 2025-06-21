@@ -60,9 +60,9 @@ const categories = [
 
     <!-- Category Filter -->
     <div class="mb-8 flex flex-wrap justify-center gap-2">
-      {categories.filter(c => c.id !== 'all').map(category => (
+      {categories.map(category => (
         <a
-          href={`/blog/category/${category.id}`}
+          href={category.id === 'all' ? '/blog' : `/blog/category/${category.id}`}
           class="rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900"
         >
           {category.label}

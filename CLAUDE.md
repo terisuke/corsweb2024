@@ -61,7 +61,7 @@ Comprehensive blog functionality with AI-powered translation, featuring:
 - **Content Collections**: Astro's built-in content management using Zod schemas
 - **Bilingual Support**: Japanese and English blog posts with separate routing
 - **AI Translation**: Automated translation from Japanese to English using Google Gemini API
-- **Rich Markdown**: GitHub Flavored Markdown, math equations (KaTeX), syntax highlighting, link cards
+- **Rich Markdown**: GitHub Flavored Markdown, math equations (KaTeX), syntax highlighting, rich link cards with automatic metadata fetching
 - **SEO Optimization**: Auto-generated OGP images, structured data, meta tags, breadcrumbs
 - **Interactive Features**: Category filtering, related posts, table of contents, share buttons
 - **Monetization**: Stripe-powered tip/support functionality
@@ -204,6 +204,26 @@ GEMINI_API_KEY=your_gemini_api_key_here
    ```
 3. **Auto-translate**: Run `node scripts/translate-blog.js src/content/blog/ja/your-post.md`
 4. **Review & Publish**: Check both versions before deployment
+
+### Rich Content Support
+
+#### Link Cards
+Automatically generates rich preview cards for URLs:
+```markdown
+https://cor-jp.com/
+https://github.com
+```
+- **Auto-fetches**: Title, description, favicon, and OG images
+- **Caches**: Images saved to `/public/remark-link-card-plus/`
+- **Responsive**: Adapts to light/dark themes
+- **Interactive**: Hover effects and smooth animations
+
+#### Supported Markdown Features
+- **GitHub Flavored Markdown**: Tables, strikethrough, task lists
+- **Math Equations**: KaTeX support for mathematical expressions
+- **Syntax Highlighting**: Code blocks with Dracula theme
+- **Auto-linking**: Headings with anchor links
+- **Rich Typography**: @tailwindcss/typography styling
 
 ### Firebase Deployment
 The site deploys to Firebase Hosting with specific caching rules defined in `firebase.json`. Production builds are optimized for long-term caching of assets while keeping HTML fresh. Blog OGP images (SVG) are cached with immutable headers.
