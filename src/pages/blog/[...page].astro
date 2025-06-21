@@ -1,16 +1,14 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import PostCard from '../../components/blog/PostCard.astro';
-import { getCurrentLocale } from '../../utils/i18n';
 import type { GetStaticPaths, Page } from 'astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCurrentLocale } from '../../utils/i18n';
 
 interface Props {
   page: Page<any>;
 }
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
-  const currentLocale = 'ja'; // Will be determined by the path
-  
   // Temporary hardcoded posts until getCollection is fixed
   const allPosts = [
     {
@@ -175,7 +173,7 @@ const categories = [
       <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
         <!-- Previous Page -->
         <a
-          href={page.url.prev || '#'}
+          href={page.url.prev ? (currentLocale==='ja'? page.url.prev.replace('/en',''): `/en${page.url.prev}`) : '#'}
           class={`rounded-lg px-3 py-2 text-sm font-medium ${
             !page.url.prev 
               ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
@@ -190,7 +188,7 @@ const categories = [
         <div class="flex gap-1">
           {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(pageNum => (
             <a
-              href={pageNum === 1 ? '/blog' : `/blog/${pageNum}`}
+              href={pageNum === 1 ? (currentLocale==='ja'? '/blog': '/en/blog') : `${currentLocale==='ja'? '/blog': '/en/blog'}/${pageNum}`}
               class={`rounded-lg px-3 py-2 text-sm font-medium ${
                 pageNum === page.currentPage
                   ? 'bg-blue-600 text-white'
@@ -205,7 +203,7 @@ const categories = [
         
         <!-- Next Page -->
         <a
-          href={page.url.next || '#'}
+          href={page.url.next ? (currentLocale==='ja'? page.url.next.replace('/en',''): `/en${page.url.next}`) : '#'}
           class={`rounded-lg px-3 py-2 text-sm font-medium ${
             !page.url.next 
               ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 

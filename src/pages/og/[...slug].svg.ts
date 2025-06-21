@@ -21,6 +21,17 @@ export async function GET({ params }: Props) {
   
   const { title, description, category, author } = post.data;
   
+  // XML escape to prevent XSS
+  const xmlEscape = (str: string) =>
+    str.replace(/&/g, '&amp;')
+       .replace(/</g, '&lt;')
+       .replace(/>/g, '&gt;')
+       .replace(/"/g, '&quot;')
+       .replace(/'/g, '&#39;');
+
+  const safeTitle = xmlEscape(title);
+  const safeDesc = description ? xmlEscape(description) : '';
+  
   // Create a simple SVG-based OG image instead of using JSX
   const svg = `
     <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
@@ -51,10 +62,10 @@ export async function GET({ params }: Props) {
       <text x="1080" y="65" text-anchor="middle" class="category">${category.toUpperCase()}</text>
       
       <!-- Title -->
-      <text x="60" y="220" class="title">${title.length > 50 ? title.substring(0, 50) + '...' : title}</text>
+      <text x="60" y="220" class="title">${safeTitle.length > 50 ? safeTitle.substring(0, 50) + '...' : safeTitle}</text>
       
       <!-- Description -->
-      <text x="60" y="280" class="description">${description ? (description.length > 100 ? description.substring(0, 100) + '...' : description) : ''}</text>
+      <text x="60" y="280" class="description">${safeDesc.length > 100 ? safeDesc.substring(0, 100) + '...' : safeDesc}</text>
       
       <!-- Author -->
       <text x="60" y="520" class="author">By ${author} • cor-jp.com</text>
