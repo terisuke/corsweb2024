@@ -32,7 +32,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 };
 
 const { page } = Astro.props as Props;
-const id = Astro.params.id || (Astro.props as any).categoryId;
+const id: string = (Astro.params.id as string | undefined) ?? (Astro.props as any).categoryId ?? '';
 const currentLocale = getCurrentLocale(Astro.url);
 
 const catLabelMap: Record<string, { ja: string; en: string }> = {
@@ -46,6 +46,10 @@ const categoryLabel = catLabelMap[id]?.[currentLocale === 'ja' ? 'ja' : 'en'] ??
 const pageTitle = `${categoryLabel} | Blog | Cor.inc`;
 const pageDescription = currentLocale === 'ja'
   ? `${categoryLabel} に属するブログ記事一覧` : `Blog posts in ${categoryLabel}`;
+
+// 「すべて」リンクのアクティブ判定
+const isAllActive = !id || !(id in catLabelMap);
+
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
@@ -75,7 +79,7 @@ const pageDescription = currentLocale === 'ja'
       <a
         href={currentLocale === 'ja' ? '/blog' : '/en/blog'}
         class={`rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 ${
-          'all' === id
+          isAllActive
             ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
             : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'
         }`}

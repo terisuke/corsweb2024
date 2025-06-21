@@ -189,6 +189,9 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ### Writing New Blog Posts
 
+**IMPORTANT: Current Hardcoded System Limitation**
+The blog system currently uses a hardcoded `allPosts` array in `/src/utils/blog.ts` for the blog list page (`/blog/[...page].astro`). When adding new blog posts, you MUST update both:
+
 1. **Create Japanese Post**: Write markdown file in `/src/content/blog/ja/`
 2. **Use Proper Frontmatter**:
    ```yaml
@@ -202,8 +205,30 @@ GEMINI_API_KEY=your_gemini_api_key_here
    lang: "ja"
    ---
    ```
-3. **Auto-translate**: Run `node scripts/translate-blog.js src/content/blog/ja/your-post.md`
-4. **Review & Publish**: Check both versions before deployment
+3. **⚠️ CRITICAL: Update Blog Utils**: Add the new post to `/src/utils/blog.ts` in the `allPosts` array:
+   ```typescript
+   {
+     slug: "your-post-slug",
+     data: {
+       title: "Your Post Title",
+       description: "Brief description",
+       pubDate: new Date("2024-01-01"),
+       author: "Terisuke",
+       category: "ai-driven-futures",
+       tags: ["ai", "development"],
+       image: {
+         url: "/images/blog/your-image.avif",
+         alt: "Image description"
+       }, // or null if no image
+       lang: "ja",
+       featured: true/false
+     }
+   }
+   ```
+4. **Auto-translate**: Run `node scripts/translate-blog.js src/content/blog/ja/your-post.md`
+5. **Review & Publish**: Check both versions before deployment
+
+**Technical Debt Note**: The individual post pages use `Astro.glob()` to read markdown files directly, but the blog list page uses the hardcoded array. This inconsistency should be resolved in future refactoring to use Astro Content Collections consistently across all blog pages.
 
 ### Rich Content Support
 

@@ -5,9 +5,6 @@ pubDate: 2025-01-21
 author: "Terisuke"
 category: "tech-lab-creativity"
 tags: ["Markdown", "ブログ", "執筆", "技術文書", "ガイド"]
-image:
-  url: "/images/blog/markdown-guide.avif"
-  alt: "マークダウンガイドのイメージ"
 lang: "ja"
 featured: true
 ---

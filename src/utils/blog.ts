@@ -53,5 +53,18 @@ export const allPosts = [
       image: null,
       lang: "ja"
     }
+  },
+  {
+    slug: "complete-markdown-guide",
+    data: {
+      title: "完全マークダウンガイド：ブログ記事作成のすべて",
+      description: "Cor.incブログで使用できるマークダウン記法とリッチコンテンツ機能の完全ガイド。リンクカード、数式、コードハイライトなど、美しい記事を作成するためのすべての機能を網羅",
+      pubDate: new Date("2025-01-21"),
+      author: "Terisuke",
+      category: "tech-lab-creativity",
+      tags: ["Markdown", "ブログ", "執筆", "技術文書", "ガイド"],
+      lang: "ja",
+      featured: true
+    }
   }
 ]; 

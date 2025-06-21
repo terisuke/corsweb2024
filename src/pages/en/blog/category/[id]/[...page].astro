@@ -6,7 +6,11 @@ import { getCurrentLocale } from '../../../../../utils/i18n';
 
 interface Props {
   page: Page<any>;
-  id: string;
+  /**
+   * categoryId is provided via getStaticPaths props and may be undefined when
+   * this page is rendered via dynamic routing. It should therefore be optional.
+   */
+  categoryId?: string;
 }
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
@@ -86,8 +90,8 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
   return paths;
 };
 
-const { page } = Astro.props as Props;
-const id = Astro.params.id || (Astro.props as any).categoryId;
+const { page, categoryId } = Astro.props as Props;
+const id: string = (Astro.params.id as string | undefined) ?? categoryId ?? '';
 const currentLocale = getCurrentLocale(Astro.url);
 
 const catLabelMap: Record<string, { ja: string; en: string }> = {
@@ -101,6 +105,9 @@ const categoryLabel = catLabelMap[id]?.[currentLocale === 'ja' ? 'ja' : 'en'] ??
 const pageTitle = `${categoryLabel} | Blog | Cor.inc`;
 const pageDescription = currentLocale === 'ja'
   ? `${categoryLabel} に属するブログ記事一覧` : `Blog posts in ${categoryLabel}`;
+
+// 判定: カテゴリ未選択、または存在しないカテゴリの場合は「すべて」をアクティブにする
+const isAllActive = !id || !(id in catLabelMap);
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
@@ -130,7 +137,7 @@ const pageDescription = currentLocale === 'ja'
       <a
         href={currentLocale === 'ja' ? '/blog' : '/en/blog'}
         class={`rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 ${
-          'all' === id
+          isAllActive
             ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
             : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'
         }`}
@@ -162,7 +169,7 @@ const pageDescription = currentLocale === 'ja'
     {page.lastPage > 1 && (
       <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
         <a
-          href={page.url.prev ? `/en/blog/category/${id}${page.url.prev}` : '#'}
+          href={page.url.prev ? `/en/blog/category/${id}/${page.url.prev.replace(/^\//, '')}` : '#'}
           class={`rounded-lg px-3 py-2 text-sm font-medium ${
             !page.url.prev
               ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500'
@@ -190,7 +197,7 @@ const pageDescription = currentLocale === 'ja'
         </div>
 
         <a
-          href={page.url.next ? `/en/blog/category/${id}${page.url.next}` : '#'}
+          href={page.url.next ? `/en/blog/category/${id}/${page.url.next.replace(/^\//, '')}` : '#'}
           class={`rounded-lg px-3 py-2 text-sm font-medium ${
             !page.url.next
               ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500'

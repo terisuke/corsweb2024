@@ -4,10 +4,7 @@ description: "A complete guide to Markdown syntax and rich content features usab
 pubDate: 2025-01-21
 author: "Terisuke"
 category: "tech-lab-creativity"
-tags: ["Markdown", "ブログ", "執筆", "技術文書", "ガイド"]
-image:
-  url: "/images/blog/markdown-guide.avif"
-  alt: "マークダウンガイドのイメージ"
+tags: ["Markdown", "Blog", "Writing", "Technical Documentation", "Guide"]
 lang: "en"
 featured: true
 ---
@@ -86,15 +83,15 @@ This guide introduces all the Markdown and rich content features available on th
 
 ### Basic Code Block
 
-```markdown
-\`\`\`javascript
+````markdown
+```javascript
 function greet(name) {
   console.log(`Hello, ${name}!`);
 }
 
 greet('World');
-\`\`\`
 ```
+````
 
 ### Example Output
 
@@ -136,32 +133,32 @@ npm run deploy
 ## Tables
 
 ```markdown
-| Item | Description | Price |
-|------|------|------|
+| Item      | Description          | Price  |
+|-----------|----------------------|--------|
 | Product A | High-quality product | ¥1,000 |
-| Product B | Affordable price | ¥500 |
-| Product C | Premium | ¥2,000 |
+| Product B | Affordable price     | ¥500   |
+| Product C | Premium              | ¥2,000 |
 ```
 
-| Item | Description | Price |
-|------|------|------|
+| Item      | Description          | Price  |
+|-----------|----------------------|--------|
 | Product A | High-quality product | ¥1,000 |
-| Product B | Affordable price | ¥500 |
-| Product C | Premium | ¥2,000 |
+| Product B | Affordable price     | ¥500   |
+| Product C | Premium              | ¥2,000 |
 
 ### Table Alignment
 
 ```markdown
 | Left-aligned | Center-aligned | Right-aligned |
-|:-------|:--------:|-------:|
-| Left | Center | Right |
-| L | C | R |
+|:-------------|:--------------:|--------------:|
+| Left         |     Center     |         Right |
+| L            |       C        |             R |
 ```
 
 | Left-aligned | Center-aligned | Right-aligned |
-|:-------|:--------:|-------:|
-| Left | Center | Right |
-| L | C | R |
+|:-------------|:--------------:|--------------:|
+| Left         |     Center     |         Right |
+| L            |       C        |             R |
 
 ## Quotes
 
