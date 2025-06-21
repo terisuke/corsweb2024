@@ -169,7 +169,7 @@ const isAllActive = !id || !(id in catLabelMap);
     {page.lastPage > 1 && (
       <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
         <a
-          href={page.url.prev ? `/en/blog/category/${id}/${page.url.prev.replace(/^\//, '')}` : '#'}
+          href={page.url.prev ? `${currentLocale === 'ja' ? '' : '/en'}/blog/category/${id}/${page.url.prev.replace(/^\//, '')}` : '#'}
           class={`rounded-lg px-3 py-2 text-sm font-medium ${
             !page.url.prev
               ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500'
@@ -183,7 +183,7 @@ const isAllActive = !id || !(id in catLabelMap);
         <div class="flex gap-1">
           {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(num => (
             <a
-              href={num === 1 ? `/en/blog/category/${id}` : `/en/blog/category/${id}/${num}`}
+              href={num === 1 ? `${currentLocale === 'ja' ? '' : '/en'}/blog/category/${id}` : `${currentLocale === 'ja' ? '' : '/en'}/blog/category/${id}/${num}`}
               class={`rounded-lg px-3 py-2 text-sm font-medium ${
                 num === page.currentPage
                   ? 'bg-blue-600 text-white'
@@ -197,7 +197,7 @@ const isAllActive = !id || !(id in catLabelMap);
         </div>
 
         <a
-          href={page.url.next ? `/en/blog/category/${id}/${page.url.next.replace(/^\//, '')}` : '#'}
+          href={page.url.next ? `${currentLocale === 'ja' ? '' : '/en'}/blog/category/${id}/${page.url.next.replace(/^\//, '')}` : '#'}
           class={`rounded-lg px-3 py-2 text-sm font-medium ${
             !page.url.next
               ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500'

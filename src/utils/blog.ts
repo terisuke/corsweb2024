@@ -63,6 +63,7 @@ export const allPosts = [
       author: "Terisuke",
       category: "tech-lab-creativity",
       tags: ["Markdown", "ブログ", "執筆", "技術文書", "ガイド"],
+      image: null,
       lang: "ja",
       featured: true
     }
