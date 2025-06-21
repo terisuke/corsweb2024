@@ -1,0 +1,221 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import { getCurrentLocale } from '../../utils/i18n';
+import type { GetStaticPaths, Page } from 'astro';
+
+interface Props {
+  page: Page<any>;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const currentLocale = 'ja'; // Will be determined by the path
+  
+  // Temporary hardcoded posts until getCollection is fixed
+  const allPosts = [
+    {
+      slug: "ai-driven-development-workflow",
+      data: {
+        title: "AI駆動開発で生産性が7倍に：私の実体験",
+        description: "最新AIツールを組み合わせた開発ワークフローにより、従来の7倍の開発速度を実現した実践的なケーススタディ",
+        pubDate: new Date("2024-01-15"),
+        author: "Terisuke",
+        category: "ai-driven-futures",
+        tags: ["AI", "開発効率", "Cursor", "CodeRabbit", "GitHub Copilot"],
+        image: null,
+        lang: "ja",
+        featured: true
+      }
+    },
+    {
+      slug: "abe-hiroshi-website-challenge",
+      data: {
+        title: "阿部寛のホームページに挑み続けて辿り着いた、驚異のホームページ制作記",
+        description: "「地球上で最もダウンロードが速いホームページの持ち主」を自負する男が、阿部寛のホームページに執拗に挑戦し続けた軌跡と技術的洞察。",
+        pubDate: new Date("2024-01-20"),
+        author: "Terisuke",
+        category: "high-performance-engineering",
+        tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"],
+        image: null,
+        lang: "ja",
+        featured: true
+      }
+    },
+    {
+      slug: "weekly-lt-challenge-journey",
+      data: {
+        title: "週1回LTを1年続けたら人生が変わった話",
+        description: "崖っぷち駆け出しエンジニア兼CEO が週1LTチャレンジで得た成長、学び、人生の変化。",
+        pubDate: new Date("2024-01-25"),
+        author: "Terisuke",
+        category: "founders-journey",
+        tags: ["LT", "成長", "コミュニティ", "起業", "エンジニア"],
+        image: null,
+        lang: "ja",
+        featured: true
+      }
+    },
+    {
+      slug: "zundamon-lt-project",
+      data: {
+        title: "【Marp×VOICEVOX×VTubeStudio】ずんだもんにLT発表してもらった",
+        description: "技術の創造的活用！Marp、VOICEVOX、VTubeStudioを組み合わせて、ずんだもんによる自動LT発表システムを構築した実験的プロジェクト。",
+        pubDate: new Date("2024-01-30"),
+        author: "Terisuke",
+        category: "tech-lab-creativity",
+        tags: ["Marp", "VOICEVOX", "VTubeStudio", "自動化", "創造的プロジェクト"],
+        image: null,
+        lang: "ja"
+      }
+    },
+    // Additional dummy posts for pagination testing
+    ...Array.from({ length: 15 }, (_, i) => ({
+      slug: `sample-post-${i + 5}`,
+      data: {
+        title: `サンプル記事 ${i + 5}`,
+        description: `これはページネーションのテスト用のサンプル記事 ${i + 5} です。`,
+        pubDate: new Date(`2024-02-${String(i + 1).padStart(2, '0')}`),
+        author: "Terisuke",
+        category: ["ai-driven-futures", "high-performance-engineering", "founders-journey", "tech-lab-creativity"][i % 4],
+        tags: ["テスト", "サンプル", "ページネーション"],
+        image: null,
+        lang: "ja"
+      }
+    }))
+  ];
+
+  // Sort posts by publication date (newest first)
+  const sortedPosts = allPosts.sort((a, b) => 
+    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
+
+  // Paginate with 12 posts per page
+  return paginate(sortedPosts, { pageSize: 12 });
+};
+
+const { page } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
+const pageTitle = currentLocale === 'ja' ? 'ブログ | Cor.inc' : 'Blog | Cor.inc';
+const pageDescription = currentLocale === 'ja' 
+  ? 'AI駆動開発、高性能エンジニアリング、創業者の軌跡、テックラボの創造性に関する洞察とストーリーをお届けします。'
+  : 'Latest insights and stories on AI-driven futures, high-performance engineering, founders journey, and tech lab creativity.';
+
+// Categories for filtering
+const categories = [
+  { id: 'all', label: currentLocale === 'ja' ? 'すべて' : 'All' },
+  { id: 'ai-driven-futures', label: currentLocale === 'ja' ? 'AI駆動の未来' : 'AI-Driven Futures' },
+  { id: 'high-performance-engineering', label: currentLocale === 'ja' ? '高性能エンジニアリング' : 'High-Performance Engineering' },
+  { id: 'founders-journey', label: currentLocale === 'ja' ? '創業者の軌跡' : 'Founders Journey' },
+  { id: 'tech-lab-creativity', label: currentLocale === 'ja' ? 'テックラボの創造性' : 'Tech Lab Creativity' },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8" x-data="{ activeCategory: 'all' }">
+    <!-- Page Header -->
+    <div class="mb-12 text-center">
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+        {currentLocale === 'ja' ? 'ブログ' : 'Blog'}
+      </h1>
+      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+        {pageDescription}
+      </p>
+      
+      <!-- Pagination Info -->
+      {page.total > page.size && (
+        <p class="mt-4 text-sm text-stone-500 dark:text-stone-400">
+          {currentLocale === 'ja' 
+            ? `${page.total}記事中 ${page.start + 1}-${page.end}記事を表示 (${page.currentPage}/${page.lastPage}ページ)`
+            : `Showing ${page.start + 1}-${page.end} of ${page.total} articles (Page ${page.currentPage} of ${page.lastPage})`
+          }
+        </p>
+      )}
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-8 flex flex-wrap justify-center gap-2">
+      {categories.map(category => (
+        <button
+          @click={`activeCategory = '${category.id}'`}
+          class="rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200"
+          x-bind:class={`activeCategory === '${category.id}' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'`}
+        >
+          {category.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- Blog Posts Grid -->
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {page.data.length > 0 ? (
+        page.data.map(post => (
+          <div 
+            x-show={`activeCategory === 'all' || activeCategory === '${post.data.category}'`}
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform scale-95"
+            x-transition:enter-end="opacity-100 transform scale-100"
+          >
+            <PostCard post={post} />
+          </div>
+        ))
+      ) : (
+        <div class="col-span-full text-center py-12">
+          <p class="text-lg text-stone-600 dark:text-stone-300">
+            ブログ記事を準備中です。しばらくお待ちください。
+          </p>
+          <p class="mt-2 text-sm text-stone-500 dark:text-stone-400">
+            Blog posts are coming soon. Please check back later.
+          </p>
+        </div>
+      )}
+    </div>
+
+    <!-- Pagination Navigation -->
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+        <!-- Previous Page -->
+        <a
+          href={page.url.prev || '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.prev 
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.prev}
+        >
+          {currentLocale === 'ja' ? '前へ' : 'Previous'}
+        </a>
+        
+        <!-- Page Numbers -->
+        <div class="flex gap-1">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(pageNum => (
+            <a
+              href={pageNum === 1 ? '/blog' : `/blog/${pageNum}`}
+              class={`rounded-lg px-3 py-2 text-sm font-medium ${
+                pageNum === page.currentPage
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+              }`}
+              aria-current={pageNum === page.currentPage ? 'page' : undefined}
+            >
+              {pageNum}
+            </a>
+          ))}
+        </div>
+        
+        <!-- Next Page -->
+        <a
+          href={page.url.next || '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.next 
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.next}
+        >
+          {currentLocale === 'ja' ? '次へ' : 'Next'}
+        </a>
+      </nav>
+    )}
+  </div>
+</Layout>

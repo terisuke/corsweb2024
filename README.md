@@ -1,6 +1,6 @@
 # Cor.inc Corporate Website
 
-高速化を極限まで追求したコーポレートサイト。阿部寛のホームページと同等かそれ以上の読み込み速度を実現。
+高速化を極限まで追求したコーポレートサイト。阿部寛のホームページと同等かそれ以上の読み込み速度を実現。AI駆動のブログシステムを統合し、日英自動翻訳機能を提供。
 
 ## 🚀 デモ
 
@@ -19,10 +19,38 @@
 
 - **Framework**: Astro 4.8.7 (Islands Architecture)
 - **Interactivity**: Alpine.js 3.14.0 (CDN配信)
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS + @tailwindcss/typography
 - **Hosting**: Firebase Hosting
 - **Language**: TypeScript
 - **i18n**: 日本語/英語対応
+- **AI Translation**: Google Generative AI (Gemini 1.5 Flash)
+- **Content Management**: Astro Content Collections with Zod
+
+## 🤖 新機能: AI駆動ブログシステム
+
+### 自動翻訳機能
+- **日本語 → 英語**: Gemini APIを使用した高品質自動翻訳
+- **バッチ処理**: 全記事の一括翻訳対応
+- **メタデータ保持**: frontmatterとマークダウン構造を完全保持
+
+### ブログ機能
+- **Content Collections**: 型安全なコンテンツ管理
+- **SEO最適化**: 自動OGP画像生成、構造化データ
+- **リッチマークダウン**: 数式(KaTeX)、コードハイライト、リンクカード
+- **インタラクティブ機能**: 目次、シェアボタン、チップ機能
+
+### 翻訳コマンド
+
+```bash
+# 単一記事の翻訳
+node scripts/translate-blog.js src/content/blog/ja/your-post.md
+
+# 全記事の一括翻訳
+node scripts/translate-all-blog.js
+
+# 環境変数設定が必要
+# .env ファイルに GEMINI_API_KEY を設定
+```
 
 ## ⚡ 高速化の工夫（詳細）
 
@@ -68,6 +96,7 @@
 - **メタタグ最適化**: Open Graph、Twitter Card対応
 - **Sitemap自動生成**: @astrojs/sitemapで検索エンジン最適化
 - **多言語対応**: 日英両言語でSEO最適化
+- **ブログSEO**: 自動OGP画像、hreflangタグ、パンくずリスト
 
 ## 🛠️ 開発環境
 
@@ -83,19 +112,42 @@ npm run preview
 
 # バンドル分析
 node bundle-analyzer.js
+
+# ブログ翻訳
+node scripts/translate-blog.js src/content/blog/ja/your-post.md
+node scripts/translate-all-blog.js
 ```
 
 ## 📁 プロジェクト構成
 
 ```
 src/
-├── components/    # ページ別コンポーネント
-├── i18n/         # 多言語対応ファイル
-├── layouts/      # レイアウトコンポーネント
-├── pages/        # ルーティングページ
-├── utils/        # ユーティリティ関数
-└── types/        # TypeScript型定義
+├── components/       # ページ別・機能別コンポーネント
+│   ├── blog/        # ブログ専用コンポーネント
+│   ├── home/        # ホームページコンポーネント
+│   ├── layout/      # 共通レイアウト
+│   └── performance/ # パフォーマンス監視
+├── content/         # コンテンツコレクション
+│   └── blog/
+│       ├── ja/      # 日本語ブログ記事
+│       └── en/      # 英語ブログ記事（自動翻訳）
+├── i18n/           # 多言語対応ファイル
+├── layouts/        # レイアウトコンポーネント
+├── pages/          # ルーティングページ
+├── utils/          # ユーティリティ関数
+└── types/          # TypeScript型定義
+
+scripts/            # 自動化スクリプト
+├── translate-blog.js      # 単一記事翻訳
+└── translate-all-blog.js  # 全記事一括翻訳
 ```
+
+## 📝 ブログ投稿の流れ
+
+1. **日本語記事作成**: `/src/content/blog/ja/` に Markdown ファイルを作成
+2. **自動翻訳実行**: `node scripts/translate-blog.js` で英語版を自動生成
+3. **内容確認**: 翻訳された英語記事の内容を確認・調整
+4. **デプロイ**: Firebase Hosting に自動デプロイ
 
 ## 🎯 今後の改善点
 
@@ -103,6 +155,8 @@ src/
 - Resource Hintsの追加最適化
 - 画像のLazy Loading戦略の改善
 - Web Vitalsモニタリングの強化
+- 翻訳精度のさらなる向上
+- ブログ管理UI/CMSの実装
 
 ## 📚 参考資料
 
@@ -110,6 +164,7 @@ src/
 - [Alpine.js Documentation](https://alpinejs.dev/)
 - [Firebase Hosting](https://firebase.google.com/)
 - [Web.dev Performance](https://web.dev/performance/)
+- [Google Generative AI](https://ai.google.dev/)
 - [阿部寛のホームページ](http://abehiroshi.la.coocan.jp/)
 
 ## 📝 ライセンス

@@ -6,11 +6,10 @@ module.exports = {
   darkMode: 'class',
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
-    colors: {
-      current: 'currentColor',
-      transparent: 'transparent',
-      white: '#ffffff',
-      primary: colors.stone,
+    extend: {
+      colors: {
+        primary: colors.stone,
+      },
     },
     fontFamily: {
       sans: ['Inter', 'sans-serif'],
@@ -28,4 +27,7 @@ module.exports = {
       '6xl': ['3.75rem', '4.25rem'],
     },
   },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };

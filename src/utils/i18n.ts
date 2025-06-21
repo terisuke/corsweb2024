@@ -2,7 +2,7 @@ export type Locale = 'ja' | 'en';
 
 const translations = {
   ja: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", contact: "Contact" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
     hero: {
       title: "Swifter than any, to the horizon beyond.",
       subtitle: "言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。",
@@ -366,7 +366,7 @@ const translations = {
     }
   },
   en: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", contact: "Contact" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
     hero: {
       title: "Swifter than any, to the horizon beyond.",
       subtitle: "Breaking down language and cultural barriers with AI to create a society where people truly understand each other.",

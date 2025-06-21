@@ -1,0 +1,462 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import WebVitals from '../components/performance/WebVitals.astro';
+import { getCurrentLocale } from '../utils/i18n';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'> | {
+    slug: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      updatedDate?: Date;
+      author: string;
+      category: string;
+      tags: string[];
+      image?: { url: string; alt: string };
+      ogImage?: string;
+      lang: string;
+      featured?: boolean;
+    };
+  };
+  relatedPosts?: (CollectionEntry<'blog'> | {
+    slug: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      updatedDate?: Date;
+      author: string;
+      category: string;
+      tags: string[];
+      image?: { url: string; alt: string };
+      ogImage?: string;
+      lang: string;
+      featured?: boolean;
+    };
+  })[];
+  nextPost?: CollectionEntry<'blog'> | {
+    slug: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      updatedDate?: Date;
+      author: string;
+      category: string;
+      tags: string[];
+      image?: { url: string; alt: string };
+      ogImage?: string;
+      lang: string;
+      featured?: boolean;
+    };
+  };
+  prevPost?: CollectionEntry<'blog'> | {
+    slug: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      updatedDate?: Date;
+      author: string;
+      category: string;
+      tags: string[];
+      image?: { url: string; alt: string };
+      ogImage?: string;
+      lang: string;
+      featured?: boolean;
+    };
+  };
+}
+
+const { post, relatedPosts, nextPost, prevPost } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
+const { title, description, pubDate, updatedDate, author, category, tags, image, ogImage } = post.data;
+
+// Use auto-generated OGP image if no custom ogImage is set
+const finalOgImage = ogImage || new URL(`/og/${post.slug}.svg`, Astro.site).toString();
+
+const formattedPubDate = new Date(pubDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const formattedUpdatedDate = updatedDate ? new Date(updatedDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}) : null;
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": description,
+  "author": {
+    "@type": "Person",
+    "name": author,
+    "url": "https://cor-jp.com/about"
+  },
+  "datePublished": pubDate.toISOString(),
+  "dateModified": (updatedDate || pubDate).toISOString(),
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cor.inc",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cor-jp.com/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": new URL(Astro.url.pathname, Astro.site).toString()
+  },
+  ...(image && {
+    "image": {
+      "@type": "ImageObject",
+      "url": new URL(image.url, Astro.site).toString(),
+      "caption": image.alt
+    }
+  })
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": currentLocale === 'ja' ? "ホーム" : "Home",
+      "item": `https://cor-jp.com${currentLocale === 'en' ? '/en' : ''}`
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": currentLocale === 'ja' ? "ブログ" : "Blog",
+      "item": `https://cor-jp.com${currentLocale === 'en' ? '/en' : ''}/blog`
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": title
+    }
+  ]
+};
+---
+
+<!doctype html>
+<html lang={currentLocale} x-cloak x-data :class="{ 'dark': $store.theme?.isDark || false }">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Cor.inc" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    
+    <!-- Article specific meta tags -->
+    <meta property="article:published_time" content={pubDate.toISOString()} />
+    {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+    <meta property="article:author" content={author} />
+    <meta property="article:section" content={category} />
+    {tags.map(tag => <meta property="article:tag" content={tag} />)}
+    
+    <!-- Hreflang tags for bilingual SEO -->
+    {currentLocale === 'ja' ? (
+      <>
+        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="ja" />
+        <link rel="alternate" href={new URL(`/en${Astro.url.pathname}`, Astro.site)} hreflang="en" />
+        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="x-default" />
+      </>
+    ) : (
+      <>
+        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="ja" />
+        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="en" />
+        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="x-default" />
+      </>
+    )}
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={finalOgImage} />
+    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
+    <meta property="og:site_name" content="Cor.inc Blog" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@cor_terisuke" />
+    <meta name="twitter:creator" content="@cor_terisuke" />
+    <meta name="twitter:url" content={Astro.url} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={finalOgImage} />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    
+    <!-- KaTeX CSS for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    
+    <title>{title} | Cor.inc Blog</title>
+    <ViewTransitions />
+    
+    <!-- Include critical CSS from parent layout -->
+    <style is:inline>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-display: optional;
+        src: url('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-display: optional;
+        src: url('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      
+      .font-loaded body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      
+      [x-cloak] { display: none !important; }
+      
+      /* Blog specific styles */
+      .prose pre {
+        background-color: #282a36;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        overflow-x: auto;
+      }
+      
+      .prose code {
+        background-color: #f1f5f9;
+        padding: 0.125rem 0.25rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+      }
+      
+      .dark .prose code {
+        background-color: #334155;
+      }
+      
+      .prose pre code {
+        background-color: transparent;
+        padding: 0;
+      }
+      
+      .prose a {
+        color: #3b82f6;
+        text-decoration: underline;
+      }
+      
+      .prose a:hover {
+        color: #2563eb;
+      }
+      
+      .dark .prose a {
+        color: #60a5fa;
+      }
+      
+      .dark .prose a:hover {
+        color: #93bbfc;
+      }
+      
+      /* Link Card Styles */
+      .rlc-container {
+        margin: 1.5rem 0;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      
+      .rlc-container:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      
+      .dark .rlc-container {
+        background-color: #292524;
+        border: 1px solid #44403c;
+      }
+      
+      .dark .rlc-container:hover {
+        border-color: #60a5fa;
+      }
+      
+      .rlc-info {
+        padding: 1rem;
+      }
+      
+      .rlc-title {
+        font-weight: 600;
+        color: #1c1917;
+        margin-bottom: 0.25rem;
+      }
+      
+      .dark .rlc-title {
+        color: #f5f5f4;
+      }
+      
+      .rlc-description {
+        color: #57534e;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      
+      .dark .rlc-description {
+        color: #a8a29e;
+      }
+      
+      .rlc-url-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      
+      .rlc-favicon {
+        width: 1rem;
+        height: 1rem;
+      }
+      
+      .rlc-url {
+        color: #78716c;
+        font-size: 0.75rem;
+      }
+      
+      .dark .rlc-url {
+        color: #78716c;
+      }
+    </style>
+  </head>
+  <body class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200">
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <WebVitals />
+    
+    <!-- Include Alpine.js initialization scripts from parent layout -->
+    <script data-cfasync="false">
+      window.alpineStoreDefaults = {
+        theme: { isDark: false, toggle: () => {} },
+        lang: { current: 'ja', toggle: () => {} }
+      };
+
+      window.alpineInitStores = function() {
+        if (!window.Alpine) return;
+        
+        Alpine.store('theme', {
+          isDark: document.documentElement.classList.contains('dark'),
+          toggle() {
+            this.isDark = !this.isDark;
+            document.documentElement.classList.toggle('dark', this.isDark);
+            localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+          },
+        });
+        
+        Alpine.store('lang', {
+          current: document.documentElement.lang,
+          toggle() {
+            const newLang = this.current === 'ja' ? 'en' : 'ja';
+            const currentPath = window.location.pathname;
+            let newPath;
+            
+            if (newLang === 'en') {
+              newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
+            } else {
+              newPath = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+            }
+            
+            window.location.href = newPath;
+          }
+        });
+      };
+
+      document.addEventListener('alpine:init', function() {
+        window.alpineInitStores();
+      });
+      
+      (function ensureAlpineStores() {
+        if (window.Alpine && typeof window.Alpine.store === 'function') {
+          window.alpineInitStores();
+        } else {
+          setTimeout(ensureAlpineStores, 5);
+        }
+      })();
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.Alpine && typeof window.alpineInitStores === 'function') {
+          window.alpineInitStores();
+        }
+      });
+    </script>
+    
+    <script 
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"
+      integrity="sha384-O8NPfezTLQ/sgLfQYBJEnezJLlum9L6KOqHsfIWauzaFfD1TQSuvA4iUpgWGHeuZ"
+      crossorigin="anonymous"
+      data-cfasync="false"
+      defer
+    ></script>
+    
+    <noscript>
+      <style>[x-cloak]{ display: block !important; }</style>
+      <div style="background:#fff3cd;color:#856404;padding:1em;border-radius:8px;margin:1em 0;text-align:center;">
+        JavaScriptが無効なため、一部機能がご利用いただけません。
+      </div>
+    </noscript>
+    
+    <script data-cfasync="false">
+      (() => {
+        const theme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (theme === 'dark' || (!theme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    
+    <script data-cfasync="false">
+      if ('fonts' in document) {
+        document.fonts.ready.then(() => {
+          document.documentElement.classList.add('font-loaded');
+        });
+      }
+    </script>
+  </body>
+</html>

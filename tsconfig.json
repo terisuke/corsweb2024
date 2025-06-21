@@ -4,10 +4,11 @@
     "types": ["types"],
     "module": "ES2022",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "plugins": [
       {
         "name": "@astrojs/ts-plugin"
-      },
-    ],
-  },
+      }
+    ]
+  }
 }

@@ -13,6 +13,27 @@ export default defineConfig({
       prefixDefaultLocale: false
     }
   },
+  markdown: {
+    remarkPlugins: [
+      'remark-gfm',
+      'remark-math',
+      ['remark-link-card-plus', { 
+        cache: true,
+        shortenUrl: true,
+        classPrefix: 'rlc-'
+      }],
+    ],
+    rehypePlugins: [
+      'rehype-slug',
+      ['rehype-autolink-headings', { behavior: 'append', properties: { class: 'heading-link' } }],
+      'rehype-katex',
+    ],
+    shikiConfig: {
+      theme: 'dracula',
+      langs: [],
+      wrap: true,
+    },
+  },
   integrations: [
     tailwind(), 
     compress({
@@ -38,7 +59,7 @@ export default defineConfig({
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
     },
     optimizeDeps: {
-      exclude: ['astro:*']
+      exclude: []
     },
     build: {
       minify: 'terser',

@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+// Simple test to see if getCollection works
+let posts = [];
+let error = null;
+
+try {
+  posts = await getCollection('blog');
+  console.log('Found posts:', posts.length);
+} catch (e) {
+  error = e.message;
+  console.error('Error:', e);
+}
+---
+
+<Layout title="Blog Test" description="Testing blog collection functionality">
+  <div class="container mx-auto p-8">
+    <h1>Blog Test Page</h1>
+    
+    {error ? (
+      <div class="bg-red-100 p-4 rounded">
+        <p>Error: {error}</p>
+      </div>
+    ) : (
+      <div class="bg-green-100 p-4 rounded">
+        <p>Found {posts.length} blog posts</p>
+        {posts.map((post) => (
+          <div class="border p-2 m-2">
+            <h3>{post.data.title}</h3>
+            <p>Lang: {post.data.lang}</p>
+            <p>Category: {post.data.category}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>
