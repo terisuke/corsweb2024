@@ -3,7 +3,7 @@ title: "完全マークダウンガイド：ブログ記事作成のすべて"
 description: "Cor.incブログで使用できるマークダウン記法とリッチコンテンツ機能の完全ガイド。リンクカード、数式、コードハイライトなど、美しい記事を作成するためのすべての機能を網羅"
 pubDate: 2025-01-21
 author: "Terisuke"
-category: "tech-lab-creativity"
+category: "lab"
 tags: ["Markdown", "ブログ", "執筆", "技術文書", "ガイド"]
 lang: "ja"
 featured: true
@@ -306,7 +306,7 @@ title: "記事のタイトル"
 description: "記事の説明文"
 pubDate: 2025-01-21
 author: "Terisuke"
-category: "tech-lab-creativity"
+category: "lab"
 tags: ["tag1", "tag2", "tag3"]
 image:
   url: "/images/blog/example.avif"

@@ -3,7 +3,7 @@ title: "The Complete Markdown Guide: Everything for Blog Post Creation"
 description: "A complete guide to Markdown syntax and rich content features usable on the Cor.inc blog.  Covers all features for creating beautiful articles, including link cards, equations, code highlighting, and more."
 pubDate: 2025-01-21
 author: "Terisuke"
-category: "tech-lab-creativity"
+category: "lab"
 tags: ["Markdown", "Blog", "Writing", "Technical Documentation", "Guide"]
 lang: "en"
 featured: true
@@ -305,7 +305,7 @@ title: "Article Title"
 description: "Article description"
 pubDate: 2025-01-21
 author: "Terisuke"
-category: "tech-lab-creativity"
+category: "lab"
 tags: ["tag1", "tag2", "tag3"]
 image:
   url: "/images/blog/example.avif"

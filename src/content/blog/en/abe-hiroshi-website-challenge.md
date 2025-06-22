@@ -3,7 +3,7 @@ title: "The Story of Creating an Amazing Homepage After Continuously Challenging
 description: 'The trajectory and technical insights of a man who, self-proclaimed as "the owner of the fastest-downloading homepage," persistently challenged Abe Hiroshi''''s homepage.'
 pubDate: 2024-01-20
 author: "Terisuke"
-category: "high-performance-engineering"
+category: "engineering"
 tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"]
 image:
   url: "/images/blog/high-performance-web.avif"

@@ -9,10 +9,10 @@ const blogCollection = defineCollection({
     updatedDate: z.coerce.date().optional(),
     author: z.string().default('Terisuke'),
     category: z.enum([
-      'ai-driven-futures',
-      'high-performance-engineering', 
-      'founders-journey',
-      'tech-lab-creativity'
+      'ai',
+      'engineering', 
+      'founder',
+      'lab'
     ]),
     tags: z.array(z.string()).default([]),
     image: z.object({

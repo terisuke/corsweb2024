@@ -9,24 +9,24 @@ const { category } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 
 const categoryColors = {
-  'ai-driven-futures': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-  'high-performance-engineering': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
-  'founders-journey': 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200',
-  'tech-lab-creativity': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  'ai': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  'engineering': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+  'founder': 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200',
+  'lab': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
 };
 
 const categoryLabels = {
   ja: {
-    'ai-driven-futures': 'AI駆動の未来',
-    'high-performance-engineering': '高性能エンジニアリング',
-    'founders-journey': '起業家の軌跡',
-    'tech-lab-creativity': '技術ラボと創造性',
+    'ai': 'AI',
+    'engineering': 'エンジニアリング',
+    'founder': '創業',
+    'lab': 'ラボ',
   },
   en: {
-    'ai-driven-futures': 'AI-Driven Futures',
-    'high-performance-engineering': 'High-Performance Engineering',
-    'founders-journey': "The Founder's Journey",
-    'tech-lab-creativity': 'Tech Lab & Creativity',
+    'ai': 'AI',
+    'engineering': 'Engineering',
+    'founder': 'Founder',
+    'lab': 'Lab',
   },
 };
 

@@ -3,7 +3,7 @@ title: "7x Productivity Boost with AI-Driven Development: My Experience"
 description: "A practical case study demonstrating a 7x increase in development speed using a workflow incorporating cutting-edge AI tools."
 pubDate: 2024-01-15
 author: "Terisuke"
-category: "ai-driven-futures"
+category: "ai"
 tags: ["AI", "開発効率", "Cursor", "CodeRabbit", "GitHub Copilot"]
 image:
   url: "/images/blog/ai-driven-development.avif"

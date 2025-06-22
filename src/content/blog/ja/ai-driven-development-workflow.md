@@ -3,7 +3,7 @@ title: "AI駆動開発で生産性が7倍に：私の実体験"
 description: "最新AIツールを組み合わせた開発ワークフローにより、従来の7倍の開発速度を実現した実践的なケーススタディ"
 pubDate: 2024-01-15
 author: "Terisuke"
-category: "ai-driven-futures"
+category: "ai"
 tags: ["AI", "開発効率", "Cursor", "CodeRabbit", "GitHub Copilot"]
 image:
   url: "/images/blog/ai-driven-development.avif"

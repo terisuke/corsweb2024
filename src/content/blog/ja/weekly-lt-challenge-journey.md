@@ -3,7 +3,7 @@ title: "毎週LT登壇を1年続けたら人生が激変した話"
 description: "崖っぷち未経験エンジニア経営者が毎週LT登壇チャレンジを通じて得た成長と学び、そして人生の変化"
 pubDate: 2024-01-25
 author: "Terisuke"
-category: "founders-journey"
+category: "founder"
 tags: ["LT", "成長", "コミュニティ", "起業", "エンジニア"]
 image:
   url: "/images/blog/lt-challenge.avif"
