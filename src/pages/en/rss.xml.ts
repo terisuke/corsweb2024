@@ -46,6 +46,6 @@ export async function GET(context: APIContext) {
         <height>400</height>
       </image>
     `,
-    stylesheet: '/rss-styles.xsl',
+    // stylesheet: '/rss-styles.xsl', // Commented out: XSL file doesn't exist
   });
 }
