@@ -78,7 +78,45 @@ const currentLocale = getCurrentLocale(Astro.url);
 const { title, description, pubDate, updatedDate, author, category, tags, image, ogImage } = post.data;
 
 // Use auto-generated OGP image if no custom ogImage is set
-const finalOgImage = ogImage || new URL(`/og/${post.slug}.svg`, Astro.site).toString();
+const finalOgImage = ogImage || new URL(`/og/${currentLocale}/${post.slug}.svg`, Astro.site).toString();
+
+// Calculate reading time (assuming 200 words per minute)
+// This function is for future use when full content is available
+function calculateReadingTime(content: string): number {
+  const words = content.trim().split(/\s+/).length;
+  return Math.ceil(words / 200);
+}
+
+// Estimate reading time from description for now
+const estimatedReadingTime = Math.max(1, Math.ceil(description.split(/\s+/).length / 50));
+
+// Generate keywords from title, description, category, and tags
+const generateKeywords = () => {
+  const baseKeywords = tags.slice(); // Copy tags array
+  
+  // Add category-based keywords
+  const categoryKeywords = {
+    'ai': ['AI', '人工知能', 'Artificial Intelligence', 'Machine Learning', 'Deep Learning'],
+    'engineering': ['エンジニアリング', 'Engineering', 'Software Development', '開発', 'プログラミング'],
+    'founder': ['起業', 'Startup', 'Entrepreneur', 'Business', 'スタートアップ'],
+    'lab': ['技術', 'Technology', 'Innovation', '革新', 'Research']
+  };
+  
+  if (categoryKeywords[category as keyof typeof categoryKeywords]) {
+    baseKeywords.push(...categoryKeywords[category as keyof typeof categoryKeywords]);
+  }
+  
+  // Add general tech keywords for all posts
+  baseKeywords.push(...(
+    currentLocale === 'ja' 
+      ? ['技術ブログ', 'テックブログ', 'エンジニア', '開発者', 'プログラマー', 'IT', 'Cor.inc']
+      : ['tech blog', 'technology', 'developer', 'programming', 'software', 'engineering', 'Cor.inc']
+  ));
+  
+  return baseKeywords.flat().slice(0, 15).join(', '); // Limit to 15 keywords
+};
+
+const keywords = generateKeywords();
 
 const formattedPubDate = new Date(pubDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
   year: 'numeric',
@@ -92,37 +130,77 @@ const formattedUpdatedDate = updatedDate ? new Date(updatedDate).toLocaleDateStr
   day: 'numeric',
 }) : null;
 
+// Enhanced structured data for tech blog
 const articleJsonLd = {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
+  "@type": category === 'ai' || category === 'engineering' ? "TechArticle" : "BlogPosting",
   "headline": title,
   "description": description,
+  "keywords": keywords,
+  "inLanguage": currentLocale,
   "author": {
     "@type": "Person",
+    "@id": "https://cor-jp.com/about#terisuke",
     "name": author,
-    "url": "https://cor-jp.com/about"
+    "url": "https://cor-jp.com/about",
+    "sameAs": [
+      "https://twitter.com/cor_terisuke",
+      "https://github.com/terisuke",
+      "https://www.linkedin.com/in/teradakousuke/"
+    ]
   },
   "datePublished": pubDate.toISOString(),
   "dateModified": (updatedDate || pubDate).toISOString(),
   "publisher": {
     "@type": "Organization",
+    "@id": "https://cor-jp.com#organization",
     "name": "Cor.inc",
+    "url": "https://cor-jp.com",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://cor-jp.com/logo.png"
-    }
+      "url": "https://cor-jp.com/logo.png",
+      "width": 400,
+      "height": 400
+    },
+    "sameAs": [
+      "https://twitter.com/cor_terisuke",
+      "https://github.com/terisuke"
+    ]
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": new URL(Astro.url.pathname, Astro.site).toString()
   },
+  "url": new URL(Astro.url.pathname, Astro.site).toString(),
+  "articleSection": category,
+  "articleBody": description, // This should ideally be the full content
+  "wordCount": estimatedReadingTime * 200, // Estimated based on reading time
+  "commentCount": 0,
+  "isAccessibleForFree": true,
+  "isFamilyFriendly": true,
+  "copyrightHolder": {
+    "@type": "Organization",
+    "@id": "https://cor-jp.com#organization"
+  },
+  "copyrightYear": new Date(pubDate).getFullYear(),
+  "genre": currentLocale === 'ja' ? "技術ブログ" : "Technology Blog",
+  "about": tags.map(tag => ({
+    "@type": "Thing",
+    "name": tag
+  })),
   ...(image && {
     "image": {
       "@type": "ImageObject",
       "url": new URL(image.url, Astro.site).toString(),
-      "caption": image.alt
+      "caption": image.alt,
+      "width": 1200,
+      "height": 630
     }
-  })
+  }),
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", "h2", "h3"]
+  }
 };
 
 const breadcrumbJsonLd = {
@@ -148,6 +226,36 @@ const breadcrumbJsonLd = {
     }
   ]
 };
+
+// Website schema with search action for better search engine integration
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://cor-jp.com#website",
+  "name": "Cor.inc",
+  "alternateName": currentLocale === 'ja' ? "コー株式会社" : "Cor Inc",
+  "url": "https://cor-jp.com",
+  "description": currentLocale === 'ja' 
+    ? "AI技術でコミュニケーションの未来を創造する技術ブログ"
+    : "Creating the future of communication with AI technology - Tech Blog",
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://cor-jp.com#organization"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": `https://cor-jp.com${currentLocale === 'en' ? '/en' : ''}/blog?search={search_term_string}`
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "inLanguage": [currentLocale],
+  "copyrightHolder": {
+    "@type": "Organization",
+    "@id": "https://cor-jp.com#organization"
+  }
+};
 ---
 
 <!doctype html>
@@ -166,8 +274,17 @@ const breadcrumbJsonLd = {
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={author} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    
+    <!-- RSS Feeds -->
+    <link rel="alternate" type="application/rss+xml" title="Cor.inc 技術ブログ (日本語)" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Cor.inc Tech Blog (English)" href="/en/rss.xml" />
     
     <!-- Article specific meta tags -->
     <meta property="article:published_time" content={pubDate.toISOString()} />
@@ -212,6 +329,7 @@ const breadcrumbJsonLd = {
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
     
     <!-- KaTeX CSS for math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">

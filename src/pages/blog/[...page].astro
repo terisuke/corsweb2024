@@ -21,10 +21,10 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 
 const { page } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
-const pageTitle = currentLocale === 'ja' ? 'ブログ | Cor.inc' : 'Blog | Cor.inc';
+const pageTitle = currentLocale === 'ja' ? '技術ブログ | Cor.inc' : 'Tech Blog | Cor.inc';
 const pageDescription = currentLocale === 'ja' 
-  ? 'AI、エンジニアリング、創業、ラボに関する洞察とストーリーをお届けします。'
-  : 'Latest insights and stories on AI, engineering, founder journey, and lab creativity.';
+  ? 'AI・機械学習、エンジニアリング、スタートアップ創業、技術革新に関する最新の技術ブログ。開発者・エンジニア向けの実践的な知識と洞察をお届けします。'
+  : 'Latest tech blog covering AI/Machine Learning, software engineering, startup journey, and innovation. Practical insights and knowledge for developers and engineers.';
 
 // Categories for filtering
 const categories = [
@@ -46,6 +46,21 @@ const categories = [
       <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
         {pageDescription}
       </p>
+      
+      <!-- RSS Feed Link -->
+      <div class="mt-4">
+        <a 
+          href="/rss.xml" 
+          class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 transition-colors"
+          title="RSSフィードを購読"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z"/>
+            <path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1zM3 15a2 2 0 114 0 2 2 0 01-4 0z"/>
+          </svg>
+          {currentLocale === 'ja' ? 'RSS購読' : 'RSS Feed'}
+        </a>
+      </div>
       
       <!-- Pagination Info -->
       {page.total > page.size && (
