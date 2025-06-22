@@ -36,10 +36,10 @@ const id: string = (Astro.params.id as string | undefined) ?? (Astro.props as an
 const currentLocale = getCurrentLocale(Astro.url);
 
 const catLabelMap: Record<string, { ja: string; en: string }> = {
-  'ai-driven-futures': { ja: 'AI駆動の未来', en: 'AI-Driven Futures' },
-  'high-performance-engineering': { ja: '高性能エンジニアリング', en: 'High-Performance Engineering' },
-  'founders-journey': { ja: '創業者の軌跡', en: 'Founders Journey' },
-  'tech-lab-creativity': { ja: 'テックラボの創造性', en: 'Tech Lab Creativity' },
+  'ai': { ja: 'AI', en: 'AI' },
+  'engineering': { ja: 'エンジニアリング', en: 'Engineering' },
+  'founder': { ja: '創業', en: 'Founder' },
+  'lab': { ja: 'ラボ', en: 'Lab' },
 };
 
 const categoryLabel = catLabelMap[id]?.[currentLocale === 'ja' ? 'ja' : 'en'] ?? `Unknown Category (${id})`;

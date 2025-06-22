@@ -3,7 +3,7 @@ title: "阿部寛のホームページに挑み続けたらすごいHPができ�
 description: "「自称下り最速のホームページを持つ男」として、阿部寛のホームページに挑戦し続けた軌跡と技術的洞察"
 pubDate: 2024-01-20
 author: "Terisuke"
-category: "high-performance-engineering"
+category: "engineering"
 tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"]
 image:
   url: "/images/blog/high-performance-web.avif"

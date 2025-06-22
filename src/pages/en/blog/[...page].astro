@@ -18,7 +18,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
         description: "A practical case study demonstrating a 7x increase in development speed using a workflow incorporating cutting-edge AI tools.",
         pubDate: new Date("2024-01-15"),
         author: "Terisuke",
-        category: "ai-driven-futures",
+        category: "ai",
         tags: ["AI", "DevEfficiency", "Cursor", "CodeRabbit", "GitHub Copilot"],
         image: null,
         lang: "en",
@@ -32,7 +32,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
         description: "The trajectory and technical insights of a man who, self-proclaimed as \"the owner of the fastest-downloading homepage,\" persistently challenged Abe Hiroshi's homepage.",
         pubDate: new Date("2024-01-20"),
         author: "Terisuke",
-        category: "high-performance-engineering",
+        category: "engineering",
         tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"],
         image: null,
         lang: "en",
@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
         description: "The growth, learning, and life changes experienced by a struggling, inexperienced engineer and CEO through a weekly lightning talk challenge.",
         pubDate: new Date("2024-01-25"),
         author: "Terisuke",
-        category: "founders-journey",
+        category: "founder",
         tags: ["LT", "Growth", "Community", "Startup", "Engineer"],
         image: null,
         lang: "en",
@@ -60,7 +60,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
         description: "Creative use of technology! An experimental project building an automated LT presentation system using Zundamon with a combination of Marp, VOICEVOX, and VTubeStudio.",
         pubDate: new Date("2024-01-30"),
         author: "Terisuke",
-        category: "tech-lab-creativity",
+        category: "lab",
         tags: ["Marp", "VOICEVOX", "VTubeStudio", "Automation", "CreativeProject"],
         image: null,
         lang: "en"
@@ -73,7 +73,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
         description: "A complete guide to Markdown syntax and rich content features usable on the Cor.inc blog.  Covers all features for creating beautiful articles, including link cards, equations, code highlighting, and more.",
         pubDate: new Date("2025-01-21"),
         author: "Terisuke",
-        category: "tech-lab-creativity",
+        category: "lab",
         tags: ["Markdown", "Blog", "Writing", "Technical Documentation", "Guide"],
         image: null,
         lang: "en",
@@ -94,15 +94,15 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 const { page } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 const pageTitle = 'Blog | Cor.inc';
-const pageDescription = 'Latest insights and stories on AI-driven futures, high-performance engineering, founders journey, and tech lab creativity.';
+const pageDescription = 'Latest insights and stories on AI, engineering, founder journey, and lab creativity.';
 
 // Categories for filtering
 const categories = [
   { id: 'all', label: 'All' },
-  { id: 'ai-driven-futures', label: 'AI-Driven Futures' },
-  { id: 'high-performance-engineering', label: 'High-Performance Engineering' },
-  { id: 'founders-journey', label: 'Founders Journey' },
-  { id: 'tech-lab-creativity', label: 'Tech Lab Creativity' },
+  { id: 'ai', label: 'AI' },
+  { id: 'engineering', label: 'Engineering' },
+  { id: 'founder', label: 'Founder' },
+  { id: 'lab', label: 'Lab' },
 ];
 ---
 

@@ -3,7 +3,7 @@ title: "[Marp×VOICEVOX×VTubeStudio] Zundamon Gave an LT Presentation"
 description: "Creative use of technology! An experimental project building an automated LT presentation system using Zundamon with a combination of Marp, VOICEVOX, and VTubeStudio."
 pubDate: 2024-01-30
 author: "Terisuke"
-category: "tech-lab-creativity"
+category: "lab"
 tags: ["Marp", "VOICEVOX", "VTubeStudio", "自動化", "創造的プロジェクト"]
 image:
   url: "/images/blog/zundamon-project.avif"

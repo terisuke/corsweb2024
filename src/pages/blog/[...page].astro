@@ -23,16 +23,16 @@ const { page } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 const pageTitle = currentLocale === 'ja' ? 'ブログ | Cor.inc' : 'Blog | Cor.inc';
 const pageDescription = currentLocale === 'ja' 
-  ? 'AI駆動開発、高性能エンジニアリング、創業者の軌跡、テックラボの創造性に関する洞察とストーリーをお届けします。'
-  : 'Latest insights and stories on AI-driven futures, high-performance engineering, founders journey, and tech lab creativity.';
+  ? 'AI、エンジニアリング、創業、ラボに関する洞察とストーリーをお届けします。'
+  : 'Latest insights and stories on AI, engineering, founder journey, and lab creativity.';
 
 // Categories for filtering
 const categories = [
   { id: 'all', label: currentLocale === 'ja' ? 'すべて' : 'All' },
-  { id: 'ai-driven-futures', label: currentLocale === 'ja' ? 'AI駆動の未来' : 'AI-Driven Futures' },
-  { id: 'high-performance-engineering', label: currentLocale === 'ja' ? '高性能エンジニアリング' : 'High-Performance Engineering' },
-  { id: 'founders-journey', label: currentLocale === 'ja' ? '創業者の軌跡' : 'Founders Journey' },
-  { id: 'tech-lab-creativity', label: currentLocale === 'ja' ? 'テックラボの創造性' : 'Tech Lab Creativity' },
+  { id: 'ai', label: currentLocale === 'ja' ? 'AI' : 'AI' },
+  { id: 'engineering', label: currentLocale === 'ja' ? 'エンジニアリング' : 'Engineering' },
+  { id: 'founder', label: currentLocale === 'ja' ? '創業' : 'Founder' },
+  { id: 'lab', label: currentLocale === 'ja' ? 'ラボ' : 'Lab' },
 ];
 ---
 

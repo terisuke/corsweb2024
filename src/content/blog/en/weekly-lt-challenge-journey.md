@@ -3,7 +3,7 @@ title: "My Life Transformed After a Year of Weekly Lightning Talks"
 description: "The growth, learning, and life changes experienced by a struggling, inexperienced engineer and CEO through a weekly lightning talk challenge."
 pubDate: 2024-01-25
 author: "Terisuke"
-category: "founders-journey"
+category: "founder"
 tags: ["LT", "成長", "コミュニティ", "起業", "エンジニア"]
 image:
   url: "/images/blog/lt-challenge.avif"

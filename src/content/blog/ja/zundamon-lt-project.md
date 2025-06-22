@@ -3,7 +3,7 @@ title: "【Marp×VOICEVOX×VTubeStudio】ずんだもんにLT発表してもら�
 description: "技術の創造的活用！Marp、VOICEVOX、VTubeStudioを組み合わせて、ずんだもんによる自動LT発表システムを構築した実験プロジェクト"
 pubDate: 2024-01-30
 author: "Terisuke"
-category: "tech-lab-creativity"
+category: "lab"
 tags: ["Marp", "VOICEVOX", "VTubeStudio", "自動化", "創造的プロジェクト"]
 image:
   url: "/images/blog/zundamon-project.avif"
