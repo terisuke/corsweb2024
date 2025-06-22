@@ -1,0 +1,164 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import PostCard from '../../../../components/blog/PostCard.astro';
+import { BLOG_CATEGORIES, getCategoryDescription, getCategoryLabel } from '../../../../config/categories';
+import Layout from '../../../../layouts/Layout.astro';
+import { getCurrentLocale } from '../../../../utils/i18n';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+  id: string;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Get all Japanese blog posts from Content Collections
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'ja' && !data.isDraft;
+  });
+  
+  // Get available categories
+  const categories = Array.from(new Set(allPosts.map(p => p.data.category)));
+
+  const paths = categories.flatMap((category: string) => {
+    const filtered = allPosts.filter(p => p.data.category === category);
+    const sorted = filtered.sort(
+      (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    );
+    return paginate(sorted, { 
+      pageSize: 12, 
+      params: { id: category },
+      props: { categoryId: category }
+    });
+  });
+  return paths;
+};
+
+const { page } = Astro.props as Props;
+const base = import.meta.env.BASE_URL || '';
+// `Astro.params.id` が存在すればそれを使用。無い場合は `getStaticPaths` で渡された `categoryId` をフォールバックに使う。
+const id: string = Astro.params.id ?? (Astro.props as any).categoryId ?? '';
+const currentLocale = getCurrentLocale(Astro.url);
+
+const isKnownCategory = BLOG_CATEGORIES.some(cat => cat.id === id);
+const categoryLabel = isKnownCategory 
+  ? getCategoryLabel(id, currentLocale === 'ja' ? 'ja' : 'en')
+  : (currentLocale === 'ja' ? 'カテゴリーが見つかりません' : 'Category Not Found');
+const pageTitle = `${categoryLabel} | Blog | Cor.inc`;
+const categoryDesc = getCategoryDescription(id, currentLocale === 'ja' ? 'ja' : 'en');
+const pageDescription = categoryDesc || (currentLocale === 'ja'
+  ? `${categoryLabel} に属するブログ記事一覧` : `Blog posts in ${categoryLabel}`);
+
+// 「すべて」リンクのアクティブ判定
+const isAllActive = !id || !BLOG_CATEGORIES.find(cat => cat.id === id);
+
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Page Header -->
+    <div class="mb-12 text-center">
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+        {categoryLabel}
+      </h1>
+      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+        {pageDescription}
+      </p>
+      
+      <!-- Pagination Info -->
+      {page.total > page.size && (
+        <p class="mt-4 text-sm text-stone-500 dark:text-stone-400">
+          {currentLocale === 'ja' 
+            ? `${page.total}記事中 ${page.start + 1}-${page.end}記事を表示 (${page.currentPage}/${page.lastPage}ページ)`
+            : `Showing ${page.start + 1}-${page.end} of ${page.total} articles (Page ${page.currentPage} of ${page.lastPage})`
+          }
+        </p>
+      )}
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-8 flex flex-wrap justify-center gap-2">
+      <a
+        href={currentLocale === 'ja' ? '/blog' : '/en/blog'}
+        class={`rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 ${
+          isAllActive
+            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+            : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'
+        }`}
+      >
+        {currentLocale === 'ja' ? 'すべて' : 'All'}
+      </a>
+      {BLOG_CATEGORIES.map((category) => (
+        <a
+          href={currentLocale === 'ja' ? `/blog/category/${category.id}` : `/en/blog/category/${category.id}`}
+          class={`rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 ${
+            category.id === id
+              ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+              : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'
+          }`}
+        >
+          {category.label[currentLocale === 'ja' ? 'ja' : 'en']}
+        </a>
+      ))}
+    </div>
+
+    <!-- 記事グリッド -->
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {page.data.map(post => (
+        <PostCard post={post} />
+      ))}
+    </div>
+
+    <!-- ページネーション -->
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+        {page.url.prev ? (
+          <a
+            href={`${base}blog/category/${id}${page.url.prev}`}
+            class={`rounded-lg px-3 py-2 text-sm font-medium bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600`}
+          >
+            {currentLocale === 'ja' ? '前へ' : 'Previous'}
+          </a>
+        ) : (
+          <span
+            class="rounded-lg px-3 py-2 text-sm font-medium cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500"
+          >
+            {currentLocale === 'ja' ? '前へ' : 'Previous'}
+          </span>
+        )}
+
+        <div class="flex gap-1">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(num => (
+            <a
+              href={`${base}blog/category/${id}${num === 1 ? '' : '/' + num}`}
+              class={`rounded-lg px-3 py-2 text-sm font-medium ${
+                num === page.currentPage
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+              }`}
+              aria-current={num === page.currentPage ? 'page' : undefined}
+            >
+              {num}
+            </a>
+          ))}
+        </div>
+
+        {page.url.next ? (
+          <a
+            href={`${base}blog/category/${id}${page.url.next}`}
+            class={`rounded-lg px-3 py-2 text-sm font-medium bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600`}
+          >
+            {currentLocale === 'ja' ? '次へ' : 'Next'}
+          </a>
+        ) : (
+          <span
+            class="rounded-lg px-3 py-2 text-sm font-medium cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500"
+          >
+            {currentLocale === 'ja' ? '次へ' : 'Next'}
+          </span>
+        )}
+      </nav>
+    )}
+  </div>
+</Layout> 

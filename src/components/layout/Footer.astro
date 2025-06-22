@@ -1,5 +1,5 @@
 ---
-import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -19,13 +19,8 @@ const bottomLinks = [
         isExternal: true,
       },
       {
-        name: 'Qiita',
-        href: 'https://qiita.com/terisuke',
-        isExternal: true,
-      },
-      {
-        name: 'Zenn',
-        href: 'https://zenn.dev/cloudia',
+        name: 'YouTube',
+        href: 'https://www.youtube.com/@Cloudia_Cor',
         isExternal: true,
       },
     ],
@@ -61,6 +56,11 @@ const bottomLinks = [
       {
         name: t.footer.links.privacy,
         href: getLocalizedUrl('/privacy', currentLocale),
+        isExternal: false,
+      },
+      {
+        name: currentLocale === 'ja' ? '特商法表記' : 'Legal Notice',
+        href: getLocalizedUrl('/legal/tokushoho', currentLocale),
         isExternal: false,
       },
     ],

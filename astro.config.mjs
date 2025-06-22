@@ -1,8 +1,8 @@
-import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import compress from 'astro-compress';
-import sitemap from '@astrojs/sitemap';
 import compressor from "astro-compressor";
+import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://cor-jp.com',
@@ -12,6 +12,28 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: false
     }
+  },
+  markdown: {
+    remarkPlugins: [
+      'remark-gfm',
+      'remark-math',
+      ['remark-link-card-plus', { 
+        cache: true,
+        shortenUrl: true,
+        showImage: true,
+        imagePosition: 'right'
+      }],
+    ],
+    rehypePlugins: [
+      'rehype-slug',
+      ['rehype-autolink-headings', { behavior: 'append', properties: { class: 'heading-link' } }],
+      'rehype-katex',
+    ],
+    shikiConfig: {
+      theme: 'dracula',
+      langs: [],
+      wrap: true,
+    },
   },
   integrations: [
     tailwind(), 
@@ -27,7 +49,35 @@ export default defineConfig({
       JavaScript: true,
       SVG: true
     }), 
-    sitemap(), 
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+      i18n: {
+        defaultLocale: 'ja',
+        locales: {
+          ja: 'ja',
+          en: 'en'
+        }
+      },
+      customPages: [
+        'https://cor-jp.com/blog',
+        'https://cor-jp.com/en/blog',
+        'https://cor-jp.com/blog/category/ai',
+        'https://cor-jp.com/blog/category/engineering',
+        'https://cor-jp.com/blog/category/founder',
+        'https://cor-jp.com/blog/category/lab',
+      ],
+      filter: (page) => {
+        // Exclude API routes and unnecessary pages
+        if (page.includes('/api/') || 
+            page.includes('/_astro/') || 
+            page.includes('/remark-link-card-plus/')) {
+          return false;
+        }
+        return true;
+      }
+    }), 
     compressor({
       gzip: true,
       brotli: true
@@ -38,7 +88,7 @@ export default defineConfig({
       // 特定のモジュールへのパスエイリアスや依存関係の解決設定
     },
     optimizeDeps: {
-      exclude: ['astro:*']
+      exclude: []
     },
     build: {
       minify: 'terser',

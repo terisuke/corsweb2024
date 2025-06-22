@@ -1,0 +1,39 @@
+---
+import { getCurrentLocale } from '../../utils/i18n';
+
+interface Props {
+  category: string;
+}
+
+const { category } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
+
+const categoryColors = {
+  'ai': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  'engineering': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+  'founder': 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200',
+  'lab': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+};
+
+const categoryLabels = {
+  ja: {
+    'ai': 'AI',
+    'engineering': 'エンジニアリング',
+    'founder': '創業',
+    'lab': 'ラボ',
+  },
+  en: {
+    'ai': 'AI',
+    'engineering': 'Engineering',
+    'founder': 'Founder',
+    'lab': 'Lab',
+  },
+};
+
+const colorClass = categoryColors[category as keyof typeof categoryColors] || 'bg-stone-100 text-stone-800 dark:bg-stone-700 dark:text-stone-200';
+const label = categoryLabels[currentLocale][category as keyof typeof categoryLabels['ja']] || category;
+---
+
+<span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
+  {label}
+</span>

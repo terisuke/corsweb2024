@@ -1,0 +1,278 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import CategoryBadge from '../../components/blog/CategoryBadge.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import ShareButtons from '../../components/blog/ShareButtons.astro';
+import TableOfContents from '../../components/blog/TableOfContents.astro';
+import TagList from '../../components/blog/TagList.astro';
+import TipButton from '../../components/blog/TipButton.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getCurrentLocale } from '../../utils/i18n';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'ja' && !data.isDraft;
+  });
+
+  return posts.map((post) => {
+    const cleanSlug = post.slug.replace('ja/', '');
+    return {
+      params: { slug: cleanSlug },
+      props: { post },
+    };
+  });
+}
+
+interface Props { post: CollectionEntry<'blog'>; }
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+const currentLocale = getCurrentLocale(Astro.url);
+
+// Get related posts and navigation posts
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.lang === 'ja' && !data.isDraft;
+});
+
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+const currentIndex = sortedPosts.findIndex(p => p.slug === post.slug);
+const relatedPosts = allPosts
+  .filter(p => p.slug !== post.slug && p.data.category === post.data.category)
+  .slice(0, 3);
+
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
+const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : undefined;
+
+const formattedPubDate = new Date(post.data.pubDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const formattedUpdatedDate = post.data.updatedDate ? new Date(post.data.updatedDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}) : null;
+
+// Calculate reading time based on content length
+const readingTime = Math.max(1, Math.round(post.body.length / 1000));
+const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+---
+
+<style>
+  /* Hide the appended heading links to keep clean heading appearance */
+  .prose .heading-link {
+    opacity: 0;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    margin-left: 0.5rem;
+    font-size: 0.875em;
+  }
+  
+  .prose h1:hover .heading-link,
+  .prose h2:hover .heading-link,
+  .prose h3:hover .heading-link,
+  .prose h4:hover .heading-link,
+  .prose h5:hover .heading-link,
+  .prose h6:hover .heading-link {
+    opacity: 0.7;
+  }
+  
+  .prose .heading-link:hover {
+    opacity: 1;
+  }
+
+  /* Ensure proper heading styles */
+  .prose h1 {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    color: rgb(28 25 23) !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    line-height: 1.375 !important;
+    color: rgb(28 25 23) !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    color: rgb(28 25 23) !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .prose h4 {
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    color: rgb(28 25 23) !important;
+    margin-top: 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Dark mode heading colors */
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4 {
+    color: rgb(245 245 244) !important;
+  }
+</style>
+
+<BlogLayout post={post} relatedPosts={relatedPosts} nextPost={nextPost} prevPost={prevPost}>
+  <article class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2 text-sm text-stone-600 dark:text-stone-400">
+        <li>
+          <a href={currentLocale === 'ja' ? '/' : '/en'} class="hover:text-blue-600 dark:hover:text-blue-400">
+            {currentLocale === 'ja' ? 'ホーム' : 'Home'}
+          </a>
+        </li>
+        <li class="before:content-['/'] before:mx-2">
+          <a href={currentLocale === 'ja' ? '/blog' : '/en/blog'} class="hover:text-blue-600 dark:hover:text-blue-400">
+            {currentLocale === 'ja' ? 'ブログ' : 'Blog'}
+          </a>
+        </li>
+        <li class="before:content-['/'] before:mx-2">
+          <span class="text-stone-900 dark:text-stone-100">{post.data.title}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="mb-8">
+      <div class="mb-4 flex items-center gap-4 text-sm">
+        <CategoryBadge category={post.data.category} />
+        <time datetime={post.data.pubDate.toISOString()} class="text-stone-500 dark:text-stone-400">
+          {formattedPubDate}
+        </time>
+        <span class="text-stone-500 dark:text-stone-400">
+          {readingTime} {currentLocale === 'ja' ? '分で読了' : 'min read'}
+        </span>
+      </div>
+      
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+        {post.data.title}
+      </h1>
+      
+      <p class="mb-6 text-lg text-stone-600 dark:text-stone-300">
+        {post.data.description}
+      </p>
+      
+      <div class="flex items-center justify-between border-b border-stone-200 pb-6 dark:border-stone-700">
+        <div class="flex items-center gap-3">
+          <div class="text-sm">
+            <p class="font-medium text-stone-900 dark:text-stone-100">{post.data.author}</p>
+            {formattedUpdatedDate && (
+              <p class="text-stone-500 dark:text-stone-400">
+                {currentLocale === 'ja' ? '更新日' : 'Updated'}: {formattedUpdatedDate}
+              </p>
+            )}
+          </div>
+        </div>
+        
+        <ShareButtons title={post.data.title} url={fullUrl} />
+      </div>
+    </header>
+
+    <!-- Featured Image -->
+    {post.data.image && (
+      <div class="mb-8 overflow-hidden rounded-2xl">
+        <img
+          src={post.data.image.url}
+          alt={post.data.image.alt}
+          class="h-auto w-full"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <!-- Table of Contents -->
+    {headings.length > 3 && (
+      <div class="mb-8">
+        <TableOfContents headings={headings} />
+      </div>
+    )}
+
+    <!-- Article Content -->
+    <div class="prose prose-lg prose-stone mx-auto dark:prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h1:font-bold prose-h1:mt-8 prose-h1:mb-6 prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-3 prose-h4:text-lg prose-h4:font-semibold prose-h4:mt-4 prose-h4:mb-2 prose-p:mb-4 prose-a:text-blue-600 prose-a:no-underline prose-a:hover:underline dark:prose-a:text-blue-400 prose-code:rounded prose-code:bg-stone-200 prose-code:px-1 prose-code:py-0.5 prose-code:text-stone-800 prose-code:before:content-[''] prose-code:after:content-[''] dark:prose-code:bg-stone-700 dark:prose-code:text-stone-200 prose-pre:bg-stone-900 prose-pre:text-stone-100 prose-pre:border prose-pre:border-stone-300 dark:prose-pre:bg-stone-800 dark:prose-pre:text-stone-200 dark:prose-pre:border-stone-600">
+      <Content />
+    </div>
+
+    <!-- Support/Tip Section -->
+    <div class="mx-auto mt-12 max-w-3xl">
+      <TipButton />
+    </div>
+
+    <!-- Tags -->
+    {post.data.tags.length > 0 && (
+      <div class="mt-12 border-t border-stone-200 pt-8 dark:border-stone-700">
+        <h3 class="mb-4 text-sm font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
+          {currentLocale === 'ja' ? 'タグ' : 'Tags'}
+        </h3>
+        <TagList tags={post.data.tags} />
+      </div>
+    )}
+
+    <!-- Navigation -->
+    <nav class="mt-12 grid gap-4 border-t border-stone-200 pt-8 dark:border-stone-700 sm:grid-cols-2">
+      {prevPost && (
+        <a
+          href={`/blog/${prevPost.slug.replace('ja/', '')}`}
+          class="group flex flex-col rounded-lg border border-stone-200 p-4 transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400"
+        >
+          <span class="mb-1 text-sm text-stone-500 dark:text-stone-400">
+            ← {currentLocale === 'ja' ? '前の記事' : 'Previous'}
+          </span>
+          <span class="font-medium text-stone-900 group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400">
+            {prevPost.data.title}
+          </span>
+        </a>
+      )}
+      
+      {nextPost && (
+        <a
+          href={`/blog/${nextPost.slug.replace('ja/', '')}`}
+          class={`group flex flex-col rounded-lg border border-stone-200 p-4 text-right transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400 ${!prevPost ? 'sm:col-start-2' : ''}`}
+        >
+          <span class="mb-1 text-sm text-stone-500 dark:text-stone-400">
+            {currentLocale === 'ja' ? '次の記事' : 'Next'} →
+          </span>
+          <span class="font-medium text-stone-900 group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400">
+            {nextPost.data.title}
+          </span>
+        </a>
+      )}
+    </nav>
+
+    <!-- Related Posts -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-16">
+        <h2 class="mb-8 text-2xl font-bold text-stone-900 dark:text-stone-100">
+          {currentLocale === 'ja' ? '関連記事' : 'Related Posts'}
+        </h2>
+        <div class="grid gap-8 md:grid-cols-3">
+          {relatedPosts.map(relatedPost => (
+            <PostCard post={relatedPost} />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BlogLayout>

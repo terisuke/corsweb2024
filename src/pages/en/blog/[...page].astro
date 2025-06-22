@@ -1,0 +1,150 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import PostCard from '../../../components/blog/PostCard.astro';
+import Layout from '../../../layouts/Layout.astro';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Get all English blog posts from Content Collections
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'en' && !data.isDraft;
+  });
+
+  // Sort posts by publication date (newest first)
+  const sortedPosts = allPosts.sort(
+    (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
+
+  // Paginate with 12 posts per page
+  return paginate(sortedPosts, { pageSize: 12 });
+};
+
+const { page } = Astro.props;
+const pageTitle = 'Tech Blog | Cor.inc';
+const pageDescription = 'Latest tech blog covering AI/Machine Learning, software engineering, startup journey, and innovation. Practical insights and knowledge for developers and engineers.';
+
+// Categories for filtering
+const categories = [
+  { id: 'all', label: 'All' },
+  { id: 'ai', label: 'AI' },
+  { id: 'engineering', label: 'Engineering' },
+  { id: 'founder', label: 'Founder' },
+  { id: 'lab', label: 'Lab' },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Page Header -->
+    <div class="mb-12 text-center">
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+        Blog
+      </h1>
+      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+        {pageDescription}
+      </p>
+      
+      <!-- RSS Feed Link -->
+      <div class="mt-4">
+        <a 
+          href="/en/rss.xml" 
+          class="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 transition-colors"
+          title="Subscribe to RSS Feed"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z"/>
+            <path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1zM3 15a2 2 0 114 0 2 2 0 01-4 0z"/>
+          </svg>
+          RSS Feed
+        </a>
+      </div>
+      
+      <!-- Pagination Info -->
+      {page.total > page.size && (
+        <p class="mt-4 text-sm text-stone-500 dark:text-stone-400">
+          Showing {page.start + 1}-{page.end} of {page.total} articles (Page {page.currentPage} of {page.lastPage})
+        </p>
+      )}
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-8 flex flex-wrap justify-center gap-2">
+      {categories.map(category => (
+        <a
+          href={category.id === 'all' ? '/en/blog' : `/en/blog/category/${category.id}`}
+          class="rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900"
+        >
+          {category.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Blog Posts Grid -->
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {page.data.length > 0 ? (
+        page.data.map(post => (
+          <PostCard post={post} />
+        ))
+      ) : (
+        <div class="col-span-full text-center py-12">
+          <p class="text-lg text-stone-600 dark:text-stone-300">
+            Blog posts are coming soon. Please check back later.
+          </p>
+        </div>
+      )}
+    </div>
+
+    <!-- Pagination Navigation -->
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+        <!-- Previous Page -->
+        <a
+          href={page.url.prev || '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.prev 
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.prev}
+        >
+          Previous
+        </a>
+        
+        <!-- Page Numbers -->
+        <div class="flex gap-1">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(pageNum => (
+            <a
+              href={pageNum === 1 ? '/en/blog' : `/en/blog/${pageNum}`}
+              class={`rounded-lg px-3 py-2 text-sm font-medium ${
+                pageNum === page.currentPage
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+              }`}
+              aria-current={pageNum === page.currentPage ? 'page' : undefined}
+            >
+              {pageNum}
+            </a>
+          ))}
+        </div>
+        
+        <!-- Next Page -->
+        <a
+          href={page.url.next || '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.next 
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.next}
+        >
+          Next
+        </a>
+      </nav>
+    )}
+  </div>
+</Layout>
