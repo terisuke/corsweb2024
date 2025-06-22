@@ -317,10 +317,10 @@ featured: true
 
 ### Category List
 
-- `ai-driven-futures`: AI-Driven Futures
-- `high-performance-engineering`: High-Performance Engineering
-- `founders-journey`: Founder's Journey
-- `tech-lab-creativity`: Tech Lab Creativity
+- **ai-driven-futures** – AI-Driven Futures
+- **high-performance-engineering** – High-Performance Engineering
+- **founders-journey** – Founder's Journey
+- **tech-lab-creativity** – Tech Lab Creativity
 
 ## Best Practices
 

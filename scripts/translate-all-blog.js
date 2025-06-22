@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import RateLimiter from './rate-limiter.js';
 import { translateFile } from './translate-blog.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,7 +13,16 @@ async function translateAllJapanesePosts() {
   const japaneseBlogDir = path.join(path.dirname(__dirname), 'src/content/blog/ja');
   const englishBlogDir = path.join(path.dirname(__dirname), 'src/content/blog/en');
   
+  // Initialize rate limiter for batch operations
+  const rateLimiter = new RateLimiter({
+    requestsPerMinute: 10, // More conservative for batch operations
+    maxRetries: 3,
+    baseDelay: 3000, // 3 seconds base delay
+    maxDelay: 120000 // 2 minutes max delay
+  });
+  
   console.log('🚀 Starting automatic translation of all Japanese blog posts...');
+  console.log(`📊 Rate limiter settings: ${rateLimiter.requestsPerMinute} requests/minute with smart retry logic`);
   
   if (!fs.existsSync(japaneseBlogDir)) {
     console.error('❌ Japanese blog directory not found:', japaneseBlogDir);
@@ -46,11 +56,17 @@ async function translateAllJapanesePosts() {
   for (const file of files) {
     try {
       console.log(`\n🔄 Translating: ${path.basename(file)}`);
-      await translateFile(file);
+      
+      // Use rate limiter for the translation operation
+      await rateLimiter.executeWithRetry(async () => {
+        await translateFile(file);
+      }, `Processing ${path.basename(file)}`);
+      
       successCount++;
       
-      // Add small delay to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Show rate limiter status
+      const status = rateLimiter.getStatus();
+      console.log(`📈 Rate limit status: ${status.requestsInLastMinute}/${status.requestsPerMinute} requests used`);
       
     } catch (error) {
       console.error(`❌ Failed to translate ${path.basename(file)}:`, error.message);

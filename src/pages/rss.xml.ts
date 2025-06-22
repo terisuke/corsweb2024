@@ -23,13 +23,13 @@ export async function GET(context: APIContext) {
       pubDate: post.data.pubDate,
       author: post.data.author,
       categories: [post.data.category, ...post.data.tags],
-      link: `/blog/${post.slug}/`,
-      guid: `https://cor-jp.com/blog/${post.slug}/`,
+      link: `/blog/${post.slug.replace(/^ja//, '')}/`,
+      guid: `https://cor-jp.com/blog/${post.slug.replace(/^ja//, '')}/`,
     })),
     customData: `
       <language>ja</language>
       <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-      <generator>Astro v4.8.7</generator>
+      <generator>Astro</generator>
       <webMaster>contact@cor-jp.com (Terisuke)</webMaster>
       <managingEditor>contact@cor-jp.com (Terisuke)</managingEditor>
       <copyright>Copyright ${new Date().getFullYear()} Cor.inc</copyright>

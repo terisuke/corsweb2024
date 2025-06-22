@@ -73,6 +73,4 @@ import ContactForm from '../components/ContactForm.vue';
 
 この挑戦を通じて、単なる「速さ」を超えた、ユーザー体験を重視したWebサイト設計の重要性を学びました。
 
----
-
 *高性能Webサイトの構築にご興味がある方は、[お問い合わせ](/contact)からご相談ください。*

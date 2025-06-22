@@ -1,4 +1,5 @@
 import { z, defineCollection } from 'astro:content';
+import { getCategoryIds } from '../config/categories';
 
 const blogCollection = defineCollection({
   type: 'content',
@@ -8,12 +9,7 @@ const blogCollection = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     author: z.string().default('Terisuke'),
-    category: z.enum([
-      'ai',
-      'engineering', 
-      'founder',
-      'lab'
-    ]),
+    category: z.enum(getCategoryIds() as [string, ...string[]]),
     tags: z.array(z.string()).default([]),
     image: z.object({
       url: z.string(),

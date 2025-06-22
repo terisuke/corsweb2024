@@ -4,73 +4,33 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
 import { getCurrentLocale } from '../utils/i18n';
+import { BLOG_CATEGORIES } from '../config/categories';
 import type { CollectionEntry } from 'astro:content';
 
+type BlogPostData = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author: string;
+  category: string;
+  tags: string[];
+  image?: { url: string; alt: string };
+  ogImage?: string;
+  lang: string;
+  featured?: boolean;
+};
+
+type BlogPost = CollectionEntry<'blog'> | {
+  slug: string;
+  data: BlogPostData;
+};
+
 interface Props {
-  post: CollectionEntry<'blog'> | {
-    slug: string;
-    data: {
-      title: string;
-      description: string;
-      pubDate: Date;
-      updatedDate?: Date;
-      author: string;
-      category: string;
-      tags: string[];
-      image?: { url: string; alt: string };
-      ogImage?: string;
-      lang: string;
-      featured?: boolean;
-    };
-  };
-  relatedPosts?: (CollectionEntry<'blog'> | {
-    slug: string;
-    data: {
-      title: string;
-      description: string;
-      pubDate: Date;
-      updatedDate?: Date;
-      author: string;
-      category: string;
-      tags: string[];
-      image?: { url: string; alt: string };
-      ogImage?: string;
-      lang: string;
-      featured?: boolean;
-    };
-  })[];
-  nextPost?: CollectionEntry<'blog'> | {
-    slug: string;
-    data: {
-      title: string;
-      description: string;
-      pubDate: Date;
-      updatedDate?: Date;
-      author: string;
-      category: string;
-      tags: string[];
-      image?: { url: string; alt: string };
-      ogImage?: string;
-      lang: string;
-      featured?: boolean;
-    };
-  };
-  prevPost?: CollectionEntry<'blog'> | {
-    slug: string;
-    data: {
-      title: string;
-      description: string;
-      pubDate: Date;
-      updatedDate?: Date;
-      author: string;
-      category: string;
-      tags: string[];
-      image?: { url: string; alt: string };
-      ogImage?: string;
-      lang: string;
-      featured?: boolean;
-    };
-  };
+  post: BlogPost;
+  relatedPosts?: BlogPost[];
+  nextPost?: BlogPost;
+  prevPost?: BlogPost;
 }
 
 const { post, relatedPosts, nextPost, prevPost } = Astro.props;
@@ -78,14 +38,8 @@ const currentLocale = getCurrentLocale(Astro.url);
 const { title, description, pubDate, updatedDate, author, category, tags, image, ogImage } = post.data;
 
 // Use auto-generated OGP image if no custom ogImage is set
-const finalOgImage = ogImage || new URL(`/og/${currentLocale}/${post.slug}.svg`, Astro.site).toString();
+const finalOgImage = ogImage || new URL(`/og/${post.slug}.svg`, Astro.site).toString();
 
-// Calculate reading time (assuming 200 words per minute)
-// This function is for future use when full content is available
-function calculateReadingTime(content: string): number {
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / 200);
-}
 
 // Estimate reading time from description for now
 const estimatedReadingTime = Math.max(1, Math.ceil(description.split(/\s+/).length / 50));
@@ -94,16 +48,22 @@ const estimatedReadingTime = Math.max(1, Math.ceil(description.split(/\s+/).leng
 const generateKeywords = () => {
   const baseKeywords = tags.slice(); // Copy tags array
   
-  // Add category-based keywords
-  const categoryKeywords = {
-    'ai': ['AI', '人工知能', 'Artificial Intelligence', 'Machine Learning', 'Deep Learning'],
-    'engineering': ['エンジニアリング', 'Engineering', 'Software Development', '開発', 'プログラミング'],
-    'founder': ['起業', 'Startup', 'Entrepreneur', 'Business', 'スタートアップ'],
-    'lab': ['技術', 'Technology', 'Innovation', '革新', 'Research']
-  };
+  // Find category configuration
+  const categoryConfig = BLOG_CATEGORIES.find(cat => cat.id === category);
   
-  if (categoryKeywords[category as keyof typeof categoryKeywords]) {
-    baseKeywords.push(...categoryKeywords[category as keyof typeof categoryKeywords]);
+  // Add category-based keywords dynamically
+  if (categoryConfig) {
+    const categoryKeywords = {
+      'ai': ['AI', '人工知能', 'Artificial Intelligence', 'Machine Learning', 'Deep Learning'],
+      'engineering': ['エンジニアリング', 'Engineering', 'Software Development', '開発', 'プログラミング'],
+      'founder': ['起業', 'Startup', 'Entrepreneur', 'Business', 'スタートアップ'],
+      'lab': ['技術', 'Technology', 'Innovation', '革新', 'Research']
+    };
+    
+    const keywords = categoryKeywords[category as keyof typeof categoryKeywords];
+    if (keywords) {
+      baseKeywords.push(...keywords);
+    }
   }
   
   // Add general tech keywords for all posts
@@ -531,59 +491,38 @@ const websiteJsonLd = {
     <Footer />
     <WebVitals />
     
-    <!-- Include Alpine.js initialization scripts from parent layout -->
+    <!-- Alpine.js Stores Plugin -->
     <script data-cfasync="false">
-      window.alpineStoreDefaults = {
-        theme: { isDark: false, toggle: () => {} },
-        lang: { current: 'ja', toggle: () => {} }
-      };
-
-      window.alpineInitStores = function() {
-        if (!window.Alpine) return;
-        
-        Alpine.store('theme', {
-          isDark: document.documentElement.classList.contains('dark'),
-          toggle() {
-            this.isDark = !this.isDark;
-            document.documentElement.classList.toggle('dark', this.isDark);
-            localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
-          },
-        });
-        
-        Alpine.store('lang', {
-          current: document.documentElement.lang,
-          toggle() {
-            const newLang = this.current === 'ja' ? 'en' : 'ja';
-            const currentPath = window.location.pathname;
-            let newPath;
-            
-            if (newLang === 'en') {
-              newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
-            } else {
-              newPath = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+      document.addEventListener('alpine:init', () => {
+        Alpine.plugin((Alpine) => {
+          // Theme store
+          Alpine.store('theme', {
+            isDark: document.documentElement.classList.contains('dark'),
+            toggle() {
+              this.isDark = !this.isDark;
+              document.documentElement.classList.toggle('dark', this.isDark);
+              localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+            },
+          });
+          
+          // Language store
+          Alpine.store('lang', {
+            current: document.documentElement.lang,
+            toggle() {
+              const newLang = this.current === 'ja' ? 'en' : 'ja';
+              const currentPath = window.location.pathname;
+              let newPath;
+              
+              if (newLang === 'en') {
+                newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
+              } else {
+                newPath = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+              }
+              
+              window.location.href = newPath;
             }
-            
-            window.location.href = newPath;
-          }
+          });
         });
-      };
-
-      document.addEventListener('alpine:init', function() {
-        window.alpineInitStores();
-      });
-      
-      (function ensureAlpineStores() {
-        if (window.Alpine && typeof window.Alpine.store === 'function') {
-          window.alpineInitStores();
-        } else {
-          setTimeout(ensureAlpineStores, 5);
-        }
-      })();
-      
-      document.addEventListener('DOMContentLoaded', function() {
-        if (window.Alpine && typeof window.alpineInitStores === 'function') {
-          window.alpineInitStores();
-        }
       });
     </script>
     

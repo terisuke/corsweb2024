@@ -1,8 +1,8 @@
-import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import compress from 'astro-compress';
-import sitemap from '@astrojs/sitemap';
 import compressor from "astro-compressor";
+import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://cor-jp.com',

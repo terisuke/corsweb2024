@@ -62,7 +62,7 @@ Comprehensive blog functionality with AI-powered translation, featuring:
 - **Bilingual Support**: Japanese and English blog posts with separate routing
 - **AI Translation**: Automated translation from Japanese to English using Google Gemini API
 - **Rich Markdown**: GitHub Flavored Markdown, math equations (KaTeX), syntax highlighting, rich link cards with automatic metadata fetching
-- **SEO Optimization**: Auto-generated OGP images, structured data, meta tags, breadcrumbs
+- **SEO**: Auto-generated OGP images, structured data, meta tags, breadcrumbs
 - **Interactive Features**: Category filtering, related posts, table of contents, share buttons
 - **Monetization**: Stripe-powered tip/support functionality
 - **Performance**: Optimized with same caching strategies as main site
@@ -195,7 +195,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 - **Category Filtering**: Dedicated pages for each category with pagination
 - **Bilingual Support**: Separate navigation for Japanese (`/blog/`) and English (`/en/blog/`) versions
 - **Responsive Design**: Mobile-first approach with touch-friendly navigation
-- **SEO Optimization**: Proper canonical URLs and hreflang tags for all navigation links
+- **SEO**: Proper canonical URLs and hreflang tags for all navigation links
 
 ### SEO & Performance Features
 

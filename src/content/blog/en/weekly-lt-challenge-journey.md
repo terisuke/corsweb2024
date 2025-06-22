@@ -11,7 +11,7 @@ tags: ["LT", "成長", "コミュニティ", "起業", "エンジニア"]
 lang: "en"
 featured: true
 ---
-# My Life Transformed After a Year of Weekly Lightning Talks
+## My Life Transformed After a Year of Weekly Lightning Talks
 
 As a "cliffhanger, inexperienced engineer-entrepreneur," I challenged myself to give a lightning talk (LT) every week for a year. The changes this brought were far beyond just improving my technical skills.
 
@@ -54,7 +54,6 @@ const communityActivities = [
 
 ### Q4: Transformation into a New Self
 
-
 ## Results Achieved
 
 - **Technical Skills**: Deepened understanding to an explainable level.
@@ -67,7 +66,5 @@ const communityActivities = [
 This experience is directly related to the company's mission: "To realize 'misunderstanding-free communication' with AI technology."
 
 It was the moment when a personal challenge transformed into a passion for solving social problems.
-
----
 
 *I can talk more about the value of taking on challenges. Please contact me via [Contact Us](/contact).*

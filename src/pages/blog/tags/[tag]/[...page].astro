@@ -1,12 +1,13 @@
 ---
 import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import PostCard from '../../../../components/blog/PostCard.astro';
 import Layout from '../../../../layouts/Layout.astro';
 import { getCurrentLocale } from '../../../../utils/i18n';
 
 interface Props {
-  page: Page<any>;
+  page: Page<CollectionEntry<'blog'>>;
   tag: string;
 }
 

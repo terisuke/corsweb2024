@@ -1,4 +1,5 @@
-// Disable JSX for this file to avoid TypeScript errors
+// NOTE: This file returns raw SVG markup in a template literal and does not use JSX.
+// JSX syntax inside a `.ts` file would confuse the TypeScript parser, so we disable JSX type checking here.
 // @ts-nocheck
 
 import { getCollection } from 'astro:content';
@@ -62,10 +63,10 @@ export async function GET({ params }: Props) {
       <text x="1080" y="65" text-anchor="middle" class="category">${category.toUpperCase()}</text>
       
       <!-- Title -->
-      <text x="60" y="220" class="title">${safeTitle.length > 50 ? safeTitle.substring(0, 50) + '...' : safeTitle}</text>
+      <text x="60" y="220" class="title">${safeTitle.length > 50 ? `${safeTitle.substring(0, 50)}...` : safeTitle}</text>
       
       <!-- Description -->
-      <text x="60" y="280" class="description">${safeDesc.length > 100 ? safeDesc.substring(0, 100) + '...' : safeDesc}</text>
+      <text x="60" y="280" class="description">${safeDesc.length > 100 ? `${safeDesc.substring(0, 100)}...` : safeDesc}</text>
       
       <!-- Author -->
       <text x="60" y="520" class="author">By ${author} • cor-jp.com</text>

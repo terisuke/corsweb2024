@@ -40,53 +40,80 @@ class: lead
 
 ```python
 import requests
-import json
 
-def generate_zundamon_voice(text):
-    # VOICEVOX APIを使用してずんだもんの声を生成
-    query_payload = {"text": text, "speaker": 3}  # ずんだもん（ノーマル）
-    
-    # 音声クエリ作成
-    query_response = requests.post(
-        "http://localhost:50021/audio_query",
-        params=query_payload
-    )
-    
+API_URL = "http://localhost:50021"
+
+def generate_zundamon_voice(text: str) -> bytes:
+    """VOICEVOX API を呼び出して音声データ (wav) を取得する"""
+
+    query_params = {"text": text, "speaker": 3}
+
+    # 音声クエリ生成
+    query_resp = requests.post(f"{API_URL}/audio_query", params=query_params, timeout=10)
+    if query_resp.status_code != 200:
+        raise RuntimeError(f"audio_query failed → {query_resp.status_code}: {query_resp.text}")
+
     # 音声合成
-    synthesis_response = requests.post(
-        "http://localhost:50021/synthesis",
+    synth_resp = requests.post(
+        f"{API_URL}/synthesis",
         params={"speaker": 3},
-        data=query_response.content
+        data=query_resp.content,
+        timeout=30
     )
-    
-    return synthesis_response.content
+    if synth_resp.status_code != 200:
+        raise RuntimeError(f"synthesis failed → {synth_resp.status_code}: {synth_resp.text}")
+
+    return synth_resp.content
 ```
 
 ### 3. VTubeStudio - キャラクター制御
 
 ```javascript
-// VTubeStudio APIを使用したアニメーション制御
+// VTubeStudio API を使ったキャラクター制御
 class VTubeStudioController {
-  async triggerExpression(expressionFile) {
-    const message = {
-      "apiName": "VTubeStudioPublicAPI",
-      "apiVersion": "1.0",
-      "requestID": "MyIDWithRandomString",
-      "messageType": "HotkeyTriggerRequest",
-      "data": {
-        "hotkeyID": expressionFile
-      }
-    };
-    
-    this.websocket.send(JSON.stringify(message));
+  constructor(wsUrl = "ws://localhost:8001") {
+    this.wsUrl = wsUrl;
+    this.isOpen = false;
+    this.websocket = new WebSocket(this.wsUrl);
+
+    this.websocket.addEventListener("open", () => {
+      this.isOpen = true;
+      console.log("✅ VTubeStudio WebSocket connected");
+    });
+
+    this.websocket.addEventListener("error", (err) => {
+      console.error("❌ WebSocket error", err);
+    });
+
+    this.websocket.addEventListener("close", () => {
+      this.isOpen = false;
+      console.warn("⚠️ WebSocket closed");
+    });
   }
-  
-  async syncWithAudio(audioTimestamps) {
-    // 音声に合わせて口パクアニメーション
-    audioTimestamps.forEach(timestamp => {
-      setTimeout(() => {
-        this.triggerExpression("mouth_animation");
-      }, timestamp);
+
+  send(data) {
+    if (!this.isOpen) {
+      console.warn("WebSocket is not open. Message skipped.");
+      return;
+    }
+    this.websocket.send(JSON.stringify(data));
+  }
+
+  triggerExpression(expressionFile) {
+    const message = {
+      apiName: "VTubeStudioPublicAPI",
+      apiVersion: "1.0",
+      requestID: crypto.randomUUID(),
+      messageType: "HotkeyTriggerRequest",
+      data: { hotkeyID: expressionFile }
+    };
+    this.send(message);
+  }
+
+  syncWithAudio(audioTimestamps) {
+    // 音声タイムスタンプに合わせて口パクをトリガー
+    audioTimestamps.forEach((ts) => {
+      setTimeout(() => this.triggerExpression("mouth_animation"), ts);
     });
   }
 }

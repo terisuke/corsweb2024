@@ -2,9 +2,11 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import yaml from 'js-yaml';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import RateLimiter from './rate-limiter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +21,14 @@ if (!process.env.GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite-preview-06-17" });
+
+// Initialize rate limiter with conservative settings for Gemini API
+const rateLimiter = new RateLimiter({
+  requestsPerMinute: 15, // Conservative limit for Gemini API
+  maxRetries: 3,
+  baseDelay: 2000, // 2 seconds base delay
+  maxDelay: 60000 // 60 seconds max delay
+});
 
 // -----------------------------------------------------------------------------
 // Utility helpers
@@ -76,97 +86,8 @@ function extractFrontmatter(content) {
 }
 
 function parseFrontmatter(frontmatterStr) {
-  const lines = frontmatterStr.split('\n');
-  const frontmatter = {};
-  let currentKey = null;
-  let currentObject = null;
-  
-  for (const line of lines) {
-    if (line.trim() === '') continue;
-    
-    const colonIndex = line.indexOf(':');
-    if (colonIndex === -1) {
-      // Handle continuation of array or object
-      if (currentKey && line.trim().startsWith('-')) {
-        // Array item
-        if (!Array.isArray(frontmatter[currentKey])) {
-          frontmatter[currentKey] = [];
-        }
-        let value = line.trim().substring(1).trim();
-        if ((value.startsWith('"') && value.endsWith('"')) || 
-            (value.startsWith("'") && value.endsWith("'"))) {
-          value = value.slice(1, -1);
-        }
-        frontmatter[currentKey].push(value);
-      }
-      continue;
-    }
-    
-    const key = line.substring(0, colonIndex).trim();
-    let value = line.substring(colonIndex + 1).trim();
-    
-    // Check if this is an indented property (part of an object)
-    if (line.startsWith('  ') && currentObject) {
-      // This is a property of the current object
-      if ((value.startsWith('"') && value.endsWith('"')) || 
-          (value.startsWith("'") && value.endsWith("'"))) {
-        value = value.slice(1, -1);
-      }
-      currentObject[key] = value;
-      continue;
-    }
-    
-    // Check if this starts an object
-    if (value === '' || value === '{}') {
-      currentKey = key;
-      currentObject = {};
-      frontmatter[key] = currentObject;
-      continue;
-    }
-    
-    // Check if this is an array
-    if (value.startsWith('[') && value.endsWith(']')) {
-      try {
-        frontmatter[key] = JSON.parse(value);
-      } catch {
-        // Fallback parsing
-        const items = value.slice(1, -1).split(',').map(item => {
-          let trimmed = item.trim();
-          if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-              (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-            trimmed = trimmed.slice(1, -1);
-          }
-          return trimmed;
-        });
-        frontmatter[key] = items;
-      }
-      currentKey = null;
-      currentObject = null;
-      continue;
-    }
-    
-    // Remove quotes if present
-    if ((value.startsWith('"') && value.endsWith('"')) || 
-        (value.startsWith("'") && value.endsWith("'"))) {
-      value = value.slice(1, -1);
-    }
-    
-    // Convert known boolean strings
-    if (value === 'true') value = true;
-    if (value === 'false') value = false;
-    
-    // Convert date strings to dates for known date fields
-    if ((key === 'pubDate' || key === 'updatedDate') && value) {
-      frontmatter[key] = new Date(value);
-    } else {
-      frontmatter[key] = value;
-    }
-    
-    currentKey = key;
-    currentObject = null;
-  }
-  
-  return frontmatter;
+  // Use js-yaml for robust parsing
+  return yaml.load(frontmatterStr);
 }
 
 function createEnglishFrontmatter(japaneseFrontmatter, translatedTitle, translatedDescription) {
@@ -244,9 +165,11 @@ ${titleAndDescription}`;
 
     let translatedTitleDesc;
     try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      translatedTitleDesc = response.text().trim();
+      translatedTitleDesc = await rateLimiter.executeWithRetry(async () => {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        return response.text().trim();
+      }, `Translating ${path.basename(inputFile)}`);
       console.log('Translation result:', translatedTitleDesc);
     } catch (error) {
       console.error('Translation error:', error);

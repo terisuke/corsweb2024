@@ -33,9 +33,17 @@ jobs:
           PUBLIC_GCAL_TZ: ${{ secrets.PUBLIC_GCAL_TZ || 'Asia/Tokyo' }}
           PUBLIC_GCAL_PARAMS: ${{ secrets.PUBLIC_GCAL_PARAMS || '' }}
 
+      - name: Debug Firebase service account secret
+        run: |
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB }}" ]; then
+            echo "❌ Missing FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB secret"
+            exit 1
+          fi
+          echo "✅ FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB secret is set"
+
       - name: Deploy to Firebase Hosting (Preview)
         if: github.event_name == 'pull_request'
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@v0.7.1
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB }}
@@ -44,7 +52,7 @@ jobs:
 
       - name: Deploy to Firebase Hosting (Production)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@v0.7.1
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB }}
