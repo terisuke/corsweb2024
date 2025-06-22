@@ -7,6 +7,7 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '.astro'],
     globals: true,
     coverage: {
+      provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',

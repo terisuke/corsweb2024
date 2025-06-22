@@ -23,8 +23,8 @@ export async function GET(context: APIContext) {
       pubDate: post.data.pubDate,
       author: post.data.author,
       categories: [post.data.category, ...post.data.tags],
-      link: `/blog/${post.slug.replace(/^ja//, '')}/`,
-      guid: `https://cor-jp.com/blog/${post.slug.replace(/^ja//, '')}/`,
+      link: `/blog/${post.slug.replace(/^ja\//, '')}/`,
+      guid: `https://cor-jp.com/blog/${post.slug.replace(/^ja\//, '')}/`,
     })),
     customData: `
       <language>ja</language>
