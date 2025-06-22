@@ -1,4 +1,6 @@
 ---
+import { getCurrentLocale } from '../../utils/i18n';
+
 interface Props {
   tags: string[];
   limit?: number;
@@ -7,13 +9,14 @@ interface Props {
 const { tags, limit } = Astro.props;
 const displayTags = limit ? tags.slice(0, limit) : tags;
 const remainingCount = limit && tags.length > limit ? tags.length - limit : 0;
+const currentLocale = getCurrentLocale(Astro.url);
 ---
 
 {displayTags.length > 0 && (
   <div class="flex flex-wrap gap-2">
     {displayTags.map(tag => (
       <a
-        href={`/blog/tags/${tag}`}
+        href={currentLocale === 'ja' ? `/blog/tags/${tag}` : `/en/blog/tags/${tag}`}
         class="inline-flex items-center rounded-full bg-stone-100 px-3 py-1 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600"
       >
         #{tag}
