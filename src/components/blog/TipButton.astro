@@ -13,8 +13,8 @@ const stripePaymentLink = 'https://buy.stripe.com/test_example_link';
 
 const tipText = currentLocale === 'ja' ? 'この記事を応援' : 'Support this article';
 const tipDescription = currentLocale === 'ja' 
-  ? 'この記事が役に立ったら、サポートをお願いします！'
-  : 'If this article was helpful, please consider supporting us!';
+  ? '投げ銭機能は近日公開予定です。しばらくお待ちください。'
+  : 'Tip functionality is coming soon. Please stay tuned.';
 ---
 
 <div class={`rounded-2xl border border-stone-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 dark:border-stone-700 dark:from-stone-800 dark:to-stone-900 ${className}`}>
@@ -35,31 +35,23 @@ const tipDescription = currentLocale === 'ja'
         {tipDescription}
       </p>
       
-      <a
-        href={stripePaymentLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-stone-900"
+      <button
+        disabled
+        class="inline-flex items-center gap-2 rounded-full bg-stone-400 px-6 py-3 text-sm font-medium text-white cursor-not-allowed opacity-60"
       >
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        {currentLocale === 'ja' ? 'サポートする' : 'Support'}
-      </a>
+        {currentLocale === 'ja' ? 'Coming Soon' : 'Coming Soon'}
+      </button>
     </div>
   </div>
   
   <div class="mt-4 border-t border-stone-200 pt-4 dark:border-stone-700">
-    <div class="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400">
+    <div class="flex items-center justify-center text-xs text-stone-500 dark:text-stone-400">
       <span>
-        {currentLocale === 'ja' ? 'Stripeで安全に決済' : 'Secure payment via Stripe'}
+        {currentLocale === 'ja' ? '準備中です...' : 'Under development...'}
       </span>
-      <div class="flex items-center gap-2">
-        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/>
-        </svg>
-        <span>Stripe</span>
-      </div>
     </div>
   </div>
 </div>
