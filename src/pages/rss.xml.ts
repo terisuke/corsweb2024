@@ -1,12 +1,17 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
-import { allPosts } from '../utils/blog';
+import { getCollection } from 'astro:content';
 
 export async function GET(context: APIContext) {
-  // Filter only Japanese posts and sort by date
-  const japanesePosts = allPosts
-    .filter(post => post.data.lang === 'ja')
-    .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+  // Get Japanese blog posts from Content Collections
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'ja' && !data.isDraft;
+  });
+
+  // Sort by date
+  const japanesePosts = allPosts.sort(
+    (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
 
   return rss({
     title: 'Cor.inc 技術ブログ',

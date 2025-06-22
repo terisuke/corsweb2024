@@ -1,8 +1,8 @@
 ---
 import type { GetStaticPaths, Page } from 'astro';
+import { getCollection } from 'astro:content';
 import PostCard from '../../../../components/blog/PostCard.astro';
 import Layout from '../../../../layouts/Layout.astro';
-import { allPosts } from '../../../../utils/blog';
 import { getCurrentLocale } from '../../../../utils/i18n';
 
 interface Props {
@@ -11,14 +11,16 @@ interface Props {
 }
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
-  // Filter Japanese posts only
-  const japanesePosts = allPosts.filter(p => p.data.lang === 'ja');
+  // Get all Japanese blog posts from Content Collections
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'ja' && !data.isDraft;
+  });
   
-  // 取得可能なカテゴリ一覧
-  const categories = Array.from(new Set(japanesePosts.map(p => p.data.category)));
+  // Get available categories
+  const categories = Array.from(new Set(allPosts.map(p => p.data.category)));
 
-  const paths = categories.flatMap(category => {
-    const filtered = japanesePosts.filter(p => p.data.category === category);
+  const paths = categories.flatMap((category: string) => {
+    const filtered = allPosts.filter(p => p.data.category === category);
     const sorted = filtered.sort(
       (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
     );

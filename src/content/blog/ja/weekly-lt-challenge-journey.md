@@ -5,9 +5,9 @@ pubDate: 2024-01-25
 author: "Terisuke"
 category: "founder"
 tags: ["LT", "成長", "コミュニティ", "起業", "エンジニア"]
-image:
-  url: "/images/blog/lt-challenge.avif"
-  alt: "LT登壇の様子"
+# image:
+#   url: "/images/blog/lt-challenge.avif"
+#   alt: "LT登壇の様子"
 lang: "ja"
 featured: true
 ---

@@ -5,9 +5,9 @@ pubDate: 2024-01-20
 author: "Terisuke"
 category: "engineering"
 tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"]
-image:
-  url: "/images/blog/high-performance-web.avif"
-  alt: "高性能Webサイトのイメージ"
+# image:
+#   url: "/images/blog/high-performance-web.avif"
+#   alt: "高性能Webサイトのイメージ"
 lang: "ja"
 featured: true
 ---

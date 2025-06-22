@@ -5,9 +5,9 @@ pubDate: 2024-01-30
 author: "Terisuke"
 category: "lab"
 tags: ["Marp", "VOICEVOX", "VTubeStudio", "自動化", "創造的プロジェクト"]
-image:
-  url: "/images/blog/zundamon-project.avif"
-  alt: "ずんだもんLTプロジェクト"
+# image:
+#   url: "/images/blog/zundamon-project.avif"
+#   alt: "ずんだもんLTプロジェクト"
 lang: "en"
 ---
 # Marp × VOICEVOX × VTubeStudio:  Having Zundamon Deliver a Lightning Talk

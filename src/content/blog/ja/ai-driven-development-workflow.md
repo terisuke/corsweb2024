@@ -5,9 +5,9 @@ pubDate: 2024-01-15
 author: "Terisuke"
 category: "ai"
 tags: ["AI", "開発効率", "Cursor", "CodeRabbit", "GitHub Copilot"]
-image:
-  url: "/images/blog/ai-driven-development.avif"
-  alt: "AI駆動開発のイメージ"
+# image:
+#   url: "/images/blog/ai-driven-development.avif"
+#   alt: "AI駆動開発のイメージ"
 lang: "ja"
 featured: true
 ---

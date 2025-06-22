@@ -30,8 +30,8 @@ const formattedDate = new Date(pubDate).toLocaleDateString(currentLocale === 'ja
   day: 'numeric',
 });
 
-// Enable individual post links
-const cleanSlug = post.slug.replace(/^ja\//, '').replace(/^en\//, '');
+// Enable individual post links - remove language prefix from slug
+const cleanSlug = post.slug.replace(/^(ja|en)\//, '');
 const postUrl = currentLocale === 'ja' ? `/blog/${cleanSlug}` : `/en/blog/${cleanSlug}`;
 ---
 

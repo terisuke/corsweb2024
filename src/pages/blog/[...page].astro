@@ -1,8 +1,8 @@
 ---
 import type { GetStaticPaths, Page } from 'astro';
+import { getCollection } from 'astro:content';
 import PostCard from '../../components/blog/PostCard.astro';
 import Layout from '../../layouts/Layout.astro';
-import { allPosts } from '../../utils/blog';
 import { getCurrentLocale } from '../../utils/i18n';
 
 interface Props {
@@ -10,8 +10,13 @@ interface Props {
 }
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Get all Japanese blog posts from Content Collections
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'ja' && !data.isDraft;
+  });
+
   // Sort posts by publication date (newest first)
-  const sortedPosts = [...allPosts].sort(
+  const sortedPosts = allPosts.sort(
     (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
   );
 

@@ -1,5 +1,5 @@
 ---
-import { type CollectionEntry } from 'astro:content';
+import { type CollectionEntry, getCollection } from 'astro:content';
 import CategoryBadge from '../../components/blog/CategoryBadge.astro';
 import PostCard from '../../components/blog/PostCard.astro';
 import ShareButtons from '../../components/blog/ShareButtons.astro';
@@ -10,28 +10,15 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 import { getCurrentLocale } from '../../utils/i18n';
 
 export async function getStaticPaths() {
-  const modules = await Astro.glob('../../content/blog/ja/*.md');
+  const posts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'ja' && !data.isDraft;
+  });
 
-  return modules.map((postMod: any) => {
-    // slug may be undefined depending on Astro version; derive from file path
-    const rawSlug = postMod.slug ?? postMod.file?.split('/').pop()?.replace('.md', '');
-    const postObj = {
-      slug: rawSlug,
-      data: {
-        ...postMod.frontmatter,
-        pubDate: new Date(postMod.frontmatter.pubDate),
-        updatedDate: postMod.frontmatter.updatedDate ? new Date(postMod.frontmatter.updatedDate) : undefined,
-      },
-      async render() {
-        return {
-          Content: postMod.Content,
-          headings: typeof postMod.getHeadings === 'function' ? postMod.getHeadings() : [],
-        };
-      },
-    } as any;
+  return posts.map((post) => {
+    const cleanSlug = post.slug.replace('ja/', '');
     return {
-      params: { slug: rawSlug },
-      props: { post: postObj },
+      params: { slug: cleanSlug },
+      props: { post },
     };
   });
 }
@@ -42,10 +29,22 @@ const { post } = Astro.props;
 const { Content, headings } = await post.render();
 const currentLocale = getCurrentLocale(Astro.url);
 
-// Simplified related posts (empty for now)
-const relatedPosts = [];
-const nextPost = undefined;
-const prevPost = undefined;
+// Get related posts and navigation posts
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.lang === 'ja' && !data.isDraft;
+});
+
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+const currentIndex = sortedPosts.findIndex(p => p.slug === post.slug);
+const relatedPosts = allPosts
+  .filter(p => p.slug !== post.slug && p.data.category === post.data.category)
+  .slice(0, 3);
+
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
+const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : undefined;
 
 const formattedPubDate = new Date(post.data.pubDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
   year: 'numeric',
@@ -59,7 +58,8 @@ const formattedUpdatedDate = post.data.updatedDate ? new Date(post.data.updatedD
   day: 'numeric',
 }) : null;
 
-const readingTime = 5; // Hardcoded reading time
+// Calculate reading time based on content length
+const readingTime = Math.max(1, Math.round(post.body.length / 1000));
 const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
 ---
@@ -234,7 +234,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     <nav class="mt-12 grid gap-4 border-t border-stone-200 pt-8 dark:border-stone-700 sm:grid-cols-2">
       {prevPost && (
         <a
-          href={`/blog/${prevPost.slug}`}
+          href={`/blog/${prevPost.slug.replace('ja/', '')}`}
           class="group flex flex-col rounded-lg border border-stone-200 p-4 transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400"
         >
           <span class="mb-1 text-sm text-stone-500 dark:text-stone-400">
@@ -248,7 +248,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       
       {nextPost && (
         <a
-          href={`/blog/${nextPost.slug}`}
+          href={`/blog/${nextPost.slug.replace('ja/', '')}`}
           class={`group flex flex-col rounded-lg border border-stone-200 p-4 text-right transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400 ${!prevPost ? 'sm:col-start-2' : ''}`}
         >
           <span class="mb-1 text-sm text-stone-500 dark:text-stone-400">

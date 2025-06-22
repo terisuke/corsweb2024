@@ -308,9 +308,9 @@ pubDate: 2025-01-21
 author: "Terisuke"
 category: "lab"
 tags: ["tag1", "tag2", "tag3"]
-image:
-  url: "/images/blog/example.avif"
-  alt: "画像の説明"
+# image:
+#   url: "/images/blog/example.avif"
+#   alt: "画像の説明"
 lang: "ja"
 featured: true
 ---

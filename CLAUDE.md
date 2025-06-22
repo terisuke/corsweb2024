@@ -160,6 +160,16 @@ GEMINI_API_KEY=your_gemini_api_key_here
 #### English Blog
 - **List Page**: `/en/blog/` → `src/pages/en/blog/[...page].astro`
 - **Post Page**: `/en/blog/[slug]` → `src/pages/en/blog/[...slug].astro`
+- **Category Pages**: `/en/blog/category/[category]/` → `src/pages/en/blog/category/[category]/[...page].astro`
+
+#### Individual Post Features (Both Languages)
+- **Full Navigation**: Previous/Next post navigation with proper slug handling
+- **Tag Display**: All post tags shown with responsive design
+- **Related Posts**: Same-category posts displayed using PostCard component
+- **Reading Time**: Dynamically calculated based on content length
+- **Social Sharing**: Share buttons for major social platforms
+- **Table of Contents**: Auto-generated for posts with 3+ headings
+- **Breadcrumb Navigation**: Structured navigation with proper schema markup
 
 #### Blog Layout
 - **Shared Layout**: `src/layouts/BlogLayout.astro`
@@ -171,12 +181,21 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ### Blog Components
 
-- **CategoryBadge.astro**: Displays category with color coding
-- **PostCard.astro**: Blog post preview cards for lists
-- **ShareButtons.astro**: Social media sharing (Twitter, Facebook, LinkedIn)
-- **TableOfContents.astro**: Auto-generated TOC for long posts
-- **TagList.astro**: Tag display and filtering
-- **TipButton.astro**: Stripe-powered support/tip functionality
+- **CategoryBadge.astro**: Color-coded category badges with responsive design
+- **PostCard.astro**: Responsive blog post preview cards for lists with hover effects
+- **ShareButtons.astro**: Social media sharing (Twitter, Facebook, LinkedIn) with proper meta tags
+- **TableOfContents.astro**: Auto-generated table of contents for long posts with smooth scrolling
+- **TagList.astro**: Tag display with consistent styling and hover effects
+- **TipButton.astro**: Stripe-powered support/tip functionality with Payment Links integration
+
+### Navigation Features
+
+- **Previous/Next Posts**: Automatic chronological navigation between posts
+- **Related Posts**: Dynamic display of same-category posts (max 3)
+- **Category Filtering**: Dedicated pages for each category with pagination
+- **Bilingual Support**: Separate navigation for Japanese (`/blog/`) and English (`/en/blog/`) versions
+- **Responsive Design**: Mobile-first approach with touch-friendly navigation
+- **SEO Optimization**: Proper canonical URLs and hreflang tags for all navigation links
 
 ### SEO & Performance Features
 
@@ -189,46 +208,49 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ### Writing New Blog Posts
 
-**IMPORTANT: Current Hardcoded System Limitation**
-The blog system currently uses a hardcoded `allPosts` array in `/src/utils/blog.ts` for the blog list page (`/blog/[...page].astro`). When adding new blog posts, you MUST update both:
+**✅ FULLY AUTOMATED SYSTEM**
+The blog system now uses Astro Content Collections throughout, providing complete automation for blog post management. Simply add markdown files and they'll automatically appear on the site.
 
-1. **Create Japanese Post**: Write markdown file in `/src/content/blog/ja/`
+#### **Step-by-Step Process**
+
+1. **Create Japanese Post**: Write markdown file in `/src/content/blog/ja/your-post-name.md`
 2. **Use Proper Frontmatter**:
    ```yaml
    ---
    title: "Your Post Title"
-   description: "Brief description"
+   description: "Brief description for SEO and previews"
    pubDate: 2024-01-01
-   category: "ai-driven-futures"
-   tags: ["ai", "development"]
+   category: "ai"  # Options: "ai", "engineering", "founder", "lab"
+   tags: ["tag1", "tag2", "tag3"]
    author: "Terisuke"
    lang: "ja"
+   featured: true  # Optional: feature on homepage
+   # image:  # Optional - currently commented out
+   #   url: "/images/blog/your-image.avif"
+   #   alt: "Image description"
    ---
    ```
-3. **⚠️ CRITICAL: Update Blog Utils**: Add the new post to `/src/utils/blog.ts` in the `allPosts` array:
-   ```typescript
-   {
-     slug: "your-post-slug",
-     data: {
-       title: "Your Post Title",
-       description: "Brief description",
-       pubDate: new Date("2024-01-01"),
-       author: "Terisuke",
-       category: "ai-driven-futures",
-       tags: ["ai", "development"],
-       image: {
-         url: "/images/blog/your-image.avif",
-         alt: "Image description"
-       }, // or null if no image
-       lang: "ja",
-       featured: true/false
-     }
-   }
-   ```
-4. **Auto-translate**: Run `node scripts/translate-blog.js src/content/blog/ja/your-post.md`
-5. **Review & Publish**: Check both versions before deployment
+3. **Auto-translate** (Optional): Run `node scripts/translate-blog.js src/content/blog/ja/your-post-name.md`
+4. **Build & Deploy**: Run `npm run build` - the post automatically appears
 
-**Technical Debt Note**: The individual post pages use `Astro.glob()` to read markdown files directly, but the blog list page uses the hardcoded array. This inconsistency should be resolved in future refactoring to use Astro Content Collections consistently across all blog pages.
+#### **Automatic Features**
+
+- **✅ Automatic HTML Generation**: Markdown → `/blog/your-post-name/index.html`
+- **✅ Auto-updating Navigation**: Previous/Next links automatically recalculate
+- **✅ Dynamic Related Posts**: Same-category posts automatically linked
+- **✅ SEO Generation**: OGP images, meta tags, structured data auto-generated
+- **✅ Sitemap Integration**: New posts automatically added to sitemap
+- **✅ RSS Feed Updates**: Both Japanese and English RSS feeds auto-update
+- **✅ Category Pages**: Posts automatically appear in category listings
+- **✅ Reading Time Calculation**: Dynamically calculated from content length
+
+#### **Content Collections Benefits**
+
+- **Type Safety**: Zod schema validation at build time
+- **Hot Reloading**: Changes appear instantly in development
+- **Build Optimization**: Only builds when content actually changes
+- **Error Detection**: Invalid frontmatter caught during build
+- **Performance**: Static generation with optimal caching
 
 ### Rich Content Support
 
@@ -254,9 +276,16 @@ https://github.com
 The site deploys to Firebase Hosting with specific caching rules defined in `firebase.json`. Production builds are optimized for long-term caching of assets while keeping HTML fresh. Blog OGP images (SVG) are cached with immutable headers.
 
 ## Important Notes
-- No test framework is configured - verify changes manually
-- Always optimize images to AVIF format for consistency
-- Maintain bilingual content structure when adding new features
-- The goal is to match or exceed the loading speed of Hiroshi Abe's website
-- Store GEMINI_API_KEY securely in environment variables for translation features
-- Review auto-translated content for accuracy before publishing
+- **No test framework configured** - verify changes manually with `npm run build` and `npm run dev`
+- **Content Collections**: All blog functionality now uses Astro Content Collections for type safety and performance
+- **Automatic Features**: Posts, navigation, and related content update automatically - no manual configuration needed
+- **Image Management**: Images currently commented out in frontmatter - uncomment `image:` section when adding images
+- **Performance Goal**: Match or exceed Hiroshi Abe's website loading speed through aggressive optimization
+- **Bilingual Workflow**: 
+  1. Write Japanese post in `/src/content/blog/ja/`
+  2. Auto-translate with `node scripts/translate-blog.js`
+  3. Review English translation for accuracy
+  4. Deploy with `npm run build`
+- **Environment Variables**: Store `GEMINI_API_KEY` securely for translation features
+- **Category System**: Use exact category names: `"ai"`, `"engineering"`, `"founder"`, `"lab"`
+- **URL Structure**: All posts become `/blog/post-name/` (Japanese) and `/en/blog/post-name/` (English)
