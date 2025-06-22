@@ -39,8 +39,8 @@ export const BLOG_CATEGORIES: CategoryConfig[] = [
   {
     id: 'founder',
     label: {
-      ja: '創業者の歩み',
-      en: 'Founder\'s Journey'
+      ja: '創業',
+      en: 'Founder'
     },
     description: {
       ja: 'スタートアップ創業・経営に関する記事',
@@ -51,8 +51,8 @@ export const BLOG_CATEGORIES: CategoryConfig[] = [
   {
     id: 'lab',
     label: {
-      ja: '技術実験室',
-      en: 'Tech Lab'
+      ja: 'ラボ',
+      en: 'Lab'
     },
     description: {
       ja: '技術実験・創作プロジェクトに関する記事',
