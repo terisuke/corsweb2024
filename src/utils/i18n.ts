@@ -227,27 +227,15 @@ const translations = {
           icon: '/assets/Note.avif',
           action: 'https://note.com/cor_instrument',
         },
-        {
-          name: 'Qiita',
-          description: 'エラー解決と技術検証ログを公開',
-          isFlagged: true,
-          icon: '/assets/Qiita.avif',
-          action: 'https://qiita.com/terisuke',
-        },
-        {
-          name: 'Zenn',
-          description: '開発中プロダクトの舞台裏を連載',
-          icon: '/assets/Zenn.avif',
-          action: 'https://zenn.dev/cloudia',
-        },
       ],
       youtube: [
         {
-          name: 'Youtube',
-          description: '実際に作成した資料や動画による説明など、視覚的に理解できる自社の資料を提供します。',
+          name: 'YouTube',
+          description: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
-          id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
+          action: 'https://www.youtube.com/@Cloudia_Cor',
+          id: ['umd2e_m3QAM'],
         },
       ]
     },
@@ -591,27 +579,15 @@ const translations = {
           icon: '/assets/Note.avif',
           action: 'https://note.com/cor_instrument',
         },
-        {
-          name: 'Qiita',
-          description: 'Publishing error resolution and technical verification logs',
-          isFlagged: true,
-          icon: '/assets/Qiita.avif',
-          action: 'https://qiita.com/terisuke',
-        },
-        {
-          name: 'Zenn',
-          description: 'Serializing behind-the-scenes of products in development',
-          icon: '/assets/Zenn.avif',
-          action: 'https://zenn.dev/cloudia',
-        },
       ],
       youtube: [
         {
-          name: 'Youtube',
-          description: 'We provide visually understandable company materials through actual created materials and video explanations.',
+          name: 'YouTube',
+          description: 'Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
-          id: ['b7lXhk2EUss', 'Sd9_nkv_4Aw'],
+          action: 'https://www.youtube.com/@Cloudia_Cor',
+          id: ['umd2e_m3QAM'],
         },
       ]
     },
