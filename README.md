@@ -37,7 +37,8 @@
 - **Content Collections**: 型安全なコンテンツ管理
 - **SEO最適化**: 自動OGP画像生成、構造化データ
 - **リッチマークダウン**: 数式(KaTeX)、コードハイライト、自動リンクカード生成
-- **インタラクティブ機能**: 目次、シェアボタン、チップ機能
+- **インタラクティブ機能**: 目次、シェアボタン、投げ銭機能
+- **投げ銭システム**: Stripe Payment Linkによる安全な投げ銭機能（自由金額設定可能）
 
 ### 翻訳コマンド
 
@@ -118,6 +119,14 @@ node scripts/translate-blog.js src/content/blog/ja/your-post.md
 node scripts/translate-all-blog.js
 ```
 
+### 環境変数設定
+
+```bash
+# .env ファイルに以下を設定
+GEMINI_API_KEY=your_gemini_api_key_here              # Gemini APIキー（ブログ自動翻訳用）
+PUBLIC_STRIPE_PAYMENT_LINK=your_stripe_payment_link_here  # Stripe Payment Link URL（投げ銭機能用）
+```
+
 ## 📁 プロジェクト構成
 
 ```
@@ -181,6 +190,8 @@ https://github.com
 - Web Vitalsモニタリングの強化
 - 翻訳精度のさらなる向上
 - ブログ管理UI/CMSの実装
+- 投げ銭履歴の管理機能
+- 投げ銭者への特別コンテンツ提供
 
 ## 📚 参考資料
 
