@@ -8,13 +8,14 @@ interface Props {
 const { className = '' } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 
-// For production, replace with your actual Stripe Payment Link
-const stripePaymentLink = 'https://buy.stripe.com/test_example_link';
+// Stripe Payment Link - 環境変数から取得
+const stripePaymentLink = import.meta.env.PUBLIC_STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/test_example_link';
 
 const tipText = currentLocale === 'ja' ? 'この記事を応援' : 'Support this article';
 const tipDescription = currentLocale === 'ja' 
-  ? '投げ銭機能は近日公開予定です。しばらくお待ちください。'
-  : 'Tip functionality is coming soon. Please stay tuned.';
+  ? 'この記事が役に立ったら、投げ銭で応援してください。お好きな金額を選択いただけます。'
+  : 'If this article was helpful, please support us with a tip. You can choose any amount.';
+const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
 ---
 
 <div class={`rounded-2xl border border-stone-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 dark:border-stone-700 dark:from-stone-800 dark:to-stone-900 ${className}`}>
@@ -31,27 +32,46 @@ const tipDescription = currentLocale === 'ja'
       <h3 class="mb-2 text-lg font-semibold text-stone-900 dark:text-stone-100">
         {tipText}
       </h3>
-      <p class="mb-4 text-sm text-stone-600 dark:text-stone-300">
+      <p class="mb-6 text-sm text-stone-600 dark:text-stone-300">
         {tipDescription}
       </p>
       
-      <button
-        disabled
-        class="inline-flex items-center gap-2 rounded-full bg-stone-400 px-6 py-3 text-sm font-medium text-white cursor-not-allowed opacity-60"
-      >
+      <!-- 投げ銭ボタン -->
+      <div class="flex justify-center">
+        <button
+          id="tip-button"
+          class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-stone-900"
+        >
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        {currentLocale === 'ja' ? '近日公開' : 'Coming Soon'}
-      </button>
+        {tipButtonText}
+        </button>
+      </div>
     </div>
   </div>
   
   <div class="mt-4 border-t border-stone-200 pt-4 dark:border-stone-700">
     <div class="flex items-center justify-center text-xs text-stone-500 dark:text-stone-400">
+      <svg class="mr-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
       <span>
-        {currentLocale === 'ja' ? '準備中です...' : 'Under development...'}
+        {currentLocale === 'ja' ? 'Stripeで安全に決済' : 'Secure payment via Stripe'}
       </span>
     </div>
   </div>
 </div>
+
+<script define:vars={{ stripePaymentLink }}>
+  // 投げ銭機能のJavaScript
+  document.addEventListener('DOMContentLoaded', function() {
+    const tipButton = document.getElementById('tip-button');
+
+    // 投げ銭ボタンのイベントリスナー
+    tipButton.addEventListener('click', function() {
+      // Stripeの決済ページにリダイレクト
+      window.open(stripePaymentLink, '_blank');
+    });
+  });
+</script>
