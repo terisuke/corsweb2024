@@ -9,7 +9,10 @@ const { className = '' } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 
 // Stripe Payment Link - 環境変数から取得
-const stripePaymentLink = import.meta.env.PUBLIC_STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/test_example_link';
+const stripePaymentLink = import.meta.env.PUBLIC_STRIPE_PAYMENT_LINK;
+if (!stripePaymentLink) {
+  throw new Error('PUBLIC_STRIPE_PAYMENT_LINK environment variable is required');
+}
 
 const tipText = currentLocale === 'ja' ? 'この記事を応援' : 'Support this article';
 const tipDescription = currentLocale === 'ja' 
@@ -70,8 +73,18 @@ const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
 
     // 投げ銭ボタンのイベントリスナー
     tipButton.addEventListener('click', function() {
-      // Stripeの決済ページにリダイレクト
-      window.open(stripePaymentLink, '_blank');
+      // Stripeの決済ページにリダイレクト（ポップアップブロッカー対策）
+      try {
+        const stripeWindow = window.open(stripePaymentLink, '_blank');
+        if (!stripeWindow || stripeWindow.closed || typeof stripeWindow.closed === 'undefined') {
+          // ポップアップがブロックされた場合は、現在のウィンドウでリダイレクト
+          window.location.href = stripePaymentLink;
+        }
+      } catch (error) {
+        console.error('Error opening Stripe payment link:', error);
+        // エラーが発生した場合も現在のウィンドウでリダイレクト
+        window.location.href = stripePaymentLink;
+      }
     });
   });
 </script>
