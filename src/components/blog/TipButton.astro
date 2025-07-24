@@ -10,9 +10,8 @@ const currentLocale = getCurrentLocale(Astro.url);
 
 // Stripe Payment Link - 環境変数から取得
 const stripePaymentLink = import.meta.env.PUBLIC_STRIPE_PAYMENT_LINK;
-if (!stripePaymentLink) {
-  throw new Error('PUBLIC_STRIPE_PAYMENT_LINK environment variable is required');
-}
+// 環境変数が設定されていない場合は投げ銭機能を無効化（空文字列は許可）
+const isTipEnabled = stripePaymentLink !== undefined;
 
 const tipText = currentLocale === 'ja' ? 'この記事を応援' : 'Support this article';
 const tipDescription = currentLocale === 'ja' 
@@ -21,6 +20,7 @@ const tipDescription = currentLocale === 'ja'
 const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
 ---
 
+{isTipEnabled && stripePaymentLink && (
 <div class={`rounded-2xl border border-stone-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 dark:border-stone-700 dark:from-stone-800 dark:to-stone-900 ${className}`}>
   <div class="flex items-start gap-4">
     <div class="flex-shrink-0">
@@ -65,8 +65,10 @@ const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
     </div>
   </div>
 </div>
+)}
 
-<script define:vars={{ stripePaymentLink }}>
+{isTipEnabled && stripePaymentLink && (
+<script define:vars={{ stripePaymentLink }} is:inline>
   // 投げ銭機能のJavaScript
   document.addEventListener('DOMContentLoaded', function() {
     const tipButton = document.getElementById('tip-button');
@@ -88,3 +90,4 @@ const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
     });
   });
 </script>
+)}
