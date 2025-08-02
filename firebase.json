@@ -19,12 +19,6 @@
         "type": 301
       }
     ],
-    "rewrites": [
-      {
-        "source": "!**/*.@(js|json|css|jpg|jpeg|png|gif|webp|avif|html|txt|xml)",
-        "destination": "/index.html"
-      }
-    ],
     "headers": [
       {
         "source": "**/*.@(js|css)",

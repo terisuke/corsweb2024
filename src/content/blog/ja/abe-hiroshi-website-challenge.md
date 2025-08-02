@@ -5,20 +5,24 @@ pubDate: 2024-01-20
 author: "Terisuke"
 category: "engineering"
 tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"]
-# image:
-#   url: "/images/blog/high-performance-web.avif"
-#   alt: "高性能Webサイトのイメージ"
+image:
+  url: "/images/blog/abe-hiroshi-hero.avif"
+  alt: "高性能Webサイトのイメージ"
 lang: "ja"
 featured: true
 ---
 
 # 阿部寛のホームページに挑み続けたらすごいHPができた話
 
-「自称下り最速のホームページを持つ男」として、私は阿部寛さんのホームページの読み込み速度に挑戦し続けました。その結果、単なる速度競争を超えた、真のハイパフォーマンスWebサイトが誕生しました。
+「自称下り最速のホームページを持つ男」として、阿部寛さんのホームページに挑戦し続けた。その結果、単なる速度競争を超えた、真のハイパフォーマンスWebサイトが誕生したのだ。ちなみに阿部寛さんのサイトは今でも速い。敬意を表する。
+
+![開発者プロフィール画像](/images/blog/k-terada.avif)
 
 ## 技術スタックの選定
 
 ### Astro + Alpine.js の採用理由
+
+なぜこの組み合わせか？答えは簡単だ。「必要な時に必要な分だけ」という禅の精神を体現しているからだ。React？重い。Vue？まあまあ。でもAlpine.js？これが最軽量の答えだった。
 
 ```astro
 ---
@@ -36,6 +40,8 @@ import ContactForm from '../components/ContactForm.vue';
 
 ### 画像最適化戦略
 
+画像は現代Webの重い荷物だ。だから私は最新のAVIF形式を採用した。JPEGの半分のサイズで、画質は変わらない。魔法のようだが、これが技術の進歩というものだ。
+
 ```html
 <!-- AVIF形式での画像配信 -->
 <picture>
@@ -47,12 +53,16 @@ import ContactForm from '../components/ContactForm.vue';
 
 ## パフォーマンス最適化の結果
 
-- **Lighthouse Score**: 100/100/100/100
-- **First Contentful Paint**: 0.3秒
-- **Largest Contentful Paint**: 0.5秒
-- **Cumulative Layout Shift**: 0
+ついにやった。全てのスコアで満点を叩き出したのだ：
+
+- **Lighthouse Score**: 100/100/100/100（完璧だ！）
+- **First Contentful Paint**: 0.3秒（瞬きする間もない）
+- **Largest Contentful Paint**: 0.5秒（コーヒーを一口飲む前に表示完了）
+- **Cumulative Layout Shift**: 0（ピクリとも動かない）
 
 ## Cache-Control戦略
+
+キャッシュは友達だ。1年間（31536000秒）のキャッシュ設定で、一度読み込んだ画像は二度と読み込まない。ユーザーのデータ通信料も節約できる。みんなハッピーだ。
 
 ```javascript
 // Firebase Hosting設定
@@ -63,7 +73,7 @@ import ContactForm from '../components/ContactForm.vue';
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "max-age=31536000, immutable"
+          "value": "max-age=31536000, immutable"  // 1年間のキャッシュ！
         }
       ]
     }
@@ -71,6 +81,6 @@ import ContactForm from '../components/ContactForm.vue';
 }
 ```
 
-この挑戦を通じて、単なる「速さ」を超えた、ユーザー体験を重視したWebサイト設計の重要性を学びました。
+この挑戦を通じて、単なる「速さ」を超えた、ユーザー体験を重視したWebサイト設計の重要性を学んだ。結論：速いは正義だが、使いやすいはもっと正義だ。
 
-*高性能Webサイトの構築にご興味がある方は、[お問い合わせ](/contact)からご相談ください。*
+*高性能Webサイトの構築に興味がある方は、[お問い合わせ](/contact)から相談してほしい。阿部寛さんより速いサイトを一緒に作ろう（無理かもしれないが、挑戦する価値はある）。*

@@ -5,6 +5,9 @@ pubDate: 2025-07-24
 author: "Terisuke"
 category: "engineering"
 tags: ["Google Cloud", "DevOps", "移行", "gcloud", "プロジェクト管理"]
+image:
+  url: "/images/blog/gcp-logo.avif"
+  alt: "Google Cloud Platform logo"
 lang: "en"
 featured: false
 ---
