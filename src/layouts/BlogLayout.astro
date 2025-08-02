@@ -339,6 +339,22 @@ const websiteJsonLd = {
         overflow-x: auto;
       }
       
+      /* Light mode: override background and adjust colors */
+      html:not(.dark) .prose pre {
+        background-color: #f6f8fa !important;
+        border: 1px solid #e5e7eb;
+      }
+      
+      /* Light mode: darken code colors for better contrast */
+      html:not(.dark) .prose pre code {
+        filter: brightness(0.6) saturate(1.5) contrast(1.2);
+      }
+      
+      /* Keep pre code background transparent */
+      .prose pre code {
+        background-color: transparent !important;
+      }
+      
       .prose code {
         background-color: #f1f5f9;
         padding: 0.125rem 0.25rem;

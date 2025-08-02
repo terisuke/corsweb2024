@@ -5,9 +5,9 @@ pubDate: 2025-07-24
 author: "Terisuke"
 category: "engineering"
 tags: ["Google Cloud", "DevOps", "移行", "gcloud", "プロジェクト管理"]
-# image:
-#   url: "/images/blog/google-cloud-migration.avif"
-#   alt: "Google Cloud移行のイメージ"
+image:
+  url: "/images/blog/gcp-logo.avif"
+  alt: "Google Cloud Platform ロゴ"
 lang: "ja"
 featured: false
 ---
@@ -215,6 +215,6 @@ Google Cloudのプロジェクト移行は、適切な権限と設定さえあ�
 
 ---
 
-**読んでいただいてありがとうございました！**
+**読んでいただいてありがとう！**
 
-同じような経験をした方、これから移行作業をする予定の方、ぜひコメントで教えてください。一緒に泣きましょう（笑）
+同じような経験をした方、これから移行作業をする予定の方、ぜひコメントで教えてくれ。一緒に泣こうぜ（笑）

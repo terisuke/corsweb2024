@@ -41,15 +41,17 @@ const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
       
       <!-- 投げ銭ボタン -->
       <div class="flex justify-center">
-        <button
-          id="tip-button"
+        <a
+          href={stripePaymentLink}
+          target="_blank"
+          rel="noopener noreferrer"
           class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-stone-900"
         >
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         {tipButtonText}
-        </button>
+        </a>
       </div>
     </div>
   </div>
@@ -67,27 +69,3 @@ const tipButtonText = currentLocale === 'ja' ? '投げ銭する' : 'Send Tip';
 </div>
 )}
 
-{isTipEnabled && stripePaymentLink && (
-<script define:vars={{ stripePaymentLink }} is:inline>
-  // 投げ銭機能のJavaScript
-  document.addEventListener('DOMContentLoaded', function() {
-    const tipButton = document.getElementById('tip-button');
-
-    // 投げ銭ボタンのイベントリスナー
-    tipButton.addEventListener('click', function() {
-      // Stripeの決済ページにリダイレクト（ポップアップブロッカー対策）
-      try {
-        const stripeWindow = window.open(stripePaymentLink, '_blank');
-        if (!stripeWindow || stripeWindow.closed || typeof stripeWindow.closed === 'undefined') {
-          // ポップアップがブロックされた場合は、現在のウィンドウでリダイレクト
-          window.location.href = stripePaymentLink;
-        }
-      } catch (error) {
-        console.error('Error opening Stripe payment link:', error);
-        // エラーが発生した場合も現在のウィンドウでリダイレクト
-        window.location.href = stripePaymentLink;
-      }
-    });
-  });
-</script>
-)}
