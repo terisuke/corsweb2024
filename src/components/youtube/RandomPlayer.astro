@@ -5,7 +5,7 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
 
 // APIキーの存在確認
 if (!API_KEY) {
-  console.warn('YouTube API key not configured');
+  console.warn('YouTube API key not configured. YouTube content will fallback to direct channel link.');
 }
 ---
 

@@ -38,6 +38,7 @@ jobs:
           PUBLIC_GCAL_TZ: ${{ secrets.PUBLIC_GCAL_TZ || 'Asia/Tokyo' }}
           PUBLIC_GCAL_PARAMS: ${{ secrets.PUBLIC_GCAL_PARAMS || '' }}
           PUBLIC_STRIPE_PAYMENT_LINK: ${{ secrets.PUBLIC_STRIPE_PAYMENT_LINK || '' }}
+          PUBLIC_YOUTUBE_API_KEY: ${{ secrets.PUBLIC_YOUTUBE_API_KEY || '' }}
 
       - name: Debug Firebase service account secret
         run: |
