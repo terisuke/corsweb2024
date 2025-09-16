@@ -16,19 +16,47 @@ if (!API_KEY) {
 </div>
 
 <script is:inline define:vars={{ CHANNEL_ID, API_KEY }}>
-  // YouTube IFrame APIが読み込まれているかチェック
+  /**
+   * YouTube IFrame APIを読み込み、複数インスタンスに対応した初期化を実行
+   * グローバルコールバックの上書きを防ぐためコールバックキューを使用
+   */
   function loadYouTubeAPI() {
     if (window.YT && window.YT.Player) {
+      // APIが既に読み込まれている場合は直接初期化
       initializePlayer();
     } else {
-      // YouTube IFrame APIを動的に読み込み
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      // コールバックのキューを作成または既存のものに追加
+      if (!window.youtubeAPICallbacks) {
+        window.youtubeAPICallbacks = [];
+      }
+      window.youtubeAPICallbacks.push(initializePlayer);
 
-      // APIが読み込まれるまで待機
-      window.onYouTubeIframeAPIReady = initializePlayer;
+      // YouTube IFrame APIが既に読み込み中かチェック
+      if (!window.youtubeAPILoading) {
+        window.youtubeAPILoading = true;
+
+        // YouTube IFrame APIを動的に読み込み
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // グローバルコールバックを設定（一度だけ）
+        window.onYouTubeIframeAPIReady = function() {
+          // キューに登録されたすべてのコールバックを実行
+          if (window.youtubeAPICallbacks) {
+            window.youtubeAPICallbacks.forEach(callback => {
+              try {
+                callback();
+              } catch (error) {
+                console.error('YouTube API callback error:', error);
+              }
+            });
+            // コールバックをクリア
+            window.youtubeAPICallbacks = [];
+          }
+        };
+      }
     }
   }
 
