@@ -289,3 +289,78 @@ The site deploys to Firebase Hosting with specific caching rules defined in `fir
 - **Environment Variables**: Store `GEMINI_API_KEY` securely for translation features
 - **Category System**: Use exact category names: `"ai"`, `"engineering"`, `"founder"`, `"lab"`
 - **URL Structure**: All posts become `/blog/post-name/` (Japanese) and `/en/blog/post-name/` (English)
+
+## Product & Service Names
+
+### Current Product Portfolio
+The site features three main product lines with updated branding:
+
+1. **TapForge** - NFC Smart Business Cards
+   - Previous name: NFCデジタル名刺作成
+   - Description: Next-gen business networking with just a tap
+   - Pricing: ¥3,000 initial cost, ¥500/additional card
+
+2. **BoltSite** - Ultra-Fast Website Development
+   - Previous name: 高性能ホームページ制作
+   - Description: Lightning-fast 0.3s loading with perfect SEO scores
+   - Features: Astro 4.8.7, SSG architecture, CDN optimization
+   - Pricing: ¥15,000-50,000+/month
+
+3. **IoTRealm** - AI/IoT Integration Platform
+   - Previous name: AI・IoTソリューション開発
+   - Description: Bridging digital innovation with physical reality
+   - Pricing: ¥1M-5M+ for development, ¥100K+/month maintenance
+
+## YouTube Integration
+
+### Random Video Player Component
+The site includes a sophisticated YouTube integration system:
+
+**Location**: `/src/components/youtube/RandomPlayer.astro`
+
+**Features**:
+- **API Integration**: Uses YouTube Data API v3 to fetch channel videos
+- **Random Selection**: Automatically selects random videos from the channel
+- **Error Handling**: Comprehensive error management and fallbacks
+- **Performance**: Optimized loading with proper iframe attributes
+
+**Environment Variables**:
+```env
+PUBLIC_YOUTUBE_API_KEY=your_youtube_api_key_here
+```
+
+**Target Channel**: `UCmivQ0Dndw81cLjkc9lgIOw` (Cor.Incorporated)
+
+**Implementation**:
+1. Fetches channel upload playlist via YouTube Data API
+2. Retrieves up to 50 recent videos
+3. Randomly selects one video per page load
+4. Embeds using YouTube IFrame API with optimized settings
+
+**Usage**: Integrated into ProductsTable.astro for dynamic video content display
+
+## Image Optimization
+
+### Team Member Images
+- **Format**: AVIF for optimal compression and quality
+- **Sizing**: Standardized to 400x400px for consistency
+- **Processing**: Automatic cropping and centering for profile images
+- **Performance**: Significant file size reduction (80%+ compression)
+
+### Image Pipeline
+- Original images stored in PNG format for editing
+- AVIF conversion for web delivery
+- Responsive sizing with proper aspect ratios
+- Automatic optimization via Astro's built-in image processing
+
+## External Media Integration
+
+### Media Section Updates
+- **Title**: Changed from "メディア紹介" to "外部メディア" (External Media)
+- **Layout**: Center-aligned components for better visual hierarchy
+- **Responsive**: Mobile-first design with proper spacing
+
+### Component Structure
+- Note articles displayed in centered card layout
+- YouTube content in dedicated full-width section
+- Proper semantic HTML with accessibility considerations

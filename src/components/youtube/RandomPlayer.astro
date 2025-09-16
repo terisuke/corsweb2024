@@ -1,0 +1,141 @@
+---
+// チャンネルIDを指定
+const CHANNEL_ID = 'UCmivQ0Dndw81cLjkc9lgIOw';
+const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
+---
+
+<div class="youtube-random-player">
+  <div class="aspect-video w-full">
+    <div id="youtube-player"></div>
+  </div>
+</div>
+
+<script define:vars={{ CHANNEL_ID, API_KEY }}>
+  // YouTube IFrame APIが読み込まれているかチェック
+  function loadYouTubeAPI() {
+    if (window.YT && window.YT.Player) {
+      initializePlayer();
+    } else {
+      // YouTube IFrame APIを動的に読み込み
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // APIが読み込まれるまで待機
+      window.onYouTubeIframeAPIReady = initializePlayer;
+    }
+  }
+
+  // プレイヤーの初期化
+  async function initializePlayer() {
+    try {
+      // チャンネルの動画リストを取得
+      const videoIds = await fetchChannelVideos();
+
+      if (videoIds.length === 0) {
+        console.error('動画が見つかりませんでした');
+        return;
+      }
+
+      // ランダムに動画を選択
+      const randomVideoId = videoIds[Math.floor(Math.random() * videoIds.length)];
+
+      // YouTubeプレイヤーを作成
+      new YT.Player('youtube-player', {
+        height: '100%',
+        width: '100%',
+        videoId: randomVideoId,
+        playerVars: {
+          autoplay: 0, // 自動再生は無効（ユーザーの操作を待つ）
+          mute: 0,
+          controls: 1,
+          rel: 0,
+          playsinline: 1,
+          modestbranding: 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onError': onPlayerError
+        }
+      });
+    } catch (error) {
+      console.error('YouTube プレイヤーの初期化に失敗しました:', error);
+    }
+  }
+
+  // チャンネルの動画リストを取得
+  async function fetchChannelVideos() {
+    try {
+      // 1. チャンネル情報を取得してアップロードプレイリストIDを取得
+      const channelResponse = await fetch(
+        `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`
+      );
+
+      if (!channelResponse.ok) {
+        throw new Error(`Channel API error: ${channelResponse.status}`);
+      }
+
+      const channelData = await channelResponse.json();
+
+      if (!channelData.items || channelData.items.length === 0) {
+        throw new Error('チャンネルが見つかりません');
+      }
+
+      const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+
+      // 2. アップロードプレイリストから動画リストを取得
+      const playlistResponse = await fetch(
+        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${API_KEY}`
+      );
+
+      if (!playlistResponse.ok) {
+        throw new Error(`Playlist API error: ${playlistResponse.status}`);
+      }
+
+      const playlistData = await playlistResponse.json();
+
+      if (!playlistData.items || playlistData.items.length === 0) {
+        throw new Error('動画が見つかりません');
+      }
+
+      // 動画IDの配列を返す
+      return playlistData.items
+        .map(item => item.snippet.resourceId.videoId)
+        .filter(id => id); // 無効なIDを除外
+
+    } catch (error) {
+      console.error('動画リストの取得に失敗しました:', error);
+      return [];
+    }
+  }
+
+  // プレイヤー準備完了時
+  function onPlayerReady(event) {
+    console.log('YouTube プレイヤーが準備完了しました');
+  }
+
+  // プレイヤーエラー時
+  function onPlayerError(event) {
+    console.error('YouTube プレイヤーエラー:', event.data);
+  }
+
+  // DOMが読み込まれたら実行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadYouTubeAPI);
+  } else {
+    loadYouTubeAPI();
+  }
+</script>
+
+<style>
+  .youtube-random-player {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #youtube-player {
+    width: 100%;
+    height: 100%;
+  }
+</style>

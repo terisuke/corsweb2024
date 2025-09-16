@@ -202,21 +202,21 @@ const translations = {
     productsTable: {
       title: "事業一覧",
       demoLabel: "Demo / Repo",
-      mediaTitle: "メディア紹介",
+      mediaTitle: "外部メディア",
       products: [
         {
-          name: 'NFCデジタル名刺作成',
-          description: '未来を先取る、スマートな出会いをすべての人へ',
+          name: 'TapForge',
+          description: 'タップ一つで繋がる、次世代ビジネスカード',
           demo: 'https://zoom-clone-navy-eta.vercel.app/',
         },
         {
-          name: '高性能ホームページ制作',
-          description: 'ビジネスの成長を加速させる、速さと品質',
+          name: 'BoltSite',
+          description: '光速0.3秒表示とSEO満点を実現する高性能Web制作',
           demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
         },
         {
-          name: 'AI・IoTソリューション開発',
-          description: 'アイデアを、画面の中から現実の世界へ',
+          name: 'IoTRealm',
+          description: 'デジタルと現実を融合した革新的ソリューション',
           demo: 'https://github.com/terisuke/engineer-cafe-navigator',
         },
       ],
@@ -224,7 +224,7 @@ const translations = {
         title: "料金一覧（税込）",
         services: [
           {
-            name: "NFCデジタル名刺",
+            name: "TapForge",
             items: [
               { item: "初期費用（1枚目）", price: "3,000円" },
               { item: "2枚目以降", price: "500円/枚" },
@@ -232,7 +232,7 @@ const translations = {
             ]
           },
           {
-            name: "高性能ホームページ制作",
+            name: "BoltSite",
             items: [
               { item: "ビギナー", price: "15,000円/月" },
               { item: "スタンダード", price: "25,000円/月" },
@@ -241,7 +241,7 @@ const translations = {
             ]
           },
           {
-            name: "AI・IoTソリューション",
+            name: "IoTRealm",
             items: [
               { item: "PoC（概念実証）", price: "100万円〜500万円" },
               { item: "本開発", price: "500万円〜" },
@@ -264,7 +264,8 @@ const translations = {
           description: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cloudia_Cor',
+          action: 'https://www.youtube.com/@Cor.Incorporated',
+          // 実際の@Cor.Incorporatedチャンネルの動画IDに更新してください
           id: ['umd2e_m3QAM'],
         },
       ]
@@ -339,7 +340,7 @@ const translations = {
       },
       {
         name: 'Nagisa Terada',
-        image: '/assets/nagisa.png',
+        image: '/assets/nagi.avif',
         job: 'Staff',
         description: '美容学校卒業後、美容室に7年勤務。プログラミングを勉強後、IT業界に転職。苦手を可能にするため日々奮闘中。',
         comingSoon: false,
@@ -585,21 +586,21 @@ const translations = {
     productsTable: {
       title: "Business List",
       demoLabel: "Demo / Repo",
-      mediaTitle: "Media Coverage",
+      mediaTitle: "External Media",
       products: [
         {
-          name: 'NFC Digital Business Card Creation',
-          description: 'Pioneering the future, smart encounters for everyone',
+          name: 'TapForge',
+          description: 'Connect with just a tap - Next-gen business networking',
           demo: 'https://zoom-clone-navy-eta.vercel.app/',
         },
         {
-          name: 'High-Performance Website Development',
-          description: 'Accelerating business growth with speed and quality',
+          name: 'BoltSite',
+          description: 'Ultra-fast 0.3s loading with perfect SEO scores',
           demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
         },
         {
-          name: 'AI・IoT Solution Development',
-          description: 'Bringing ideas from the screen to the real world',
+          name: 'IoTRealm',
+          description: 'Bridging digital innovation with physical reality',
           demo: 'https://github.com/terisuke/engineer-cafe-navigator',
         },
       ],
@@ -607,7 +608,7 @@ const translations = {
         title: "Pricing List (Tax Included)",
         services: [
           {
-            name: "NFC Digital Business Cards",
+            name: "TapForge",
             items: [
               { item: "Initial cost (1st card)", price: "¥3,000" },
               { item: "2nd card onwards", price: "¥500/card" },
@@ -615,7 +616,7 @@ const translations = {
             ]
           },
           {
-            name: "High-Performance Website Development",
+            name: "BoltSite",
             items: [
               { item: "Beginner", price: "¥15,000/month" },
               { item: "Standard", price: "¥25,000/month" },
@@ -624,7 +625,7 @@ const translations = {
             ]
           },
           {
-            name: "AI・IoT Solutions",
+            name: "IoTRealm",
             items: [
               { item: "PoC (Proof of Concept)", price: "¥1M-5M" },
               { item: "Full Development", price: "¥5M+" },
@@ -647,7 +648,8 @@ const translations = {
           description: 'Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cloudia_Cor',
+          action: 'https://www.youtube.com/@Cor.Incorporated',
+          // 実際の@Cor.Incorporatedチャンネルの動画IDに更新してください
           id: ['umd2e_m3QAM'],
         },
       ]
@@ -722,9 +724,9 @@ const translations = {
       },
       {
         name: 'Nagisa Terada',
-        image: '/assets/nagisa.png',
+        image: '/assets/nagi.avif',
         job: 'Staff',
-        description: '美容学校卒業後、美容室に7年勤務。プログラミングを勉強後、IT業界に転職。苦手を可能にするため日々奮闘中。',
+        description: 'After graduating from beauty school, worked at a salon for 7 years. Transitioned to IT after learning programming. Striving daily to turn challenges into possibilities.',
         comingSoon: false,
         link: 'https://digital-studio-c5abe.web.app/',
       },
