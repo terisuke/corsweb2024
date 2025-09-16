@@ -265,8 +265,6 @@ const translations = {
           isFlagged: true,
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
-          // 実際の@Cor.Incorporatedチャンネルの動画IDに更新してください
-          id: ['umd2e_m3QAM'],
         },
       ]
     },
@@ -649,8 +647,6 @@ const translations = {
           isFlagged: true,
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
-          // 実際の@Cor.Incorporatedチャンネルの動画IDに更新してください
-          id: ['umd2e_m3QAM'],
         },
       ]
     },

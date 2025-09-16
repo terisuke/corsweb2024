@@ -2,6 +2,11 @@
 // チャンネルIDを指定
 const CHANNEL_ID = 'UCmivQ0Dndw81cLjkc9lgIOw';
 const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
+
+// APIキーの存在確認
+if (!API_KEY) {
+  console.warn('YouTube API key not configured');
+}
 ---
 
 <div class="youtube-random-player">
@@ -10,7 +15,7 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
   </div>
 </div>
 
-<script define:vars={{ CHANNEL_ID, API_KEY }}>
+<script is:inline define:vars={{ CHANNEL_ID, API_KEY }}>
   // YouTube IFrame APIが読み込まれているかチェック
   function loadYouTubeAPI() {
     if (window.YT && window.YT.Player) {
@@ -29,12 +34,30 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
 
   // プレイヤーの初期化
   async function initializePlayer() {
+    const playerContainer = document.getElementById('youtube-player');
+
+    // APIキーが設定されていない場合のフォールバック
+    if (!API_KEY) {
+      if (playerContainer) {
+        playerContainer.innerHTML = `
+          <div class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <p class="text-gray-600 dark:text-gray-400 text-center px-4">
+              YouTube APIが設定されていません。<br>
+              <a href="https://www.youtube.com/@Cor.Incorporated" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline">YouTubeチャンネルを直接ご覧ください</a>
+            </p>
+          </div>
+        `;
+      }
+      return;
+    }
+
     try {
       // チャンネルの動画リストを取得
       const videoIds = await fetchChannelVideos();
 
       if (videoIds.length === 0) {
         console.error('動画が見つかりませんでした');
+        showErrorFallback('動画が見つかりませんでした');
         return;
       }
 
@@ -61,6 +84,7 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
       });
     } catch (error) {
       console.error('YouTube プレイヤーの初期化に失敗しました:', error);
+      showErrorFallback('動画の読み込みに失敗しました');
     }
   }
 
@@ -73,6 +97,9 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
       );
 
       if (!channelResponse.ok) {
+        if (channelResponse.status === 403) {
+          throw new Error('YouTube API quota exceeded or invalid API key');
+        }
         throw new Error(`Channel API error: ${channelResponse.status}`);
       }
 
@@ -90,6 +117,9 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
       );
 
       if (!playlistResponse.ok) {
+        if (playlistResponse.status === 403) {
+          throw new Error('YouTube API quota exceeded or invalid API key');
+        }
         throw new Error(`Playlist API error: ${playlistResponse.status}`);
       }
 
@@ -111,13 +141,34 @@ const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
   }
 
   // プレイヤー準備完了時
-  function onPlayerReady(event) {
+  function onPlayerReady(_event) {
     console.log('YouTube プレイヤーが準備完了しました');
+    // プレイヤーの初期設定がある場合はここで実行
+    // const player = _event.target;
+    // 例: player.setVolume(50); 等の初期設定
+  }
+
+  // エラー時のフォールバックUI表示
+  function showErrorFallback(message) {
+    const playerContainer = document.getElementById('youtube-player');
+    if (playerContainer) {
+      playerContainer.innerHTML = `
+        <div class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div class="text-center px-4">
+            <p class="text-gray-600 dark:text-gray-400 mb-2">${message}</p>
+            <a href="https://www.youtube.com/@Cor.Incorporated" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline">
+              YouTubeチャンネルを直接ご覧ください
+            </a>
+          </div>
+        </div>
+      `;
+    }
   }
 
   // プレイヤーエラー時
   function onPlayerError(event) {
     console.error('YouTube プレイヤーエラー:', event.data);
+    showErrorFallback('動画の再生でエラーが発生しました');
   }
 
   // DOMが読み込まれたら実行
