@@ -1,5 +1,6 @@
 ---
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import RandomPlayer from '../youtube/RandomPlayer.astro';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -34,14 +35,38 @@ const t = getTranslations(currentLocale);
       </div>
     </div>
 
+    <!-- Pricing Section -->
+    <div class="mb-16">
+      <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.pricing.title}</h2>
+      <div class="grid gap-8 lg:grid-cols-3">
+        {
+          t.productsTable.pricing.services.map((service) => (
+            <div class="relative flex flex-col gap-6 rounded-3xl bg-primary-500/5 p-8 dark:bg-primary-400/5">
+              <h3 class="text-xl font-medium text-primary-600 dark:text-primary-400">{service.name}</h3>
+              <div class="space-y-3">
+                {
+                  service.items.map((item) => (
+                    <div class="flex justify-between items-center border-b border-primary-200/50 dark:border-primary-700/50 pb-2">
+                      <span class="text-primary-950/80 dark:text-primary-200/80">{item.item}</span>
+                      <span class="font-medium text-primary-600 dark:text-primary-400">{item.price}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
     <!-- Media Section -->
-    <h2 class="mb-8 text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.mediaTitle}</h2>
-    <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-3">
+    <h2 class="mb-8 text-center text-3xl font-medium tracking-tight sm:text-4xl">{t.productsTable.mediaTitle}</h2>
+    <div class="-mt-8 flex justify-center">
       {
         t.productsTable.articles.map((item) => (
           <div
             class:list={[
-              'relative flex flex-col gap-8 rounded-3xl p-8',
+              'relative flex flex-col gap-8 rounded-3xl p-8 max-w-md',
               item.isFlagged && 'bg-primary-500/10 dark:bg-primary-400/10',
             ]}
           >
@@ -64,7 +89,7 @@ const t = getTranslations(currentLocale);
       }
     </div>
     <div class="py-16"></div>
-    <div class="-mt-8 grid gap-8 lg:mt-0 lg:grid-cols-1">
+    <div class="mx-auto max-w-4xl">
       {
         t.productsTable.youtube.map((item) => (
           <div
@@ -74,13 +99,7 @@ const t = getTranslations(currentLocale);
             ]}
           >
             <div class="flex-1">
-              <iframe
-                id="player"
-                class="aspect-video w-full flex-1"
-                src={`https://www.youtube.com/embed/${
-                  item.id[Math.floor(Math.random() * item.id.length)]
-                }`}
-              />
+              <RandomPlayer />
               <div class="py-4" />
               <h2 class="text-center text-4xl font-medium">{item.name}</h2>
               <p class="mt-6 text-center text-primary-950/70 dark:text-primary-200/70">

@@ -200,26 +200,56 @@ const translations = {
       button: "Contact us"
     },
     productsTable: {
-      title: "プロダクト一覧",
+      title: "事業一覧",
       demoLabel: "Demo / Repo",
-      mediaTitle: "メディア紹介",
+      mediaTitle: "外部メディア",
       products: [
         {
-          name: 'なんちゃってZOOM',
-          description: 'ZOOM のようなビデオ通話アプリ',
+          name: 'TapForge',
+          description: 'タップ一つで繋がる、次世代ビジネスカード',
           demo: 'https://zoom-clone-navy-eta.vercel.app/',
         },
         {
-          name: 'Constellation Creator',
-          description: '画像をアップロードするとオリジナル星座を作成するアプリ',
+          name: 'BoltSite',
+          description: '光速0.3秒表示とSEO満点を実現する高性能Web制作',
           demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
         },
         {
-          name: 'エンジニアカフェナビゲーター',
-          description: 'Mastraベースのエンジニアカフェ自動受付システム(現在開発中)',
+          name: 'IoTRealm',
+          description: 'デジタルと現実を融合した革新的ソリューション',
           demo: 'https://github.com/terisuke/engineer-cafe-navigator',
         },
       ],
+      pricing: {
+        title: "料金一覧（税込）",
+        services: [
+          {
+            name: "TapForge",
+            items: [
+              { item: "初期費用（1枚目）", price: "3,000円" },
+              { item: "2枚目以降", price: "600円/枚" },
+              { item: "100枚以上", price: "500円/枚" }
+            ]
+          },
+          {
+            name: "BoltSite",
+            items: [
+              { item: "ビギナー", price: "15,000円/月" },
+              { item: "スタンダード", price: "25,000円/月" },
+              { item: "プレミアム", price: "30,000円/月" },
+              { item: "エンタープライズ", price: "50,000円〜/月" }
+            ]
+          },
+          {
+            name: "IoTRealm",
+            items: [
+              { item: "PoC（概念実証）", price: "100万円〜500万円" },
+              { item: "本開発", price: "500万円〜" },
+              { item: "保守・運用", price: "10万円〜/月" }
+            ]
+          }
+        ]
+      },
       articles: [
         {
           name: 'Note',
@@ -234,8 +264,7 @@ const translations = {
           description: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cloudia_Cor',
-          id: ['umd2e_m3QAM'],
+          action: 'https://www.youtube.com/@Cor.Incorporated',
         },
       ]
     },
@@ -308,11 +337,12 @@ const translations = {
         zennLink: 'https://zenn.dev/cloudia',
       },
       {
-        name: 'Coming Soon...',
-        image: '/assets/coming-soon.avif',
-        job: '',
-        comingSoon: true,
-        link: '#',
+        name: 'Nagisa Terada',
+        image: '/assets/nagi.avif',
+        job: 'Staff',
+        description: '美容学校卒業後、美容室に7年勤務。プログラミングを勉強後、IT業界に転職。苦手を可能にするため日々奮闘中。',
+        comingSoon: false,
+        link: 'https://digital-studio-c5abe.web.app/',
       },
     ],
     meta: {
@@ -552,26 +582,56 @@ const translations = {
       button: "Contact us"
     },
     productsTable: {
-      title: "Product List",
+      title: "Business List",
       demoLabel: "Demo / Repo",
-      mediaTitle: "Media Coverage",
+      mediaTitle: "External Media",
       products: [
         {
-          name: 'Fake ZOOM',
-          description: 'Video calling app like ZOOM',
+          name: 'TapForge',
+          description: 'Connect with just a tap - Next-gen business networking',
           demo: 'https://zoom-clone-navy-eta.vercel.app/',
         },
         {
-          name: 'Constellation Creator',
-          description: 'App that creates original constellations from uploaded images',
+          name: 'BoltSite',
+          description: 'Ultra-fast 0.3s loading with perfect SEO scores',
           demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
         },
         {
-          name: 'Engineer Cafe Navigator',
-          description: 'Mastra-based engineer cafe automatic reception system (currently in development)',
+          name: 'IoTRealm',
+          description: 'Bridging digital innovation with physical reality',
           demo: 'https://github.com/terisuke/engineer-cafe-navigator',
         },
       ],
+      pricing: {
+        title: "Pricing List (Tax Included)",
+        services: [
+          {
+            name: "TapForge",
+            items: [
+              { item: "Initial cost (1st card)", price: "¥3,000" },
+              { item: "2nd card onwards", price: "¥600/card" },
+              { item: "100+ cards", price: "¥500/card" }
+            ]
+          },
+          {
+            name: "BoltSite",
+            items: [
+              { item: "Beginner", price: "¥15,000/month" },
+              { item: "Standard", price: "¥25,000/month" },
+              { item: "Premium", price: "¥30,000/month" },
+              { item: "Enterprise", price: "¥50,000+/month" }
+            ]
+          },
+          {
+            name: "IoTRealm",
+            items: [
+              { item: "PoC (Proof of Concept)", price: "¥1M-5M" },
+              { item: "Full Development", price: "¥5M+" },
+              { item: "Maintenance & Support", price: "¥100K+/month" }
+            ]
+          }
+        ]
+      },
       articles: [
         {
           name: 'Note',
@@ -586,8 +646,7 @@ const translations = {
           description: 'Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cloudia_Cor',
-          id: ['umd2e_m3QAM'],
+          action: 'https://www.youtube.com/@Cor.Incorporated',
         },
       ]
     },
@@ -660,11 +719,12 @@ const translations = {
         zennLink: 'https://zenn.dev/cloudia',
       },
       {
-        name: 'Coming Soon...',
-        image: '/assets/coming-soon.avif',
-        job: '',
-        comingSoon: true,
-        link: '#',
+        name: 'Nagisa Terada',
+        image: '/assets/nagi.avif',
+        job: 'Staff',
+        description: 'After graduating from beauty school, worked at a salon for 7 years. Transitioned to IT after learning programming. Striving daily to turn challenges into possibilities.',
+        comingSoon: false,
+        link: 'https://digital-studio-c5abe.web.app/',
       },
     ],
     meta: {
