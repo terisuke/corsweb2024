@@ -11,6 +11,7 @@ function extractLinks(item) {
   const linkPatterns = [
     { type: 'LitLink', pattern: /lit\.link/ },
     { type: 'X', pattern: /(?:x\.com|twitter\.com)/ },
+    { type: 'ホームページ', pattern: /digital-studio/ },
   ];
   const links = [];
   if (item.link) {
