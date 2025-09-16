@@ -227,8 +227,8 @@ const translations = {
             name: "TapForge",
             items: [
               { item: "初期費用（1枚目）", price: "3,000円" },
-              { item: "2枚目以降", price: "500円/枚" },
-              { item: "100枚以上", price: "300円/枚" }
+              { item: "2枚目以降", price: "600円/枚" },
+              { item: "100枚以上", price: "500円/枚" }
             ]
           },
           {
@@ -611,8 +611,8 @@ const translations = {
             name: "TapForge",
             items: [
               { item: "Initial cost (1st card)", price: "¥3,000" },
-              { item: "2nd card onwards", price: "¥500/card" },
-              { item: "100+ cards", price: "¥300/card" }
+              { item: "2nd card onwards", price: "¥600/card" },
+              { item: "100+ cards", price: "¥500/card" }
             ]
           },
           {

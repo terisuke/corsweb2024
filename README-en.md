@@ -25,6 +25,7 @@ A corporate website with extreme loading speed optimization. Achieves loading sp
 - **i18n**: Japanese/English support
 - **AI Translation**: Google Generative AI (Gemini 1.5 Flash)
 - **Content Management**: Astro Content Collections with Zod
+- **YouTube Integration**: YouTube Data API v3 for dynamic video content
 
 ## 🤖 New Feature: AI-Driven Blog System
 
@@ -125,6 +126,7 @@ node scripts/translate-all-blog.js
 # Set the following in .env file
 GEMINI_API_KEY=your_gemini_api_key_here              # Gemini API key (for blog auto-translation)
 PUBLIC_STRIPE_PAYMENT_LINK=your_stripe_payment_link_here  # Stripe Payment Link URL (for tip functionality)
+PUBLIC_YOUTUBE_API_KEY=your_youtube_api_key_here     # YouTube Data API v3 key (for random video display)
 ```
 
 ## 📁 Project Structure
@@ -135,7 +137,9 @@ src/
 │   ├── blog/        # Blog-specific components
 │   ├── home/        # Homepage components
 │   ├── layout/      # Shared layouts
-│   └── performance/ # Performance monitoring
+│   ├── performance/ # Performance monitoring
+│   ├── products/    # Product showcase components
+│   └── youtube/     # YouTube API integration components
 ├── content/         # Content collections
 │   └── blog/
 │       ├── ja/      # Japanese blog posts
@@ -175,6 +179,11 @@ https://github.com
 - **Cache Feature**: Locally saved to `/public/remark-link-card-plus/`
 - **Responsive Design**: Supports both desktop and mobile
 - **Dark Mode Support**: Automatically follows theme switching
+
+### YouTube Integration
+- **Dynamic Content**: Random video display via YouTube Data API v3
+- **Channel Integration**: Connected to Cor.Incorporated official channel
+- **Auto-updates**: New videos automatically added to display candidates
 
 ### Advanced Features
 - **Automatic Table of Contents**: Auto-generated from heading structure
