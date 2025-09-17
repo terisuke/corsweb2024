@@ -25,3 +25,10 @@ pnpm-debug.log*
 
 # firebase files
 @hosting.ZGlzdA.cache
+
+# MCP server files
+.mcp.json
+.serena/
+
+# Link card cache
+public/remark-link-card-plus/
