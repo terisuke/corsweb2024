@@ -11,7 +11,16 @@ if (!API_KEY) {
 
 <div class="youtube-random-player">
   <div class="aspect-video w-full">
-    <div id="youtube-player"></div>
+    <div id="youtube-player" class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <!-- ローディング表示（初期表示） -->
+      <div class="youtube-loading">
+        <svg class="animate-spin h-8 w-8 text-primary-600 dark:text-primary-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">動画を読み込み中...</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -21,61 +30,56 @@ if (!API_KEY) {
    * グローバルコールバックの上書きを防ぐためコールバックキューを使用
    */
   function loadYouTubeAPI() {
-    if (window.YT && window.YT.Player) {
-      // APIが既に読み込まれている場合は直接初期化
+    // すでにAPIが読み込まれている場合
+    if (window.YT?.Player) {
       initializePlayer();
-    } else {
-      // コールバックのキューを作成または既存のものに追加
-      if (!window.youtubeAPICallbacks) {
-        window.youtubeAPICallbacks = [];
-      }
-      window.youtubeAPICallbacks.push(initializePlayer);
-
-      // YouTube IFrame APIが既に読み込み中かチェック
-      if (!window.youtubeAPILoading) {
-        window.youtubeAPILoading = true;
-
-        // YouTube IFrame APIを動的に読み込み
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // グローバルコールバックを設定（一度だけ）
-        window.onYouTubeIframeAPIReady = function() {
-          // キューに登録されたすべてのコールバックを実行
-          if (window.youtubeAPICallbacks) {
-            window.youtubeAPICallbacks.forEach(callback => {
-              try {
-                callback();
-              } catch (error) {
-                console.error('YouTube API callback error:', error);
-              }
-            });
-            // コールバックをクリア
-            window.youtubeAPICallbacks = [];
-          }
-        };
-      }
+      return;
     }
+
+    // コールバックキューの初期化
+    window.youtubeAPICallbacks = window.youtubeAPICallbacks || [];
+    window.youtubeAPICallbacks.push(initializePlayer);
+
+    // APIが読み込み中の場合はスキップ
+    if (window.youtubeAPILoading) {
+      return;
+    }
+
+    window.youtubeAPILoading = true;
+
+    // YouTube IFrame APIを動的に読み込み
+    const script = document.createElement('script');
+    script.src = 'https://www.youtube.com/iframe_api';
+    script.async = true;
+    document.head.appendChild(script);
+
+    // グローバルコールバックを設定（一度だけ）
+    window.onYouTubeIframeAPIReady = () => {
+      const callbacks = window.youtubeAPICallbacks || [];
+      callbacks.forEach(callback => {
+        try {
+          callback();
+        } catch (error) {
+          console.error('YouTube API callback error:', error);
+        }
+      });
+      window.youtubeAPICallbacks = [];
+    };
   }
 
   // プレイヤーの初期化
   async function initializePlayer() {
     const playerContainer = document.getElementById('youtube-player');
+    if (!playerContainer) return;
+
+    // すでにプレイヤーが存在する場合はスキップ
+    if (playerContainer.querySelector('iframe')) {
+      return;
+    }
 
     // APIキーが設定されていない場合のフォールバック
     if (!API_KEY) {
-      if (playerContainer) {
-        playerContainer.innerHTML = `
-          <div class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-lg">
-            <p class="text-gray-600 dark:text-gray-400 text-center px-4">
-              YouTube APIが設定されていません。<br>
-              <a href="https://www.youtube.com/@Cor.Incorporated" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline">YouTubeチャンネルを直接ご覧ください</a>
-            </p>
-          </div>
-        `;
-      }
+      showErrorFallback('YouTube APIが設定されていません');
       return;
     }
 
@@ -83,8 +87,7 @@ if (!API_KEY) {
       // チャンネルの動画リストを取得
       const videoIds = await fetchChannelVideos();
 
-      if (videoIds.length === 0) {
-        console.error('動画が見つかりませんでした');
+      if (!videoIds.length) {
         showErrorFallback('動画が見つかりませんでした');
         return;
       }
@@ -103,7 +106,8 @@ if (!API_KEY) {
           controls: 1,
           rel: 0,
           playsinline: 1,
-          modestbranding: 1
+          modestbranding: 1,
+          origin: window.location.origin // originを明示的に設定
         },
         events: {
           'onReady': onPlayerReady,
@@ -119,48 +123,45 @@ if (!API_KEY) {
   // チャンネルの動画リストを取得
   async function fetchChannelVideos() {
     try {
-      // 1. チャンネル情報を取得してアップロードプレイリストIDを取得
-      const channelResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`
-      );
+      // チャンネル情報を取得
+      const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`;
+      const channelResponse = await fetch(channelUrl);
 
       if (!channelResponse.ok) {
-        if (channelResponse.status === 403) {
-          throw new Error('YouTube API quota exceeded or invalid API key');
-        }
-        throw new Error(`Channel API error: ${channelResponse.status}`);
+        const errorMsg = channelResponse.status === 403
+          ? 'YouTube API quota exceeded or invalid API key'
+          : `Channel API error: ${channelResponse.status}`;
+        throw new Error(errorMsg);
       }
 
       const channelData = await channelResponse.json();
+      const uploadsPlaylistId = channelData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
 
-      if (!channelData.items || channelData.items.length === 0) {
+      if (!uploadsPlaylistId) {
         throw new Error('チャンネルが見つかりません');
       }
 
-      const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
-
-      // 2. アップロードプレイリストから動画リストを取得
-      const playlistResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${API_KEY}`
-      );
+      // プレイリストから動画リストを取得
+      const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${API_KEY}`;
+      const playlistResponse = await fetch(playlistUrl);
 
       if (!playlistResponse.ok) {
-        if (playlistResponse.status === 403) {
-          throw new Error('YouTube API quota exceeded or invalid API key');
-        }
-        throw new Error(`Playlist API error: ${playlistResponse.status}`);
+        const errorMsg = playlistResponse.status === 403
+          ? 'YouTube API quota exceeded or invalid API key'
+          : `Playlist API error: ${playlistResponse.status}`;
+        throw new Error(errorMsg);
       }
 
       const playlistData = await playlistResponse.json();
 
-      if (!playlistData.items || playlistData.items.length === 0) {
+      if (!playlistData.items?.length) {
         throw new Error('動画が見つかりません');
       }
 
       // 動画IDの配列を返す
       return playlistData.items
-        .map(item => item.snippet.resourceId.videoId)
-        .filter(id => id); // 無効なIDを除外
+        .map(item => item.snippet?.resourceId?.videoId)
+        .filter(Boolean);
 
     } catch (error) {
       console.error('動画リストの取得に失敗しました:', error);
@@ -169,28 +170,32 @@ if (!API_KEY) {
   }
 
   // プレイヤー準備完了時
-  function onPlayerReady(_event) {
-    console.log('YouTube プレイヤーが準備完了しました');
-    // プレイヤーの初期設定がある場合はここで実行
-    // const player = _event.target;
-    // 例: player.setVolume(50); 等の初期設定
+  function onPlayerReady() {
+    // ローディング表示を削除
+    const loadingElement = document.querySelector('.youtube-loading');
+    if (loadingElement) {
+      loadingElement.remove();
+    }
   }
 
   // エラー時のフォールバックUI表示
   function showErrorFallback(message) {
     const playerContainer = document.getElementById('youtube-player');
-    if (playerContainer) {
-      playerContainer.innerHTML = `
-        <div class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-lg">
-          <div class="text-center px-4">
-            <p class="text-gray-600 dark:text-gray-400 mb-2">${message}</p>
-            <a href="https://www.youtube.com/@Cor.Incorporated" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline">
-              YouTubeチャンネルを直接ご覧ください
-            </a>
-          </div>
+    if (!playerContainer) return;
+
+    playerContainer.innerHTML = `
+      <div class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-lg">
+        <div class="text-center px-4">
+          <p class="text-gray-600 dark:text-gray-400 mb-2">${message}</p>
+          <a href="https://www.youtube.com/@Cor.Incorporated"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="text-primary-600 hover:underline">
+            YouTubeチャンネルを直接ご覧ください
+          </a>
         </div>
-      `;
-    }
+      </div>
+    `;
   }
 
   // プレイヤーエラー時
@@ -199,12 +204,36 @@ if (!API_KEY) {
     showErrorFallback('動画の再生でエラーが発生しました');
   }
 
+  // 初期化のエントリーポイント
+  function initialize() {
+    const playerContainer = document.getElementById('youtube-player');
+    if (playerContainer && !playerContainer.querySelector('iframe')) {
+      loadYouTubeAPI();
+    }
+  }
+
   // DOMが読み込まれたら実行
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadYouTubeAPI);
+    document.addEventListener('DOMContentLoaded', initialize);
   } else {
-    loadYouTubeAPI();
+    initialize();
   }
+
+  // View Transitions対応
+  document.addEventListener('astro:after-swap', () => {
+    setTimeout(initialize, 100);
+  });
+
+  // YouTube APIのプリロード
+  document.addEventListener('astro:before-preparation', () => {
+    if (!window.YT && !window.youtubeAPILoading) {
+      const preload = document.createElement('link');
+      preload.rel = 'preload';
+      preload.as = 'script';
+      preload.href = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(preload);
+    }
+  });
 </script>
 
 <style>
@@ -216,5 +245,18 @@ if (!API_KEY) {
   #youtube-player {
     width: 100%;
     height: 100%;
+    min-height: 300px;
+  }
+
+  .youtube-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #youtube-player iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
   }
 </style>

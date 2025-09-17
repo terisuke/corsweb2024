@@ -400,6 +400,9 @@ The site includes a sophisticated YouTube integration system:
 - **Random Selection**: Automatically selects random videos from the channel
 - **Error Handling**: Comprehensive error management and fallbacks
 - **Performance**: Optimized loading with proper iframe attributes
+- **View Transitions Support**: Seamless player re-initialization on page navigation
+- **Loading States**: Visual feedback during video loading
+- **Origin Security**: Explicit origin parameter to prevent postMessage warnings
 
 **Environment Variables**:
 
@@ -415,9 +418,19 @@ PUBLIC_YOUTUBE_API_KEY=your_youtube_api_key_here
 2. Retrieves up to 50 recent videos
 3. Randomly selects one video per page load
 4. Embeds using YouTube IFrame API with optimized settings
+5. Handles View Transitions with automatic re-initialization
+6. Preloads YouTube API for faster initialization on navigation
 
 **Usage**: Integrated into ProductsTable.astro for dynamic video content
 display
+
+**Recent Improvements**:
+
+- Fixed postMessage origin warnings
+- Added View Transitions API support for smooth navigation
+- Implemented loading states for better UX
+- Optimized initialization timing
+- Added prefetch strategy adjustments
 
 ## Image Optimization
 
