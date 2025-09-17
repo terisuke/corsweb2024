@@ -6,6 +6,10 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://cor-jp.com',
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'hover'
+  },
   i18n: {
     locales: ["ja", "en"],
     defaultLocale: "ja",
