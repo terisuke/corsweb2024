@@ -51,6 +51,14 @@ const translations = {
         fields: {
           name: "お名前",
           email: "メールアドレス",
+          consultationType: "相談内容",
+          consultationTypePlaceholder: "相談内容を選択してください",
+          consultationOptions: [
+            "TapForgeについてのご相談",
+            "BoltSiteについてのご相談",
+            "IoTRealmについてのご相談",
+            "その他"
+          ],
           message: "メッセージ"
         },
         submit: "送信",
@@ -138,8 +146,12 @@ const translations = {
           answer: "価格については、企業様ごとにご要望が異なりますので、初回お打ち合わせ後にお見積もりをお送りさせていただきます。同業種の類似案件と比較し、15％程度コストを抑えてご提案させていただくことが多いです。お支払い方法は、銀行振込やPaypal決済など、様々なお支払い方法に対応しております。初回打ち合わせ時にご希望のお支払い方法をスタッフにお伝えください。"
         },
         {
-          question: "React、Flutter、Pythonを使うメリットは？FirebaseやSupaBaseなどのBaaSの利点は？",
-          answer: "React、Flutter、Pythonは、最先端言語ゆえの拡張性、世界中にいる多くのユーザーのコミュニティサポートにより短期間で大規模なシステム/アプリ開発を可能にします。これらの言語は柔軟性があり、初心者にも理解しやすく、豊富なライブラリを持っています。また、FirebaseやSupaBaseのようなBaaSは、リアルタイムのデータ同期、様々な組み込み機能、スケーラビリティ、透明性、セキュリティなど拡張性の高いバックエンドを提供します。これらの技術を組み合わせることで、効率的で高品質なアプリケーション開発が可能になります。"
+          question: "JavaScriptやTypeScript、Python、Goなどを使うメリットは？",
+          answer: "JavaScriptは1995年にNetscapeで生まれ、ウェブ開発の基盤となる言語です。TypeScriptはそのスーパーセットとして、静的型付けを追加し、大規模プロジェクトでの保守性を向上させます。Pythonは1991年に開発された汎用性の高い言語で、シンプルで読みやすい文法が特徴です。AI・機械学習、データ分析、Web開発まで幅広く対応でき、豊富なライブラリにより開発効率が非常に高いです。Go（Golang）は2009年にGoogleが開発した軽量かつ高速な言語で、シンプルな文法と並行処理（goroutines）が特徴です。クラウドネイティブなアプリケーションやマイクロサービスに適しており、コンパイル速度が速く、メモリ効率が高いため、スケーラブルなサーバー開発に最適です。"
+        },
+        {
+          question: "FirebaseやSupaBaseなどのBaaSをはじめとしたクラウドサービスを使う利点は？",
+          answer: "BaaS（Backend as a Service）は認証、データベース、ストレージ、プッシュ通知などのバックエンド機能を提供します。FirebaseはGoogleのサービスでリアルタイムデータベースと豊富な機能が特徴です。SupabaseはオープンソースのFirebase代替で、PostgreSQLベースのリアルタイム機能とRESTful APIを提供します。クラウドサービス全般では、初期投資を抑えながら、必要に応じてリソースを拡張できる柔軟性があります。AWS、Google Cloud、Azureなどの主要プロバイダーは、高可用性、自動バックアップ、セキュリティ機能を提供します。グローバルなCDN、負荷分散、監視ツールにより、パフォーマンスと信頼性を向上させ、運用負荷を大幅に軽減できます。開発期間の短縮、運用コストの削減、スケーラビリティの確保が主な利点です。"
         },
         {
           question: "要件によってどこまでタスクをカスタマイズできますか?また変更が必要な場合はどのように対応しますか?",
@@ -162,25 +174,25 @@ const translations = {
       note: "* ミーティングのご依頼は下記のお問い合わせフォームよりご連絡ください。"
     },
     testimonials: {
-      title: "Skilled code",
+      title: "Technical Expertise",
       items: [
         {
+          name: "JavaScript/TypeScript",
+          description: "フロントエンド&サーバーサイド開発",
+          image: "/assets/jsts.avif",
+          message: "JavaScriptは1995年にNetscapeで生まれ、ウェブ開発の基盤となる言語です。TypeScriptはそのスーパーセットとして、静的型付けを追加し、大規模プロジェクトでの保守性を向上させます。Node.jsやReactと組み合わせてリアルタイム通信やUI構築に活用され、非同期処理や豊富なエコシステムにより、迅速でインタラクティブなアプリケーション開発に適しています。"
+        },
+        {
           name: "Python",
-          description: "サーバーサイド&機械学習",
+          description: "AI&機械学習",
           image: "/assets/python.avif",
-          message: "Pythonは1991年に開発された、汎用性の高いプログラミング言語です。初心者にも分かりやすい書き方で、データの分析、ブロックチェーンの開発、自動で仕事をするプログラム、AI（人工知能）の開発にもよく使われます。世界中に多くのコミュニティがあり、さまざまな人が開発したパッケージを使ってスピーディーに多機能なシステム開発をすることが可能です。"
+          message: "Pythonは1991年に開発された汎用性の高いプログラミング言語です。シンプルで読みやすい文法が特徴で、機械学習、AI開発、データ分析に広く使われます。TensorFlowやPyTorchといったライブラリを活用することで、複雑なAIモデルを迅速に構築でき、初心者から上級者まで幅広く支持されています。"
         },
         {
-          name: "Flutter",
-          description: "モバイルアプリ開発",
-          image: "/assets/flutter.avif",
-          message: "Flutterは2018年にGoogleによって開発されたオープンソースのソフトウェア開発キットです。一つのコードベースからiOS、Android、Web、デスクトップアプリケーションを同時に構築することが可能です。多くのパッケージが開発者から発表されており、それらのパッケージを組み合わせてユーザーフレンドリーなアプリ開発を少ないコードで実現できます。"
-        },
-        {
-          name: "React",
-          description: "Webアプリ開発",
-          image: "/assets/react.avif",
-          message: "ReactはJavaScriptを用いた最も有名なフレームワークです。2013年にMeta(旧Facebook)により発表され、TypeScriptにも対応しています。コンポーネントベースのアーキテクチャを採用しており、再利用可能なUIパーツを作成し、それらを組み合わせることで、大規模かつパフォーマンスの高いWebアプリケーションを効率的に開発することができます。"
+          name: "Go",
+          description: "バックエンド&高性能システム",
+          image: "/assets/go.avif",
+          message: "Go（Golang）は2009年にGoogleが開発した軽量かつ高速なプログラミング言語です。シンプルな文法と並行処理（goroutines）が特徴で、クラウドネイティブなアプリケーションやマイクロサービスに適しています。コンパイル速度が速く、メモリ効率が高いため、スケーラブルなサーバー開発に最適です。"
         }
       ]
     },
@@ -211,12 +223,12 @@ const translations = {
         },
         {
           name: 'BoltSite',
-          description: '光速0.3秒表示とSEO満点を実現する高性能Web制作',
+          description: '光速0.3秒表示とSEO満点を実現する<br/>高性能Web制作',
           demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
         },
         {
           name: 'IoTRealm',
-          description: 'デジタルと現実を融合した革新的ソリューション',
+          description: 'デジタルと現実を融合した<br/>革新的ソリューション',
           demo: 'https://github.com/terisuke/engineer-cafe-navigator',
         },
       ],
@@ -433,6 +445,14 @@ const translations = {
         fields: {
           name: "Your name",
           email: "Email",
+          consultationType: "Consultation Type",
+          consultationTypePlaceholder: "Please select consultation type",
+          consultationOptions: [
+            "Consultation about TapForge",
+            "Consultation about BoltSite",
+            "Consultation about IoTRealm",
+            "Other"
+          ],
           message: "Message"
         },
         submit: "Submit",
@@ -520,8 +540,12 @@ const translations = {
           answer: "Pricing varies depending on the client's requirements, so we will send you a quote after the initial meeting. Compared to similar projects in the same industry, we often offer proposals at about 15% lower cost. Payment methods include bank transfer, Paypal, and more. Please let our staff know your preferred payment method during the initial meeting."
         },
         {
-          question: "What are the benefits of using React, Flutter, and Python? What are the advantages of BaaS like Firebase or SupaBase?",
-          answer: "React, Flutter, and Python offer extensibility as cutting-edge languages and enable large-scale system/app development in a short period thanks to global community support. These languages are flexible, beginner-friendly, and have rich libraries. BaaS like Firebase and SupaBase provide highly scalable backends with real-time data sync, built-in features, scalability, transparency, and security. Combining these technologies enables efficient, high-quality app development."
+          question: "What are the benefits of using JavaScript, TypeScript, Python, Go, and other languages?",
+          answer: "JavaScript was born in 1995 at Netscape and has become the foundation of web development. TypeScript, as its superset, adds static typing to improve maintainability in large-scale projects. Python is a versatile language developed in 1991, known for its simple and readable syntax. It covers AI/machine learning, data analysis, and web development with rich libraries, making it extremely efficient for development. Go (Golang) is a lightweight and fast language developed by Google in 2009, featuring simple syntax and concurrent processing (goroutines). It's ideal for cloud-native applications and microservices, with fast compilation speed and high memory efficiency, making it optimal for scalable server development."
+        },
+        {
+          question: "What are the advantages of using BaaS like Firebase and Supabase, and cloud services in general?",
+          answer: "BaaS (Backend as a Service) provides backend functions such as authentication, databases, storage, and push notifications. Firebase is Google's service featuring real-time databases and rich functionality. Supabase is an open-source Firebase alternative offering PostgreSQL-based real-time features and RESTful APIs. Cloud services in general offer flexibility to scale resources as needed while keeping initial investment low. Major providers like AWS, Google Cloud, and Azure provide high availability, automatic backups, and security features. Global CDN, load balancing, and monitoring tools improve performance and reliability while significantly reducing operational overhead. Main benefits include reduced development time, lower operational costs, and ensured scalability."
         },
         {
           question: "How much can tasks be customized according to requirements? How do you handle changes if needed?",
@@ -547,22 +571,22 @@ const translations = {
       title: "Technical Expertise",
       items: [
         {
+          name: "JavaScript/TypeScript",
+          description: "Frontend & Backend Development",
+          image: "/assets/jsts.avif",
+          message: "JavaScript was born in 1995 at Netscape and has become the foundation of web development. TypeScript, as its superset, adds static typing to improve maintainability in large-scale projects. It's used in combination with Node.js and React for real-time communication and UI construction. With asynchronous processing and a rich ecosystem, it's ideal for rapid and interactive application development."
+        },
+        {
           name: "Python",
-          description: "Server-side & Machine Learning",
+          description: "AI & Machine Learning",
           image: "/assets/python.avif",
-          message: "Python is a versatile programming language developed in 1991. With its beginner-friendly syntax, it's widely used for data analysis, blockchain development, automation, and AI development. With numerous communities worldwide and various packages developed by contributors, it enables speedy development of multifunctional systems."
+          message: "Python is a versatile programming language developed in 1991. Known for its simple and readable syntax, it's widely used in machine learning, AI development, and data analysis. By leveraging libraries like TensorFlow and PyTorch, complex AI models can be built rapidly, making it popular from beginners to advanced users."
         },
         {
-          name: "Flutter",
-          description: "Mobile App Development",
-          image: "/assets/flutter.avif",
-          message: "Flutter is an open-source software development kit developed by Google in 2018. It allows simultaneous development of iOS, Android, Web, and desktop applications from a single codebase. With many packages released by developers, it enables user-friendly app development with minimal code by combining these packages."
-        },
-        {
-          name: "React",
-          description: "Web App Development",
-          image: "/assets/react.avif",
-          message: "React is the most famous framework using JavaScript. Released by Meta (formerly Facebook) in 2013, it also supports TypeScript. It adopts a component-based architecture, allowing creation of reusable UI parts and efficient development of large-scale, high-performance web applications by combining them."
+          name: "Go",
+          description: "Backend & High-Performance Systems",
+          image: "/assets/go.avif",
+          message: "Go (Golang) is a lightweight and fast programming language developed by Google in 2009. Known for its simple syntax and concurrent processing (goroutines), it's ideal for cloud-native applications and microservices. With fast compilation speed and high memory efficiency, it's optimal for scalable server development."
         }
       ]
     },
@@ -588,17 +612,17 @@ const translations = {
       products: [
         {
           name: 'TapForge',
-          description: 'Connect with just a tap - Next-gen business networking',
+          description: 'Connect with just a tap -<br/>Next-gen business networking',
           demo: 'https://zoom-clone-navy-eta.vercel.app/',
         },
         {
           name: 'BoltSite',
-          description: 'Ultra-fast 0.3s loading with perfect SEO scores',
+          description: 'Ultra-fast 0.3s loading with<br/>perfect SEO scores',
           demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
         },
         {
           name: 'IoTRealm',
-          description: 'Bridging digital innovation with physical reality',
+          description: 'Bridging digital innovation<br/>with physical reality',
           demo: 'https://github.com/terisuke/engineer-cafe-navigator',
         },
       ],

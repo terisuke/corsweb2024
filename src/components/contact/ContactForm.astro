@@ -52,6 +52,24 @@ const t = getTranslations(currentLocale);
           />
         </div>
 
+        <!-- Consultation type select -->
+        <div>
+          <label for="consultation-type" class="sr-only">{t.contact.form.fields.consultationType}</label>
+          <select
+            name="consultationType"
+            id="consultation-type"
+            class="block w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-4 text-base ring-1 ring-primary-900/40 transition hover:ring-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:hover:ring-primary-400 dark:focus:ring-primary-400"
+            required
+          >
+            <option value="">{t.contact.form.fields.consultationTypePlaceholder}</option>
+            {
+              t.contact.form.fields.consultationOptions.map((option) => (
+                <option value={option}>{option}</option>
+              ))
+            }
+          </select>
+        </div>
+
         <!-- Message textarea -->
         <div>
           <label for="message" class="sr-only">{t.contact.form.fields.message}</label>
