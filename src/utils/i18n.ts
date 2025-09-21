@@ -53,6 +53,12 @@ const translations = {
           email: "メールアドレス",
           consultationType: "相談内容",
           consultationTypePlaceholder: "相談内容を選択してください",
+          consultationOptions: [
+            "TapForgeについてのご相談",
+            "BoltSiteについてのご相談",
+            "IoTRealmについてのご相談",
+            "その他"
+          ],
           message: "メッセージ"
         },
         submit: "送信",
@@ -441,6 +447,12 @@ const translations = {
           email: "Email",
           consultationType: "Consultation Type",
           consultationTypePlaceholder: "Please select consultation type",
+          consultationOptions: [
+            "Consultation about TapForge",
+            "Consultation about BoltSite",
+            "Consultation about IoTRealm",
+            "Other"
+          ],
           message: "Message"
         },
         submit: "Submit",

@@ -62,10 +62,11 @@ const t = getTranslations(currentLocale);
             required
           >
             <option value="">{t.contact.form.fields.consultationTypePlaceholder}</option>
-            <option value="TapForgeについてのご相談">TapForgeについてのご相談</option>
-            <option value="BoltSiteについてのご相談">BoltSiteについてのご相談</option>
-            <option value="IoTRealmについてのご相談">IoTRealmについてのご相談</option>
-            <option value="その他">その他</option>
+            {
+              t.contact.form.fields.consultationOptions.map((option) => (
+                <option value={option}>{option}</option>
+              ))
+            }
           </select>
         </div>
 
