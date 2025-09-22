@@ -28,28 +28,25 @@ const t = getTranslations(currentLocale);
             };
             
             return (
-              <div class="relative flex flex-col gap-8 rounded-3xl bg-primary-500/10 p-8 dark:bg-primary-400/10">
+              <a
+                href={product.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="relative flex flex-col gap-8 rounded-3xl bg-primary-500/10 p-8 dark:bg-primary-400/10 transition-all duration-300 hover:bg-primary-500/20 dark:hover:bg-primary-400/20 hover:scale-105 hover:shadow-lg group"
+              >
                 <div class="flex justify-center mb-4">
-                  <img 
-                    src={getIconPath(product.name)} 
-                    alt={`${product.name} icon`} 
-                    class="w-16 h-16 object-contain"
+                  <img
+                    src={getIconPath(product.name)}
+                    alt={`${product.name} icon`}
+                    class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110"
                     loading="lazy"
                   />
                 </div>
                 <div class="flex-1 text-center">
-                  <h3 class="mb-4 text-xl font-medium">{product.name}</h3>
+                  <h3 class="mb-4 text-xl font-medium group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">{product.name}</h3>
                   <p class="mb-4 text-primary-950/70 dark:text-primary-200/70" set:html={product.description}></p>
-                  <a
-                    href={product.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-sm text-primary-600 hover:underline"
-                  >
-                    {t.productsTable.demoLabel}
-                  </a>
                 </div>
-              </div>
+              </a>
             );
           })
         }

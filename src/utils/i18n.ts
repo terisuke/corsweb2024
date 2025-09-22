@@ -224,7 +224,7 @@ const translations = {
         {
           name: 'BoltSite',
           description: '光速0.3秒表示とSEO満点を実現する<br/>高性能Web制作',
-          demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
+          demo: 'https://boltsite.pages.dev/',
         },
         {
           name: 'IoTRealm',
@@ -618,7 +618,7 @@ const translations = {
         {
           name: 'BoltSite',
           description: 'Ultra-fast 0.3s loading with<br/>perfect SEO scores',
-          demo: 'https://constellation-creator-639959525777.asia-northeast1.run.app/',
+          demo: 'https://boltsite.pages.dev/',
         },
         {
           name: 'IoTRealm',
