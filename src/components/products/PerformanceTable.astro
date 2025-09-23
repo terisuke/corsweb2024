@@ -1,0 +1,128 @@
+---
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+// フォールバック用のデフォルト値
+const performanceData = {
+  title: currentLocale === 'ja' ? '性能' : 'Performance',
+  plans: currentLocale === 'ja' 
+    ? ['ビギナー', 'スタンダード', 'プレミアム', 'エンタープライズ']
+    : ['Beginner', 'Standard', 'Premium', 'Enterprise'],
+  features: [
+    {
+      name: currentLocale === 'ja' ? 'PageSpeed 95点以上' : 'PageSpeed 95+ Points',
+      included: [true, true, true, true]
+    },
+    {
+      name: currentLocale === 'ja' ? 'CDN配信' : 'CDN Delivery',
+      included: [true, true, true, true]
+    },
+    {
+      name: currentLocale === 'ja' ? '画像最適化' : 'Image Optimization',
+      included: [true, true, true, true]
+    },
+    {
+      name: currentLocale === 'ja' ? 'リアルタイムバックアップ' : 'Real-time Backup',
+      included: [true, true, true, true]
+    }
+  ],
+  note: currentLocale === 'ja' 
+    ? '注記: 全プランでリアルタイムバックアップ (Cloudflare Firebase Hosting) を提供'
+    : 'Note: Real-time backup (Cloudflare Firebase Hosting) is provided with all plans'
+};
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <!-- Performance Table Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl flex items-center gap-3">
+          <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+          </div>
+          {performanceData.title}
+        </h2>
+        <button 
+          class="text-gray-500 hover:text-gray-700 transition-colors"
+          onclick="togglePerformanceTable()"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Performance Table -->
+    <div id="performance-table" class="overflow-x-auto">
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-50">
+            <th class="border border-gray-300 px-6 py-4 text-left font-medium text-gray-900">
+              機能
+            </th>
+            {performanceData.plans.map((plan) => (
+              <th class="border border-gray-300 px-6 py-4 text-center font-medium text-gray-900">
+                {plan}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {performanceData.features.map((feature) => (
+            <tr class="hover:bg-gray-50">
+              <td class="border border-gray-300 px-6 py-4 font-medium text-gray-900">
+                {feature.name}
+              </td>
+              {feature.included.map((included) => (
+                <td class="border border-gray-300 px-6 py-4 text-center">
+                  {included ? (
+                    <div class="inline-flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
+                      <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                  ) : (
+                    <div class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 rounded-full">
+                      <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Note -->
+    <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+      <p class="text-sm text-blue-800">
+        {performanceData.note}
+      </p>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  function togglePerformanceTable(event) {
+    const table = document.getElementById('performance-table');
+    const button = event.target.closest('button');
+    const icon = button.querySelector('svg path');
+    
+    if (table.style.display === 'none') {
+      table.style.display = 'block';
+      icon.setAttribute('d', 'M19 9l-7 7-7-7');
+    } else {
+      table.style.display = 'none';
+      icon.setAttribute('d', 'M9 5l7 7-7 7');
+    }
+  }
+</script>
