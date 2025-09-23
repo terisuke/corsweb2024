@@ -219,7 +219,7 @@ const translations = {
         {
           name: 'TapForge',
           description: 'タップ一つで繋がる、次世代ビジネスカード',
-          demo: 'https://zoom-clone-navy-eta.vercel.app/',
+          demo: 'https://tapforge.pages.dev/',
         },
         {
           name: 'BoltSite',
@@ -229,7 +229,7 @@ const translations = {
         {
           name: 'IoTRealm',
           description: 'デジタルと現実を融合した<br/>革新的ソリューション',
-          demo: 'https://github.com/terisuke/engineer-cafe-navigator',
+          demo: 'https://iotrealm.pages.dev/',
         },
       ],
       pricing: {
@@ -613,7 +613,7 @@ const translations = {
         {
           name: 'TapForge',
           description: 'Connect with just a tap -<br/>Next-gen business networking',
-          demo: 'https://zoom-clone-navy-eta.vercel.app/',
+          demo: 'https://tapforge.pages.dev/',
         },
         {
           name: 'BoltSite',
@@ -623,7 +623,7 @@ const translations = {
         {
           name: 'IoTRealm',
           description: 'Bridging digital innovation<br/>with physical reality',
-          demo: 'https://github.com/terisuke/engineer-cafe-navigator',
+          demo: 'https://iotrealm.pages.dev/',
         },
       ],
       pricing: {
