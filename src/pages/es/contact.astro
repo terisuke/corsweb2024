@@ -1,0 +1,23 @@
+---
+import Calendar from '../../components/contact/Calendar.astro';
+import ContactForm from '../../components/contact/ContactForm.astro';
+import ContactInfo from '../../components/contact/ContactInfo.astro';
+import Heading from '../../components/contact/Heading.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<script src="https://www.google.com/recaptcha/api.js" async defer is:inline></script>
+
+<Layout
+  description={t.meta.contact.description}
+  title={t.meta.contact.title}
+>
+  <Heading />
+  <ContactInfo />
+  <Calendar />
+  <ContactForm />
+</Layout>

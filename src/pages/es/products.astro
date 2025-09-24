@@ -1,0 +1,21 @@
+---
+import Cta from '../../components/products/Cta.astro';
+import Faq from '../../components/products/Faq.astro';
+import Heading from '../../components/products/Heading.astro';
+import ProductsTable from '../../components/products/ProductsTable.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<Layout
+  description={t.meta.products.description}
+  title={t.meta.products.title}
+>
+  <Heading />
+  <ProductsTable />
+  <Faq />
+  <Cta />
+</Layout>
