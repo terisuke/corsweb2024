@@ -75,7 +75,8 @@ const translations = {
         about: "About",
         products: "Products&Insights",
         contact: "Contact",
-        privacy: "Privacy"
+        privacy: "Privacy",
+        legal: "特商法表記"
       },
       description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
       copyright: "© 2025 Cor.inc"
@@ -133,6 +134,12 @@ const translations = {
     },
     team: {
       title: "Meet our team"
+    },
+    linkTypes: {
+      LitLink: "LitLink",
+      X: "X",
+      Zenn: "Zenn",
+      Homepage: "ホームページ"
     },
     faq: {
       title: "FAQ",
@@ -278,7 +285,20 @@ const translations = {
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
         },
-      ]
+      ],
+      youtubeMessages: {
+        apiNotConfigured: 'YouTube APIが設定されていません',
+        watchDirectly: 'YouTubeチャンネルを直接ご覧ください',
+        loading: '動画を読み込み中...',
+        noVideosFound: '動画が見つかりませんでした',
+        loadFailed: '動画の読み込みに失敗しました',
+        playbackError: '動画の再生でエラーが発生しました',
+        channelNotFound: 'チャンネルが見つかりません',
+        videosNotFound: '動画が見つかりません'
+      },
+      buttonTexts: {
+        goTo: 'Go'
+      }
     },
     contactInfo: {
       address: {
@@ -469,7 +489,8 @@ const translations = {
         about: "About",
         products: "Products&Insights",
         contact: "Contact",
-        privacy: "Privacy"
+        privacy: "Privacy",
+        legal: "Legal Notice"
       },
       description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
       copyright: "© 2025 Cor.inc"
@@ -527,6 +548,12 @@ const translations = {
     },
     team: {
       title: "Meet our team"
+    },
+    linkTypes: {
+      LitLink: "LitLink",
+      X: "X",
+      Zenn: "Zenn",
+      Homepage: "Homepage"
     },
     faq: {
       title: "FAQ",
@@ -672,7 +699,20 @@ const translations = {
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
         },
-      ]
+      ],
+      youtubeMessages: {
+        apiNotConfigured: 'YouTube API is not configured',
+        watchDirectly: 'Please watch directly on the YouTube channel',
+        loading: 'Loading video...',
+        noVideosFound: 'No videos found',
+        loadFailed: 'Failed to load video',
+        playbackError: 'Video playback error occurred',
+        channelNotFound: 'Channel not found',
+        videosNotFound: 'No videos found'
+      },
+      buttonTexts: {
+        goTo: 'Go'
+      }
     },
     contactInfo: {
       address: {
@@ -863,7 +903,8 @@ const translations = {
         about: "关于我们",
         products: "产品&洞察",
         contact: "联系我们",
-        privacy: "隐私"
+        privacy: "隐私",
+        legal: "法律声明"
       },
       description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事IT战略咨询及相关产品开发、自社AI产品开发销售。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
       copyright: "© 2025 Cor.inc"
@@ -921,6 +962,12 @@ const translations = {
     },
     team: {
       title: "认识我们的团队"
+    },
+    linkTypes: {
+      LitLink: "LitLink",
+      X: "X",
+      Zenn: "Zenn",
+      Homepage: "主页"
     },
     faq: {
       title: "常见问题",
@@ -1010,26 +1057,26 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "初期费用（1枚目）", price: "3,000円" },
-              { item: "2枚目以降", price: "600円/枚" },
-              { item: "100枚以上一括注文時", price: "500円/枚(2枚目以降)" }
+              { item: "初期费用（第1张）", price: "¥3,000" },
+              { item: "第2张起", price: "¥600/张" },
+              { item: "100张以上批量订购", price: "¥500/张（第2张起）" }
             ]
           },
           {
             name: "BoltSite",
             items: [
-              { item: "ビギナー", price: "15,000円/月" },
-              { item: "スタンダード", price: "25,000円/月" },
-              { item: "プレミアム", price: "30,000円/月" },
-              { item: "エンタープライズ", price: "50,000円〜/月" }
+              { item: "初学者", price: "¥15,000/月" },
+              { item: "标准版", price: "¥25,000/月" },
+              { item: "高级版", price: "¥30,000/月" },
+              { item: "企业版", price: "¥50,000+/月" }
             ]
           },
           {
             name: "IoTRealm",
             items: [
-              { item: "PoC（概念実証）", price: "100万円〜500万円" },
-              { item: "本開発", price: "500万円〜" },
-              { item: "保守・運用", price: "10万円〜/月" }
+              { item: "PoC（概念验证）", price: "¥100万~500万" },
+              { item: "正式开发", price: "¥500万~" },
+              { item: "维护运营", price: "¥10万~/月" }
             ]
           }
         ]
@@ -1045,12 +1092,25 @@ const translations = {
       youtube: [
         {
           name: 'YouTube',
-          description: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
+          description: '我们提供技术和商业战略相关的视频内容。分享AI应用案例和产品开发的幕后故事。',
           isFlagged: true,
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
         },
-      ]
+      ],
+      youtubeMessages: {
+        apiNotConfigured: 'YouTube API未配置',
+        watchDirectly: '请直接在YouTube频道观看',
+        loading: '正在加载视频...',
+        noVideosFound: '未找到视频',
+        loadFailed: '视频加载失败',
+        playbackError: '视频播放发生错误',
+        channelNotFound: '未找到频道',
+        videosNotFound: '未找到视频'
+      },
+      buttonTexts: {
+        goTo: '前往'
+      }
     },
     contactInfo: {
       address: {
@@ -1139,31 +1199,31 @@ const translations = {
     },
     privacy: {
       title: "隐私政策",
-      lastUpdate: "Last update: May 13, 2024",
-      intro: "Cor.incでは、お客様のプライバシーを最優先し、その保護に努めています。本プライバシーポリシーでは、ウェブ解析ツール、Flutterアプリ、機械学習ソリューションなど、弊社のサービスをご利用いただく際の個人情報の収集、使用、保護に関する弊社のアプローチについて詳しく説明します。当社の取り組みをご理解いただくため、本ポリシーをご確認いただくことをお勧めします。",
+      lastUpdate: "最后更新：2024年5月13日",
+      intro: "Cor.inc将客户隐私放在首位，致力于保护客户隐私。本隐私政策详细说明了我们在您使用我们的服务（包括网络分析工具、Flutter应用程序、机器学习解决方案等）时收集、使用和保护个人信息的做法。我们建议您查看本政策以了解我们的承诺。",
       section1: {
-        title: "1. 当社が収集する情報",
-        description: "当社のサービスをご利用いただく際に、当社は以下のような様々な種類の個人情報を収集することがあります：",
+        title: "1. 我们收集的信息",
+        description: "当您使用我们的服务时，我们可能会收集以下各种类型的个人信息：",
         items: [
-          "お客様が提供する情報：これには、お客様がアカウントを作成したり、当社サービスの特定の機能を利用したりする際に、お客様の氏名、Eメールアドレス、連絡先、その他の関連データが含まれる場合があります。",
-          "利用データ：当社は、お客様のIPアドレス、ブラウザの種類、デバイス情報、訪問したページ、および当社サービスとのインタラクションを含む、お客様の当社サービスの利用に関するデータを収集します。",
-          "クッキーおよび類似技術：ユーザーエクスペリエンスを向上させ、利用パターンを把握するため、当社サービスではクッキーおよび類似の技術を利用しています。"
+          "您提供的信息：这可能包括您在创建账户或使用我们服务的特定功能时提供的姓名、电子邮件地址、联系方式和其他相关数据。",
+          "使用数据：我们收集与您使用我们服务相关的数据，包括您的IP地址、浏览器类型、设备信息、访问的页面以及与我们服务的交互。",
+          "Cookie和类似技术：为了改善用户体验和了解使用模式，我们的服务使用Cookie和类似技术。"
         ]
       },
       section2: {
-        title: "2. お客様の情報の使用方法",
-        description: "当社は、お客様の個人情報を以下の目的で利用することがあります：",
+        title: "2. 我们如何使用您的信息",
+        description: "我们可能将您的个人信息用于以下目的：",
         items: [
-          "サービスの提供と改善：当社では、パーソナライズされた体験を提供し、当社サービスの機能を向上させるためにお客様のデータを使用します。",
-          "コミュニケーション：お客様のEメールアドレスおよび連絡先情報は、最新情報、ニュースレター、販促資料の送付に使用されることがあります。これらの通信を拒否するオプションがあります。",
-          "アナリティクス：ユーザーの行動をよりよく理解し、当社のサービスを向上させるために、当社は集計および匿名化されたデータを分析します。"
+          "服务提供和改进：我们使用您的数据来提供个性化体验并改进我们服务的功能。",
+          "沟通：您的电子邮件地址和联系信息可能用于发送更新、新闻通讯和促销材料。您可以选择退出这些通信。",
+          "分析：为了更好地了解用户行为并改进我们的服务，我们分析汇总和匿名化的数据。"
         ]
       },
       contact: {
-        title: "お問い合わせ",
-        description: "当社の個人情報保護方針についてご質問やご不明な点がございましたら、",
-        linkText: "お問い合わせフォーム",
-        suffix: "までご連絡ください。"
+        title: "联系我们",
+        description: "如果您对我们的隐私政策有任何疑问或疑虑，请通过我们的",
+        linkText: "联系表单",
+        suffix: "与我们联系。"
       }
     }
   },
@@ -1241,7 +1301,8 @@ const translations = {
         about: "회사소개",
         products: "제품&인사이트",
         contact: "문의",
-        privacy: "개인정보처리방침"
+        privacy: "개인정보처리방침",
+        legal: "법적 고지"
       },
       description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, IT 전략 컨설팅 및 관련 제품 개발, 자사 AI 제품 개발 및 판매를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
       copyright: "© 2025 Cor.inc"
@@ -1299,6 +1360,12 @@ const translations = {
     },
     team: {
       title: "우리 팀을 만나보세요"
+    },
+    linkTypes: {
+      LitLink: "LitLink",
+      X: "X",
+      Zenn: "Zenn",
+      Homepage: "홈페이지"
     },
     faq: {
       title: "자주 묻는 질문",
@@ -1428,7 +1495,20 @@ const translations = {
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
         },
-      ]
+      ],
+      youtubeMessages: {
+        apiNotConfigured: 'YouTube API가 설정되지 않았습니다',
+        watchDirectly: 'YouTube 채널에서 직접 시청해 주세요',
+        loading: '동영상 로딩 중...',
+        noVideosFound: '동영상을 찾을 수 없습니다',
+        loadFailed: '동영상 로딩에 실패했습니다',
+        playbackError: '동영상 재생 중 오류가 발생했습니다',
+        channelNotFound: '채널을 찾을 수 없습니다',
+        videosNotFound: '동영상을 찾을 수 없습니다'
+      },
+      buttonTexts: {
+        goTo: '이동'
+      }
     },
     contactInfo: {
       address: {
@@ -1517,31 +1597,31 @@ const translations = {
     },
     privacy: {
       title: "개인정보처리방침",
-      lastUpdate: "Last update: May 13, 2024",
-      intro: "Cor.incでは、お客様のプライバシーを最優先し、その保護に努めています。本プライバシーポリシーでは、ウェブ解析ツール、Flutterアプリ、機械学習ソリューションなど、弊社のサービスをご利用いただく際の個人情報の収集、使用、保護に関する弊社のアプローチについて詳しく説明します。当社の取り組みをご理解いただくため、本ポリシーをご確認いただくことをお勧めします。",
+      lastUpdate: "최종 업데이트: 2024년 5월 13일",
+      intro: "Cor.inc는 고객의 개인정보를 최우선으로 하여 보호에 최선을 다하고 있습니다. 본 개인정보처리방침에서는 웹 분석 도구, Flutter 앱, 머신러닝 솔루션 등 저희 서비스를 이용하실 때 개인정보의 수집, 사용, 보호에 대한 저희의 접근 방식에 대해 자세히 설명합니다. 저희의 노력을 이해하시기 위해 본 정책을 검토해 주시기를 권장합니다.",
       section1: {
-        title: "1. 当社が収集する情報",
-        description: "当社のサービスをご利用いただく際に、当社は以下のような様々な種類の個人情報を収集することがあります：",
+        title: "1. 저희가 수집하는 정보",
+        description: "저희 서비스를 이용하실 때 다음과 같은 다양한 유형의 개인정보를 수집할 수 있습니다:",
         items: [
-          "お客様が提供する情報：これには、お客様がアカウントを作成したり、当社サービスの特定の機能を利用したりする際に、お客様の氏名、Eメールアドレス、連絡先、その他の関連データが含まれる場合があります。",
-          "利用データ：当社は、お客様のIPアドレス、ブラウザの種類、デバイス情報、訪問したページ、および当社サービスとのインタラクションを含む、お客様の当社サービスの利用に関するデータを収集します。",
-          "クッキーおよび類似技術：ユーザーエクスペリエンスを向上させ、利用パターンを把握するため、当社サービスではクッキーおよび類似の技術を利用しています。"
+          "고객이 제공하는 정보: 계정을 생성하거나 저희 서비스의 특정 기능을 이용할 때 제공하는 성명, 이메일 주소, 연락처, 기타 관련 데이터가 포함될 수 있습니다.",
+          "이용 데이터: 고객의 IP 주소, 브라우저 유형, 기기 정보, 방문한 페이지, 저희 서비스와의 상호작용을 포함한 서비스 이용 관련 데이터를 수집합니다.",
+          "쿠키 및 유사 기술: 사용자 경험을 향상시키고 이용 패턴을 파악하기 위해 저희 서비스에서는 쿠키 및 유사한 기술을 사용합니다."
         ]
       },
       section2: {
-        title: "2. お客様の情報の使用方法",
-        description: "当社は、お客様の個人情報を以下の目的で利用することがあります：",
+        title: "2. 고객 정보 사용 방법",
+        description: "고객의 개인정보를 다음과 같은 목적으로 이용할 수 있습니다:",
         items: [
-          "サービスの提供と改善：当社では、パーソナライズされた体験を提供し、当社サービスの機能を向上させるためにお客様のデータを使用します。",
-          "コミュニケーション：お客様のEメールアドレスおよび連絡先情報は、最新情報、ニュースレター、販促資料の送付に使用されることがあります。これらの通信を拒否するオプションがあります。",
-          "アナリティクス：ユーザーの行動をよりよく理解し、当社のサービスを向上させるために、当社は集計および匿名化されたデータを分析します。"
+          "서비스 제공 및 개선: 개인화된 경험을 제공하고 저희 서비스의 기능을 향상시키기 위해 고객 데이터를 사용합니다.",
+          "커뮤니케이션: 고객의 이메일 주소 및 연락처 정보는 업데이트, 뉴스레터, 홍보 자료 발송에 사용될 수 있습니다. 이러한 통신을 거부할 수 있는 옵션이 있습니다.",
+          "분석: 사용자 행동을 더 잘 이해하고 저희 서비스를 개선하기 위해 집계 및 익명화된 데이터를 분석합니다."
         ]
       },
       contact: {
-        title: "お問い合わせ",
-        description: "当社の個人情報保護方針についてご質問やご不明な点がございましたら、",
-        linkText: "お問い合わせフォーム",
-        suffix: "までご連絡ください。"
+        title: "문의하기",
+        description: "저희 개인정보처리방침에 대한 질문이나 궁금한 점이 있으시면",
+        linkText: "문의 양식",
+        suffix: "을 통해 연락해 주세요."
       }
     }
   },
@@ -1619,7 +1699,8 @@ const translations = {
         about: "Acerca de",
         products: "Productos&Insights",
         contact: "Contacto",
-        privacy: "Privacidad"
+        privacy: "Privacidad",
+        legal: "Aviso Legal"
       },
       description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la consultoría estratégica de TI y el desarrollo de productos relacionados, y al desarrollo y venta de productos de IA propios. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
       copyright: "© 2025 Cor.inc"
@@ -1677,6 +1758,12 @@ const translations = {
     },
     team: {
       title: "Conoce a nuestro equipo"
+    },
+    linkTypes: {
+      LitLink: "LitLink",
+      X: "X",
+      Zenn: "Zenn",
+      Homepage: "Página web"
     },
     faq: {
       title: "Preguntas Frecuentes",
@@ -1806,7 +1893,20 @@ const translations = {
           icon: '/assets/Youtube.avif',
           action: 'https://www.youtube.com/@Cor.Incorporated',
         },
-      ]
+      ],
+      youtubeMessages: {
+        apiNotConfigured: 'YouTube API no está configurado',
+        watchDirectly: 'Por favor, vea directamente en el canal de YouTube',
+        loading: 'Cargando video...',
+        noVideosFound: 'No se encontraron videos',
+        loadFailed: 'Error al cargar el video',
+        playbackError: 'Error en la reproducción del video',
+        channelNotFound: 'Canal no encontrado',
+        videosNotFound: 'No se encontraron videos'
+      },
+      buttonTexts: {
+        goTo: 'Ir'
+      }
     },
     contactInfo: {
       address: {
@@ -1895,31 +1995,31 @@ const translations = {
     },
     privacy: {
       title: "Política de privacidad",
-      lastUpdate: "Last update: May 13, 2024",
-      intro: "Cor.incでは、お客様のプライバシーを最優先し、その保護に努めています。本プライバシーポリシーでは、ウェブ解析ツール、Flutterアプリ、機械学習ソリューションなど、弊社のサービスをご利用いただく際の個人情報の収集、使用、保護に関する弊社のアプローチについて詳しく説明します。当社の取り組みをご理解いただくため、本ポリシーをご確認いただくことをお勧めします。",
+      lastUpdate: "Última actualización: 13 de mayo de 2024",
+      intro: "En Cor.inc, priorizamos su privacidad y nos comprometemos a protegerla. Esta política de privacidad detalla nuestro enfoque para recopilar, usar y proteger información personal cuando utiliza nuestros servicios, incluyendo herramientas de análisis web, aplicaciones Flutter y soluciones de aprendizaje automático. Recomendamos revisar esta política para entender nuestro compromiso.",
       section1: {
-        title: "1. 当社が収集する情報",
-        description: "当社のサービスをご利用いただく際に、当社は以下のような様々な種類の個人情報を収集することがあります：",
+        title: "1. Información que recopilamos",
+        description: "Cuando utiliza nuestros servicios, podemos recopilar varios tipos de información personal, incluyendo:",
         items: [
-          "お客様が提供する情報：これには、お客様がアカウントを作成したり、当社サービスの特定の機能を利用したりする際に、お客様の氏名、Eメールアドレス、連絡先、その他の関連データが含まれる場合があります。",
-          "利用データ：当社は、お客様のIPアドレス、ブラウザの種類、デバイス情報、訪問したページ、および当社サービスとのインタラクションを含む、お客様の当社サービスの利用に関するデータを収集します。",
-          "クッキーおよび類似技術：ユーザーエクスペリエンスを向上させ、利用パターンを把握するため、当社サービスではクッキーおよび類似の技術を利用しています。"
+          "Información que usted proporciona: Esto puede incluir su nombre, dirección de correo electrónico, información de contacto y otros datos relevantes cuando crea una cuenta o utiliza funciones específicas de nuestros servicios.",
+          "Datos de uso: Recopilamos datos relacionados con su uso de nuestros servicios, incluyendo su dirección IP, tipo de navegador, información del dispositivo, páginas visitadas e interacciones con nuestros servicios.",
+          "Cookies y tecnologías similares: Para mejorar la experiencia del usuario y entender los patrones de uso, nuestros servicios utilizan cookies y tecnologías similares."
         ]
       },
       section2: {
-        title: "2. お客様の情報の使用方法",
-        description: "当社は、お客様の個人情報を以下の目的で利用することがあります：",
+        title: "2. Cómo utilizamos su información",
+        description: "Podemos utilizar su información personal para los siguientes propósitos:",
         items: [
-          "サービスの提供と改善：当社では、パーソナライズされた体験を提供し、当社サービスの機能を向上させるためにお客様のデータを使用します。",
-          "コミュニケーション：お客様のEメールアドレスおよび連絡先情報は、最新情報、ニュースレター、販促資料の送付に使用されることがあります。これらの通信を拒否するオプションがあります。",
-          "アナリティクス：ユーザーの行動をよりよく理解し、当社のサービスを向上させるために、当社は集計および匿名化されたデータを分析します。"
+          "Provisión y mejora de servicios: Utilizamos sus datos para proporcionar experiencias personalizadas y mejorar las funciones de nuestros servicios.",
+          "Comunicación: Su dirección de correo electrónico e información de contacto pueden utilizarse para enviar actualizaciones, boletines y materiales promocionales. Tiene la opción de optar por no recibir estas comunicaciones.",
+          "Análisis: Para entender mejor el comportamiento del usuario y mejorar nuestros servicios, analizamos datos agregados y anonimizados."
         ]
       },
       contact: {
-        title: "お問い合わせ",
-        description: "当社の個人情報保護方針についてご質問やご不明な点がございましたら、",
-        linkText: "お問い合わせフォーム",
-        suffix: "までご連絡ください。"
+        title: "Contáctanos",
+        description: "Si tiene preguntas o inquietudes sobre nuestra política de privacidad, póngase en contacto con nosotros a través de nuestro",
+        linkText: "formulario de contacto",
+        suffix: "."
       }
     }
   }
