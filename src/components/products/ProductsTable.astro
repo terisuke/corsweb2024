@@ -4,12 +4,6 @@ import RandomPlayer from '../youtube/RandomPlayer.astro';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
-
-// デバッグ: 翻訳データを確認
-console.log('ProductsTable - Current locale:', currentLocale);
-console.log('ProductsTable - t.buttonTexts:', t.buttonTexts);
-console.log('ProductsTable - t.buttonTexts?.goTo:', t.buttonTexts?.goTo);
-
 ---
 
 <section class="py-16 sm:py-20">
@@ -106,7 +100,15 @@ console.log('ProductsTable - t.buttonTexts?.goTo:', t.buttonTexts?.goTo);
               rel="noopener noreferrer"
               class="inline-flex w-full items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
             >
-              {t.buttonTexts?.goTo || 'Go'} {item.name}
+              {currentLocale === 'zh' ? '前往' : currentLocale === 'ko' ? '이동' : currentLocale === 'es' ? 'Ir' : 'Go'} {item.name}
+              <!-- デバッグ: 翻訳データを確認 -->
+              <script>
+                console.log('Button text debug:', {
+                  buttonTexts: {t.buttonTexts},
+                  goTo: {t.buttonTexts?.goTo},
+                  itemName: {item.name}
+                });
+              </script>
             </a>
           </div>
         ))
