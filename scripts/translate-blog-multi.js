@@ -33,9 +33,9 @@ const rateLimiter = new RateLimiter({
 // Language configurations
 const LANGUAGES = {
   en: { name: 'English', author: 'Terisuke' },
-  zh: { name: 'Chinese', author: 'Terisuke' },
-  ko: { name: 'Korean', author: 'Terisuke' },
-  es: { name: 'Spanish', author: 'Terisuke' }
+  zh: { name: 'Simplified Chinese (简体中文)', author: 'Terisuke' },
+  ko: { name: 'Korean (한국어)', author: 'Terisuke' },
+  es: { name: 'Spanish (Español)', author: 'Terisuke' }
 };
 
 // -----------------------------------------------------------------------------
@@ -59,7 +59,13 @@ function escapeYAMLString(str) {
 
 async function translateBlogPost(japaneseContent, targetLang) {
   const langConfig = LANGUAGES[targetLang];
-  const prompt = `Translate the following Japanese blog post to ${langConfig.name}. Translate technical terms appropriately and make it readable ${langConfig.name}. Return only the translated content without any additional explanations:
+  const prompt = `Translate the following Japanese blog post to ${langConfig.name}.
+IMPORTANT: You must translate the Japanese text, not leave it in Japanese.
+Translate technical terms appropriately and make it readable in ${langConfig.name}.
+${targetLang === 'zh' ? 'Output in Simplified Chinese (简体中文).' : ''}
+${targetLang === 'ko' ? 'Output in Korean (한국어).' : ''}
+${targetLang === 'es' ? 'Output in Spanish (Español).' : ''}
+Return only the translated content without any additional explanations:
 
 ${japaneseContent}`;
 
@@ -170,7 +176,12 @@ async function translateFile(inputFile, targetLang) {
     const titleAndDescription = `Title: ${parsedFrontmatter.title}\nDescription: ${parsedFrontmatter.description}`;
 
     console.log(`Translating title and description to ${langConfig.name}...`);
-    const prompt = `Translate the following to ${langConfig.name}, maintaining the exact format with "Title:" and "Description:" labels:
+    const prompt = `Translate the following Japanese text to ${langConfig.name}.
+IMPORTANT: You must translate the content, not leave it in Japanese.
+Maintain the exact format with "Title:" and "Description:" labels.
+${targetLang === 'zh' ? 'Output in Simplified Chinese.' : ''}
+${targetLang === 'ko' ? 'Output in Korean.' : ''}
+${targetLang === 'es' ? 'Output in Spanish.' : ''}
 
 ${titleAndDescription}`;
 
