@@ -1,49 +1,55 @@
 ---
-title: "My Life Transformed After a Year of Weekly Lightning Talks"
-description: "The growth, learning, and life changes experienced by a struggling, inexperienced engineer and CEO through a weekly lightning talk challenge."
+title: "The Story of How My Life Radically Changed After I Spoke at an LT Presentation Every Week for a Year"
+description: "The growth, learning, and life changes of a cliffhanger, inexperienced engineer-turned-manager through a weekly LT presentation challenge."
 pubDate: 2024-01-25
 author: "Terisuke"
 category: "founder"
 tags: ["LT", "成長", "コミュニティ", "起業", "エンジニア"]
-# image:
-#   url: "/images/blog/lt-challenge.avif"
-#   alt: "LT登壇の様子"
 lang: "en"
 featured: true
 ---
-## My Life Transformed After a Year of Weekly Lightning Talks
 
-As a "cliffhanger, inexperienced engineer-entrepreneur," I challenged myself to give a lightning talk (LT) every week for a year. The changes this brought were far beyond just improving my technical skills.
+# My Life Radically Changed After Speaking at Weekly Lightning Talks for a Year
+
+As a "Clinging to the Edge Unexperienced Engineer Turned Entrepreneur," I challenged myself to participate in weekly Lightning Talks (LT) for a year. The changes this endeavor brought about far surpassed any improvement in my technical skills.
+
+Honestly, at first, I was on the verge of tears thinking, "Am I really going to present again this week...?" But now, I've reached a point where I can't imagine life without LT presentations. It's amazing how much people can change.
 
 ## Background of the Challenge
 
-### Dealing with ASD
+### Facing My ASD Traits
 
-I was diagnosed with ASD (Autism Spectrum Disorder) as an adult.  Difficulties with communication have always been a challenge in my life.
+I was diagnosed with Autism Spectrum Disorder (ASD) as an adult. Communication difficulties have always been a significant challenge in my life.
+
+However, precisely because of this, I decided to take on the activity I found most daunting: "speaking in front of people." If you avoid things you're bad at, you'll stay bad at them forever.
 
 ### The Path to Entrepreneurship
 
-From music to engineering, and then to becoming an entrepreneur.  Throughout this journey, I developed a strong desire for "misunderstanding-free communication."
+My journey has been a transformation from music to engineering, and then to entrepreneurship. Throughout this, I developed a strong desire for "communication without misunderstanding."
 
-## A Year's Journey
+Just four years ago, I had never written a line of code. But now, I'm not only running a company but also coding. Life is unpredictable.
 
-### Q1: Facing My Fears
+## The Year's Trajectory
+
+### First Quarter: Confronting Fear
 
 ```markdown
 # Initial Challenges
 - Fear of public speaking
-- Lack of ability to organize technical content
-- Exploring how to engage with the community
+- Insufficient ability to organize technical content
+- Seeking ways to engage with the community
 ```
 
-### Q2: Habit Formation
+### Second Quarter: Forming Habits
 
-Preparing for weekly LTs became part of my daily routine, creating a rhythm for learning.
+Preparing for weekly LT talks became a part of my daily routine, creating a rhythm for my learning.
 
-### Q3: Connecting with the Community
+I started experiencing a strange symptom: "feeling restless on Fridays." I call this LT dependency.
+
+### Third Quarter: Connecting with the Community
 
 ```javascript
-// Expanding Community Activities
+// Expansion of Community Activities
 const communityActivities = [
   'Tech meetup presentations',
   'Online community contributions',
@@ -52,19 +58,27 @@ const communityActivities = [
 ];
 ```
 
-### Q4: Transformation into a New Self
+### Fourth Quarter: Transforming into a New Self
 
-## Results Achieved
+By this point, I had become someone who couldn't live without LT presentations. This was truly the moment my life went off the rails (in a good way!).
 
-- **Technical Skills**: Deepened understanding to an explainable level.
-- **Communication Skills**: Acquired structured speaking skills.
-- **Networking**: Connected with engineers nationwide.
-- **Confidence**: Overcame the fear of public speaking.
+## Achieved Results
+
+-   **Technical Skills**: My understanding deepened to a level where I could explain it (from "it works somehow" to "I can explain why it works").
+-   **Communication Skills**: Acquired structured speaking methods (no more rambling presentations).
+-   **Network**: Connected with engineers nationwide (gained a large number of LT peers).
+-   **Confidence**: Overcame my fear of public speaking (nothing scares me anymore).
 
 ## Elevating to Cor.Inc.'s Mission
 
-This experience is directly related to the company's mission: "To realize 'misunderstanding-free communication' with AI technology."
+This experience directly led to our company's mission: "Achieving 'communication without misunderstanding' through AI technology."
 
-It was the moment when a personal challenge transformed into a passion for solving social problems.
+This was the moment my personal challenges transformed into a passion for solving societal issues.
 
-*I can talk more about the value of taking on challenges. Please contact me via [Contact Us](/contact).*
+The realization that "if I'm struggling with this, others must be too" sparked my sense of purpose as an entrepreneur.
+
+---
+
+I'm happy to discuss the value of taking on challenges in more detail. Please feel free to contact me through [Contact](/contact).
+
+To you who think, "LT presentations are impossible...", don't worry. Everyone feels that way at first. But after a year, you'll wonder, "How did I even live without LT presentations?" It's truly不思議 (fushigi - mysterious/amazing).

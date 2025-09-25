@@ -1,45 +1,46 @@
 ---
-title: "How Migrating an Entire Google Cloud Project Between Organizations Finished in One Day"
-description: "The tearful record of a developer who, after meticulously creating scripts to migrate GCS objects, discovered that projects themselves could be moved."
+title: "The Case Where Migrating an Entire Google Cloud Project Across Organizations Finished in One Day"
+description: "A record of a developer's tears upon discovering that projects could be moved in their entirety, despite having created scripts for incremental GCS migration."
 pubDate: 2025-07-24
 author: "Terisuke"
 category: "engineering"
 tags: ["Google Cloud", "DevOps", "移行", "gcloud", "プロジェクト管理"]
 image:
   url: "/images/blog/gcp-logo.avif"
-  alt: "Google Cloud Platform logo"
+  alt: "Google Cloud Platform ロゴ"
 lang: "en"
 featured: false
 ---
-# The Time I Moved an Entire Google Cloud Project Between Organizations and Finished in One Day
 
-Hello, it's Terisuke.
+# The Time Google Cloud Projects Migrated Across Organizations Finished in One Day
 
-Today, I want to talk about **how I completely wasted a lot of time**.
+Hello, this is Terisuke.
+
+Today, I'm going to tell you a story about **a huge waste of time**.
 
 As part of organizing our company's cloud environment, we needed to move projects managed under `company@example-a.com` to the organization of `company@example-b.com`.
 
-At first, I was determined, thinking, "Alright, I'll use Terraform and gcloud to meticulously migrate GCS buckets and Compute Engine instances one by one!" ... but then,
+At first, I was eager to "Alright, let's use terraform and gcloud to migrate GCS buckets and Compute instances little by little!" but...
 
-**I learned that if you're within the same Google Cloud, there's a way to move entire projects at once.**
+**I learned that there's actually a way to move entire projects within the same Google Cloud environment.**
 
-As a result, the GCS migration scripts I painstakingly created became completely useless (cry).
+As a result, the GCS migration script I painstakingly created was completely useless (cry).
 
-However, to avoid stepping on the same rake, I'm summarizing the method here as a personal memo.
+However, to avoid falling into the same trap, I'm documenting the method as a memo.
 
 ## Prerequisites (This is Important)
 
 First, you need to meet the following conditions:
 
-- ✅ You have Owner permissions for both organizations.
-- ✅ The project to be migrated is not using VPC Service Controls or Shared VPC.
-- ✅ You are not using any paid services from the Marketplace (these will need to be repurchased).
+- ✅ You have Owner permissions in both organizations.
+- ✅ The project to be migrated does not use VPC Service Controls or Shared VPC.
+- ✅ You are not using paid services from the Marketplace (you will need to repurchase them).
 
 ## Migration Flow (Actual Steps Taken)
 
-### 1. Confirm Organization IDs
+### 1. Confirming Organization IDs
 
-First, confirm the organization IDs of the source and destination. This is crucial for later configurations.
+First, confirm the Organization IDs of the source and destination. This is crucial for later configuration.
 
 ```bash
 # Log in to the source organization
@@ -55,24 +56,24 @@ gcloud organizations list
 # example-b.com    987654321098   C02yyyyyy
 ```
 
-### 2. Pre-Migration Checks (Getting stuck here is troublesome)
+### 2. Pre-checks (Getting stuck here is troublesome)
 
-Before migrating, let's confirm the following. It's a real pain when you realize an error after it happens.
+Before migrating, check the following. It's really troublesome to notice errors after they occur.
 
 ```bash
-# Check for VPC Service Controls (if an error occurs, it's okay)
+# Check VPC Service Controls (if an error appears, it's okay)
 gcloud access-context-manager perimeters list
 
-# Check for Shared VPC (if {} is returned, it's okay)
+# Check Shared VPC (if {} is returned, it's okay)
 gcloud compute shared-vpc get-host-project your-project-id
 
-# Note the current billing account
+# Note down the current billing account
 gcloud beta billing projects describe your-project-id
 ```
 
-### 3. Configure the Migration Corridor (This is the Key)
+### 3. Setting up the Migration Corridor (This is the Key)
 
-This is the most important part. We establish a "migration corridor" to enable project movement between organizations. In essence, it's a setting to make the organizations trust each other.
+This is the most important part. We establish a "migration corridor" to enable project movement between organizations. In essence, it's a setting to make each organization trust the other.
 
 **Set export permission in the source organization:**
 ```bash
@@ -109,9 +110,9 @@ EOF
 gcloud org-policies set-policy import-policy.yaml
 ```
 
-### 4. Grant Permissions (This is where I got stuck)
+### 4. Granting Permissions (Got stuck here)
 
-Even with organization owner permissions, project-level permissions were necessary. I only realized this after encountering an error, but the following permissions are required.
+Even as an organization owner, project-level permissions were required. I realized this after encountering an error, but the following permissions are necessary.
 
 ```bash
 # Switch back to the source account
@@ -126,16 +127,16 @@ gcloud organizations add-iam-policy-binding 123456789012 \
     --member="user:company@example-a.com" \
     --role="roles/resourcemanager.projectMover"
 
-# Grant permissions to the destination organization as well (cross-organization permission grant)
+# Grant permissions to the destination organization as well (cross-organization permission granting)
 gcloud config set account company@example-b.com
 gcloud organizations add-iam-policy-binding 987654321098 \
     --member="user:company@example-a.com" \
     --role="roles/resourcemanager.projectCreator"
 ```
 
-### 5. The Actual Migration (Just One Command!)
+### 5. The Actual Migration (Just 1 Command!)
 
-Once preparations are complete, you can migrate with a single command.
+Once everything is ready, you can migrate with just one command.
 
 ```bash
 # Execute with the source account
@@ -143,11 +144,11 @@ gcloud config set account company@example-a.com
 gcloud beta projects move your-project-id --organization 987654321098
 ```
 
-A warning will appear, but proceed by typing `Y`. **The migration was completed in less than a minute.** I was taken aback by how fast it was.
+A warning will appear, but proceed by typing `Y`. **The migration was completed in less than a minute**. I was taken aback by how fast it was.
 
-### 6. Change Billing Account (Forgetting this is a big problem)
+### 6. Changing the Billing Account (You'll regret it if you forget)
 
-The project moved, but the billing account doesn't change automatically. If you forget this, billing will continue to be sent to the old organization.
+Although the project has moved, the billing account does not change. If you forget this, billing will continue to go to the old organization.
 
 ```bash
 # Switch to the destination account
@@ -158,7 +159,7 @@ gcloud beta billing accounts list
 gcloud beta billing projects link your-project-id --billing-account NEW-BILLING-ID
 ```
 
-I encountered permission errors here as well, so I had to grant project owner permissions to the destination account.
+I encountered permission errors here as well, so I had to grant the project owner permission to the destination account.
 
 ```bash
 # Execute with the source account
@@ -170,7 +171,7 @@ gcloud projects add-iam-policy-binding your-project-id \
 
 ### 7. Cleanup (Extremely Important)
 
-Close the "security holes" opened for migration. If you forget this, projects will remain movable between organizations at will.
+Close the "security holes" that were opened for the migration. If you forget this, the ability to move projects freely between organizations will persist.
 
 ```bash
 # Delete organization policies
@@ -189,31 +190,31 @@ gcloud organizations remove-iam-policy-binding 987654321098 \
 ## Post-Migration Considerations
 
 - **Inherited IAM policies** will be lost. Permissions granted at the organization level will need to be reconfigured.
-- **Budget alerts** also need to be reconfigured. Budget settings are not carried over to the new billing account.
-- **Service functionality checks** are mandatory. Pay close attention to services with external integrations.
+- **Budget alerts** will also need to be reconfigured. Budget settings are not carried over to the new billing account.
+- **Service operational checks** are essential. Pay special attention to services with external integrations.
 
-## The Punchline: My Useless GCS Migration Script
+## The Punchline: The Useless GCS Migration Script
 
-When I started the migration work, I had actually created a script to migrate GCS buckets via local transfer.
+When I initially started the migration process, I had even created a script to migrate GCS buckets via local transfer.
 
 https://github.com/terisuke/gcs-migration-project
 
-I had implemented parallel downloads, progress display, and error handling, thinking, "Now I can easily migrate large numbers of buckets!" ... but then,
+I implemented parallel downloads, progress display, and error handling, thinking, "This will make migrating large numbers of buckets much easier!" but...
 
-The moment I learned that **projects could be moved as a whole**, everything became a waste.
+The moment I learned that **projects could be moved whole**, everything became useless.
 
-But well, it was a good learning experience for parallel processing with `gsutil` and GCS operations in Python, and it's still usable if you can't cross organizations, so it wasn't a complete waste... I keep telling myself that.
+However, I'm telling myself that it wasn't entirely wasted, as I learned about parallel processing with `gsutil` and GCS operations in Python, and it could still be useful in cases where cross-organization movement isn't possible.
 
 ## Summary
 
-Google Cloud project migration was surprisingly easy, provided you have the correct permissions and configurations. However, don't forget to clean up security settings.
+Google Cloud project migration was surprisingly easy with the right permissions and configuration. However, don't forget to clean up security settings.
 
 If anyone else is undertaking a similar migration, I recommend investigating the existence of `gcloud beta projects move` from the start. Reinventing the wheel can be fun, but time is finite.
 
-Still, I wish I could get back those three days I spent creating that GCS migration script.
+Still, I wish I could get back the three days I spent creating that GCS migration script.
 
 ---
 
 **Thank you for reading!**
 
-If you've had a similar experience, or are planning a migration, please let me know in the comments. Let's cry together (lol).
+If you've had a similar experience or are planning a migration, please let me know in the comments. Let's cry together (lol).

@@ -18,7 +18,7 @@ const blogCollection = defineCollection({
     ogImage: z.string().optional(),
     isDraft: z.boolean().default(false),
     featured: z.boolean().default(false),
-    lang: z.enum(['ja', 'en']).default('ja'),
+    lang: z.enum(['ja', 'en', 'zh', 'ko', 'es']).default('ja'),
     readingTime: z.number().optional(),
   }),
 });

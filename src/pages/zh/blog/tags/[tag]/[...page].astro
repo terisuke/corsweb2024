@@ -1,0 +1,161 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import PostCard from '../../../../../components/blog/PostCard.astro';
+import { BLOG_CATEGORIES } from '../../../../../config/categories';
+import Layout from '../../../../../layouts/Layout.astro';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+  tag: string;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Get all Chinese blog posts from Content Collections
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return data.lang === 'zh' && !data.isDraft;
+  });
+
+  // Get all unique tags
+  const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))];
+
+  const paths = allTags.flatMap((tag: string) => {
+    const tagPosts = allPosts
+      .filter(post => post.data.tags.includes(tag))
+      .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+    return paginate(tagPosts, {
+      pageSize: 12,
+      params: { tag: tag },
+      props: { tag: tag }
+    });
+  });
+
+  return paths;
+};
+
+const { page, tag } = Astro.props as Props;
+const pageTitle = `"${tag}" 标签文章 | 博客 | Cor.inc`;
+const pageDescription = `标签为"${tag}"的文章。探索相关技术文章和教程。`;
+
+// Categories for filtering (share with config)
+const categories = BLOG_CATEGORIES.map((cat) => ({ id: cat.id, label: cat.label.zh || cat.label.en }));
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Page Header -->
+    <div class="mb-12 text-center">
+      <div class="mb-4">
+        <a
+          href="/zh/blog"
+          class="inline-flex items-center text-sm text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 transition-colors"
+        >
+          ← 返回博客
+        </a>
+      </div>
+      
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+        <span class="inline-flex items-center gap-2">
+          <span class="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+            #{tag}
+          </span>
+          标签文章
+        </span>
+      </h1>
+      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+        {pageDescription}
+      </p>
+      
+      <!-- Pagination Info -->
+      {page.total > page.size && (
+        <p class="mt-4 text-sm text-stone-500 dark:text-stone-400">
+          显示 {page.start + 1}-{page.end + 1} 共 {page.total} 篇文章（第 {page.currentPage} 页，共 {page.lastPage} 页）
+        </p>
+      )}
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-8 flex flex-wrap justify-center gap-2">
+      {categories.map(category => (
+        <a
+          href={category.id === 'all' ? '/zh/blog' : `/zh/blog/category/${category.id}`}
+          class="rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900"
+        >
+          {category.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Blog Posts Grid -->
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {page.data.length > 0 ? (
+        page.data.map(post => (
+          <PostCard post={post} />
+        ))
+      ) : (
+        <div class="col-span-full text-center py-12 space-y-4">
+          <p class="text-lg text-stone-600 dark:text-stone-300">
+            没有找到标签为"{tag}"的文章。
+          </p>
+          <p class="text-sm text-stone-500 dark:text-stone-400">
+            您可以：
+          </p>
+          <div class="flex justify-center gap-4">
+            <a href="/zh/blog" class="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">浏览所有文章</a>
+            <a href="/zh/blog" class="rounded-full bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600">热门标签</a>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Pagination Navigation -->
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+        <!-- Previous Page -->
+        <a
+          href={page.url.prev || '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.prev 
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.prev}
+        >
+          上一页
+        </a>
+        
+        <!-- Page Numbers -->
+        <div class="flex gap-1">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(pageNum => (
+            <a
+              href={pageNum === 1 ? `/zh/blog/tags/${tag}` : `/zh/blog/tags/${tag}/${pageNum}`}
+              class={`rounded-lg px-3 py-2 text-sm font-medium ${
+                pageNum === page.currentPage
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+              }`}
+              aria-current={pageNum === page.currentPage ? 'page' : undefined}
+            >
+              {pageNum}
+            </a>
+          ))}
+        </div>
+        
+        <!-- Next Page -->
+        <a
+          href={page.url.next || '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.next 
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500' 
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.next}
+        >
+          下一页
+        </a>
+      </nav>
+    )}
+  </div>
+</Layout>

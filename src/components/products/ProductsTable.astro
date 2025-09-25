@@ -101,14 +101,6 @@ const t = getTranslations(currentLocale);
               class="inline-flex w-full items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
             >
               {currentLocale === 'zh' ? '前往' : currentLocale === 'ko' ? '이동' : currentLocale === 'es' ? 'Ir' : 'Go'} {item.name}
-              <!-- デバッグ: 翻訳データを確認 -->
-              <script>
-                console.log('Button text debug:', {
-                  buttonTexts: {t.buttonTexts},
-                  goTo: {t.buttonTexts?.goTo},
-                  itemName: {item.name}
-                });
-              </script>
             </a>
           </div>
         ))
@@ -125,7 +117,7 @@ const t = getTranslations(currentLocale);
             ]}
           >
             <div class="flex-1">
-              <RandomPlayer messages={t.youtubeMessages} />
+              <RandomPlayer messages={t.productsTable.youtubeMessages} />
               <div class="py-4" />
               <h2 class="text-center text-4xl font-medium">{item.name}</h2>
               <p class="mt-6 text-center text-primary-950/70 dark:text-primary-200/70">

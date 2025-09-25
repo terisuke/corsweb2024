@@ -11,7 +11,7 @@ export default defineConfig({
     defaultStrategy: 'hover'
   },
   i18n: {
-    locales: ["ja", "en"],
+    locales: ["ja", "en", "zh", "ko", "es"],
     defaultLocale: "ja",
     routing: {
       prefixDefaultLocale: false
@@ -61,7 +61,10 @@ export default defineConfig({
         defaultLocale: 'ja',
         locales: {
           ja: 'ja',
-          en: 'en'
+          en: 'en',
+          zh: 'zh',
+          ko: 'ko',
+          es: 'es'
         }
       },
       customPages: [
