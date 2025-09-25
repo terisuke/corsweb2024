@@ -5,6 +5,9 @@ pubDate: 2025-09-25
 author: "Terisuke"
 category: "engineering"
 tags: ["多言語化", "i18n", "Astro", "Claude Code", "自動化", "Gemini API"]
+image:
+  url: "/images/blog/ko-404.avif"
+  alt: "韓国語ブログ404ページ"
 lang: "ja"
 featured: true
 isDraft: false
@@ -108,7 +111,7 @@ async function translateToLanguage(inputFile, targetLang, body, frontmatter) {
 }
 ```
 
-![翻訳スクリプトの実行画面](/images/blog/translation-script-running.avif)
+https://github.com/Cor-Incorporated/corsweb2024/blob/develop/scripts/translate-blog-all-languages.js
 
 ### ステップ3: エラーとの死闘
 
@@ -124,14 +127,7 @@ $ npm run build
 
 **ビルドエラーの嵐。**
 
-さらに、韓国語のブログページを開くと...
-
-```
-[ERROR] Cannot read properties of undefined (reading 'lab')
-  at CategoryBadge.astro:34:43
-```
-
-![エラーログの山](/images/blog/error-logs-pile.avif)
+![エラーログの山](/images/blog/naniittenda.avif)
 
 ## バグ修正の連続
 
@@ -199,8 +195,6 @@ lang: "zh"
 # 【闪电15分钟】用MCP服务器构建MCP服务器！  # 本文は中国語
 ```
 
-![frontmatterが翻訳されていない様子](/images/blog/untranslated-frontmatter.avif)
-
 原因を調査した結果、翻訳スクリプトのパース処理にバグがあることが判明。修正用のスクリプトを別途作成して対応した。
 
 ```javascript
@@ -231,7 +225,10 @@ function extractTitleFromBody(body) {
 - ✅ 全てのTypeScriptエラーの解消
 - ✅ ビルド成功（317ページ）
 
-![完成した5言語対応のブログ](/images/blog/multilingual-blog-complete.avif)
+![完成した中国語ブログ](/images/blog/zh.avif)
+![完成した韓国語ブログ](/images/blog/ko.avif)
+![完成したスペイン語ブログ](/images/blog/es.avif)
+
 
 ### 翻訳の品質
 
@@ -280,6 +277,6 @@ Gemini APIによる翻訳は想像以上に高品質だった。
 
 *実装したコードはGitHubで公開しています。翻訳スクリプトは他のAstroプロジェクトでも使えるはずです。*
 
-![最終的な5言語対応の画面](/images/blog/final-multilingual-success.avif)
+https://github.com/Cor-Incorporated/corsweb2024
 
 *Claude Codeと共に戦った3時間。それは、怒涛でありながらも充実した時間だった。*
