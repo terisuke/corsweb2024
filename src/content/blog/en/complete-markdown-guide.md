@@ -1,16 +1,17 @@
 ---
-title: "The Complete Markdown Guide: Everything for Blog Post Creation"
-description: "A complete guide to Markdown syntax and rich content features usable on the Cor.inc blog.  Covers all features for creating beautiful articles, including link cards, equations, code highlighting, and more."
+title: "Complete Markdown Guide: Everything for Blog Post Creation"
+description: "A complete guide to Markdown syntax and rich content features usable on Cor.inc blogs. Covers all features for creating beautiful articles, including link cards, mathematical formulas, and code highlighting."
 pubDate: 2025-01-21
 author: "Terisuke"
 category: "lab"
-tags: ["Markdown", "Blog", "Writing", "Technical Documentation", "Guide"]
+tags: ["Markdown", "ブログ", "執筆", "技術文書", "ガイド"]
 lang: "en"
 featured: true
 ---
-# The Complete Markdown Guide: Everything You Need for Blog Post Creation
 
-This guide introduces all the Markdown and rich content features available on the Cor.inc blog. Let's learn the techniques to create beautiful and readable articles.
+# The Complete Markdown Guide: Everything for Blog Post Creation
+
+This guide introduces all the Markdown syntax and rich content features available on the Cor.inc blog. We've packed it with techniques to create beautiful and easy-to-read articles. Your journey to becoming a Markdown master starts here.
 
 ## Basic Markdown Syntax
 
@@ -39,23 +40,23 @@ This guide introduces all the Markdown and rich content features available on th
 
 ### Lists
 
-#### Unordered List
+#### Unordered Lists
 
 ```markdown
 - Item 1
 - Item 2
-  - Subitem 2.1
-  - Subitem 2.2
+  - Sub-item 2.1
+  - Sub-item 2.2
 - Item 3
 ```
 
 - Item 1
 - Item 2
-  - Subitem 2.1
-  - Subitem 2.2
+  - Sub-item 2.1
+  - Sub-item 2.2
 - Item 3
 
-#### Ordered List
+#### Ordered Lists
 
 ```markdown
 1. First item
@@ -67,7 +68,7 @@ This guide introduces all the Markdown and rich content features available on th
 2. Second item
 3. Third item
 
-#### Task List
+#### Task Lists
 
 ```markdown
 - [x] Completed task
@@ -83,17 +84,17 @@ This guide introduces all the Markdown and rich content features available on th
 
 ### Basic Code Block
 
-````markdown
-```javascript
+```markdown
+\`\`\`javascript
 function greet(name) {
   console.log(`Hello, ${name}!`);
 }
 
 greet('World');
+\`\`\`
 ```
-````
 
-### Example Output
+### Actual Display Example
 
 ```javascript
 function greet(name) {
@@ -111,7 +112,7 @@ greet('World');
 - Bash/Shell
 - JSON/YAML
 - Markdown
-- Many more
+- And many more
 
 ```python
 # Python example
@@ -133,63 +134,61 @@ npm run deploy
 ## Tables
 
 ```markdown
-| Item      | Description          | Price  |
-|-----------|----------------------|--------|
+| Item | Description | Price |
+|------|-------------|-------|
 | Product A | High-quality product | ¥1,000 |
-| Product B | Affordable price     | ¥500   |
-| Product C | Premium              | ¥2,000 |
+| Product B | Affordable price | ¥500 |
+| Product C | Premium | ¥2,000 |
 ```
 
-| Item      | Description          | Price  |
-|-----------|----------------------|--------|
+| Item | Description | Price |
+|------|-------------|-------|
 | Product A | High-quality product | ¥1,000 |
-| Product B | Affordable price     | ¥500   |
-| Product C | Premium              | ¥2,000 |
+| Product B | Affordable price | ¥500 |
+| Product C | Premium | ¥2,000 |
 
 ### Table Alignment
 
 ```markdown
-| Left-aligned | Center-aligned | Right-aligned |
-|:-------------|:--------------:|--------------:|
-| Left         |     Center     |         Right |
-| L            |       C        |             R |
+| Left Align | Center Align | Right Align |
+|:-----------|:------------:|------------:|
+| Left | Center | Right |
+| L | C | R |
 ```
 
-| Left-aligned | Center-aligned | Right-aligned |
-|:-------------|:--------------:|--------------:|
-| Left         |     Center     |         Right |
-| L            |       C        |             R |
+| Left Align | Center Align | Right Align |
+|:-----------|:------------:|------------:|
+| Left | Center | Right |
+| L | C | R |
 
-## Quotes
+## Blockquotes
 
 ```markdown
 > This is a quote.
-> It can span
-> multiple lines.
+> It can span multiple lines.
 
 > **Important Quote**
->
-> You can also use **Markdown syntax** within a quote.
+> 
+> **Markdown syntax** can also be used within quotes.
 ```
 
 > This is a quote.
-> It can span
-> multiple lines.
+> It can span multiple lines.
 
 > **Important Quote**
->
-> You can also use **Markdown syntax** within a quote.
+> 
+> **Markdown syntax** can also be used within quotes.
 
 ## Links and Images
 
 ### Basic Links
 
 ```markdown
-[Cor.inc Website](https://cor-jp.com)
+[Cor.inc Official Website](https://cor-jp.com)
 [Contact Us](/contact)
 ```
 
-[Cor.inc Website](https://cor-jp.com)
+[Cor.inc Official Website](https://cor-jp.com)
 [Contact Us](/contact)
 
 ### Images
@@ -199,17 +198,17 @@ npm run deploy
 ![Description](/images/example.jpg "Title")
 ```
 
-## Math Equations (KaTeX)
+## Mathematical Formulas (KaTeX)
 
-### Inline Equation
+### Inline Formulas
 
 ```markdown
-The area of a circle is calculated as $A = \pi r^2$.
+The area of a circle can be calculated as $A = \pi r^2$.
 ```
 
-The area of a circle is calculated as $A = \pi r^2$.
+The area of a circle can be calculated as $A = \pi r^2$.
 
-### Block Equation
+### Block Formulas
 
 ```markdown
 $$
@@ -221,7 +220,7 @@ $$
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
 
-### Example of Complex Equation
+### Complex Formula Example
 
 ```markdown
 $$
@@ -245,9 +244,9 @@ $$
 
 ## Rich Link Cards
 
-### Usage
+### How to Use
 
-Simply write a URL by itself to automatically generate a rich preview card:
+Simply write a URL on its own line, and a rich preview card will be automatically generated. It's magical, but it's actually the work of `remark-link-card-plus`:
 
 ```markdown
 https://cor-jp.com/
@@ -257,7 +256,7 @@ https://github.com
 https://docs.astro.build
 ```
 
-### Example
+### Display Example
 
 https://cor-jp.com/
 
@@ -267,11 +266,11 @@ https://docs.astro.build
 
 ### Features
 
-- **Automatic Metadata Retrieval**: Automatically retrieves the title, description, and favicon.
-- **OG Image Display**: Displays the website's thumbnail image.
-- **Caching Function**: Once retrieved, information is cached locally.
-- **Responsive**: Supports both desktop and mobile.
-- **Dark Mode**: Automatically adjusts according to the theme.
+- **Automatic Metadata Retrieval**: Automatically fetches title, description, and favicon.
+- **OG Image Display**: Shows the website's thumbnail image.
+- **Caching Function**: Caches retrieved information locally.
+- **Responsive**: Adaptable to both desktop and mobile.
+- **Dark Mode**: Adjusts automatically based on the theme.
 
 ## Horizontal Rule
 
@@ -283,21 +282,21 @@ https://docs.astro.build
 
 ## Escape Characters
 
-To prevent characters from being interpreted as Markdown syntax, escape them with a backslash:
+Characters that you don't want to be interpreted as Markdown syntax can be escaped with a backslash. Not knowing this will lead to unintended displays and sadness:
 
 ```markdown
-\*This will not be italicized\*
-\`This will not be code\`
-\# This will not be a heading
+\*This won't be italicized\*
+\`This won't be code\`
+\# This won't be a heading
 ```
 
-\*This will not be italicized\*
-\`This will not be code\`
-\# This will not be a heading
+\*This won't be italicized\*
+\`This won't be code\`
+\# This won't be a heading
 
 ## Front Matter
 
-At the beginning of the article, write front matter to set metadata:
+At the beginning of an article, write the front matter to set metadata. Forgetting this will make Astro throw an error:
 
 ```yaml
 ---
@@ -317,10 +316,10 @@ featured: true
 
 ### Category List
 
-- **ai-driven-futures** – AI-Driven Futures
-- **high-performance-engineering** – High-Performance Engineering
-- **founders-journey** – Founder's Journey
-- **tech-lab-creativity** – Tech Lab Creativity
+- `ai-driven-futures`: AI-Driven Futures
+- `high-performance-engineering`: High-Performance Engineering
+- `founders-journey`: Founder's Journey
+- `tech-lab-creativity`: Tech Lab Creativity
 
 ## Best Practices
 
@@ -329,23 +328,23 @@ featured: true
 ```markdown
 # Main Title (H1 is auto-generated)
 
-## Large Section (H2)
+## Major Section (H2)
 
 ### Subsection (H3)
 
-#### Detail Item (H4)
+#### Detailed Item (H4)
 ```
 
 ### 2. Readable Code
 
-- Use appropriate language specifications for code blocks.
-- Divide long code into logical units.
-- Add comments for explanations.
+- Use appropriate language specification for code blocks (syntax highlighting is easy on the eyes).
+- Split long code into logical units (nobody wants to read 100 lines of code at once).
+- Add comments for explanations (it's a letter to your future self).
 
 ### 3. Effective Link Cards
 
-- Only create link cards for highly relevant URLs.
-- Create a reference links section at the end of the article.
+- Link card only relevant URLs.
+- Create a "Reference Links" section at the end of the article.
 - Choose reliable sources for external links.
 
 ### 4. Visual Elements
@@ -356,34 +355,34 @@ featured: true
 
 ## Troubleshooting
 
-### Common Problems
+### Common Issues
 
-1. **Link cards are not displayed.**
-   - Make sure the URL is on a single line.
-   - Make sure it starts with HTTPS.
+1. **Link cards not displaying**
+   - Ensure the URL is on its own line.
+   - Ensure it starts with HTTPS.
    - Check if the website is accessible.
 
-2. **Mathematical formulas are not displayed.**
-   - Check that there are no spaces before and after the `$` symbol.
-   - Check the escaping of special characters.
+2. **Mathematical formulas not displaying**
+   - Check for spaces before and after the `$` symbol.
+   - Check for escaped special characters.
 
-3. **Code highlighting does not work.**
-   - Check for spelling mistakes in the language name.
+3. **Code highlighting not working**
+   - Check for typos in the language name.
    - Check the number of backticks (`).
 
-## Summary
+## Conclusion
 
-By utilizing the features introduced in this guide, you can create readable and beautiful blog posts.  The link card feature, in particular, is a powerful tool for providing readers with valuable reference materials in a visually appealing way.
+By utilizing the features introduced in this guide, you can create readable and beautiful blog posts. The link card feature, in particular, is a powerful tool that provides readers with useful reference materials in a visually appealing format. Seeing a card appear just by writing a URL feels like being a magician.
 
 Use the following checklist when creating articles:
 
-- [ ] Front matter is correctly set.
-- [ ] Heading structure is logical.
-- [ ] Code blocks have appropriate language specifications.
-- [ ] Link cards are displayed correctly.
-- [ ] Mathematical formulas are displayed correctly.
-- [ ] Alt attributes are set for images.
+- [ ] Front matter is correctly configured (to avoid Astro errors).
+- [ ] Heading structure is logical (so readers don't get lost).
+- [ ] Code blocks have appropriate language specifications (for beautiful highlighting).
+- [ ] Link cards display correctly (for aesthetics).
+- [ ] Mathematical formulas display correctly (to satisfy mathematicians).
+- [ ] Image `alt` attributes are set (accessibility is important).
 
 ---
 
-*If you have any questions about this guide, please [contact us](/contact).*
+*If you have any questions about this guide, please contact us via [Contact](/contact). Let's walk the path to becoming a Markdown master together.*

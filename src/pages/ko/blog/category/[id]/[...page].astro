@@ -1,0 +1,152 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import PostCard from '../../../../../components/blog/PostCard.astro';
+import Layout from '../../../../../layouts/Layout.astro';
+import { getCurrentLocale } from '../../../../../utils/i18n';
+import { getCategoryLabel, getCategoryDescription, BLOG_CATEGORIES } from '../../../../../config/categories';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+  /**
+   * categoryId is provided via getStaticPaths props and may be undefined when
+   * this page is rendered via dynamic routing. It should therefore be optional.
+   */
+  categoryId?: string;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Get all Korean blog posts from Content Collections
+  const allPosts = await getCollection('blog', (entry) => {
+    return entry.data.lang === 'ko' && !entry.data.isDraft;
+  });
+  
+  // Get available categories
+  const categories = Array.from(new Set(allPosts.map(p => p.data.category)));
+
+  const paths = categories.flatMap(category => {
+    const filtered = allPosts.filter(p => p.data.category === category);
+    const sorted = filtered.sort(
+      (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    );
+    return paginate(sorted, { 
+      pageSize: 12, 
+      params: { id: category as string },
+      props: { categoryId: category }
+    });
+  });
+  return paths;
+};
+
+const { page, categoryId } = Astro.props as Props;
+const id: string = (Astro.params.id as string | undefined) ?? categoryId ?? '';
+const currentLocale = getCurrentLocale(Astro.url);
+
+const categoryLabel = getCategoryLabel(id, 'ko');
+const pageTitle = `${categoryLabel} | 블로그 | Cor.inc`;
+const categoryDesc = getCategoryDescription(id, 'ko');
+const pageDescription = categoryDesc || `${categoryLabel} 카테고리의 블로그 글`;
+
+// 判定: カテゴリ未選択、または存在しないカテゴリの場合は「すべて」をアクティブにする
+const isAllActive = !id || !BLOG_CATEGORIES.find(cat => cat.id === id);
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Page Header -->
+    <div class="mb-12 text-center">
+      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+        {categoryLabel}
+      </h1>
+      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+        {pageDescription}
+      </p>
+      
+      <!-- Pagination Info -->
+      {page.total > page.size && (
+        <p class="mt-4 text-sm text-stone-500 dark:text-stone-400">
+          `표시 중 ${page.start + 1}-${page.end + 1} / 총 ${page.total}개 글 (페이지 ${page.currentPage}/${page.lastPage})`
+        </p>
+      )}
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-8 flex flex-wrap justify-center gap-2">
+      <a
+        href='/ko/blog'
+        class={`rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 ${
+          isAllActive
+            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+            : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'
+        }`}
+      >
+        전체
+      </a>
+      {BLOG_CATEGORIES.map((category) => (
+        <a
+          href={`/ko/blog/category/${category.id}`}
+          class={`rounded-full px-4 py-2 text-sm font-medium border-2 transition-all duration-200 ${
+            category.id === id
+              ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+              : 'bg-white text-black border-gray-300 hover:bg-gray-50 dark:bg-black dark:text-white dark:border-gray-600 dark:hover:bg-gray-900'
+          }`}
+        >
+          {category.label.ko || category.label.en}
+        </a>
+      ))}
+    </div>
+
+    <!-- 記事グリッド -->
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {page.data.map(post => (
+        <PostCard post={post} />
+      ))}
+    </div>
+
+    <!-- ページネーション -->
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+        <a
+          href={page.url.prev ? `/ko/blog/category/${id}/${page.url.prev.replace(/^\//, '')}` : '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.prev
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500'
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.prev}
+        >
+          이전
+        </a>
+
+        <div class="flex gap-1">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(num => (
+            <a
+              href={num === 1 ? `/ko/blog/category/${id}` : `/ko/blog/category/${id}/${num}`}
+              class={`rounded-lg px-3 py-2 text-sm font-medium ${
+                num === page.currentPage
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+              }`}
+              aria-current={num === page.currentPage ? 'page' : undefined}
+            >
+              {num}
+            </a>
+          ))}
+        </div>
+
+        <a
+          href={page.url.next ? `/ko/blog/category/${id}/${page.url.next.replace(/^\//, '')}` : '#'}
+          class={`rounded-lg px-3 py-2 text-sm font-medium ${
+            !page.url.next
+              ? 'cursor-not-allowed bg-stone-100 text-stone-400 dark:bg-stone-700 dark:text-stone-500'
+              : 'bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600'
+          }`}
+          aria-disabled={!page.url.next}
+        >
+          다음
+        </a>
+      </nav>
+    )}
+  </div>
+</Layout>

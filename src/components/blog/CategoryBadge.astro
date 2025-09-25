@@ -28,10 +28,28 @@ const categoryLabels = {
     'founder': 'Founder',
     'lab': 'Lab',
   },
+  zh: {
+    'ai': '人工智能',
+    'engineering': '工程',
+    'founder': '創業',
+    'lab': '實驗室',
+  },
+  ko: {
+    'ai': 'AI',
+    'engineering': '엔지니어링',
+    'founder': '창업',
+    'lab': '연구소',
+  },
+  es: {
+    'ai': 'IA',
+    'engineering': 'Ingeniería',
+    'founder': 'Fundador',
+    'lab': 'Laboratorio',
+  },
 };
 
 const colorClass = categoryColors[category as keyof typeof categoryColors] || 'bg-stone-100 text-stone-800 dark:bg-stone-700 dark:text-stone-200';
-const label = categoryLabels[currentLocale][category as keyof typeof categoryLabels['ja']] || category;
+const label = categoryLabels[currentLocale as keyof typeof categoryLabels]?.[category as keyof typeof categoryLabels['ja']] || category;
 ---
 
 <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>

@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getTranslations } from '../../utils/i18n';
+
+const currentLocale = 'es';
+const t = getTranslations(currentLocale);
+
+const title = '¡Gracias por tu apoyo!';
+const description = 'Gracias por tu apoyo. Continuaremos brindando contenido de alta calidad.';
+---
+
+<Layout title={title} description={description}>
+  <div class="mx-auto max-w-2xl px-4 py-16 text-center sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+        <svg class="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+    </div>
+
+    <h1 class="mb-4 text-3xl font-bold text-stone-900 dark:text-stone-100 sm:text-4xl">
+      {title}
+    </h1>
+
+    <p class="mb-8 text-lg text-stone-600 dark:text-stone-300">
+      {description}
+    </p>
+
+    <div class="mb-8 rounded-lg bg-stone-50 p-6 dark:bg-stone-800">
+      <h2 class="mb-4 text-xl font-semibold text-stone-900 dark:text-stone-100">
+        ¿Qué sigue?
+      </h2>
+      <ul class="space-y-2 text-left text-stone-600 dark:text-stone-300">
+        <li class="flex items-start">
+          <svg class="mr-2 mt-1 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Escribir nuevos artículos técnicos
+        </li>
+        <li class="flex items-start">
+          <svg class="mr-2 mt-1 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Compartir casos de uso de tecnología AI
+        </li>
+        <li class="flex items-start">
+          <svg class="mr-2 mt-1 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Desarrollar proyectos de código abierto
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
+      <a
+        href="/es/blog"
+        class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-stone-900"
+      >
+        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        Volver al Blog
+      </a>
+
+      <a
+        href="/es"
+        class="inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-6 py-3 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700"
+      >
+        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        Volver al Inicio
+      </a>
+    </div>
+  </div>
+</Layout>

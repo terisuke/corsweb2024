@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+
+const locale = Astro.props.locale || getCurrentLocale(Astro.url);
+const t = getTranslations(locale);
+---
+
+<Layout
+  description={t.privacy.intro}
+  title={t.meta.privacy.title}
+>
+  <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <div class="sm:pb:20 flex flex-col gap-4 pb-16 text-center">
+      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{t.privacy.title}</h1>
+      <p class="text-base">{t.privacy.lastUpdate}</p>
+    </div>
+    <div>
+      <p class="mb-4">
+        {t.privacy.intro}
+      </p>
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.privacy.section1.title}</h2>
+      <p class="mb-6">
+        {t.privacy.section1.description}
+      </p>
+      <ul class="list-inside list-disc space-y-4">
+        {
+          Array.isArray(t.privacy.section1?.items) && t.privacy.section1.items.map((item) => (
+            <li>{item}</li>
+          ))
+        }
+      </ul>
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.privacy.section2.title}</h2>
+      <p class="mb-4">{t.privacy.section2.description}</p>
+      <ul class="list-inside list-disc space-y-4">
+        {
+          Array.isArray(t.privacy.section2?.items) && t.privacy.section2.items.map((item) => (
+            <li>{item}</li>
+          ))
+        }
+      </ul>
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.privacy.contact.title}</h2>
+      <p class="mb-4">
+        {t.privacy.contact.description}<br />
+        <span class="font-medium">
+          <a href={getLocalizedUrl('/contact', locale)}>{t.privacy.contact.linkText}</a>
+        </span>
+        {t.privacy.contact.suffix}
+      </p>
+    </div>
+  </div>
+</Layout>

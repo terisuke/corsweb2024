@@ -1,21 +1,28 @@
 ---
-title: "The Story of Creating an Amazing Homepage After Continuously Challenging Abe Hiroshi's Homepage"
-description: 'The trajectory and technical insights of a man who, self-proclaimed as "the owner of the fastest-downloading homepage," persistently challenged Abe Hiroshi''''s homepage.'
+title: "The Story of How I Kept Challenging Abe Hiroshi's Homepage and Made an Amazing One"
+description: "The journey and technical insights of continuing to challenge Abe Hiroshi's homepage, as a \"man who claims to have the fastest descending homepage.\""
 pubDate: 2024-01-20
 author: "Terisuke"
 category: "engineering"
 tags: ["Astro", "Alpine.js", "AVIF", "WebPerformance", "PageSpeed"]
-# image:
-#   url: "/images/blog/high-performance-web.avif"
-#   alt: "高性能Webサイトのイメージ"
+image:
+  url: "/images/blog/abe-hiroshi-hero.avif"
+  alt: "高性能Webサイトのイメージ"
 lang: "en"
 featured: true
 ---
-My quest to create a website faster than Hiroki Abe's (self-proclaimed fastest) led to the creation of a truly high-performance website.
 
-## Technology Stack Selection
+# The Story of How I Built an Amazing Website by Continuously Challenging Hiroshi Abe's Homepage
 
-### Choosing Astro + Alpine.js
+As the "man who claims to have the fastest homepage," I persistently challenged Hiroshi Abe's website. The result was not just a speed competition, but the birth of a truly high-performance web experience. By the way, Hiroshi Abe's site is still fast today. I offer my respect.
+
+![Developer Profile Image](/images/blog/k-terada.avif)
+
+## Selecting the Technology Stack
+
+### Why Astro + Alpine.js?
+
+Why this combination? The answer is simple. It embodies the Zen spirit of "only what you need, when you need it." React? Heavy. Vue? Okay. But Alpine.js? That was the lightest answer.
 
 ```astro
 ---
@@ -26,15 +33,17 @@ import ContactForm from '../components/ContactForm.vue';
 
 <Layout title="Ultra Fast Website">
   <Hero />
-  <!-- JavaScript loaded only where needed -->
+  <!-- Load JavaScript only where needed -->
   <ContactForm client:load />
 </Layout>
 ```
 
 ### Image Optimization Strategy
 
+Images are the heavy burden of the modern web. That's why I adopted the latest AVIF format. It's half the size of JPEG with no compromise in image quality. It's like magic, but this is technological progress.
+
 ```html
-<!-- Serving images in AVIF format -->
+<!-- Image delivery in AVIF format -->
 <picture>
   <source srcset="hero-480w.avif 480w, hero-800w.avif 800w" type="image/avif">
   <source srcset="hero-480w.webp 480w, hero-800w.webp 800w" type="image/webp">
@@ -44,15 +53,19 @@ import ContactForm from '../components/ContactForm.vue';
 
 ## Performance Optimization Results
 
-- **Lighthouse Score**: 100/100/100/100
-- **First Contentful Paint**: 0.3 seconds
-- **Largest Contentful Paint**: 0.5 seconds
-- **Cumulative Layout Shift**: 0
+I finally did it. I achieved perfect scores across the board:
+
+- **Lighthouse Score**: 100/100/100/100 (Perfect!)
+- **First Contentful Paint**: 0.3 seconds (Too fast to blink)
+- **Largest Contentful Paint**: 0.5 seconds (Loaded before you can take a sip of coffee)
+- **Cumulative Layout Shift**: 0 (Not a single pixel moved)
 
 ## Cache-Control Strategy
 
+Caching is your friend. With a cache setting of one year (31,536,000 seconds), images once loaded will never be loaded again. This also saves users' data costs. Everyone is happy.
+
 ```javascript
-// Firebase Hosting configuration
+// Firebase Hosting Configuration
 {
   "headers": [
     {
@@ -60,7 +73,7 @@ import ContactForm from '../components/ContactForm.vue';
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "max-age=31536000, immutable"
+          "value": "max-age=31536000, immutable"  // Cache for 1 year!
         }
       ]
     }
@@ -68,8 +81,6 @@ import ContactForm from '../components/ContactForm.vue';
 }
 ```
 
-This challenge taught me the importance of user experience-focused web design, going beyond just speed.
+Through this challenge, I learned the importance of designing websites that prioritize user experience beyond mere "speed." Conclusion: Speed is justice, but usability is even greater justice.
 
----
-
-*Interested in building a high-performance website?  Contact us [/contact] for a consultation.*
+*If you're interested in building a high-performance website, please consult with me via the [Contact](/contact) page. Let's build a site faster than Hiroshi Abe's together (it might be impossible, but it's worth the challenge).*
