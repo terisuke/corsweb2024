@@ -235,14 +235,19 @@ const currentLocale = getCurrentLocale(Astro.url);
         Alpine.store('lang', {
           current: document.documentElement.lang,
           toggle() {
-            const newLang = this.current === 'ja' ? 'en' : 'ja';
+            const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'];
+            const currentIndex = localeOrder.indexOf(this.current);
+            const nextIndex = (currentIndex + 1) % localeOrder.length;
+            const newLang = localeOrder[nextIndex];
+            
             const currentPath = window.location.pathname;
             let newPath;
             
-            if (newLang === 'en') {
-              newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
+            if (newLang === 'ja') {
+              newPath = currentPath.replace(/^\/(en|zh|ko|es)/, '') || '/';
             } else {
-              newPath = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+              newPath = currentPath.replace(/^\/(en|zh|ko|es)/, '') || '/';
+              newPath = newPath === '/' ? `/${newLang}` : `/${newLang}${newPath}`;
             }
             
             window.location.href = newPath;

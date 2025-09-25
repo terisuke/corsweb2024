@@ -1,0 +1,25 @@
+---
+import About from '../../components/home/About.astro';
+import Cta from '../../components/home/Cta.astro';
+import Hero from '../../components/home/Hero.astro';
+import Services from '../../components/home/Services.astro';
+import Testimonials from '../../components/home/Testimonials.astro';
+import Layout from '../../layouts/Layout.astro';
+import Expertise from '../../components/home/Expertise.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<Layout
+  description={t.meta.home.description}
+  title={t.meta.home.title}
+>
+  <Hero />
+  <Services />
+  <Expertise />
+  <About />
+  <Testimonials />
+  <Cta />
+</Layout>

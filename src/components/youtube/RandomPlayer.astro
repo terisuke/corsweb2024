@@ -3,6 +3,9 @@
 const CHANNEL_ID = 'UCmivQ0Dndw81cLjkc9lgIOw';
 const API_KEY = import.meta.env.PUBLIC_YOUTUBE_API_KEY;
 
+// 翻訳データを受け取る
+const { messages } = Astro.props;
+
 // APIキーの存在確認
 if (!API_KEY) {
   console.warn('YouTube API key not configured. YouTube content will fallback to direct channel link.');
@@ -18,13 +21,13 @@ if (!API_KEY) {
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span class="ml-2 text-gray-600 dark:text-gray-400">動画を読み込み中...</span>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">{messages?.loading || '動画を読み込み中...'}</span>
       </div>
     </div>
   </div>
 </div>
 
-<script is:inline define:vars={{ CHANNEL_ID, API_KEY }}>
+<script is:inline define:vars={{ CHANNEL_ID, API_KEY, messages }}>
   /**
    * YouTube IFrame APIを読み込み、複数インスタンスに対応した初期化を実行
    * グローバルコールバックの上書きを防ぐためコールバックキューを使用
@@ -79,7 +82,7 @@ if (!API_KEY) {
 
     // APIキーが設定されていない場合のフォールバック
     if (!API_KEY) {
-      showErrorFallback('YouTube APIが設定されていません');
+      showErrorFallback(messages?.apiNotConfigured || 'YouTube APIが設定されていません');
       return;
     }
 
@@ -88,7 +91,7 @@ if (!API_KEY) {
       const videoIds = await fetchChannelVideos();
 
       if (!videoIds.length) {
-        showErrorFallback('動画が見つかりませんでした');
+        showErrorFallback(messages?.noVideosFound || '動画が見つかりませんでした');
         return;
       }
 
@@ -116,7 +119,7 @@ if (!API_KEY) {
       });
     } catch (error) {
       console.error('YouTube プレイヤーの初期化に失敗しました:', error);
-      showErrorFallback('動画の読み込みに失敗しました');
+      showErrorFallback(messages?.loadFailed || '動画の読み込みに失敗しました');
     }
   }
 
@@ -138,7 +141,7 @@ if (!API_KEY) {
       const uploadsPlaylistId = channelData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
 
       if (!uploadsPlaylistId) {
-        throw new Error('チャンネルが見つかりません');
+        throw new Error(messages?.channelNotFound || 'チャンネルが見つかりません');
       }
 
       // プレイリストから動画リストを取得
@@ -155,7 +158,7 @@ if (!API_KEY) {
       const playlistData = await playlistResponse.json();
 
       if (!playlistData.items?.length) {
-        throw new Error('動画が見つかりません');
+        throw new Error(messages?.videosNotFound || '動画が見つかりません');
       }
 
       // 動画IDの配列を返す
@@ -191,7 +194,7 @@ if (!API_KEY) {
              target="_blank"
              rel="noopener noreferrer"
              class="text-primary-600 hover:underline">
-            YouTubeチャンネルを直接ご覧ください
+            ${messages?.watchDirectly || 'YouTubeチャンネルを直接ご覧ください'}
           </a>
         </div>
       </div>
@@ -201,7 +204,7 @@ if (!API_KEY) {
   // プレイヤーエラー時
   function onPlayerError(event) {
     console.error('YouTube プレイヤーエラー:', event.data);
-    showErrorFallback('動画の再生でエラーが発生しました');
+    showErrorFallback(messages?.playbackError || '動画の再生でエラーが発生しました');
   }
 
   // 初期化のエントリーポイント
