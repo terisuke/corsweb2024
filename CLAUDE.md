@@ -7,10 +7,10 @@ with code in this repository.
 
 This is a high-performance corporate website for Cor.inc built with Astro
 4.8.7, focusing on extreme loading speed optimization. The site features
-bilingual (Japanese/English) content and showcases services in Python data
-analysis, web/mobile development, and machine learning solutions. The project
-includes an integrated blog system with AI-powered automated translation
-capabilities.
+multilingual content (Japanese, English, Chinese, Korean, Spanish) and showcases
+services in Python data analysis, web/mobile development, and machine learning
+solutions. The project includes an integrated blog system with AI-powered automated
+translation capabilities.
 
 ## Development Commands
 
@@ -79,9 +79,10 @@ Alpine.store('lang', { current: string, toggle: function })
 Comprehensive blog functionality with AI-powered translation, featuring:
 
 - **Content Collections**: Astro's built-in content management using Zod schemas
-- **Bilingual Support**: Japanese and English blog posts with separate routing
-- **AI Translation**: Automated translation from Japanese to English using
-  Google Gemini API
+- **Multilingual Support**: Japanese, English, Chinese, Korean, and Spanish blog
+  posts with separate routing
+- **AI Translation**: Automated translation from Japanese to all other languages
+  using Google Gemini API
 - **Rich Markdown**: GitHub Flavored Markdown, math equations (KaTeX), syntax
   highlighting, rich link cards with automatic metadata fetching
 - **SEO**: Auto-generated OGP images, structured data, meta tags, breadcrumbs
@@ -98,7 +99,16 @@ src/content/
 │   ├── ja/          # Japanese blog posts (source)
 │   │   ├── post-1.md
 │   │   └── post-2.md
-│   └── en/          # English blog posts (auto-translated)
+│   ├── en/          # English blog posts (auto-translated)
+│   │   ├── post-1.md
+│   │   └── post-2.md
+│   ├── zh/          # Chinese blog posts (auto-translated)
+│   │   ├── post-1.md
+│   │   └── post-2.md
+│   ├── ko/          # Korean blog posts (auto-translated)
+│   │   ├── post-1.md
+│   │   └── post-2.md
+│   └── es/          # Spanish blog posts (auto-translated)
 │       ├── post-1.md
 │       └── post-2.md
 ├── config.ts        # Content collection schemas
@@ -130,7 +140,7 @@ const blogCollection = defineCollection({
     ogImage: z.string().optional(),
     isDraft: z.boolean().default(false),
     featured: z.boolean().default(false),
-    lang: z.enum(['ja', 'en']).default('ja'),
+    lang: z.enum(['ja', 'en', 'zh', 'ko', 'es']).default('ja'),
     readingTime: z.number().optional(),
   }),
 });
@@ -140,31 +150,51 @@ const blogCollection = defineCollection({
 
 #### Translation Scripts
 
-Two Node.js scripts handle automated translation:
+Four Node.js scripts handle automated translation:
 
-**1. Individual Post Translation** (`scripts/translate-blog.js`)
+**1. Single Language Translation** (`scripts/translate-blog-multi.js`)
+
+```bash
+node scripts/translate-blog-multi.js [lang] src/content/blog/ja/your-post.md
+# Example: node scripts/translate-blog-multi.js zh src/content/blog/ja/your-post.md
+```
+
+- Translates a single Japanese blog post to specified language (en, zh, ko, es)
+- Uses Google Generative AI (Gemini 1.5 Flash) with GEMINI_API_KEY
+- Preserves frontmatter structure and metadata
+- Handles YAML parsing/formatting with proper escaping
+- Updates language metadata dynamically
+- Outputs to `/src/content/blog/[lang]/` with same filename
+
+**2. All Languages Translation** (`scripts/translate-blog-all-languages.js`)
+
+```bash
+node scripts/translate-blog-all-languages.js src/content/blog/ja/your-post.md
+```
+
+- Translates a single Japanese post to all 4 languages (en, zh, ko, es) simultaneously
+- Includes rate limiting (3-second delay between languages)
+- Provides progress reporting and error handling
+- Creates language directory structures if needed
+- Processes translations in parallel with retry logic
+
+**3. Legacy English Translation** (`scripts/translate-blog.js`)
 
 ```bash
 node scripts/translate-blog.js src/content/blog/ja/your-post.md
 ```
 
-- Translates a single Japanese blog post to English
-- Uses Google Generative AI (Gemini 1.5 Flash) with GEMINI_API_KEY
-- Preserves frontmatter structure and metadata
-- Handles YAML parsing/formatting with proper escaping
-- Updates language metadata (lang: 'en', author: 'Terisuke')
-- Outputs to `/src/content/blog/en/` with same filename
+- Original script for English-only translation
+- Maintained for backward compatibility
 
-**2. Batch Translation** (`scripts/translate-all-blog.js`)
+**4. Batch Translation** (`scripts/translate-all-blog.js`)
 
 ```bash
 node scripts/translate-all-blog.js
 ```
 
-- Automatically translates all Japanese posts in `/src/content/blog/ja/`
-- Includes rate limiting (1-second delay between requests)
-- Provides progress reporting and error handling
-- Creates English directory structure if needed
+- Automatically translates all Japanese posts to English only
+- Legacy script maintained for backward compatibility
 
 #### Translation Features
 
@@ -202,7 +232,28 @@ GEMINI_API_KEY=your_gemini_api_key_here
 - **Category Pages**: `/en/blog/category/[category]/` →
   `src/pages/en/blog/category/[category]/[...page].astro`
 
-#### Individual Post Features (Both Languages)
+#### Chinese Blog
+
+- **List Page**: `/zh/blog/` → `src/pages/zh/blog/[...page].astro`
+- **Post Page**: `/zh/blog/[slug]` → `src/pages/zh/blog/[...slug].astro`
+- **Category Pages**: `/zh/blog/category/[category]/` →
+  `src/pages/zh/blog/category/[category]/[...page].astro`
+
+#### Korean Blog
+
+- **List Page**: `/ko/blog/` → `src/pages/ko/blog/[...page].astro`
+- **Post Page**: `/ko/blog/[slug]` → `src/pages/ko/blog/[...slug].astro`
+- **Category Pages**: `/ko/blog/category/[category]/` →
+  `src/pages/ko/blog/category/[category]/[...page].astro`
+
+#### Spanish Blog
+
+- **List Page**: `/es/blog/` → `src/pages/es/blog/[...page].astro`
+- **Post Page**: `/es/blog/[slug]` → `src/pages/es/blog/[...slug].astro`
+- **Category Pages**: `/es/blog/category/[category]/` →
+  `src/pages/es/blog/category/[category]/[...page].astro`
+
+#### Individual Post Features (All Languages)
 
 - **Full Navigation**: Previous/Next post navigation with proper slug handling
 - **Tag Display**: All post tags shown with responsive design
@@ -218,7 +269,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 - **Shared Layout**: `src/layouts/BlogLayout.astro`
   - Enhanced SEO with structured data (Article, BreadcrumbList)
   - Auto-generated OGP images at `/og/[slug].svg`
-  - Bilingual hreflang tags
+  - Multilingual hreflang tags (5 languages)
   - KaTeX CSS for math rendering
   - Performance optimizations (critical CSS, Web Vitals)
 
@@ -240,8 +291,12 @@ GEMINI_API_KEY=your_gemini_api_key_here
 - **Previous/Next Posts**: Automatic chronological navigation between posts
 - **Related Posts**: Dynamic display of same-category posts (max 3)
 - **Category Filtering**: Dedicated pages for each category with pagination
-- **Bilingual Support**: Separate navigation for Japanese (`/blog/`) and
-  English (`/en/blog/`) versions
+- **Multilingual Support**: Separate navigation for all 5 languages:
+  - Japanese (`/blog/`)
+  - English (`/en/blog/`)
+  - Chinese (`/zh/blog/`)
+  - Korean (`/ko/blog/`)
+  - Spanish (`/es/blog/`)
 - **Responsive Design**: Mobile-first approach with touch-friendly navigation
 - **SEO**: Proper canonical URLs and hreflang tags for all navigation links
 
@@ -250,7 +305,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 - **Auto-generated OGP Images**: Dynamic SVG generation at
   `/og/[slug].svg.ts`
 - **Structured Data**: JSON-LD for Article and BreadcrumbList schemas
-- **Bilingual SEO**: Proper hreflang tags and canonical URLs
+- **Multilingual SEO**: Proper hreflang tags and canonical URLs for 5 languages
 - **Meta Tags**: Comprehensive OpenGraph and Twitter Card support
 - **Sitemap**: Auto-generated with @astrojs/sitemap
 - **Performance**: Web Vitals tracking, critical CSS, font optimization
@@ -283,8 +338,9 @@ they'll automatically appear on the site.
    ---
    ```
 
-3. **Auto-translate** (Optional): Run
-   `node scripts/translate-blog.js src/content/blog/ja/your-post-name.md`
+3. **Auto-translate** (Optional):
+   - For all languages: `node scripts/translate-blog-all-languages.js src/content/blog/ja/your-post-name.md`
+   - For specific language: `node scripts/translate-blog-multi.js [lang] src/content/blog/ja/your-post-name.md`
 4. **Build & Deploy**: Run `npm run build` - the post automatically appears
 
 #### **Automatic Features**
@@ -296,7 +352,7 @@ they'll automatically appear on the site.
 - **✅ SEO Generation**: OGP images, meta tags, structured data
   auto-generated
 - **✅ Sitemap Integration**: New posts automatically added to sitemap
-- **✅ RSS Feed Updates**: Both Japanese and English RSS feeds auto-update
+- **✅ RSS Feed Updates**: All 5 language RSS feeds auto-update (ja, en, zh, ko, es)
 - **✅ Category Pages**: Posts automatically appear in category listings
 - **✅ Reading Time Calculation**: Dynamically calculated from content length
 
@@ -351,18 +407,22 @@ immutable headers.
   uncomment `image:` section when adding images
 - **Performance Goal**: Match or exceed Hiroshi Abe's website loading speed
   through aggressive optimization
-- **Bilingual Workflow**:
+- **Multilingual Workflow**:
 
   1. Write Japanese post in `/src/content/blog/ja/`
-  2. Auto-translate with `node scripts/translate-blog.js`
-  3. Review English translation for accuracy
+  2. Auto-translate to all languages with `node scripts/translate-blog-all-languages.js`
+  3. Review translations for accuracy (optional)
   4. Deploy with `npm run build`
 - **Environment Variables**: Store `GEMINI_API_KEY` securely for translation
   features
 - **Category System**: Use exact category names: `"ai"`, `"engineering"`,
   `"founder"`, `"lab"`
-- **URL Structure**: All posts become `/blog/post-name/` (Japanese) and
-  `/en/blog/post-name/` (English)
+- **URL Structure**: Posts are available in all languages:
+  - Japanese: `/blog/post-name/`
+  - English: `/en/blog/post-name/`
+  - Chinese: `/zh/blog/post-name/`
+  - Korean: `/ko/blog/post-name/`
+  - Spanish: `/es/blog/post-name/`
 
 ## Product & Service Names
 
