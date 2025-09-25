@@ -1,6 +1,6 @@
 # Cor.inc Corporate Website
 
-A corporate website with extreme loading speed optimization. Achieves loading speeds equal to or faster than Hiroshi Abe's homepage. Features an integrated AI-driven blog system with automated Japanese-English translation.
+A corporate website with extreme loading speed optimization. Achieves loading speeds equal to or faster than Hiroshi Abe's homepage. Features an integrated AI-driven blog system with automated Japanese to English, Chinese, Korean, and Spanish translation.
 
 ## 🚀 Demo
 
@@ -22,7 +22,7 @@ A corporate website with extreme loading speed optimization. Achieves loading sp
 - **Styling**: Tailwind CSS + @tailwindcss/typography
 - **Hosting**: Firebase Hosting
 - **Language**: TypeScript
-- **i18n**: Japanese/English support
+- **i18n**: 5 language support (Japanese, English, Chinese, Korean, Spanish)
 - **AI Translation**: Google Generative AI (Gemini 1.5 Flash)
 - **Content Management**: Astro Content Collections with Zod
 - **YouTube Integration**: YouTube Data API v3 for dynamic video content
@@ -30,7 +30,8 @@ A corporate website with extreme loading speed optimization. Achieves loading sp
 ## 🤖 New Feature: AI-Driven Blog System
 
 ### Automated Translation
-- **Japanese → English**: High-quality automated translation using Gemini API
+- **Japanese → 4 Languages**: High-quality automated translation to English, Chinese, Korean, and Spanish using Gemini API
+- **Simultaneous Translation**: Support for translating to all languages at once
 - **Batch Processing**: Support for bulk translation of all articles
 - **Metadata Preservation**: Complete preservation of frontmatter and markdown structure
 
@@ -44,10 +45,17 @@ A corporate website with extreme loading speed optimization. Achieves loading sp
 ### Translation Commands
 
 ```bash
-# Translate single article
+# Translate single article to all 4 languages
+node scripts/translate-blog-all-languages.js src/content/blog/ja/your-post.md
+
+# Translate single article to specific language
+node scripts/translate-blog-multi.js zh src/content/blog/ja/your-post.md
+# Language options: en (English), zh (Chinese), ko (Korean), es (Spanish)
+
+# Translate to English only (legacy)
 node scripts/translate-blog.js src/content/blog/ja/your-post.md
 
-# Bulk translate all articles
+# Bulk translate all articles to English (legacy)
 node scripts/translate-all-blog.js
 
 # Environment variable required
@@ -97,7 +105,7 @@ node scripts/translate-all-blog.js
 - **Structured Data**: Provide company information with JSON-LD (including company name variations)
 - **Meta Tag Optimization**: Open Graph, Twitter Card support
 - **Automatic Sitemap Generation**: Search engine optimization with @astrojs/sitemap
-- **Multilingual Support**: SEO optimization for both Japanese and English
+- **Multilingual Support**: SEO optimization for 5 languages (Japanese, English, Chinese, Korean, Spanish)
 - **Blog SEO**: Automatic OGP images, hreflang tags, breadcrumb lists
 
 ## 🛠️ Development Environment
@@ -115,9 +123,10 @@ npm run preview
 # Bundle analysis
 node bundle-analyzer.js
 
-# Blog translation
-node scripts/translate-blog.js src/content/blog/ja/your-post.md
-node scripts/translate-all-blog.js
+# Blog translation to all languages
+node scripts/translate-blog-all-languages.js src/content/blog/ja/your-post.md
+# Translation to specific language
+node scripts/translate-blog-multi.js zh src/content/blog/ja/your-post.md
 ```
 
 ### Environment Variable Configuration
@@ -142,8 +151,11 @@ src/
 │   └── youtube/     # YouTube API integration components
 ├── content/         # Content collections
 │   └── blog/
-│       ├── ja/      # Japanese blog posts
-│       └── en/      # English blog posts (auto-translated)
+│       ├── ja/      # Japanese blog posts (source)
+│       ├── en/      # English blog posts (auto-translated)
+│       ├── zh/      # Chinese blog posts (auto-translated)
+│       ├── ko/      # Korean blog posts (auto-translated)
+│       └── es/      # Spanish blog posts (auto-translated)
 ├── i18n/           # Internationalization files
 ├── layouts/        # Layout components
 ├── pages/          # Routing pages
@@ -151,16 +163,18 @@ src/
 └── types/          # TypeScript type definitions
 
 scripts/            # Automation scripts
-├── translate-blog.js      # Single article translation
-└── translate-all-blog.js  # Bulk article translation
+├── translate-blog-all-languages.js  # Single article to all 4 languages
+├── translate-blog-multi.js         # Single article to specified language
+├── translate-blog.js               # Single article to English (legacy)
+└── translate-all-blog.js          # Bulk articles to English (legacy)
 ```
 
 ## 📝 Blog Posting Workflow
 
 1. **Create Japanese Article**: Create Markdown file in `/src/content/blog/ja/`
 2. **Utilize Rich Content**: Use link cards, math equations, code highlighting
-3. **Run Auto-translation**: Generate English version with `node scripts/translate-blog.js`
-4. **Review Content**: Check and adjust translated English article
+3. **Run Auto-translation**: Generate all 4 language versions with `node scripts/translate-blog-all-languages.js`
+4. **Review Content**: Check and adjust translated articles in each language (optional)
 5. **Deploy**: Auto-deploy to Firebase Hosting
 
 ## ✨ Supported Markdown Features

@@ -1,6 +1,6 @@
 # Cor.inc Corporate Website
 
-高速化を極限まで追求したコーポレートサイト。阿部寛のホームページと同等かそれ以上の読み込み速度を実現。AI駆動のブログシステムを統合し、日英自動翻訳機能を提供。
+高速化を極限まで追求したコーポレートサイト。阿部寛のホームページと同等かそれ以上の読み込み速度を実現。AI駆動のブログシステムを統合し、日本語から英語・中国語・韓国語・スペイン語への自動翻訳機能を提供。
 
 ## 🚀 デモ
 
@@ -22,7 +22,7 @@
 - **Styling**: Tailwind CSS + @tailwindcss/typography
 - **Hosting**: Firebase Hosting
 - **Language**: TypeScript
-- **i18n**: 日本語/英語対応
+- **i18n**: 5言語対応（日本語、英語、中国語、韓国語、スペイン語）
 - **AI Translation**: Google Generative AI (Gemini 1.5 Flash)
 - **Content Management**: Astro Content Collections with Zod
 - **YouTube Integration**: YouTube Data API v3 for dynamic video content
@@ -30,7 +30,8 @@
 ## 🤖 新機能: AI駆動ブログシステム
 
 ### 自動翻訳機能
-- **日本語 → 英語**: Gemini APIを使用した高品質自動翻訳
+- **日本語 → 4言語**: Gemini APIで英語・中国語・韓国語・スペイン語への高品質自動翻訳
+- **一括翻訳**: 全言語への同時翻訳対応
 - **バッチ処理**: 全記事の一括翻訳対応
 - **メタデータ保持**: frontmatterとマークダウン構造を完全保持
 
@@ -44,10 +45,17 @@
 ### 翻訳コマンド
 
 ```bash
-# 単一記事の翻訳
+# 単一記事を全4言語に翻訳
+node scripts/translate-blog-all-languages.js src/content/blog/ja/your-post.md
+
+# 単一記事を特定言語に翻訳
+node scripts/translate-blog-multi.js zh src/content/blog/ja/your-post.md
+# 言語オプション: en (英語), zh (中国語), ko (韓国語), es (スペイン語)
+
+# 英語のみに翻訳（レガシー）
 node scripts/translate-blog.js src/content/blog/ja/your-post.md
 
-# 全記事の一括翻訳
+# 全記事を英語に一括翻訳（レガシー）
 node scripts/translate-all-blog.js
 
 # 環境変数設定が必要
@@ -97,7 +105,7 @@ node scripts/translate-all-blog.js
 - **構造化データ**: JSON-LDで企業情報を提供（会社名バリエーション含む）
 - **メタタグ最適化**: Open Graph、Twitter Card対応
 - **Sitemap自動生成**: @astrojs/sitemapで検索エンジン最適化
-- **多言語対応**: 日英両言語でSEO最適化
+- **多言語対応**: 5言語でSEO最適化（日本語、英語、中国語、韓国語、スペイン語）
 - **ブログSEO**: 自動OGP画像、hreflangタグ、パンくずリスト
 
 ## 🛠️ 開発環境
@@ -115,9 +123,10 @@ npm run preview
 # バンドル分析
 node bundle-analyzer.js
 
-# ブログ翻訳
-node scripts/translate-blog.js src/content/blog/ja/your-post.md
-node scripts/translate-all-blog.js
+# ブログ翻訶全言語翻訳
+node scripts/translate-blog-all-languages.js src/content/blog/ja/your-post.md
+# 特定言語への翻訳
+node scripts/translate-blog-multi.js zh src/content/blog/ja/your-post.md
 ```
 
 ### 環境変数設定
@@ -142,8 +151,11 @@ src/
 │   └── youtube/     # YouTube API統合コンポーネント
 ├── content/         # コンテンツコレクション
 │   └── blog/
-│       ├── ja/      # 日本語ブログ記事
-│       └── en/      # 英語ブログ記事（自動翻訳）
+│       ├── ja/      # 日本語ブログ記事（ソース）
+│       ├── en/      # 英語ブログ記事（自動翻訳）
+│       ├── zh/      # 中国語ブログ記事（自動翻訳）
+│       ├── ko/      # 韓国語ブログ記事（自動翻訳）
+│       └── es/      # スペイン語ブログ記事（自動翻訶）
 ├── i18n/           # 多言語対応ファイル
 ├── layouts/        # レイアウトコンポーネント
 ├── pages/          # ルーティングページ
@@ -151,16 +163,18 @@ src/
 └── types/          # TypeScript型定義
 
 scripts/            # 自動化スクリプト
-├── translate-blog.js      # 単一記事翻訳
-└── translate-all-blog.js  # 全記事一括翻訳
+├── translate-blog-all-languages.js  # 单一記事ₒ全4言語に翻訳
+├── translate-blog-multi.js         # 単一記事を指定言語に翻訳
+├── translate-blog.js               # 単一記事英語翻訳（レガシー）
+└── translate-all-blog.js          # 全記事英語一括翻訳（レガシー）
 ```
 
 ## 📝 ブログ投稿の流れ
 
 1. **日本語記事作成**: `/src/content/blog/ja/` に Markdown ファイルを作成
 2. **リッチコンテンツ活用**: リンクカード、数式、コードハイライトを活用
-3. **自動翻訳実行**: `node scripts/translate-blog.js` で英語版を自動生成
-4. **内容確認**: 翻訳された英語記事の内容を確認・調整
+3. **自動翻訳実行**: `node scripts/translate-blog-all-languages.js` で全4言語版を同時生成
+4. **内容確認**: 翻訳された各言語記事の内容を確認・調整（オプション）
 5. **デプロイ**: Firebase Hosting に自動デプロイ
 
 ## ✨ サポートされているマークダウン機能
