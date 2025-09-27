@@ -245,19 +245,19 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "初期費用（1枚目）", price: "3,000円" },
+              { item: "月額利用料金", price: "500円〜700円/月", note: "NFC名刺カード1枚サービス含む" },
               { item: "2枚目以降", price: "600円/枚" },
-              { item: "100枚以上一括注文時", price: "500円/枚(2枚目以降)" }
+              { item: "100枚以上一括注文時", price: "500円/枚" }
             ]
           },
           {
             name: "BoltSite",
             items: [
-              { item: "ビギナー", price: "15,000円/月" },
-              { item: "スタンダード", price: "25,000円/月" },
-              { item: "プレミアム", price: "30,000円/月" },
+              { item: "スタンダードプラン", price: "15,000円/月" },
+              { item: "プロフェッショナルプラン", price: "25,000円/月" },
               { item: "エンタープライズ", price: "50,000円〜/月" }
-            ]
+            ],
+            notes: ["パフォーマンス保証（3ヶ月）", "ビジネス成果保証（6ヶ月）", "年間契約プランあり（10%割引）"]
           },
           {
             name: "IoTRealm",
@@ -640,17 +640,17 @@ const translations = {
         {
           name: 'TapForge',
           description: 'Connect with just a tap -<br/>Next-gen business networking',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/en/',
         },
         {
           name: 'BoltSite',
           description: 'Ultra-fast 0.3s loading with<br/>perfect SEO scores',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/en/',
         },
         {
           name: 'IoTRealm',
           description: 'Bridging digital innovation<br/>with physical reality',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/en/',
         },
       ],
       pricing: {
@@ -659,19 +659,19 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "Initial cost (1st card)", price: "¥3,000" },
+              { item: "Monthly usage fee", price: "¥500-700/month", note: "1 NFC business card service included" },
               { item: "2nd card onwards", price: "¥600/card" },
-              { item: "100+ cards bulk order", price: "¥500/card (2nd onwards)" }
+              { item: "100+ cards bulk order", price: "¥500/card" }
             ]
           },
           {
             name: "BoltSite",
             items: [
-              { item: "Beginner", price: "¥15,000/month" },
-              { item: "Standard", price: "¥25,000/month" },
-              { item: "Premium", price: "¥30,000/month" },
+              { item: "Standard Plan", price: "¥15,000/month" },
+              { item: "Professional Plan", price: "¥25,000/month" },
               { item: "Enterprise", price: "¥50,000+/month" }
-            ]
+            ],
+            notes: ["Performance guarantee (3 months)", "Business results guarantee (6 months)", "Annual contract available (10% discount)"]
           },
           {
             name: "IoTRealm",
@@ -1038,17 +1038,17 @@ const translations = {
         {
           name: 'TapForge',
           description: '一键连接，<br/>下一代商务网络',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/zh/',
         },
         {
           name: 'BoltSite',
           description: '超快0.3秒加载<br/>完美SEO评分',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/zh/',
         },
         {
           name: 'IoTRealm',
           description: '数字创新<br/>与物理现实的桥梁',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/zh/',
         },
       ],
       pricing: {
@@ -1057,19 +1057,19 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "初期费用（第1张）", price: "¥3,000" },
+              { item: "月使用费", price: "¥500-700/月", note: "含1张NFC名片服务" },
               { item: "第2张起", price: "¥600/张" },
-              { item: "100张以上批量订购", price: "¥500/张（第2张起）" }
+              { item: "100张以上批量订购", price: "¥500/张" }
             ]
           },
           {
             name: "BoltSite",
             items: [
-              { item: "初学者", price: "¥15,000/月" },
-              { item: "标准版", price: "¥25,000/月" },
-              { item: "高级版", price: "¥30,000/月" },
+              { item: "标准计划", price: "¥15,000/月" },
+              { item: "专业计划", price: "¥25,000/月" },
               { item: "企业版", price: "¥50,000+/月" }
-            ]
+            ],
+            notes: ["性能保证（3个月）", "业务成果保证（6个月）", "可选年度合同（10%折扣）"]
           },
           {
             name: "IoTRealm",
@@ -1436,17 +1436,17 @@ const translations = {
         {
           name: 'TapForge',
           description: '한 번의 탭으로 연결되는<br/>차세대 비즈니스 네트워킹',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/ko/',
         },
         {
           name: 'BoltSite',
           description: '초고속 0.3초 로딩<br/>완벽한 SEO 점수',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/ko/',
         },
         {
           name: 'IoTRealm',
           description: '디지털 혁신과<br/>물리적 현실의 다리',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/ko/',
         },
       ],
       pricing: {
@@ -1455,19 +1455,19 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "초기 비용 (1장)", price: "¥3,000" },
+              { item: "월 사용료", price: "¥500-700/월", note: "NFC 명함 1장 서비스 포함" },
               { item: "2장부터", price: "¥600/장" },
-              { item: "100장 이상 일괄 주문", price: "¥500/장 (2장부터)" }
+              { item: "100장 이상 일괄 주문", price: "¥500/장" }
             ]
           },
           {
             name: "BoltSite",
             items: [
-              { item: "비기너", price: "¥15,000/월" },
-              { item: "스탠다드", price: "¥25,000/월" },
-              { item: "프리미엄", price: "¥30,000/월" },
+              { item: "스탠다드 플랜", price: "¥15,000/월" },
+              { item: "프로페셔널 플랜", price: "¥25,000/월" },
               { item: "엔터프라이즈", price: "¥50,000+/월" }
-            ]
+            ],
+            notes: ["성능 보장 (3개월)", "비즈니스 성과 보장 (6개월)", "연간 계약 가능 (10% 할인)"]
           },
           {
             name: "IoTRealm",
@@ -1834,17 +1834,17 @@ const translations = {
         {
           name: 'TapForge',
           description: 'Conecta con un solo toque -<br/>Redes de negocios de próxima generación',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/es/',
         },
         {
           name: 'BoltSite',
           description: 'Carga ultra rápida de 0.3s con<br/>puntuaciones SEO perfectas',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/es/',
         },
         {
           name: 'IoTRealm',
           description: 'Tendiendo puentes entre la innovación digital<br/>y la realidad física',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/es/',
         },
       ],
       pricing: {
@@ -1853,19 +1853,19 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "Costo inicial (1 tarjeta)", price: "¥3,000" },
+              { item: "Tarifa de uso mensual", price: "¥500-700/mes", note: "1 tarjeta de presentación NFC incluida" },
               { item: "Desde la 2da tarjeta", price: "¥600/tarjeta" },
-              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta (desde la 2da)" }
+              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta" }
             ]
           },
           {
             name: "BoltSite",
             items: [
-              { item: "Principiante", price: "¥15,000/mes" },
-              { item: "Estándar", price: "¥25,000/mes" },
-              { item: "Premium", price: "¥30,000/mes" },
+              { item: "Plan Estándar", price: "¥15,000/mes" },
+              { item: "Plan Profesional", price: "¥25,000/mes" },
               { item: "Empresarial", price: "¥50,000+/mes" }
-            ]
+            ],
+            notes: ["Garantía de rendimiento (3 meses)", "Garantía de resultados empresariales (6 meses)", "Contrato anual disponible (10% descuento)"]
           },
           {
             name: "IoTRealm",
