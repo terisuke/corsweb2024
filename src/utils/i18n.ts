@@ -640,17 +640,17 @@ const translations = {
         {
           name: 'TapForge',
           description: 'Connect with just a tap -<br/>Next-gen business networking',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/en/',
         },
         {
           name: 'BoltSite',
           description: 'Ultra-fast 0.3s loading with<br/>perfect SEO scores',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/en/',
         },
         {
           name: 'IoTRealm',
           description: 'Bridging digital innovation<br/>with physical reality',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/en/',
         },
       ],
       pricing: {
@@ -1038,17 +1038,17 @@ const translations = {
         {
           name: 'TapForge',
           description: '一键连接，<br/>下一代商务网络',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/zh/',
         },
         {
           name: 'BoltSite',
           description: '超快0.3秒加载<br/>完美SEO评分',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/zh/',
         },
         {
           name: 'IoTRealm',
           description: '数字创新<br/>与物理现实的桥梁',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/zh/',
         },
       ],
       pricing: {
@@ -1436,17 +1436,17 @@ const translations = {
         {
           name: 'TapForge',
           description: '한 번의 탭으로 연결되는<br/>차세대 비즈니스 네트워킹',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/ko/',
         },
         {
           name: 'BoltSite',
           description: '초고속 0.3초 로딩<br/>완벽한 SEO 점수',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/ko/',
         },
         {
           name: 'IoTRealm',
           description: '디지털 혁신과<br/>물리적 현실의 다리',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/ko/',
         },
       ],
       pricing: {
@@ -1834,17 +1834,17 @@ const translations = {
         {
           name: 'TapForge',
           description: 'Conecta con un solo toque -<br/>Redes de negocios de próxima generación',
-          demo: 'https://tapforge.pages.dev/',
+          demo: 'https://tapforge.pages.dev/es/',
         },
         {
           name: 'BoltSite',
           description: 'Carga ultra rápida de 0.3s con<br/>puntuaciones SEO perfectas',
-          demo: 'https://boltsite.pages.dev/',
+          demo: 'https://boltsite.pages.dev/es/',
         },
         {
           name: 'IoTRealm',
           description: 'Tendiendo puentes entre la innovación digital<br/>y la realidad física',
-          demo: 'https://iotrealm.pages.dev/',
+          demo: 'https://iotrealm.pages.dev/es/',
         },
       ],
       pricing: {
