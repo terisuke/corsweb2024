@@ -245,9 +245,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "月額利用料金", price: "500円〜700円/月", note: "NFC名刺カード1枚サービス含む" },
+              { item: "月額利用料金*", price: "500円〜700円/月" },
               { item: "2枚目以降", price: "600円/枚" },
-              { item: "100枚以上一括注文時", price: "500円/枚" }
+              { item: "100枚以上一括注文時", price: "500円/枚", note: "*NFC名刺カード1枚サービス含む" }
             ]
           },
           {
@@ -659,9 +659,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "Monthly usage fee", price: "¥500-700/month", note: "1 NFC business card service included" },
+              { item: "Monthly usage fee*", price: "¥500-700/month" },
               { item: "2nd card onwards", price: "¥600/card" },
-              { item: "100+ cards bulk order", price: "¥500/card" }
+              { item: "100+ cards bulk order", price: "¥500/card", note: "*1 NFC business card service included" }
             ]
           },
           {
@@ -1057,9 +1057,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "月使用费", price: "¥500-700/月", note: "含1张NFC名片服务" },
+              { item: "月使用费*", price: "¥500-700/月" },
               { item: "第2张起", price: "¥600/张" },
-              { item: "100张以上批量订购", price: "¥500/张" }
+              { item: "100张以上批量订购", price: "¥500/张", note: "*含1张NFC名片服务" }
             ]
           },
           {
@@ -1111,21 +1111,21 @@ const translations = {
       buttonTexts: {
         goTo: '前往'
       }
-    },
-    contactInfo: {
-      address: {
-        label: "邮寄地址",
-        value: "810-0001 福冈县 福冈市\n中央区天神2丁目3-10\n天神派恩克雷斯特719号"
       },
-      phone: {
-        label: "电话号码",
-        value: "070-8561-1659"
+      contactInfo: {
+        address: {
+          label: "邮寄地址",
+          value: "810-0001 福冈县 福冈市\n中央区天神2丁目3-10\n天神派恩克雷斯特719号"
+        },
+        phone: {
+          label: "电话号码",
+          value: "070-8561-1659"
+        },
+        chat: {
+          label: "邮箱",
+          value: "与AI Cloudia聊天"
+        }
       },
-      chat: {
-        label: "邮箱",
-        value: "与AI Cloudia聊天"
-      }
-    },
     valuesData: [
       [
         {
@@ -1219,7 +1219,7 @@ const translations = {
           "分析：为了更好地了解用户行为并改进我们的服务，我们分析汇总和匿名化的数据。"
         ]
       },
-      contact: {
+        contact: {
         title: "联系我们",
         description: "如果您对我们的隐私政策有任何疑问或疑虑，请通过我们的",
         linkText: "联系表单",
@@ -1455,9 +1455,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "월 사용료", price: "¥500-700/월", note: "NFC 명함 1장 서비스 포함" },
+              { item: "월 사용료*", price: "¥500-700/월" },
               { item: "2장부터", price: "¥600/장" },
-              { item: "100장 이상 일괄 주문", price: "¥500/장" }
+              { item: "100장 이상 일괄 주문", price: "¥500/장", note: "*NFC 명함 1장 서비스 포함" }
             ]
           },
           {
@@ -1509,19 +1509,19 @@ const translations = {
       buttonTexts: {
         goTo: '이동'
       }
-    },
-    contactInfo: {
-      address: {
-        label: "우편 주소",
-        value: "810-0001 후쿠오카현 후쿠오카시\n츄오구 텐진 2-3-10\n텐진 파인 크레스트 719호"
       },
-      phone: {
-        label: "전화번호",
-        value: "070-8561-1659"
-      },
-      chat: {
-        label: "이메일",
-        value: "AI Cloudia와 채팅"
+      contactInfo: {
+        address: {
+          label: "우편 주소",
+          value: "810-0001 후쿠오카현 후쿠오카시\n츄오구 텐진 2-3-10\n텐진 파인 크레스트 719호"
+        },
+        phone: {
+          label: "전화번호",
+          value: "070-8561-1659"
+        },
+        chat: {
+          label: "이메일",
+          value: "AI Cloudia와 채팅"
       }
     },
     valuesData: [
@@ -1853,9 +1853,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "Tarifa de uso mensual", price: "¥500-700/mes", note: "1 tarjeta de presentación NFC incluida" },
+              { item: "Tarifa de uso mensual*", price: "¥500-700/mes" },
               { item: "Desde la 2da tarjeta", price: "¥600/tarjeta" },
-              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta" }
+              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta", note: "*1 tarjeta de presentación NFC incluida" }
             ]
           },
           {
@@ -1907,19 +1907,19 @@ const translations = {
       buttonTexts: {
         goTo: 'Ir'
       }
-    },
-    contactInfo: {
-      address: {
-        label: "Dirección postal",
-        value: "810-0001 Prefectura de Fukuoka, Ciudad de Fukuoka\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
       },
-      phone: {
-        label: "Número de teléfono",
-        value: "070-8561-1659"
-      },
-      chat: {
-        label: "Correo electrónico",
-        value: "Chatea con AI Cloudia"
+      contactInfo: {
+        address: {
+          label: "Dirección postal",
+          value: "810-0001 Prefectura de Fukuoka, Ciudad de Fukuoka\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
+        },
+        phone: {
+          label: "Número de teléfono",
+          value: "070-8561-1659"
+        },
+        chat: {
+          label: "Correo electrónico",
+          value: "Chatea con AI Cloudia"
       }
     },
     valuesData: [
@@ -2015,7 +2015,7 @@ const translations = {
           "Análisis: Para entender mejor el comportamiento del usuario y mejorar nuestros servicios, analizamos datos agregados y anonimizados."
         ]
       },
-      contact: {
+        contact: {
         title: "Contáctanos",
         description: "Si tiene preguntas o inquietudes sobre nuestra política de privacidad, póngase en contacto con nosotros a través de nuestro",
         linkText: "formulario de contacto",
