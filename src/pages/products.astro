@@ -3,6 +3,7 @@ import Cta from '../components/products/Cta.astro';
 import Faq from '../components/products/Faq.astro';
 import Heading from '../components/products/Heading.astro';
 import ProductsTable from '../components/products/ProductsTable.astro';
+import ProductBackstory from '../components/products/ProductBackstory.astro';
 import Layout from '../layouts/Layout.astro';
 import { getCurrentLocale, getTranslations } from '../utils/i18n';
 
@@ -15,6 +16,7 @@ const t = getTranslations(currentLocale);
   title={t.meta.products.title}
 >
   <Heading />
+  <ProductBackstory />
   <ProductsTable />
   <Faq />
   <Cta />

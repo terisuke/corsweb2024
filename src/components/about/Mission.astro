@@ -28,9 +28,11 @@ const t = getTranslations(currentLocale);
             <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
               {t.mission.subtitle}
             </p>
-            <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
-              {t.mission.description}
-            </p>
+            {t.mission.paragraphs.map((paragraph) => (
+              <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg">
+                {paragraph}
+              </p>
+            ))}
           </div>
         </div>
 

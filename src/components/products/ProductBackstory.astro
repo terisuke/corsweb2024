@@ -1,0 +1,46 @@
+---
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col gap-12 lg:gap-16">
+      <!-- Header -->
+      <div class="text-center">
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{t.productBackstory.title}</h2>
+      </div>
+
+      <!-- Products -->
+      <div class="space-y-16">
+        {t.productBackstory.products.map((product) => (
+          <div class="flex flex-col gap-6">
+            <!-- Product Name & Subtitle -->
+            <div class="space-y-2">
+              <h3 class="text-2xl font-medium text-primary-600 dark:text-primary-400">
+                {product.name}
+              </h3>
+              <p class="text-xl font-medium text-primary-950 dark:text-primary-200">
+                {product.subtitle}
+              </p>
+            </div>
+
+            <!-- Story -->
+            <div class="prose prose-stone dark:prose-invert max-w-none">
+              <p class="text-base text-primary-950/70 dark:text-primary-200/70 sm:text-lg leading-relaxed">
+                {product.story}
+              </p>
+            </div>
+
+            <!-- Divider (except for last item) -->
+            {product !== t.productBackstory.products[t.productBackstory.products.length - 1] && (
+              <div class="h-px w-full bg-primary-900/10 dark:bg-primary-300/10"></div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
