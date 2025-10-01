@@ -69,15 +69,19 @@ const t = getTranslations(currentLocale);
                         <span class="text-primary-950/80 dark:text-primary-200/80">{item.item}</span>
                         <span class="font-medium text-primary-600 dark:text-primary-400">{item.price}</span>
                       </div>
-                      {item.note && (
-                        <div class="text-xs text-primary-950/60 dark:text-primary-200/60 mt-1 pl-2">
-                          {item.note}
-                        </div>
-                      )}
                     </div>
                   ))
                 }
               </div>
+              {service.items.some(item => item.note) && (
+                <div class="mt-4 space-y-1">
+                  {service.items.filter(item => item.note).map((item) => (
+                    <div class="text-sm text-primary-950/60 dark:text-primary-200/60">
+                      {item.note}
+                    </div>
+                  ))}
+                </div>
+              )}
               {service.notes && service.notes.length > 0 && (
                 <div class="mt-2 space-y-1">
                   {service.notes.map((note) => (

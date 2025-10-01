@@ -4,8 +4,8 @@ const translations = {
   ja: {
     nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
     hero: {
-      title: "Swifter than any, to the horizon beyond.",
-      subtitle: "言葉・文化の壁を AI で乗り越え、人と人が真に理解し合える社会を実現します。",
+      title: "言葉を超えて、想いを届ける。",
+      subtitle: "かつてトランペットで伝えた感動を、今はコードで。元音楽家が追求する「誤解のないコミュニケーション」の実現。",
       cta: "実績とプロダクトを見る"
     },
     services: {
@@ -27,13 +27,52 @@ const translations = {
     },
     mission: {
       title: "Our mission",
-      subtitle: "誤解のないコミュニケーションを AI で実現し、誰もが自分の価値を発揮できる世界をつくる。",
-      description: "Cor.inc は、ITを通じて「幸せ」を追求する世界一の企業として、コミュニケーションの課題を解決し、ユーザー間の共感と共通理解を促進するシステムや仕組みを開発しています。私たちの使命は、日々進化するテクノロジーを活用して、関わる全ての人々が自らの価値を明確に自覚し、真の幸せを追求し達成できるように支援することです。私たちは、すべてのステークホルダーがより幸せな社会を目指して協働し、技術力を駆使して共に真の幸せを共創する未来を創造していきます。",
+      subtitle: "かつてトランペットで追い求めた「言葉を超えた伝達」を、今はテクノロジーで。",
+      paragraphs: [
+        "創業者自身がASDという特性を持ち、「伝わらない」苦しみを知っています。",
+        "だからこそ、誤解のないコミュニケーション実現に本気です。",
+        "名刺交換で、ホームページで、AIを介した対話で。日常の小さな瞬間に「ああ、伝わった」という感動を。",
+        "それが積み重なれば、誰もが自分の価値を正しく伝え、理解される社会になる。",
+        "私たちは、テクノロジーを使って、人と人の間にある「言葉の壁」を取り払い、誰もが自分らしく輝ける世界を創ります。"
+      ],
       stats: [
         { name: "設立から", value: "2年" },
         { name: "使える言語", value: "10" },
         { name: "プロジェクト", value: "15" },
         { name: "提供サービス", value: "App Develop & IT/AI Strategy" }
+      ]
+    },
+    founderStory: {
+      title: "代表の想い",
+      subtitle: "なぜ元音楽家が、音楽関連ではない事業を?",
+      paragraphs: [
+        "小さい頃から「空気の読めない子供」でした。ASDという特性を持ち、他者との壁を常に感じながら生きてきました。",
+        "高校2年生の冬、2000人のホールでトランペットソロを吹いた時、初めて「言葉を超えたコミュニケーション」の感動を味わいました。会場の全ての意識が集中し、言葉など必要ない一体感に魂を震わせました。",
+        "しかし音楽業界で、その感動を二度と味わえませんでした。コネ、立場、腹の探り合い。表現は「仕事」に成り下がり、私は心を病みました。",
+        "コロナ禍で音楽の道を離れ、リクルートで営業を経験。そこで「既存ツールの限界」と「言葉が届かないもどかしさ」に直面しました。",
+        "そしてテクノロジーと出会いました。コードは裏切らない。AIは感情的にならない。何より、作ったものが誰かの課題を解決し、実際に生活を豊かにする様子を目の当たりにできる。",
+        "あの高校時代の感動を、今度は日常に。名刺交換で、ホームページで、AIを介したコミュニケーションで。「ああ、伝わった」という小さな感動を積み重ねていく。",
+        "それが、Cor.incの原点です。"
+      ]
+    },
+    productBackstory: {
+      title: "なぜこのサービスなのか",
+      products: [
+        {
+          name: "TapForge",
+          subtitle: "「出会い」から始まるコミュニケーション革新",
+          story: "リクルートで営業をしていた時、名刺交換後に名刺が山のように溜まり、誰が誰だかわからなくなる状況を何度も経験しました。名刺交換という「儀式」は、本来「これから関係を築きましょう」という意思表示のはずが、実際には「一応連絡先を交換しました」という形式的な記録にしかなっていない。ここに大きなミスコミュニケーションを感じていました。TapForgeは、名刺交換を「本当の出会い」に変えるためのプロダクトです。タップ一つで相手のプロフィール、SNS、ポートフォリオ、予約カレンダーなど、あらゆる情報に瞬時にアクセスできる。「私はこういう仕事をしています」と口頭で説明する代わりに、タップ一つで自分の全てを視覚的に、直感的に伝えられる。これが、「言葉を超えたコミュニケーション」の第一歩です。"
+        },
+        {
+          name: "BoltSite",
+          subtitle: "企業の「想い」を形にする",
+          story: "リクルートで営業をしていた時、多くの企業のホームページを見ましたが、その企業の「想い」や「情熱」が全く伝わってこないものばかりでした。経営者は熱い想いを持っている。自社の製品やサービスに誇りを持っている。でも、それがホームページに全く反映されていない。既存のツールの枠の中でしか表現できないからです。BoltSiteは、Astroというフレームワークを使った超高速なホームページ制作サービスですが、私が本当に大切にしているのは「その企業らしさ」を引き出すことです。ホームページ制作の打ち合わせでは、ひたすら経営者の話を聞きます。「なぜこの事業を始めたのか」「どんな想いで製品を作っているのか」。そして、その言葉の裏にある、言葉にならない想いを読み取り、デザインとコピーに落とし込む。結果として出来上がるのは、単なる「企業情報サイト」ではなく、その企業の「人格」が感じられるホームページです。"
+        },
+        {
+          name: "IoTRealm",
+          subtitle: "想いを形にする受託開発",
+          story: "名刺とホームページで信頼関係を築いた後、多くの経営者が「実は、こういうことができたらいいなって思ってるんだけど...」と語ります。それは時に曖昧で、時に壮大で、時に技術的に可能なのかすらわからないアイデアです。でも、その奥には確実に「こうなったら嬉しい」という純粋な想いがある。IoTRealmは、そんな「想い」を形にするための受託開発サービスです。例えば、ある不動産・建設系スタートアップの代表は、「AIに敷地図を渡すだけで自動的に間取りを生成するプロダクト」を提案し、優勝しましたが、技術的な実現方法が分からず困っていました。私は2週間でプロトタイプを作成。YOLOという画像認識AIを使って敷地図から建設可能地を自動判定し、簡易的な間取り図を生成するアプリです。これもまた、「言葉を超えたコミュニケーション」です。複雑な法規制や計算を、視覚的なデータに変換することで、専門家と素人の間の知識の壁を取り払い、誤解なく情報を共有できます。"
+        }
       ]
     },
     contact: {
@@ -245,9 +284,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "月額利用料金", price: "500円〜700円/月", note: "NFC名刺カード1枚サービス含む" },
+              { item: "月額利用料金*", price: "500円〜700円/月" },
               { item: "2枚目以降", price: "600円/枚" },
-              { item: "100枚以上一括注文時", price: "500円/枚" }
+              { item: "100枚以上一括注文時", price: "500円/枚", note: "*NFC名刺カード1枚サービス含む" }
             ]
           },
           {
@@ -357,7 +396,7 @@ const translations = {
         job: 'CEO',
         description: '音大卒 → 楽器メーカー営業 → メガベンチャーで法人営業 → IT へ転身という異色の経歴を活かし、"技術と言葉の橋渡し" に挑戦しています。',
         comingSoon: false,
-        link: 'https://lit.link/terisuke',
+        link: 'https://www.tapforge.org/p/company',
       },
       {
         name: 'Cloudia Sorano',
@@ -418,8 +457,8 @@ const translations = {
   en: {
     nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
     hero: {
-      title: "Swifter than any, to the horizon beyond.",
-      subtitle: "Breaking down language and cultural barriers with AI to create a society where people truly understand each other.",
+      title: "Beyond Words, Delivering Feelings.",
+      subtitle: "Once expressed through trumpet, now through code. A former musician's pursuit of 'communication beyond words.'",
       cta: "View Our Work & Products"
     },
     services: {
@@ -441,13 +480,52 @@ const translations = {
     },
     mission: {
       title: "Our mission",
-      subtitle: "Realizing miscommunication-free communication through AI, creating a world where everyone can demonstrate their value.",
-      description: "As the world's leading company pursuing 'happiness' through IT, Cor.inc develops systems and mechanisms that solve communication challenges and promote empathy and mutual understanding among users. Our mission is to support all involved parties in clearly recognizing their own value and pursuing and achieving true happiness by utilizing ever-evolving technology. We create a future where all stakeholders collaborate toward a happier society and co-create true happiness together using our technical capabilities.",
+      subtitle: "What I once pursued with the trumpet - communication beyond words - now through technology.",
+      paragraphs: [
+        "Our founder has ASD and knows the pain of 'not being understood.'",
+        "That's why we're serious about realizing miscommunication-free communication.",
+        "Through business card exchanges, websites, and AI-mediated conversations. Small moments of 'ah, it got through' in daily life.",
+        "When these accumulate, everyone can properly convey and be understood for their value.",
+        "We use technology to remove the 'word barriers' between people, creating a world where everyone can shine as themselves."
+      ],
       stats: [
         { name: "Since Founded", value: "2 years" },
         { name: "Languages", value: "10" },
         { name: "Projects", value: "15" },
         { name: "Services", value: "App Develop & IT/AI Strategy" }
+      ]
+    },
+    founderStory: {
+      title: "Founder's Story",
+      subtitle: "Why does a former musician run a non-music business?",
+      paragraphs: [
+        "Since childhood, I was 'the kid who couldn't read the room.' With ASD, I've always felt a wall between myself and others.",
+        "In my second year of high school, playing a trumpet solo in a hall filled with 2,000 people, I first experienced the emotion of 'communication beyond words.' Every consciousness in the venue focused on me, and my soul trembled with a sense of unity that needed no words.",
+        "But in the music industry, I never felt that emotion again. Connections, hierarchy, reading between the lines. Expression degraded into mere 'work,' and I became ill.",
+        "During the pandemic, I left music and worked in sales at Recruit. There, I faced 'the limitations of existing tools' and 'the frustration of words not reaching people.'",
+        "Then I discovered technology. Code doesn't betray. AI doesn't get emotional. Most importantly, I could witness how what I created solved someone's problems and enriched their lives.",
+        "That emotion from high school, now in daily life. In business card exchanges, on websites, through AI-mediated communication. Accumulating small moments of 'ah, it got through.'",
+        "That is the origin of Cor.inc."
+      ]
+    },
+    productBackstory: {
+      title: "Why These Services?",
+      products: [
+        {
+          name: "TapForge",
+          subtitle: "Communication Revolution Starting from 'Meeting'",
+          story: "During my time as a salesperson at Recruit, I repeatedly experienced situations where business cards would pile up after exchanges, making it impossible to remember who was who. The 'ritual' of exchanging business cards should be a declaration of intent to 'build a relationship,' but in reality, it only becomes a formal record of 'we exchanged contact information.' I felt a significant miscommunication here. TapForge is a product designed to transform business card exchanges into 'real encounters.' With just one tap, you can instantly access all information—profiles, SNS, portfolios, appointment calendars. Instead of verbally explaining 'This is what I do,' you can convey everything about yourself visually and intuitively with a single tap. This is the first step toward 'communication beyond words.'"
+        },
+        {
+          name: "BoltSite",
+          subtitle: "Shaping Companies' 'Feelings'",
+          story: "When I was in sales at Recruit, I saw many company websites, but most failed to convey the 'feelings' or 'passion' of those companies. Business owners have passionate thoughts. They take pride in their products and services. But this is not reflected on their websites at all—because they can only express within the framework of existing tools. BoltSite is an ultra-fast website creation service using the Astro framework, but what I truly value is bringing out 'that company's essence.' In website creation meetings, I listen intently to business owners. 'Why did you start this business?' 'What feelings do you have when creating products?' Then, I interpret the unspoken feelings behind those words and translate them into design and copy. The result is not just a 'corporate information site' but a website where you can feel that company's 'personality.'"
+        },
+        {
+          name: "IoTRealm",
+          subtitle: "Contract Development to Shape Feelings",
+          story: "After building trust through business cards and websites, many business owners say, 'Actually, I've been thinking it would be nice if we could do this...' Sometimes it's vague, sometimes grandiose, sometimes unclear if it's even technically possible. But behind it, there's definitely a pure desire: 'It would be great if this happened.' IoTRealm is a contract development service to shape such 'feelings.' For example, a real estate and construction startup representative proposed 'a product that automatically generates floor plans just by giving AI a site map,' won an award, but was struggling because they didn't know how to technically realize it. I created a prototype in two weeks—an app that uses YOLO image recognition AI to automatically determine buildable areas from site maps and generate simple floor plans. This is also 'communication beyond words.' By converting complex regulations and calculations into visual data, we can break down the knowledge barrier between experts and laypeople and share information without misunderstanding."
+        }
       ]
     },
     contact: {
@@ -659,9 +737,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "Monthly usage fee", price: "¥500-700/month", note: "1 NFC business card service included" },
+              { item: "Monthly usage fee*", price: "¥500-700/month" },
               { item: "2nd card onwards", price: "¥600/card" },
-              { item: "100+ cards bulk order", price: "¥500/card" }
+              { item: "100+ cards bulk order", price: "¥500/card", note: "*1 NFC business card service included" }
             ]
           },
           {
@@ -771,7 +849,7 @@ const translations = {
         job: 'CEO',
         description: 'Music college graduate → Musical instrument manufacturer sales → Corporate sales at mega-venture → Career change to IT. Leveraging this unique background to challenge "bridging technology and language."',
         comingSoon: false,
-        link: 'https://lit.link/terisuke',
+        link: 'https://www.tapforge.org/p/company',
       },
       {
         name: 'Cloudia Sorano',
@@ -855,13 +933,52 @@ const translations = {
     },
     mission: {
       title: "我们的使命",
-      subtitle: "通过AI实现无误解的沟通，创造每个人都能发挥自己价值的世界。",
-      description: "Cor.inc作为通过IT追求\"幸福\"的世界一流企业，开发解决沟通问题、促进用户间共鸣和共同理解的系统和机制。我们的使命是运用日新月异的技术，支持所有相关人员明确认识自身价值，追求并实现真正的幸福。我们致力于让所有利益相关者为了更幸福的社会而协作，运用技术力量共同创造真正的幸福未来。",
+      subtitle: "曾经用小号追求的「超越语言的传达」,现在用技术实现。",
+      paragraphs: [
+        "创始人自身具有ASD特质,深知「无法传达」的痛苦。",
+        "正因如此,我们认真致力于实现无误解的沟通。",
+        "在名片交换中、在网站上、在AI辅助的对话中。日常小小的瞬间产生「啊,传达到了」的感动。",
+        "积累起来,就能形成每个人都能正确传达自己的价值、被他人理解的社会。",
+        "我们使用技术消除人与人之间的「语言障碍」,创造每个人都能展现自我光彩的世界。"
+      ],
       stats: [
         { name: "成立以来", value: "2年" },
         { name: "可用语言", value: "10" },
         { name: "项目", value: "15" },
         { name: "提供服务", value: "应用开发 & IT/AI战略" }
+      ]
+    },
+    founderStory: {
+      title: "创始人的故事",
+      subtitle: "为什么前音乐家经营非音乐业务？",
+      paragraphs: [
+        "从小我就是那个'不会察言观色的孩子'。我患有ASD，一直感觉自己和他人之间有一堵墙。",
+        "高中二年级的冬天，在容纳2000人的音乐厅里演奏小号独奏时，我第一次体验到了'超越语言的沟通'的感动。整个会场的意识都集中在我身上，那种不需要言语的一体感让我的灵魂为之震颤。",
+        "但在音乐界，我再也没有感受到那种感动。人脉、地位、揣摩心意。表达沦为了'工作'，我病倒了。",
+        "疫情期间，我离开了音乐，在Recruit做销售。在那里，我面对了'现有工具的局限性'和'言语无法传达的焦虑'。",
+        "然后我发现了技术。代码不会背叛。AI不会情绪化。最重要的是，我能亲眼看到我创造的东西如何解决别人的问题，如何丰富他们的生活。",
+        "将高中时代的那种感动，融入日常生活。在交换名片时，在网站上，通过AI中介的沟通。积累'啊，传达到了'的小小感动。",
+        "这就是Cor.inc的起源。"
+      ]
+    },
+    productBackstory: {
+      title: "为什么是这些服务？",
+      products: [
+        {
+          name: "TapForge",
+          subtitle: "从'相遇'开始的沟通革命",
+          story: "在Recruit做销售时，我多次经历名片交换后名片堆积如山，不知道谁是谁的情况。名片交换这个'仪式'本应是'让我们建立关系'的意向表达，但实际上只成为了'我们交换了联系方式'的形式记录。我在这里感受到了巨大的误解。TapForge是一个旨在将名片交换转变为'真正相遇'的产品。只需一次点击，您就可以立即访问所有信息——个人资料、社交媒体、作品集、预约日历。不用口头解释'我做这个工作'，只需一次点击就能视觉化、直观地传达您的一切。这是迈向'超越语言的沟通'的第一步。"
+        },
+        {
+          name: "BoltSite",
+          subtitle: "塑造企业的'情感'",
+          story: "在Recruit做销售时，我看到了许多公司网站，但大多数都无法传达这些公司的'情感'或'热情'。企业主有热情的想法。他们为自己的产品和服务感到自豪。但这完全没有反映在他们的网站上——因为他们只能在现有工具的框架内表达。BoltSite是使用Astro框架的超高速网站创建服务，但我真正重视的是展现'那个公司的本质'。在网站创建会议中，我专注地倾听企业主的想法。'您为什么创办这项业务？''您在制造产品时有什么感受？'然后，我解读这些话语背后未说出口的感受，并将它们转化为设计和文案。结果不仅仅是'企业信息网站'，而是一个能让您感受到那个公司'个性'的网站。"
+        },
+        {
+          name: "IoTRealm",
+          subtitle: "塑造情感的承包开发",
+          story: "通过名片和网站建立信任后，许多企业主会说：'实际上，我一直在想如果能做到这个就好了...'有时模糊，有时宏大，有时甚至不清楚技术上是否可行。但背后肯定有一个纯粹的愿望：'如果能实现这个就太好了'。IoTRealm是一个承包开发服务，旨在塑造这些'情感'。例如，一家房地产和建筑初创公司的代表提出了'只需给AI一个场地图就能自动生成平面图的产品'，并获得了奖项，但由于不知道如何在技术上实现而苦恼。我在两周内创建了一个原型——使用YOLO图像识别AI从场地图自动判断可建筑区域并生成简单平面图的应用程序。这也是'超越语言的沟通'。通过将复杂的法规和计算转换为视觉数据，我们可以打破专家和外行之间的知识壁垒，无误地分享信息。"
+        }
       ]
     },
     contact: {
@@ -981,8 +1098,24 @@ const translations = {
           answer: "定价根据客户需求而有所不同，因此我们将在初次会议后向您发送报价。与同行业类似项目相比，我们通常以约15%更低的成本提供提案。付款方式包括银行转账、Paypal等。请在初次会议时告知我们的工作人员您首选的付款方式。"
         },
         {
-          question: "你们提供哪些服务？",
-          answer: "我们提供Web应用开发、移动应用开发、AI产品开发、数据分析、IT战略咨询等服务。我们还提供定制解决方案，根据您的具体需求量身定制。"
+          question: "使用JavaScript、TypeScript、Python、Go等语言有什么好处？",
+          answer: "JavaScript于1995年在Netscape诞生，已成为Web开发的基础。TypeScript作为其超集，添加了静态类型，提高了大型项目的可维护性。Python是1991年开发的通用语言，以简单易读的语法著称。它涵盖AI/机器学习、数据分析和Web开发，拥有丰富的库，开发效率极高。Go（Golang）是Google于2009年开发的轻量级、高速语言，具有简单的语法和并发处理（goroutines）。它非常适合云原生应用程序和微服务，编译速度快，内存效率高，是可扩展服务器开发的理想选择。"
+        },
+        {
+          question: "使用Firebase、Supabase等BaaS以及云服务有什么优势？",
+          answer: "BaaS（Backend as a Service）提供身份验证、数据库、存储和推送通知等后端功能。Firebase是Google的服务，具有实时数据库和丰富的功能。Supabase是开源的Firebase替代品，提供基于PostgreSQL的实时功能和RESTful API。云服务通常提供灵活性，可以根据需要扩展资源，同时保持较低的初始投资。AWS、Google Cloud和Azure等主要提供商提供高可用性、自动备份和安全功能。全球CDN、负载均衡和监控工具提高了性能和可靠性，同时显著减少了运营开销。主要优势包括缩短开发时间、降低运营成本和确保可扩展性。"
+        },
+        {
+          question: "根据需求可以定制任务到什么程度？如果需要更改，如何处理？",
+          answer: "我们会听取每个项目的需求并创建定制解决方案，因此定制几乎是无限的。但是，为了加快交付并避免关键系统错误，我们通常不接受生产过程中需求的更改。请在会议前充分总结您的需求。"
+        },
+        {
+          question: "开发后如何进行维护和支持？是否有额外费用？",
+          answer: "由于我们的主要业务是开发，除了重大定制外，我们不提供维护或支持。开发完成后，我们可以介绍我们专门从事维护和支持的合作伙伴公司。请与我们咨询有关费用的问题。"
+        },
+        {
+          question: "如何确保数据安全和隐私？",
+          answer: "为确保数据安全和隐私，我们使用先进的加密技术，并最大限度地利用Firebase和SupaBase等BaaS的安全功能。对于访问控制，我们为每个客户设置专用账户，并以最低必要权限进行管理。我们严格遵守数据保护政策，并进行定期安全审计，在整个开发、交付和维护过程中保护您的数据。"
         }
       ]
     },
@@ -1057,9 +1190,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "月使用费", price: "¥500-700/月", note: "含1张NFC名片服务" },
+              { item: "月使用费*", price: "¥500-700/月" },
               { item: "第2张起", price: "¥600/张" },
-              { item: "100张以上批量订购", price: "¥500/张" }
+              { item: "100张以上批量订购", price: "¥500/张", note: "*含1张NFC名片服务" }
             ]
           },
           {
@@ -1111,21 +1244,21 @@ const translations = {
       buttonTexts: {
         goTo: '前往'
       }
-    },
-    contactInfo: {
-      address: {
-        label: "邮寄地址",
-        value: "810-0001 福冈县 福冈市\n中央区天神2丁目3-10\n天神派恩克雷斯特719号"
       },
-      phone: {
-        label: "电话号码",
-        value: "070-8561-1659"
+      contactInfo: {
+        address: {
+          label: "邮寄地址",
+          value: "810-0001 福冈县 福冈市\n中央区天神2丁目3-10\n天神派恩克雷斯特719号"
+        },
+        phone: {
+          label: "电话号码",
+          value: "070-8561-1659"
+        },
+        chat: {
+          label: "邮箱",
+          value: "与AI Cloudia聊天"
+        }
       },
-      chat: {
-        label: "邮箱",
-        value: "与AI Cloudia聊天"
-      }
-    },
     valuesData: [
       [
         {
@@ -1169,7 +1302,7 @@ const translations = {
         job: 'CEO',
         description: '音乐学院毕业 → 乐器制造商销售 → 大型风险投资企业销售 → 转行IT。利用这一独特背景挑战"技术与语言的桥梁"。',
         comingSoon: false,
-        link: 'https://lit.link/terisuke',
+        link: 'https://www.tapforge.org/p/company',
       },
       {
         name: 'Cloudia Sorano',
@@ -1219,7 +1352,7 @@ const translations = {
           "分析：为了更好地了解用户行为并改进我们的服务，我们分析汇总和匿名化的数据。"
         ]
       },
-      contact: {
+        contact: {
         title: "联系我们",
         description: "如果您对我们的隐私政策有任何疑问或疑虑，请通过我们的",
         linkText: "联系表单",
@@ -1253,13 +1386,52 @@ const translations = {
     },
     mission: {
       title: "우리의 미션",
-      subtitle: "AI로 오해 없는 소통을 실현하고, 모든 사람이 자신의 가치를 발휘할 수 있는 세상을 만든다.",
-      description: "Cor.inc는 IT를 통해 '행복'을 추구하는 세계 최고의 기업으로서, 소통의 과제를 해결하고 사용자 간의 공감과 공통 이해를 촉진하는 시스템과 메커니즘을 개발하고 있습니다. 우리의 사명은 매일 진화하는 기술을 활용하여 관련된 모든 사람들이 자신의 가치를 명확히 인식하고 진정한 행복을 추구하고 달성할 수 있도록 지원하는 것입니다. 우리는 모든 이해관계자가 더 행복한 사회를 목표로 협력하고, 기술력을 활용하여 함께 진정한 행복을 공동창조하는 미래를 창조해 나갑니다.",
+      subtitle: "한때 트럼펫으로 추구했던 '말을 넘어선 전달'을, 지금은 기술로.",
+      paragraphs: [
+        "창업자 자신이 ASD라는 특성을 가지고 있어, '전달되지 않는' 고통을 알고 있습니다.",
+        "그렇기 때문에 오해 없는 소통 실현에 진심입니다.",
+        "명함 교환에서, 홈페이지에서, AI를 통한 대화에서. 일상의 작은 순간에 '아, 전달됐구나'라는 감동을.",
+        "그것이 쌓이면, 누구나 자신의 가치를 제대로 전달하고 이해받는 사회가 됩니다.",
+        "우리는 기술을 사용하여 사람과 사람 사이의 '언어의 벽'을 없애고, 누구나 자신답게 빛날 수 있는 세상을 만듭니다."
+      ],
       stats: [
         { name: "설립부터", value: "2년" },
         { name: "사용 가능한 언어", value: "10" },
         { name: "프로젝트", value: "15" },
         { name: "제공 서비스", value: "앱 개발 & IT/AI 전략" }
+      ]
+    },
+    founderStory: {
+      title: "창립자의 이야기",
+      subtitle: "왜 전직 음악가가 음악과 무관한 사업을?",
+      paragraphs: [
+        "어릴 때부터 '눈치 없는 아이'였습니다. ASD라는 특성을 가지고 있어, 항상 타인과의 벽을 느끼며 살아왔습니다.",
+        "고등학교 2학년 겨울, 2000명이 들어가는 홀에서 트럼펫 솔로를 연주했을 때, 처음으로 '언어를 넘어선 소통'의 감동을 맛보았습니다. 회장의 모든 의식이 집중되고, 말이 필요 없는 일체감에 영혼이 떨렸습니다.",
+        "하지만 음악 업계에서, 그 감동을 다시 맛볼 수 없었습니다. 인맥, 지위, 속마음 탐색. 표현은 '일'로 전락했고, 저는 마음의 병을 얻었습니다.",
+        "코로나 시기에 음악의 길을 떠나 Recruit에서 영업을 경험했습니다. 거기서 '기존 도구의 한계'와 '말이 전달되지 않는 답답함'에 직면했습니다.",
+        "그리고 기술을 만났습니다. 코드는 배신하지 않습니다. AI는 감정적이지 않습니다. 무엇보다 제가 만든 것이 누군가의 문제를 해결하고 실제로 삶을 풍요롭게 하는 모습을 목격할 수 있습니다.",
+        "그 고등학교 시절의 감동을, 이제는 일상에서. 명함 교환에서, 홈페이지에서, AI를 통한 소통에서. '아, 전달되었다'는 작은 감동을 쌓아가는 것.",
+        "그것이 Cor.inc의 원점입니다."
+      ]
+    },
+    productBackstory: {
+      title: "왜 이 서비스들인가?",
+      products: [
+        {
+          name: "TapForge",
+          subtitle: "'만남'에서 시작되는 소통 혁신",
+          story: "Recruit에서 영업을 하던 시절, 명함 교환 후 명함이 산처럼 쌓여 누가 누구인지 알 수 없게 되는 상황을 여러 번 경험했습니다. 명함 교환이라는 '의식'은 본래 '앞으로 관계를 쌓아가자'는 의사 표시여야 하는데, 실제로는 '일단 연락처를 교환했습니다'라는 형식적인 기록에 불과했습니다. 여기에서 큰 미스커뮤니케이션을 느꼈습니다. TapForge는 명함 교환을 '진정한 만남'으로 바꾸기 위한 제품입니다. 한 번의 탭으로 프로필, SNS, 포트폴리오, 예약 캘린더 등 모든 정보에 즉시 접근할 수 있습니다. '저는 이런 일을 합니다'라고 구두로 설명하는 대신, 한 번의 탭으로 자신의 모든 것을 시각적으로, 직관적으로 전달할 수 있습니다. 이것이 '언어를 넘어선 소통'의 첫 번째 단계입니다."
+        },
+        {
+          name: "BoltSite",
+          subtitle: "기업의 '마음'을 형상화",
+          story: "Recruit에서 영업을 할 때 많은 기업 웹사이트를 봤지만, 대부분 그 기업의 '마음'이나 '열정'이 전혀 전달되지 않았습니다. 경영자는 열정적인 생각을 가지고 있습니다. 자사 제품과 서비스에 자부심을 가지고 있습니다. 하지만 그것이 웹사이트에 전혀 반영되지 않습니다—기존 도구의 틀 안에서만 표현할 수 있기 때문입니다. BoltSite는 Astro 프레임워크를 사용한 초고속 웹사이트 제작 서비스이지만, 제가 진정으로 중요하게 여기는 것은 '그 기업다움'을 끌어내는 것입니다. 웹사이트 제작 미팅에서는 경영자의 이야기를 끊임없이 듣습니다. '왜 이 사업을 시작했나요?' '제품을 만들 때 어떤 마음이었나요?' 그리고 그 말 뒤에 있는, 말로 표현되지 않은 마음을 읽어내어 디자인과 카피에 담아냅니다. 그 결과 만들어지는 것은 단순한 '기업 정보 사이트'가 아니라, 그 기업의 '인격'이 느껴지는 웹사이트입니다."
+        },
+        {
+          name: "IoTRealm",
+          subtitle: "마음을 형상화하는 수탁 개발",
+          story: "명함과 웹사이트로 신뢰 관계를 구축한 후, 많은 경영자들이 '사실은 이런 걸 할 수 있으면 좋겠다고 생각하고 있는데...'라고 말합니다. 때로는 모호하고, 때로는 거대하며, 때로는 기술적으로 가능한지조차 불분명한 아이디어입니다. 하지만 그 뒤에는 확실히 '이렇게 되면 좋겠다'는 순수한 마음이 있습니다. IoTRealm은 그런 '마음'을 형상화하기 위한 수탁 개발 서비스입니다. 예를 들어, 한 부동산·건설 스타트업 대표가 'AI에 부지 지도를 넘기기만 하면 자동으로 평면도를 생성하는 제품'을 제안해 우승했지만, 기술적으로 어떻게 실현할지 몰라 고민하고 있었습니다. 저는 2주 만에 프로토타입을 만들었습니다—YOLO 이미지 인식 AI를 사용해 부지 지도에서 건축 가능 지역을 자동 판정하고 간단한 평면도를 생성하는 앱입니다. 이것 역시 '언어를 넘어선 소통'입니다. 복잡한 법 규제와 계산을 시각적 데이터로 변환함으로써 전문가와 비전문가 사이의 지식 장벽을 허물고 오해 없이 정보를 공유할 수 있습니다."
+        }
       ]
     },
     contact: {
@@ -1379,8 +1551,24 @@ const translations = {
           answer: "가격은 클라이언트의 요구사항에 따라 달라지므로 초기 미팅 후 견적을 보내드립니다. 같은 업계의 유사한 프로젝트와 비교하여 약 15% 낮은 비용으로 제안하는 경우가 많습니다. 결제 방법에는 은행 송금, Paypal 등이 포함됩니다. 초기 미팅 시 직원에게 선호하는 결제 방법을 알려주시기 바랍니다."
         },
         {
-          question: "어떤 서비스를 제공하나요?",
-          answer: "웹 애플리케이션 개발, 모바일 애플리케이션 개발, AI 제품 개발, 데이터 분석, IT 전략 컨설팅 등의 서비스를 제공합니다. 또한 귀하의 특정 요구사항에 맞춘 맞춤형 솔루션도 제공합니다."
+          question: "JavaScript, TypeScript, Python, Go 등을 사용하는 이점은 무엇인가요?",
+          answer: "JavaScript는 1995년 Netscape에서 탄생하여 웹 개발의 기반이 되었습니다. TypeScript는 그 슈퍼셋으로서 정적 타입을 추가하여 대규모 프로젝트의 유지보수성을 향상시킵니다. Python은 1991년에 개발된 범용 언어로 간단하고 읽기 쉬운 문법이 특징입니다. AI/머신러닝, 데이터 분석, 웹 개발에 광범위하게 사용되며 풍부한 라이브러리로 개발 효율이 매우 높습니다. Go(Golang)는 2009년 Google이 개발한 경량이고 고속인 언어로 간단한 문법과 동시성 처리(goroutines)가 특징입니다. 클라우드 네이티브 애플리케이션이나 마이크로서비스에 적합하며, 컴파일 속도가 빠르고 메모리 효율이 높아 확장 가능한 서버 개발에 이상적입니다."
+        },
+        {
+          question: "Firebase, Supabase 등 BaaS와 클라우드 서비스를 사용하는 이점은 무엇인가요?",
+          answer: "BaaS(Backend as a Service)는 인증, 데이터베이스, 스토리지, 푸시 알림 등의 백엔드 기능을 제공합니다. Firebase는 Google의 서비스로 실시간 데이터베이스와 풍부한 기능을 제공합니다. Supabase는 오픈소스 Firebase 대안으로 PostgreSQL 기반의 실시간 기능과 RESTful API를 제공합니다. 클라우드 서비스는 일반적으로 초기 투자를 낮게 유지하면서 필요에 따라 리소스를 확장할 수 있는 유연성을 제공합니다. AWS, Google Cloud, Azure 등 주요 제공업체는 고가용성, 자동 백업, 보안 기능을 제공합니다. 글로벌 CDN, 로드 밸런싱, 모니터링 도구로 성능과 신뢰성을 향상시키면서 운영 오버헤드를 크게 줄일 수 있습니다. 주요 이점으로는 개발 시간 단축, 운영 비용 절감, 확장성 보장이 있습니다."
+        },
+        {
+          question: "요구사항에 따라 작업을 어느 정도까지 맞춤화할 수 있나요? 변경이 필요한 경우 어떻게 처리하나요?",
+          answer: "각 프로젝트의 요구사항을 듣고 맞춤형 솔루션을 만들기 때문에 맞춤화는 사실상 무제한입니다. 하지만 납품을 빠르게 하고 중요한 시스템 오류를 피하기 위해 일반적으로 생산 중 요구사항 변경은 받지 않습니다. 회의 전에 요구사항을 충분히 정리해 주시기 바랍니다."
+        },
+        {
+          question: "개발 후 유지보수와 지원은 어떻게 이루어지나요? 추가 비용이 있나요?",
+          answer: "우리의 주요 사업은 개발이므로 주요 맞춤화를 제외하고는 유지보수나 지원을 제공하지 않습니다. 개발 완료 후 유지보수 및 지원을 전문으로 하는 파트너 회사를 소개해 드릴 수 있습니다. 비용에 대해서는 문의해 주시기 바랍니다."
+        },
+        {
+          question: "데이터 보안과 프라이버시를 어떻게 보장하나요?",
+          answer: "데이터 보안과 프라이버시를 보장하기 위해 고급 암호화 기술을 사용하고 Firebase와 SupaBase 등 BaaS의 보안 기능을 최대한 활용합니다. 액세스 제어의 경우 각 클라이언트에 대해 전용 계정을 설정하고 최소 필요 권한으로 관리합니다. 우리는 데이터 보호 정책을 엄격히 준수하고 정기적인 보안 감사를 실시하여 개발, 제공, 유지보수 전반에 걸쳐 귀하의 데이터를 보호합니다."
         }
       ]
     },
@@ -1455,9 +1643,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "월 사용료", price: "¥500-700/월", note: "NFC 명함 1장 서비스 포함" },
+              { item: "월 사용료*", price: "¥500-700/월" },
               { item: "2장부터", price: "¥600/장" },
-              { item: "100장 이상 일괄 주문", price: "¥500/장" }
+              { item: "100장 이상 일괄 주문", price: "¥500/장", note: "*NFC 명함 1장 서비스 포함" }
             ]
           },
           {
@@ -1509,19 +1697,19 @@ const translations = {
       buttonTexts: {
         goTo: '이동'
       }
-    },
-    contactInfo: {
-      address: {
-        label: "우편 주소",
-        value: "810-0001 후쿠오카현 후쿠오카시\n츄오구 텐진 2-3-10\n텐진 파인 크레스트 719호"
       },
-      phone: {
-        label: "전화번호",
-        value: "070-8561-1659"
-      },
-      chat: {
-        label: "이메일",
-        value: "AI Cloudia와 채팅"
+      contactInfo: {
+        address: {
+          label: "우편 주소",
+          value: "810-0001 후쿠오카현 후쿠오카시\n츄오구 텐진 2-3-10\n텐진 파인 크레스트 719호"
+        },
+        phone: {
+          label: "전화번호",
+          value: "070-8561-1659"
+        },
+        chat: {
+          label: "이메일",
+          value: "AI Cloudia와 채팅"
       }
     },
     valuesData: [
@@ -1567,7 +1755,7 @@ const translations = {
         job: 'CEO',
         description: '음악대학 졸업 → 악기 제조업체 영업 → 메가벤처 기업영업 → IT 전환. 이 독특한 배경을 활용해 "기술과 언어의 다리"에 도전합니다.',
         comingSoon: false,
-        link: 'https://lit.link/terisuke',
+        link: 'https://www.tapforge.org/p/company',
       },
       {
         name: 'Cloudia Sorano',
@@ -1651,13 +1839,52 @@ const translations = {
     },
     mission: {
       title: "Nuestra misión",
-      subtitle: "Realizar la comunicación sin malentendidos con IA, y crear un mundo donde todos puedan demostrar su propio valor.",
-      description: "Cor.inc, como la empresa número uno del mundo que persigue la 'felicidad' a través de las TI, desarrolla sistemas y mecanismos que resuelven los desafíos de la comunicación y promueven la empatía y comprensión mutua entre los usuarios. Nuestra misión es utilizar tecnologías que evolucionan diariamente para apoyar a todas las personas relacionadas para que reconozcan claramente su propio valor y persigan y logren la verdadera felicidad. Trabajamos para que todos los interesados colaboren hacia una sociedad más feliz, y creamos un futuro de co-creación de verdadera felicidad juntos utilizando el poder de la tecnología.",
+      subtitle: "Lo que una vez perseguí con la trompeta - comunicación más allá de las palabras - ahora a través de la tecnología.",
+      paragraphs: [
+        "Nuestro fundador tiene TEA y conoce el dolor de 'no ser comprendido'.",
+        "Por eso nos tomamos en serio la realización de una comunicación sin malentendidos.",
+        "A través de intercambios de tarjetas de presentación, sitios web y conversaciones mediadas por IA. Pequeños momentos de 'ah, lo entendieron' en la vida cotidiana.",
+        "Cuando se acumulan, todos pueden transmitir adecuadamente y ser comprendidos por su valor.",
+        "Usamos la tecnología para eliminar las 'barreras del lenguaje' entre las personas, creando un mundo donde todos puedan brillar como ellos mismos."
+      ],
       stats: [
         { name: "Desde la fundación", value: "2 años" },
         { name: "Idiomas disponibles", value: "10" },
         { name: "Proyectos", value: "15" },
         { name: "Servicios ofrecidos", value: "Desarrollo de Apps & Estrategia IT/IA" }
+      ]
+    },
+    founderStory: {
+      title: "Historia del Fundador",
+      subtitle: "¿Por qué un ex músico dirige un negocio no relacionado con la música?",
+      paragraphs: [
+        "Desde pequeño, era 'el niño que no sabía leer el ambiente'. Con ASD, siempre he sentido un muro entre yo y los demás.",
+        "En mi segundo año de secundaria, tocando un solo de trompeta en un auditorio lleno de 2,000 personas, experimenté por primera vez la emoción de 'comunicación más allá de las palabras'. Toda la conciencia del lugar se concentró en mí, y mi alma tembló con una sensación de unidad que no necesitaba palabras.",
+        "Pero en la industria musical, nunca volví a sentir esa emoción. Conexiones, jerarquía, leer entre líneas. La expresión se degradó a mero 'trabajo', y enfermé.",
+        "Durante la pandemia, dejé la música y trabajé en ventas en Recruit. Allí, enfrenté 'las limitaciones de las herramientas existentes' y 'la frustración de que las palabras no llegaran a la gente'.",
+        "Luego descubrí la tecnología. El código no traiciona. La IA no se vuelve emocional. Y sobre todo, pude presenciar cómo lo que creé resolvió los problemas de alguien y enriqueció sus vidas.",
+        "Esa emoción de la secundaria, ahora en la vida cotidiana. En intercambios de tarjetas de presentación, en sitios web, a través de comunicación mediada por IA. Acumulando pequeños momentos de 'ah, llegó'.",
+        "Ese es el origen de Cor.inc."
+      ]
+    },
+    productBackstory: {
+      title: "¿Por Qué Estos Servicios?",
+      products: [
+        {
+          name: "TapForge",
+          subtitle: "Revolución de Comunicación que Comienza desde el 'Encuentro'",
+          story: "Durante mi tiempo como vendedor en Recruit, experimenté repetidamente situaciones donde las tarjetas de presentación se acumulaban después del intercambio, haciendo imposible recordar quién era quién. El 'ritual' de intercambiar tarjetas de presentación debería ser una declaración de intención de 'construir una relación', pero en realidad, solo se convierte en un registro formal de 'intercambiamos información de contacto'. Sentí una comunicación errónea significativa aquí. TapForge es un producto diseñado para transformar el intercambio de tarjetas de presentación en 'encuentros reales'. Con solo un toque, puede acceder instantáneamente a toda la información: perfiles, redes sociales, portafolios, calendarios de citas. En lugar de explicar verbalmente 'Esto es lo que hago', puede transmitir todo sobre usted de manera visual e intuitiva con un solo toque. Este es el primer paso hacia la 'comunicación más allá de las palabras'."
+        },
+        {
+          name: "BoltSite",
+          subtitle: "Dando Forma a los 'Sentimientos' de las Empresas",
+          story: "Cuando estaba en ventas en Recruit, vi muchos sitios web de empresas, pero la mayoría no lograba transmitir los 'sentimientos' o la 'pasión' de esas empresas. Los dueños de negocios tienen pensamientos apasionados. Se enorgullecen de sus productos y servicios. Pero esto no se refleja en absoluto en sus sitios web, porque solo pueden expresarse dentro del marco de las herramientas existentes. BoltSite es un servicio de creación de sitios web ultrarrápido que utiliza el framework Astro, pero lo que realmente valoro es sacar 'la esencia de esa empresa'. En las reuniones de creación de sitios web, escucho atentamente a los dueños de negocios. '¿Por qué comenzó este negocio?' '¿Qué sentimientos tiene al crear productos?' Luego, interpreto los sentimientos no expresados detrás de esas palabras y los traduzco en diseño y copia. El resultado no es solo un 'sitio de información corporativa', sino un sitio web donde puede sentir la 'personalidad' de esa empresa."
+        },
+        {
+          name: "IoTRealm",
+          subtitle: "Desarrollo por Contrato para Dar Forma a los Sentimientos",
+          story: "Después de construir confianza a través de tarjetas de presentación y sitios web, muchos dueños de negocios dicen: 'En realidad, he estado pensando que sería bueno si pudiéramos hacer esto...' A veces es vago, a veces grandioso, a veces poco claro si es técnicamente posible. Pero detrás, definitivamente hay un deseo puro: 'Sería genial si esto sucediera'. IoTRealm es un servicio de desarrollo por contrato para dar forma a tales 'sentimientos'. Por ejemplo, un representante de una startup inmobiliaria y de construcción propuso 'un producto que genera automáticamente planos simplemente dándole a la IA un mapa del sitio', ganó un premio, pero estaba luchando porque no sabía cómo realizarlo técnicamente. Creé un prototipo en dos semanas: una aplicación que usa IA de reconocimiento de imágenes YOLO para determinar automáticamente áreas edificables a partir de mapas del sitio y generar planos simples. Esto también es 'comunicación más allá de las palabras'. Al convertir regulaciones y cálculos complejos en datos visuales, podemos derribar la barrera del conocimiento entre expertos y profanos y compartir información sin malentendidos."
+        }
       ]
     },
     contact: {
@@ -1777,8 +2004,24 @@ const translations = {
           answer: "Los precios varían dependiendo de los requisitos del cliente, por lo que le enviaremos una cotización después de la reunión inicial. Comparado con proyectos similares en la misma industria, a menudo ofrecemos propuestas a aproximadamente 15% menor costo. Los métodos de pago incluyen transferencia bancaria, Paypal y más. Por favor, informe a nuestro personal sobre su método de pago preferido durante la reunión inicial."
         },
         {
-          question: "¿Qué servicios ofrecen?",
-          answer: "Ofrecemos desarrollo de aplicaciones web, desarrollo de aplicaciones móviles, desarrollo de productos de IA, análisis de datos, consultoría estratégica de TI y más. También ofrecemos soluciones personalizadas adaptadas a sus necesidades específicas."
+          question: "¿Cuáles son los beneficios de usar JavaScript, TypeScript, Python, Go y otros lenguajes?",
+          answer: "JavaScript nació en 1995 en Netscape y se ha convertido en la base del desarrollo web. TypeScript, como su superconjunto, añade tipado estático para mejorar la mantenibilidad en proyectos a gran escala. Python es un lenguaje de propósito general desarrollado en 1991, conocido por su sintaxis simple y legible. Cubre IA/aprendizaje automático, análisis de datos y desarrollo web con bibliotecas ricas, lo que hace que sea extremadamente eficiente para el desarrollo. Go (Golang) es un lenguaje ligero y de alta velocidad desarrollado por Google en 2009, con sintaxis simple y procesamiento concurrente (goroutines). Es ideal para aplicaciones nativas de la nube y microservicios, con velocidad de compilación rápida y alta eficiencia de memoria, lo que lo hace óptimo para el desarrollo de servidores escalables."
+        },
+        {
+          question: "¿Cuáles son las ventajas de usar BaaS como Firebase y Supabase, y servicios en la nube en general?",
+          answer: "BaaS (Backend as a Service) proporciona funciones backend como autenticación, bases de datos, almacenamiento y notificaciones push. Firebase es el servicio de Google con bases de datos en tiempo real y funcionalidad rica. Supabase es una alternativa de código abierto a Firebase que ofrece funciones en tiempo real basadas en PostgreSQL y APIs RESTful. Los servicios en la nube en general ofrecen flexibilidad para escalar recursos según sea necesario mientras se mantiene baja la inversión inicial. Los principales proveedores como AWS, Google Cloud y Azure proporcionan alta disponibilidad, copias de seguridad automáticas y funciones de seguridad. El CDN global, el equilibrio de carga y las herramientas de monitoreo mejoran el rendimiento y la confiabilidad mientras reducen significativamente la sobrecarga operativa. Los principales beneficios incluyen tiempo de desarrollo reducido, costos operativos más bajos y escalabilidad garantizada."
+        },
+        {
+          question: "¿Cuánto se pueden personalizar las tareas según los requisitos? ¿Cómo se manejan los cambios si es necesario?",
+          answer: "Escuchamos los requisitos de cada proyecto y creamos soluciones personalizadas, por lo que la personalización es prácticamente ilimitada. Sin embargo, para acelerar la entrega y evitar errores críticos del sistema, generalmente no aceptamos cambios en los requisitos durante la producción. Por favor, resuma sus requisitos a fondo antes de la reunión."
+        },
+        {
+          question: "¿Cómo se maneja el mantenimiento y el soporte después del desarrollo? ¿Hay costos adicionales?",
+          answer: "Como nuestro negocio principal es el desarrollo, no proporcionamos mantenimiento o soporte excepto para personalizaciones importantes. Después de que se complete el desarrollo, podemos presentarle a nuestras empresas asociadas especializadas en mantenimiento y soporte. Por favor, consúltenos sobre los costos."
+        },
+        {
+          question: "¿Cómo se garantiza la seguridad y privacidad de los datos?",
+          answer: "Para garantizar la seguridad y privacidad de los datos, utilizamos tecnologías de cifrado avanzadas y maximizamos las funciones de seguridad de BaaS como Firebase y SupaBase. Para el control de acceso, configuramos cuentas dedicadas para cada cliente y las administramos con los privilegios mínimos necesarios. Cumplimos estrictamente con las políticas de protección de datos y realizamos auditorías de seguridad periódicas para proteger sus datos durante todo el desarrollo, la entrega y el mantenimiento."
         }
       ]
     },
@@ -1853,9 +2096,9 @@ const translations = {
           {
             name: "TapForge",
             items: [
-              { item: "Tarifa de uso mensual", price: "¥500-700/mes", note: "1 tarjeta de presentación NFC incluida" },
+              { item: "Tarifa de uso mensual*", price: "¥500-700/mes" },
               { item: "Desde la 2da tarjeta", price: "¥600/tarjeta" },
-              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta" }
+              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta", note: "*1 tarjeta de presentación NFC incluida" }
             ]
           },
           {
@@ -1907,19 +2150,19 @@ const translations = {
       buttonTexts: {
         goTo: 'Ir'
       }
-    },
-    contactInfo: {
-      address: {
-        label: "Dirección postal",
-        value: "810-0001 Prefectura de Fukuoka, Ciudad de Fukuoka\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
       },
-      phone: {
-        label: "Número de teléfono",
-        value: "070-8561-1659"
-      },
-      chat: {
-        label: "Correo electrónico",
-        value: "Chatea con AI Cloudia"
+      contactInfo: {
+        address: {
+          label: "Dirección postal",
+          value: "810-0001 Prefectura de Fukuoka, Ciudad de Fukuoka\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
+        },
+        phone: {
+          label: "Número de teléfono",
+          value: "070-8561-1659"
+        },
+        chat: {
+          label: "Correo electrónico",
+          value: "Chatea con AI Cloudia"
       }
     },
     valuesData: [
@@ -1965,7 +2208,7 @@ const translations = {
         job: 'CEO',
         description: 'Graduado de universidad de música → Ventas en fabricante de instrumentos → Ventas corporativas en mega-venture → Transición a IT. Aprovechando este trasfondo único para desafiar "tender puentes entre tecnología y lenguaje".',
         comingSoon: false,
-        link: 'https://lit.link/terisuke',
+        link: 'https://www.tapforge.org/p/company',
       },
       {
         name: 'Cloudia Sorano',
@@ -2015,7 +2258,7 @@ const translations = {
           "Análisis: Para entender mejor el comportamiento del usuario y mejorar nuestros servicios, analizamos datos agregados y anonimizados."
         ]
       },
-      contact: {
+        contact: {
         title: "Contáctanos",
         description: "Si tiene preguntas o inquietudes sobre nuestra política de privacidad, póngase en contacto con nosotros a través de nuestro",
         linkText: "formulario de contacto",

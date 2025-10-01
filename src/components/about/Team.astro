@@ -6,25 +6,9 @@ const t = getTranslations(currentLocale);
 
 const team = t.teamData;
 
-// リンクタイプ判定関数
-function extractLinks(item) {
-  const linkPatterns = [
-    { type: 'LitLink', pattern: /lit\.link/ },
-    { type: 'X', pattern: /(?:x\.com|twitter\.com)/ },
-    { type: 'Homepage', pattern: /digital-studio/ },
-  ];
-  const links = [];
-  if (item.link) {
-    linkPatterns.forEach(({ type, pattern }) => {
-      if (pattern.test(item.link)) {
-        links.push({ type, url: item.link });
-      }
-    });
-  }
-  if (item.zennLink) {
-    links.push({ type: 'Zenn', url: item.zennLink });
-  }
-  return links;
+// アイコンリンク取得関数（zennLinkを優先、なければlink）
+function getIconLink(item) {
+  return item.zennLink || item.link || null;
 }
 ---
 
@@ -41,12 +25,24 @@ function extractLinks(item) {
               }`}
             >
               <div class="space-y-6">
-                {/* 画像はitem.linkにリンク */}
-                {item.link ? (
-                  <a href={item.link} target="_blank" rel="noopener noreferrer" aria-label={`${item.name}のプロフィールページを新しいタブで開く`}>
+                {/* アイコンリンク（zennLink優先、なければlink） */}
+                {(() => {
+                  const iconLink = getIconLink(item);
+                  return iconLink ? (
+                    <a href={iconLink} target="_blank" rel="noopener noreferrer" aria-label={`${item.name}のプロフィールページを新しいタブで開く`}>
+                      <picture>
+                        <img
+                          class="mx-auto h-auto w-16 rounded-full"
+                          src={item.image}
+                          alt={item.name}
+                          width="64"
+                          height="64"
+                          loading="lazy"
+                        />
+                      </picture>
+                    </a>
+                  ) : (
                     <picture>
-                      {/* <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> */}
-                      {/* <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> */}
                       <img
                         class="mx-auto h-auto w-16 rounded-full"
                         src={item.image}
@@ -56,21 +52,8 @@ function extractLinks(item) {
                         loading="lazy"
                       />
                     </picture>
-                  </a>
-                ) : (
-                  <picture>
-                    {/* <source media="(min-width: 1024px)" srcset={item.image.replace('.webp', '-lg.webp')} /> */}
-                    {/* <source media="(min-width: 640px)" srcset={item.image.replace('.webp', '-md.webp')} /> */}
-                    <img
-                      class="mx-auto h-auto w-16 rounded-full"
-                      src={item.image}
-                      alt={item.name}
-                      width="64"
-                      height="64"
-                      loading="lazy"
-                    />
-                  </picture>
-                )}
+                  );
+                })()}
                 <div class="text-center">
                   <h3 class="text-lg font-medium">
                     {item.comingSoon ? 'Coming Soon...' : item.name}
@@ -87,31 +70,6 @@ function extractLinks(item) {
                       {item.description}
                     </p>
                   )}
-
-                  {/* リンク配列を関数で取得しmapで表示 */}
-                  {(() => {
-                    const links = extractLinks(item);
-                    return links.length > 0 && (
-                      <div class="mt-2 space-x-2">
-                        {links.map((link, idx, arr) => (
-                          <>
-                            <a
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={`${item.name}の${link.type}ページを新しいタブで開く`}
-                              class="text-sm text-primary-600 hover:underline"
-                            >
-                              {t.linkTypes?.[link.type] || link.type}
-                            </a>
-                            {idx < arr.length - 1 && (
-                              <span class="text-primary-950/50">•</span>
-                            )}
-                          </>
-                        ))}
-                      </div>
-                    );
-                  })()}
                 </div>
               </div>
             </li>

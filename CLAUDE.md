@@ -508,6 +508,36 @@ display
 - Responsive sizing with proper aspect ratios
 - Automatic optimization via Astro's built-in image processing
 
+## Team Component
+
+### Team Member Display Pattern
+
+The Team component (`/src/components/about/Team.astro`) follows a unified design pattern for displaying team member profiles:
+
+**Icon Link Strategy**:
+- **Priority System**: `zennLink` takes precedence over `link` when both are available
+- **Consistent UX**: All team members have clickable profile icons, no separate text links
+- **Simplified Design**: Removed per-member link lists below profiles for visual consistency
+
+**Link Priority Logic**:
+```typescript
+function getIconLink(item) {
+  return item.zennLink || item.link || null;
+}
+```
+
+**Team Data Structure** (in `i18n.ts`):
+- `link`: Primary profile link (e.g., TapForge profile, personal website)
+- `zennLink`: Zenn profile link (takes priority for icon linking)
+- Icon automatically uses `zennLink` if available, otherwise falls back to `link`
+
+**Current Team Setup**:
+- **Kousuke Terada (CEO)**: Icon links to TapForge profile
+- **Cloudia Sorano (AI Ambassador)**: Icon links to Zenn profile (prioritized over X/Twitter)
+- **Nagisa Terada (Staff)**: Icon links to personal website
+
+This approach ensures a clean, uniform presentation across all team members while maintaining flexibility for different profile link types.
+
 ## External Media Integration
 
 ### Media Section Updates
