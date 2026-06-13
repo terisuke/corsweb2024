@@ -10,7 +10,7 @@
 |---|---|---|
 | [ADR-0001](./ADR-0001-cms-studiocms.md) | CMS に StudioCMS（Astroネイティブ・SSR・libSQL）を採用 | Accepted (2026-06-13) |
 | [ADR-0002](./ADR-0002-hosting-firebase-app-hosting.md) | ホスティングを Firebase App Hosting（cor-jp-web）＋Astro SSR に移行（静的SSGから） | Accepted (2026-06-13) |
-| [ADR-0003](./ADR-0003-db-turso-libsql.md) | DB に Turso(libSQL) マネージド（東京・無料枠）を採用。PII は対象外（別管理） | Accepted (2026-06-13) |
+| [ADR-0003](./ADR-0003-db-supabase-postgres.md) | DB に Supabase（Postgres・東京 ap-northeast-1・既存org再利用）を採用。PII は対象外（別管理） | Accepted (2026-06-13) |
 | [ADR-0004](./ADR-0004-analytics-cloudflare-clarity.md) | 計測を Cloudflare Web Analytics＋Microsoft Clarity（cookieless優先・Clarity は PP 明記） | Accepted (2026-06-13) |
 | [ADR-0005](./ADR-0005-contact-phased-migration.md) | Contact を段階移行（Phase1 SSGFORM 継続＋PP明記/同意、Phase2 自社チャットボット・GCP集約・LLM非依存） | Accepted (2026-06-13) |
 | [ADR-0006](./ADR-0006-i18n-single-source.md) | i18n source of truth を `src/utils/i18n.ts` に一本化（`*.json` 廃止） | Accepted (2026-06-13) |
@@ -18,7 +18,7 @@
 
 ## フェーズ対応
 
-- **Phase1（バックエンド土台＋公開前ガードレール）**: ADR-0001〜0003（SSR化・App Hosting・Turso・StudioCMS）／ADR-0005 Phase1（SSGFORM＋同意）／ADR-0006（i18n一本化）／ADR-0007（公開前ガードレール）。
+- **Phase1（バックエンド土台＋公開前ガードレール）**: ADR-0001〜0003（SSR化・App Hosting・Supabase/Postgres・StudioCMS）／ADR-0005 Phase1（SSGFORM＋同意）／ADR-0006（i18n一本化）／ADR-0007（公開前ガードレール）。
 - **Phase2（C案UI刷新・新ページ・チャットボット）**: ADR-0004（計測導入）／ADR-0005 Phase2（自社チャットボット）。
 
 ## 運用
