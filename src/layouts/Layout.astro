@@ -152,9 +152,17 @@ const currentLocale = getCurrentLocale(Astro.url);
     <!-- C案 fonts: Outfit (display) + Noto Sans JP (body/jp). Inter is loaded via @font-face below. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+      />
+    </noscript>
     <link rel="preconnect" href="https://esm.sh" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
