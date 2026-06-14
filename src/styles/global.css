@@ -1,0 +1,63 @@
+/*
+ * C案 (option-c) custom utilities — migrated from cor-hp-mock/src/styles/global.css
+ * Tailwind v3 syntax. Colors / fonts / animations live in tailwind.config.cjs.
+ * This file holds the bespoke CSS classes that aren't expressible as config tokens.
+ */
+
+/* font-display utility adds the tracking the mock relied on */
+.font-display {
+  font-family: 'Outfit', 'Noto Sans JP', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.font-jp {
+  font-family: 'Noto Sans JP', 'Hiragino Sans', system-ui, sans-serif;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    currentColor 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    currentColor 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(10, 15, 28, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 15, 28, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.noise-bg {
+  position: relative;
+}
+
+.noise-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(10, 15, 28, 0.06) 1px,
+    transparent 0
+  );
+  background-size: 4px 4px;
+  pointer-events: none;
+  opacity: 0.4;
+}

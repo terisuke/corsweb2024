@@ -9,6 +9,30 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.stone,
+        // C案 (option-c) design tokens
+        'cor-ink': '#0a0f1c',
+        'cor-paper': '#fafaf7',
+        'cor-accent': '#ff5a1f',
+        'cor-accent-soft': '#ffe6db',
+        'cor-teal': '#0ea5e9',
+        'cor-violet': '#7c3aed',
+      },
+      fontFamily: {
+        display: ['Outfit', 'Noto Sans JP', 'system-ui', 'sans-serif'],
+        jp: ['Noto Sans JP', 'Hiragino Sans', 'system-ui', 'sans-serif'],
+      },
+      keyframes: {
+        'float-slow': {
+          '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-20px) translateX(10px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+      },
+      animation: {
+        'float-slow': 'float-slow 18s ease-in-out infinite',
       },
     },
     fontFamily: {

@@ -1,26 +1,235 @@
 ---
-import About from '../components/home/About.astro';
-import Cta from '../components/home/Cta.astro';
-import Hero from '../components/home/Hero.astro';
-import Services from '../components/home/Services.astro';
-import Testimonials from '../components/home/Testimonials.astro';
 import Layout from '../layouts/Layout.astro';
-import Expertise from '../components/home/Expertise.astro';
 import { getCurrentLocale, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 ---
 
-
 <Layout
   description={t.meta.home.description}
   title={t.meta.home.title}
 >
-  <Hero />
-  <Services />
-  <Expertise />
-  <About />
-  <Testimonials />
-  <Cta />
+  <!-- Hero: 課題訴求 + 想いをチラ見せ -->
+  <section class="relative min-h-[88vh] flex items-center overflow-hidden bg-gradient-to-br from-cor-paper via-teal-50/50 to-cyan-50/50">
+    <!-- 装飾 -->
+    <div class="absolute inset-0 grid-bg opacity-30"></div>
+    <div class="absolute top-0 right-0 w-[36rem] h-[36rem] bg-gradient-to-br from-teal-300/20 to-cyan-300/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-cor-accent/15 to-amber-200/20 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-6xl mx-auto px-6 py-20 w-full">
+      <p class="font-display text-xs tracking-[0.3em] text-teal-700 font-bold mb-8">
+        COR. INC. — AI × CO-CREATION
+      </p>
+
+      <h1 class="font-jp text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.1] mb-6 max-w-4xl">
+        現場の課題を、<br />
+        <span class="bg-gradient-to-r from-teal-700 to-cor-accent bg-clip-text text-transparent">
+          AIで解く。
+        </span>
+      </h1>
+
+      <p class="font-jp text-lg sm:text-xl text-cor-ink/60 italic mb-10 max-w-2xl leading-relaxed">
+        — 共創を通じて、<br class="sm:hidden" />誰一人取り残されない未来へ。
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 mb-16">
+        <a
+          href="https://griftai.org"
+          target="_blank"
+          rel="noopener"
+          class="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-cor-accent text-white rounded-full font-bold hover:bg-orange-600 transition shadow-xl shadow-cor-accent/30"
+        >
+          <span class="inline-block w-2 h-2 rounded-full bg-white animate-pulse"></span>
+          まずはAI見積もりを試す
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a
+          href="#challenges"
+          class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-cor-ink text-white rounded-full font-bold hover:bg-cor-ink/90 transition"
+        >
+          課題から相談する
+        </a>
+        <a
+          href="#story"
+          class="inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-cor-ink/15 text-cor-ink rounded-full font-bold hover:bg-cor-ink/5 transition"
+        >
+          想いを読む
+        </a>
+      </div>
+
+      <!-- バッジ群 -->
+      <div class="flex flex-wrap gap-2 text-xs">
+        <span class="px-3 py-1.5 bg-white/80 backdrop-blur border border-cor-ink/10 rounded-full">
+          AI駆動開発 4〜5倍生産性
+        </span>
+        <span class="px-3 py-1.5 bg-white/80 backdrop-blur border border-cor-ink/10 rounded-full">
+          ローカルLLM × ISMS整備中
+        </span>
+        <span class="px-3 py-1.5 bg-white/80 backdrop-blur border border-cor-ink/10 rounded-full">
+          OSS 18万行 / 8名貢献
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2カラム: 課題 × 想い -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
+        <!-- 左: 課題 -->
+        <div id="challenges">
+          <p class="text-xs tracking-widest text-cor-accent font-bold mb-4 uppercase">
+            01 / あなたの課題
+          </p>
+          <h2 class="font-jp text-3xl sm:text-4xl font-black leading-tight mb-8">
+            こんな課題、<br />
+            一緒に解きましょう。
+          </h2>
+
+          <div class="space-y-3">
+            {
+              [
+                { icon: '🏫', text: '老朽化した基幹システムをクラウド化したい' },
+                { icon: '🏢', text: '多言語対応のAI受付・チャットを導入したい' },
+                { icon: '🤖', text: '生成AIサービスをゼロから本番化したい' },
+                { icon: '🔒', text: '機密データを外に出さずにAI活用したい' },
+                { icon: '🏗', text: '業界特化のAIツールを作りたい' },
+                { icon: '📊', text: 'AI駆動開発を社内に内製化したい' },
+              ].map((c) => (
+                <a
+                  href="#"
+                  class="flex items-center gap-4 p-4 rounded-2xl border border-cor-ink/10 hover:border-cor-accent hover:bg-cor-accent-soft/30 transition group"
+                >
+                  <span class="text-2xl">{c.icon}</span>
+                  <span class="flex-1 font-jp text-cor-ink/90 group-hover:text-cor-ink font-medium">
+                    {c.text}
+                  </span>
+                  <span class="text-cor-ink/30 group-hover:text-cor-accent group-hover:translate-x-1 transition">→</span>
+                </a>
+              ))
+            }
+          </div>
+
+          <a
+            href="#contact"
+            class="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-cor-accent text-white rounded-full font-bold hover:bg-orange-600 transition"
+          >
+            無料相談する →
+          </a>
+        </div>
+
+        <!-- 右: 想い -->
+        <div id="story" class="lg:border-l lg:border-cor-ink/10 lg:pl-20">
+          <p class="text-xs tracking-widest text-teal-700 font-bold mb-4 uppercase">
+            02 / 私たちの想い
+          </p>
+          <h2 class="font-jp text-3xl sm:text-4xl font-black leading-tight mb-8">
+            なぜCor.は<br />
+            この事業をしているのか。
+          </h2>
+
+          <blockquote class="border-l-4 border-teal-500 pl-6 mb-8 text-cor-ink/80 font-jp leading-relaxed italic">
+            元音楽家・営業職を経てエンジニアとして起業した私自身の特性から、<strong class="not-italic">「誤解のないコミュニケーション」をAI技術で実現する</strong>ためにCor.をしています。
+            <footer class="mt-3 text-xs text-cor-ink/50 not-italic">— 代表 寺田康佑</footer>
+          </blockquote>
+
+          <div class="space-y-6">
+            <div>
+              <p class="text-xs tracking-widest text-teal-700 font-bold mb-2">MISSION</p>
+              <p class="font-jp font-bold text-lg leading-relaxed">
+                競争ではなく共創を通じて、未来を切り拓き、幸福な社会を実現する。
+              </p>
+            </div>
+            <div>
+              <p class="text-xs tracking-widest text-teal-700 font-bold mb-2">VISION</p>
+              <p class="font-jp font-bold text-lg leading-relaxed">
+                多様な認知特性や価値観を持つ全ての人が、誤解なく互いを理解し合える世界。
+              </p>
+            </div>
+            <div>
+              <p class="text-xs tracking-widest text-teal-700 font-bold mb-2">WHY</p>
+              <p class="font-jp text-cor-ink/70 leading-relaxed">
+                <strong class="text-cor-ink">この想いがあるから、受託も自社開発も同じ軸で選びます。</strong>
+                〈誤解なき共創に資するか／作り手が本来の実力を発揮できる世界に近づくか〉が判断基準。
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="#about"
+            class="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-cor-ink/10 text-cor-ink rounded-full font-bold hover:bg-cor-ink/5 transition"
+          >
+            代表ストーリーを読む →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grift体験帯 -->
+  <section class="py-24 bg-gradient-to-br from-cor-accent-soft via-orange-100/50 to-amber-50 relative overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-96 h-96 bg-cor-accent/15 rounded-full blur-3xl"></div>
+    <div class="relative max-w-5xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-xs tracking-widest text-cor-accent font-bold mb-4 uppercase">
+            Try Our AI / Grift
+          </p>
+          <h2 class="font-jp text-3xl sm:text-4xl font-black leading-tight mb-6">
+            言葉で説明する前に、<br />
+            <span class="text-cor-accent">AIで試してみませんか？</span>
+          </h2>
+          <p class="text-cor-ink/70 leading-relaxed mb-8">
+            自社AIツール <strong class="text-cor-ink">Grift</strong> に、あなたの作りたいものを入力するだけ。<br />
+            GitHub実績と市場相場から、根拠ある<strong class="text-cor-ink">見積もり・納期・類似実績</strong>を30秒で生成します。
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="https://griftai.org"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-cor-accent text-white rounded-full font-bold hover:bg-orange-600 transition shadow-xl shadow-cor-accent/30"
+            >
+              無料で試す →
+            </a>
+            <span class="inline-flex items-center gap-2 px-4 py-4 text-xs text-cor-ink/60">
+              <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+              登録不要・30秒
+            </span>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="absolute -inset-3 bg-gradient-to-br from-cor-accent/20 to-amber-300/20 rounded-3xl blur-2xl"></div>
+          <div class="relative bg-white rounded-3xl shadow-2xl border border-cor-ink/5 p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-9 h-9 bg-gradient-to-br from-cor-accent to-orange-600 rounded-lg flex items-center justify-center text-white font-display font-black">G</div>
+              <div class="font-display font-black text-cor-ink">Grift</div>
+              <span class="ml-auto text-xs text-emerald-600 font-bold">● ONLINE</span>
+            </div>
+            <div class="bg-cor-ink/[0.03] rounded-xl p-3 mb-4 text-sm font-jp">
+              「営業の見積書作成をAIで自動化したい」
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <div class="bg-cor-accent-soft/60 rounded-lg p-2.5 text-center">
+                <div class="text-[10px] text-cor-ink/60">コスト</div>
+                <div class="font-display font-black text-cor-ink">¥180万〜</div>
+              </div>
+              <div class="bg-cor-accent-soft/60 rounded-lg p-2.5 text-center">
+                <div class="text-[10px] text-cor-ink/60">納期</div>
+                <div class="font-display font-black text-cor-ink">4週間〜</div>
+              </div>
+              <div class="bg-cor-accent-soft/60 rounded-lg p-2.5 text-center">
+                <div class="text-[10px] text-cor-ink/60">類似</div>
+                <div class="font-display font-black text-cor-ink">5件</div>
+              </div>
+            </div>
+            <button class="w-full py-2.5 bg-cor-ink text-white rounded-lg font-bold text-sm hover:bg-cor-ink/90 transition">
+              この見積もりで相談する →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>
