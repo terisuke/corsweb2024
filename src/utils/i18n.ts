@@ -118,7 +118,7 @@ const translations = {
         legal: "特商法表記"
       },
       description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
-      copyright: "© 2025 Cor.inc"
+      copyright: "Cor.inc"
     },
     features: {
       title: "Features",
@@ -571,7 +571,7 @@ const translations = {
         legal: "Legal Notice"
       },
       description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
-      copyright: "© 2025 Cor.inc"
+      copyright: "Cor.inc"
     },
     features: {
       title: "Features",
@@ -1024,7 +1024,7 @@ const translations = {
         legal: "法律声明"
       },
       description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事IT战略咨询及相关产品开发、自社AI产品开发销售。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
-      copyright: "© 2025 Cor.inc"
+      copyright: "Cor.inc"
     },
     features: {
       title: "特色",
@@ -1477,7 +1477,7 @@ const translations = {
         legal: "법적 고지"
       },
       description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, IT 전략 컨설팅 및 관련 제품 개발, 자사 AI 제품 개발 및 판매를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
-      copyright: "© 2025 Cor.inc"
+      copyright: "Cor.inc"
     },
     features: {
       title: "특징",
@@ -1930,7 +1930,7 @@ const translations = {
         legal: "Aviso Legal"
       },
       description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la consultoría estratégica de TI y el desarrollo de productos relacionados, y al desarrollo y venta de productos de IA propios. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
-      copyright: "© 2025 Cor.inc"
+      copyright: "Cor.inc"
     },
     features: {
       title: "Características",
