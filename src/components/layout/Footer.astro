@@ -54,6 +54,11 @@ const bottomLinks = [
     header: t.footer.legal,
     links: [
       {
+        name: t.footer.links.security,
+        href: getLocalizedUrl('/security', currentLocale),
+        isExternal: false,
+      },
+      {
         name: t.footer.links.privacy,
         href: getLocalizedUrl('/privacy', currentLocale),
         isExternal: false,
