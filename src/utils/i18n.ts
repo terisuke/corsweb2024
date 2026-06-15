@@ -18,11 +18,11 @@ const translations = {
     },
     about: {
       title: "About",
-      description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
+      description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
       cta: "More details",
       heading: {
         title: "About",
-        description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
+        description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
       }
     },
     mission: {
@@ -117,7 +117,7 @@ const translations = {
         privacy: "Privacy",
         legal: "特商法表記"
       },
-      description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
+      description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
       copyright: "Cor.inc"
     },
     features: {
@@ -156,7 +156,7 @@ const translations = {
       ]
     },
     header: {
-      mobileMenuDescription: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、IT戦略コンサルタントやそれに伴うプロダクト開発、自社AI製品の開発・販売を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
+      mobileMenuDescription: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
     },
     "404": {
       title: "404",
@@ -471,11 +471,11 @@ const translations = {
     },
     about: {
       title: "About",
-      description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
+      description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
       cta: "More details",
       heading: {
         title: "About",
-        description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
+        description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
       }
     },
     mission: {
@@ -570,7 +570,7 @@ const translations = {
         privacy: "Privacy",
         legal: "Legal Notice"
       },
-      description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
+      description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
       copyright: "Cor.inc"
     },
     features: {
@@ -609,7 +609,7 @@ const translations = {
       ]
     },
     header: {
-      mobileMenuDescription: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We provide IT strategy consulting, product development, and develop and sell our own AI products. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
+      mobileMenuDescription: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
     },
     "404": {
       title: "404",
@@ -924,11 +924,11 @@ const translations = {
     },
     about: {
       title: "关于我们",
-      description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事IT战略咨询及相关产品开发、自社AI产品开发销售。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
+      description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
       cta: "更多详情",
       heading: {
         title: "关于我们",
-        description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事IT战略咨询及相关产品开发、自社AI产品开发销售。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。"
+        description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。"
       }
     },
     mission: {
@@ -1023,7 +1023,7 @@ const translations = {
         privacy: "隐私",
         legal: "法律声明"
       },
-      description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事IT战略咨询及相关产品开发、自社AI产品开发销售。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
+      description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
       copyright: "Cor.inc"
     },
     features: {
@@ -1062,7 +1062,7 @@ const translations = {
       ]
     },
     header: {
-      mobileMenuDescription: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事IT战略咨询及相关产品开发、自社AI产品开发销售。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。"
+      mobileMenuDescription: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。"
     },
     "404": {
       title: "404",
@@ -1377,11 +1377,11 @@ const translations = {
     },
     about: {
       title: "회사소개",
-      description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, IT 전략 컨설팅 및 관련 제품 개발, 자사 AI 제품 개발 및 판매를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
+      description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
       cta: "자세히 보기",
       heading: {
         title: "회사소개",
-        description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, IT 전략 컨설팅 및 관련 제품 개발, 자사 AI 제품 개발 및 판매를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다."
+        description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다."
       }
     },
     mission: {
@@ -1476,7 +1476,7 @@ const translations = {
         privacy: "개인정보처리방침",
         legal: "법적 고지"
       },
-      description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, IT 전략 컨설팅 및 관련 제품 개발, 자사 AI 제품 개발 및 판매를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
+      description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
       copyright: "Cor.inc"
     },
     features: {
@@ -1515,7 +1515,7 @@ const translations = {
       ]
     },
     header: {
-      mobileMenuDescription: "Cor.inc는 \"경쟁이 아닌 공동창조를 통해 미래를 개척하고 행복한 사회를 실현한다\"는 미션을 가지고 IT 전략 컨설팅 및 관련 제품 개발, 자사 AI 제품 개발·판매를 하고 있습니다. \"경쟁\"보다는 \"공동창조\"를 중시하고, 스타트업의 강점인 \"스피드감\"을 살려 창의성과 혁신성이 가득한 서비스를 제공합니다."
+      mobileMenuDescription: "Cor.inc는 \"경쟁이 아닌 공동창조를 통해 미래를 개척하고 행복한 사회를 실현한다\"는 미션을 가지고 AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. \"경쟁\"보다는 \"공동창조\"를 중시하고, 스타트업의 강점인 \"스피드감\"을 살려 창의성과 혁신성이 가득한 서비스를 제공합니다."
     },
     "404": {
       title: "404",
@@ -1830,11 +1830,11 @@ const translations = {
     },
     about: {
       title: "Acerca de",
-      description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la consultoría estratégica de TI y el desarrollo de productos relacionados, y al desarrollo y venta de productos de IA propios. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
+      description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
       cta: "Más detalles",
       heading: {
         title: "Acerca de",
-        description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la consultoría estratégica de TI y el desarrollo de productos relacionados, y al desarrollo y venta de productos de IA propios. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación."
+        description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación."
       }
     },
     mission: {
@@ -1929,7 +1929,7 @@ const translations = {
         privacy: "Privacidad",
         legal: "Aviso Legal"
       },
-      description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la consultoría estratégica de TI y el desarrollo de productos relacionados, y al desarrollo y venta de productos de IA propios. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
+      description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
       copyright: "Cor.inc"
     },
     features: {
@@ -1968,7 +1968,7 @@ const translations = {
       ]
     },
     header: {
-      mobileMenuDescription: "Cor.inc tiene como misión \"pionear el futuro a través de la co-creación en lugar de la competencia, realizando una sociedad feliz\". Nos dedicamos a la consultoría estratégica de TI, desarrollo de productos relacionados y desarrollo y venta de productos de IA propios. Valoramos la \"co-creación\" sobre la \"competencia\" y aprovechamos la fortaleza de las startups de \"sentido de velocidad\" para proporcionar servicios llenos de creatividad e innovación."
+      mobileMenuDescription: "Cor.inc tiene como misión \"pionear el futuro a través de la co-creación en lugar de la competencia, realizando una sociedad feliz\". Nos dedicamos a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la \"co-creación\" sobre la \"competencia\" y aprovechamos la fortaleza de las startups de \"sentido de velocidad\" para proporcionar servicios llenos de creatividad e innovación."
     },
     "404": {
       title: "404",
