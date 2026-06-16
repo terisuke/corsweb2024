@@ -11,7 +11,7 @@ const t = getTranslations(currentLocale);
   title={t.meta.security.title}
 >
   <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <div class="sm:pb:20 flex flex-col gap-4 pb-16 text-center">
+    <div class="sm:pb-20 flex flex-col gap-4 pb-16 text-center">
       <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{t.security.title}</h1>
       <p class="text-base italic text-primary-950/70 dark:text-primary-200/70">{t.security.tagline}</p>
     </div>
@@ -23,7 +23,7 @@ const t = getTranslations(currentLocale);
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.pillarsTitle}</h2>
       <div class="flex flex-col gap-8">
         {
-          t.security.pillars.map((pillar) => (
+          Array.isArray(t.security?.pillars) && t.security.pillars.map((pillar) => (
             <div>
               <h3 class="mb-2 text-lg font-medium">{pillar.title}</h3>
               <p>{pillar.description}</p>
@@ -53,7 +53,7 @@ const t = getTranslations(currentLocale);
           </thead>
           <tbody>
             {
-              t.security.table.map((row) => (
+              Array.isArray(t.security?.table) && t.security.table.map((row) => (
                 <tr class="border-b border-primary-900/10 dark:border-primary-300/10 align-top">
                   <td class="py-3 pr-4 font-medium">{row.area}</td>
                   <td class="py-3 pr-4">{row.effort}</td>
