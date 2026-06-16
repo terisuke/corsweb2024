@@ -36,10 +36,12 @@ describe('Blog Utilities', () => {
 
 // Helper functions to test
 function calculateReadingTime(content: string): number {
+  const trimmed = content.trim();
+  // Empty or whitespace-only content has no reading time.
+  if (!trimmed) return 0;
   const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  const readingTime = Math.ceil(words / wordsPerMinute);
-  return Math.max(readingTime, content.trim() ? 1 : 0);
+  const words = trimmed.split(/\s+/).length;
+  return Math.ceil(words / wordsPerMinute);
 }
 
 function formatSlug(slug: string, lang: string): string {
