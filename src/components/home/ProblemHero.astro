@@ -1,0 +1,67 @@
+---
+import { getCurrentLocale, getJaTranslations, getLocalizedUrl } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getJaTranslations();
+
+// 福岡100選 2026-2027 の badge は公開可能日まで非表示（正本ガードレール）。
+const HIDDEN_TRUST_BADGES = ['福岡100選 2026-2027'];
+const trustBadges = t.homeHero.trustBadges.filter(
+  (badge) => !HIDDEN_TRUST_BADGES.includes(badge),
+);
+
+const griftUrl = 'https://griftai.org';
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col items-center gap-8 text-center sm:gap-10">
+      <p
+        class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
+      >
+        {t.homeHero.kicker}
+      </p>
+      <div class="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
+        <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">
+          {t.homeHero.title}
+        </h1>
+        <p class="text-lg text-primary-950/70 dark:text-primary-200/70 sm:text-xl">
+          {t.homeHero.subtitle}
+        </p>
+      </div>
+      <div class="flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
+        <a
+          href={griftUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full border border-transparent bg-primary-600 px-5 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300 dark:focus-visible:outline-primary-400"
+        >
+          {t.homeHero.primaryCta}
+        </a>
+        <a
+          href={getLocalizedUrl('/contact', currentLocale)}
+          class="inline-flex items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
+        >
+          {t.homeHero.secondaryCta}
+        </a>
+        <a
+          href={getLocalizedUrl('/about', currentLocale)}
+          class="inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-primary-950 underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200"
+        >
+          {t.homeHero.philosophyCta}
+        </a>
+      </div>
+      {
+        trustBadges.length > 0 && (
+          <ul class="flex flex-wrap items-center justify-center gap-3">
+            {trustBadges.map((badge) => (
+              <li class="rounded-full bg-primary-500/10 px-4 py-1.5 text-sm text-primary-950/70 dark:bg-primary-400/10 dark:text-primary-200/70">
+                {badge}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>

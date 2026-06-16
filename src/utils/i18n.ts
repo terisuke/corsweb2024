@@ -2,7 +2,7 @@ export type Locale = 'ja' | 'en' | 'zh' | 'ko' | 'es';
 
 const translations = {
   ja: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security", works: "Works", grift: "Grift" },
     hero: {
       title: "言葉を超えて、想いを届ける。",
       subtitle: "かつてトランペットで伝えた感動を、今はコードで。元音楽家が追求する「誤解のないコミュニケーション」の実現。",
@@ -424,7 +424,8 @@ const translations = {
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
       privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." },
-      security: { title: "セキュリティ | Cor.inc", description: "Cor.株式会社の情報セキュリティ、ISMS取得に向けた体制、ローカルファーストと機密度ティアによるAI開発環境について。" }
+      security: { title: "セキュリティ | Cor.inc", description: "Cor.株式会社の情報セキュリティ、ISMS取得に向けた体制、ローカルファーストと機密度ティアによるAI開発環境について。" },
+      works: { title: "実績 | Cor.inc", description: "Cor.株式会社の実績紹介。AI受託開発、基幹DB移行、多言語AI受付、建築AI、自社プロダクトGriftなど、領域の異なる実装実績を順次公開します。" }
     },
     privacy: {
       title: "プライバシーポリシー",
@@ -454,6 +455,98 @@ const translations = {
         linkText: "お問い合わせフォーム",
         suffix: "までご連絡ください。"
       }
+    },
+    homeHero: {
+      kicker: "COR. INC. — AI × CO-CREATION",
+      title: "現場の課題を、AIで解く。",
+      subtitle: "違いをぶつけ、価値を磨き、AIで形にする。Cor.は受託開発・AI顧問・自社プロダクトGriftを通じて、事業と作り手が本来の力を発揮できる共創を実装します。",
+      primaryCta: "AI見積もりを試す",
+      secondaryCta: "課題から相談する",
+      philosophyCta: "きょうそうの思想を読む",
+      trustBadges: ["福岡100選 2026-2027", "AI駆動開発 4〜5倍生産性", "ローカルLLM × ISMS取得準備中", "OSS 18万行 / 8名貢献"]
+    },
+    homeChallenges: {
+      eyebrow: "01 / あなたの課題",
+      title: "こんな課題、一緒に解きましょう。",
+      items: [
+        { title: "老朽化した基幹システムをクラウド化したい", description: "既存DB調査、スキーマ整理、Cloud SQL移行、運用設計まで支援。" },
+        { title: "多言語対応のAI受付・チャットを導入したい", description: "音声、RAG、エージェント、施設/自治体向けの案内体験を設計。" },
+        { title: "生成AIサービスをゼロから本番化したい", description: "要件定義、UX、API、課金、CI/CD、監視まで一気通貫。" },
+        { title: "機密データを外に出さずAI活用したい", description: "ローカルLLM、承認AIツール、機密度ティアに応じた設計。" },
+        { title: "業界特化のAIツールを作りたい", description: "建築図面、間取り生成、業務固有データのAI処理など。" },
+        { title: "AI駆動開発を社内に内製化したい", description: "AI顧問、AI研修、開発プロセス設計、チーム伴走。" }
+      ],
+      cta: "無料相談する"
+    },
+    griftBridge: {
+      eyebrow: "Try Our AI / Grift",
+      title: "言葉で説明する前に、AIで試してみませんか？",
+      description: "自社AIツール Grift に、あなたの作りたいものを入力するだけ。GitHub実績と市場相場から、根拠ある参考見積もり・納期・類似実績を30秒で生成します。",
+      cta: "GriftでAI見積もりを試す",
+      note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。",
+      mock: {
+        input: "営業の見積書作成をAIで自動化したい",
+        costLabel: "参考コスト",
+        cost: "180万円〜",
+        durationLabel: "参考納期",
+        duration: "4週間〜",
+        similarLabel: "類似実績",
+        similar: "5件"
+      }
+    },
+    proof: {
+      eyebrow: "03 / 実証",
+      title: "自称ではなく、実装で語る。",
+      description: "AI SaaS、AIアンケート、基幹DB移行、多言語AI受付、建築AI。領域も立ち上げ方も異なる実績が、Cor.の実装力を裏付けます。",
+      stats: [
+        { label: "OSS実装", value: "182,368行", note: "Engineer Cafe Navigator" },
+        { label: "主要OSS貢献", value: "87.7%", note: "git実測コミット比率" },
+        { label: "AI駆動開発", value: "4〜5倍", note: "内部実測" },
+        { label: "実績領域", value: "5系統", note: "AI/DB/OSS/建築/自社" }
+      ],
+      cta: "実績を見る"
+    },
+    services2026: {
+      title: "事業の現場に、AIを実装する。",
+      items: [
+        { name: "AI受託開発", description: "生成AI、RAG、エージェント、画像/音声処理を使った本番システムを、要件定義から運用まで実装。" },
+        { name: "AI顧問・AI研修", description: "経営/開発/現場チームに合わせ、AI活用方針、ツール選定、業務導入、内製化を伴走。" },
+        { name: "ローカルLLM・セキュアAI", description: "機密データを外部へ不要に出さず、機密度に応じたAI運用を設計。" },
+        { name: "Grift", description: "GitHub実績と市場相場から、説明できる参考見積もりを生成する自社AIツール。" }
+      ]
+    },
+    securityTrust: {
+      title: "自由に作る。責任を持って守る。",
+      description: "Cor.は、開発者の快適さと、お客様の情報を守る責任を両立させるため、ローカルファースト、最小限のセキュリティログ、機密度ティアに基づく運用を整備しています。",
+      items: [
+        "顧問弁護士と連携し、契約・AI・個人情報・ISMS運用をレビュー",
+        "ISO/IEC 27001認証取得を目標にISMS運用を整備中",
+        "機密度ティアに応じて承認AI・会社アカウント・隔離環境を使い分け",
+        "会社支給Mac、暗号化、MDM、検知・対応型の軽量統制"
+      ],
+      cta: "セキュリティ方針を見る"
+    },
+    kyousou: {
+      title: "Cor.は、きょうそうを追い続ける。",
+      description: "迎合ではなく、衝突でもなく、互いの価値観を持ち寄り、違いを磨き合い、AIで現場の課題を形にする。それがCor.の考える「きょうそう」です。",
+      items: [
+        { word: "共創", meaning: "一緒に価値を作る", cor: "顧客・パートナー・AIと共に作る" },
+        { word: "協奏", meaning: "異なる強みが響き合う", cor: "人、AI、専門性、地域が役割を持つ" },
+        { word: "競争", meaning: "互いを磨く", cor: "イエスマンを拒み、率直に高め合う" },
+        { word: "狂想", meaning: "まだ形のない構想", cor: "妄想で終わらせずプロダクトに落とす" },
+        { word: "狂騒", meaning: "熱量・市場のざわめき", cor: "追う対象ではなく、結果として生むもの" }
+      ],
+      cta: "代表ストーリーを読む"
+    },
+    finalCta: {
+      title: "課題から、きょうそうを始めましょう。",
+      description: "Griftで参考見積もりを試すか、まだ言語化できていない課題からご相談ください。",
+      primary: "AI見積もりを試す",
+      secondary: "相談する"
+    },
+    works: {
+      title: "実績",
+      intro: "実績は順次公開予定です。"
     },
     security: {
       title: "セキュリティ",
@@ -489,7 +582,7 @@ const translations = {
     }
   },
   en: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security", works: "Works", grift: "Grift" },
     hero: {
       title: "Beyond Words, Delivering Feelings.",
       subtitle: "Once expressed through trumpet, now through code. A former musician's pursuit of 'communication beyond words.'",
@@ -976,7 +1069,7 @@ const translations = {
     }
   },
   zh: {
-    nav: { home: "首页", about: "关于我们", products: "产品&洞察", blog: "博客", contact: "联系我们", security: "安全" },
+    nav: { home: "首页", about: "关于我们", products: "产品&洞察", blog: "博客", contact: "联系我们", security: "安全", works: "Works", grift: "Grift" },
     hero: {
       title: "比任何人都更快，超越地平线。",
       subtitle: "通过AI打破语言和文化壁垒，实现人们真正相互理解的社会。",
@@ -1463,7 +1556,7 @@ const translations = {
     }
   },
   ko: {
-    nav: { home: "홈", about: "회사소개", products: "제품&인사이트", blog: "블로그", contact: "문의", security: "보안" },
+    nav: { home: "홈", about: "회사소개", products: "제품&인사이트", blog: "블로그", contact: "문의", security: "보안", works: "Works", grift: "Grift" },
     hero: {
       title: "누구보다 빠르게, 지평선 너머로.",
       subtitle: "AI로 언어와 문화의 벽을 넘어 사람들이 진정으로 이해하는 사회를 실현합니다.",
@@ -1950,7 +2043,7 @@ const translations = {
     }
   },
   es: {
-    nav: { home: "Inicio", about: "Acerca de", products: "Productos&Insights", blog: "Blog", contact: "Contacto", security: "Seguridad" },
+    nav: { home: "Inicio", about: "Acerca de", products: "Productos&Insights", blog: "Blog", contact: "Contacto", security: "Seguridad", works: "Works", grift: "Grift" },
     hero: {
       title: "Más rápido que cualquiera, más allá del horizonte.",
       subtitle: "Superando las barreras del idioma y la cultura con IA para crear una sociedad donde las personas se entiendan verdaderamente.",
@@ -2440,6 +2533,12 @@ const translations = {
 
 export function getTranslations(locale: Locale) {
   return translations[locale];
+}
+
+// JA 専用の翻訳取得。Home C案コンポーネント等、現状 ja のみにコピーが存在する
+// セクションで利用する。union ではなく ja の具体型を返すため新規キーに型安全にアクセスできる。
+export function getJaTranslations() {
+  return translations.ja;
 }
 
 export function getCurrentLocale(url: URL): Locale {
