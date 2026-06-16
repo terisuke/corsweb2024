@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getJaTranslations } from '../utils/i18n';
+
+const t = getJaTranslations();
+---
+
+<Layout
+  description={t.meta.works.description}
+  title={t.meta.works.title}
+>
+  <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <div class="flex flex-col gap-4 pb-16 text-center sm:pb-20">
+      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{t.works.title}</h1>
+    </div>
+    <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+      {t.works.intro}
+    </p>
+  </div>
+</Layout>
