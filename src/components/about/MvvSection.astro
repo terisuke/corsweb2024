@@ -1,0 +1,43 @@
+---
+// MVV/Valuesは正本07案・寺田社長(CEO)承認待ちのドラフトです。
+// 最終文言の確定は寺田社長(CEO)の承認後に行ってください。
+import { getJaTranslations } from '../../utils/i18n';
+
+const t = getJaTranslations();
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col gap-10 sm:gap-12">
+      <div class="max-w-3xl">
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          {t.aboutPage.mvvTitle}
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+          <h3 class="text-sm font-medium uppercase tracking-wide text-primary-600 dark:text-primary-400">
+            Mission
+          </h3>
+          <p class="text-lg text-primary-950/80 dark:text-primary-200/80">{t.aboutPage.mission}</p>
+        </div>
+        <div class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+          <h3 class="text-sm font-medium uppercase tracking-wide text-primary-600 dark:text-primary-400">
+            Vision
+          </h3>
+          <p class="text-lg text-primary-950/80 dark:text-primary-200/80">{t.aboutPage.vision}</p>
+        </div>
+      </div>
+      <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          t.aboutPage.values.map((value) => (
+            <li class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+              <h3 class="text-xl font-medium tracking-tight">{value.title}</h3>
+              <p class="text-base text-primary-950/70 dark:text-primary-200/70">{value.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

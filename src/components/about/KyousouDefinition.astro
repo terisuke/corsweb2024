@@ -1,0 +1,30 @@
+---
+import { getJaTranslations } from '../../utils/i18n';
+
+const t = getJaTranslations();
+---
+
+<section id="kyousou" class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col gap-10 sm:gap-12">
+      <div class="max-w-3xl">
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          {t.aboutPage.kyousouTitle}
+        </h2>
+      </div>
+      <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+        {
+          t.aboutPage.kyousou.map((item) => (
+            <li class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+              <h3 class="text-2xl font-medium tracking-tight">{item.word}</h3>
+              <p class="text-base text-primary-950/70 dark:text-primary-200/70">{item.usage}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="max-w-3xl rounded-3xl bg-primary-600/10 p-6 text-xl font-medium tracking-tight text-primary-700 dark:bg-primary-400/10 dark:text-primary-300 sm:text-2xl">
+        {t.aboutPage.kyousouAxis}
+      </p>
+    </div>
+  </div>
+</section>

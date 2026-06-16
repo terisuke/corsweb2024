@@ -166,8 +166,30 @@ const translations = {
       cta: "ホームに戻る"
     },
     aboutPage: {
-      title: "About",
-      subtitle: "世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。"
+      title: 'きょうそうを追い続ける。',
+      lead: 'Cor.は、誰とでも無理に分かり合う会社ではありません。自分の価値観を持つ人同士が、違いを隠さず、互いの成長を求め、AIと技術で現場の課題を形にする会社です。',
+      kyousouTitle: '「きょうそう」とは。',
+      kyousou: [
+        { word: '共創', usage: '顧客、AI、パートナーと一緒に作る' },
+        { word: '協奏', usage: '人・AI・専門性が役割を持って響き合う' },
+        { word: '競争', usage: 'イエスマンを拒み、互いを磨く' },
+        { word: '狂想', usage: 'まだ形のないアイデアを恐れない' },
+        { word: '狂騒', usage: '結果として市場に生む熱量' },
+      ],
+      kyousouAxis: 'きょうそうとは、違いを成果に変える実装態度である。',
+      mvvTitle: 'Mission / Vision / Values',
+      mission: 'きょうそうを通じて、作り手と事業の可能性を解放する。',
+      vision: '価値観の違いが、分断ではなく、より良い実装を生む社会をつくる。',
+      values: [
+        { title: '迎合しない共創', description: '相手に合わせるだけの関係は作らない。率直に問い、必要なら反論し、より良い答えを探す。' },
+        { title: '実証で語る', description: '思想だけでは終わらせない。コード、プロダクト、運用、数字で示す。' },
+        { title: '自由と責任を両立する', description: '人の力を縛らず、守るべき情報は守る。快適さと信頼を同時に設計する。' },
+        { title: '違いを磨き合う', description: '認知特性、専門性、価値観の違いを、妥協ではなく成果へ変える。' },
+        { title: '作り手の実力を解放する', description: 'AIを、人を置き換える道具ではなく、人が本来の力を出すための拡張として使う。' },
+      ],
+      founderTitle: '代表ストーリー',
+      founderLead: 'Cor.の「きょうそう」は、代表 寺田康佑の経験から生まれています。',
+      founderPlaceholder: '代表ストーリーの詳細は準備中です。',
     },
     values: {
       title: "Our Values"
@@ -419,7 +441,7 @@ const translations = {
     ],
     meta: {
       home: { title: "Cor.inc · Pioneering Collaboration Through Innovation", description: "Cor.inc specializes in Python-powered data analysis and Web & Mobile app development, creating innovative, machine learning-enhanced solutions for Innovative people who want to change the world." },
-      about: { title: "About · Cor.inc", description: "Find more our history, values, mission and more. We are a group of people who share the same values." },
+      about: { title: "About | Cor.inc", description: "Cor.株式会社が追い続ける「きょうそう」。共創・協奏・競争・狂想を通じて、作り手と事業の可能性を解放します。" },
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
