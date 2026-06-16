@@ -2,7 +2,7 @@ export type Locale = 'ja' | 'en' | 'zh' | 'ko' | 'es';
 
 const translations = {
   ja: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security" },
     hero: {
       title: "言葉を超えて、想いを届ける。",
       subtitle: "かつてトランペットで伝えた感動を、今はコードで。元音楽家が追求する「誤解のないコミュニケーション」の実現。",
@@ -115,6 +115,7 @@ const translations = {
         products: "Products&Insights",
         contact: "Contact",
         privacy: "Privacy",
+        security: "Security",
         legal: "特商法表記"
       },
       description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
@@ -422,7 +423,8 @@ const translations = {
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
-      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." }
+      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." },
+      security: { title: "セキュリティ | Cor.inc", description: "Cor.株式会社の情報セキュリティ、ISMS取得に向けた体制、ローカルファーストと機密度ティアによるAI開発環境について。" }
     },
     privacy: {
       title: "プライバシーポリシー",
@@ -452,10 +454,42 @@ const translations = {
         linkText: "お問い合わせフォーム",
         suffix: "までご連絡ください。"
       }
+    },
+    security: {
+      title: "セキュリティ",
+      tagline: "自由に作る。責任を持って守る。",
+      lead: "Cor.株式会社は、AI開発におけるスピードと、お客様の大切な情報を守る責任を両立させるため、情報セキュリティ体制の整備を進めています。開発者が高い生産性を発揮できるローカルファーストな環境を保ちながら、機密度に応じたアクセス制御、承認AIツール、最小限のセキュリティログ、インシデント対応体制を組み合わせて運用します。",
+      pillarsTitle: "3つの柱",
+      pillars: [
+        { title: "ローカルファースト", description: "高スペックな会社支給Macを活用し、開発者が快適にローカル開発できる環境を基本とします。端末暗号化、MDM、アカウント管理、必要なセキュリティ設定を組み合わせ、開発速度と情報管理の両立を目指します。" },
+        { title: "最小限のセキュリティログと検知・対応", description: "予防的にすべてを禁止するのではなく、業務に必要な範囲でセキュリティ上の可視化を行い、問題発生時にすばやく検知・対応できる体制を整えます。取得対象は業務関連のセキュリティテレメトリに限定し、私的な内容を過度に取得しない方針です。" },
+        { title: "機密度ティア", description: "扱う情報の機密度に応じて、会社アカウント、承認済みAIツール、アクセス制御、必要時の隔離環境を使い分けます。非機密の検証ではスピードを重視し、顧客機密・個人情報・ソースコードなどを扱う場合は、より厳格な取扱いを適用します。" }
+      ],
+      statusTitle: "体制整備",
+      status: {
+        legal: "2026年6月より、顧問弁護士と連携し、契約、個人情報、AI利用、情報セキュリティ運用に関する法務レビュー体制を整備しています。",
+        isms: "Cor.株式会社は、2026年12月のISO/IEC 27001認証取得を目標に、ISMS（情報セキュリティマネジメントシステム）の運用整備を進めています。"
+      },
+      aiTitle: "AI利用方針",
+      aiDescription: "Cor.はAIツールの業務利用を積極的に活用します。一方で、顧客機密、個人情報、ソースコード、学習データ等を扱う場合は、学習利用されない契約・設定のAIツール、会社アカウント、または承認済み環境を用います。AIの出力は人が検証し、権利・正確性・安全性を確認したうえで利用します。",
+      tableTitle: "取り組み一覧",
+      tableHead: { area: "領域", effort: "取り組み", state: "状態" },
+      table: [
+        { area: "法務レビュー", effort: "顧問弁護士と連携し、契約・個人情報・AI利用・ISMS運用を確認", state: "2026年6月より整備" },
+        { area: "ISMS", effort: "ISO/IEC 27001認証取得を目標に、リスク管理・教育・規程・監査体制を整備", state: "2026年12月取得目標" },
+        { area: "端末管理", effort: "会社支給Mac、端末暗号化、MDM、必要な設定配布", state: "段階導入" },
+        { area: "AI利用", effort: "機密度に応じ、承認AIツール・会社アカウント・学習非利用設定を適用", state: "運用整備中" },
+        { area: "ローカルLLM", effort: "機密情報を外部へ不要に出さないAI活用を支援", state: "案件に応じて適用" },
+        { area: "インシデント対応", effort: "報告ライン、初動対応、再発防止を規程化", state: "ISMS運用内で整備" }
+      ],
+      privacyTitle: "プライバシーについて",
+      privacyDescription: "個人情報の取り扱いについては、",
+      privacyLinkText: "プライバシーポリシー",
+      privacySuffix: "をご覧ください。"
     }
   },
   en: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact" },
+    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security" },
     hero: {
       title: "Beyond Words, Delivering Feelings.",
       subtitle: "Once expressed through trumpet, now through code. A former musician's pursuit of 'communication beyond words.'",
@@ -568,6 +602,7 @@ const translations = {
         products: "Products&Insights",
         contact: "Contact",
         privacy: "Privacy",
+        security: "Security",
         legal: "Legal Notice"
       },
       description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
@@ -875,7 +910,8 @@ const translations = {
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
-      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." }
+      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." },
+      security: { title: "Security | Cor.inc", description: "Cor. Inc.'s information security: our ISMS roadmap, and a local-first, sensitivity-tiered AI development environment." }
     },
     privacy: {
       title: "Privacy Policy",
@@ -905,10 +941,42 @@ const translations = {
         linkText: "contact form",
         suffix: "."
       }
+    },
+    security: {
+      title: "Security",
+      tagline: "Build freely. Protect responsibly.",
+      lead: "Cor. Inc. is building out its information security program to balance the speed of AI development with the responsibility of protecting our customers' valuable information. While maintaining a local-first environment where developers can be highly productive, we operate a combination of sensitivity-based access controls, approved AI tools, minimal security logging, and an incident response framework.",
+      pillarsTitle: "Three Pillars",
+      pillars: [
+        { title: "Local-First", description: "We use high-spec, company-issued Macs as the baseline so developers can work comfortably in a local development environment. By combining device encryption, MDM, account management, and necessary security configurations, we aim to balance development speed with information management." },
+        { title: "Minimal Security Logging, Detection, and Response", description: "Rather than preventively prohibiting everything, we maintain security visibility to the extent needed for our work and build a framework that can quickly detect and respond when issues arise. The data we collect is limited to work-related security telemetry, and our policy is not to excessively collect private content." },
+        { title: "Sensitivity Tiers", description: "Depending on the sensitivity of the information handled, we selectively use company accounts, approved AI tools, access controls, and isolated environments when needed. For non-confidential verification we prioritize speed, while applying stricter handling when dealing with customer confidential data, personal information, source code, and the like." }
+      ],
+      statusTitle: "Building Our Framework",
+      status: {
+        legal: "Since June 2026, in collaboration with our retained legal counsel, we have been building a legal review framework covering contracts, personal information, AI use, and information security operations.",
+        isms: "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification in December 2026."
+      },
+      aiTitle: "AI Usage Policy",
+      aiDescription: "Cor. actively leverages AI tools for our work. At the same time, when handling customer confidential data, personal information, source code, training data, and the like, we use AI tools under contracts and configurations that prevent training use, company accounts, or approved environments. AI outputs are verified by people and used only after confirming rights, accuracy, and safety.",
+      tableTitle: "Initiatives",
+      tableHead: { area: "Area", effort: "Initiative", state: "Status" },
+      table: [
+        { area: "Legal Review", effort: "In collaboration with retained legal counsel, reviewing contracts, personal information, AI use, and ISMS operations", state: "Building since June 2026" },
+        { area: "ISMS", effort: "Targeting ISO/IEC 27001 certification, building risk management, training, policies, and audit framework", state: "Targeting certification in December 2026" },
+        { area: "Device Management", effort: "Company-issued Macs, device encryption, MDM, and distribution of necessary configurations", state: "Phased rollout" },
+        { area: "AI Use", effort: "Applying approved AI tools, company accounts, and no-training settings according to sensitivity", state: "Operational readiness in progress" },
+        { area: "Local LLM", effort: "Supporting AI use that avoids unnecessarily exposing confidential information externally", state: "Applied per engagement" },
+        { area: "Incident Response", effort: "Codifying reporting lines, initial response, and recurrence prevention into policy", state: "Being built within ISMS operations" }
+      ],
+      privacyTitle: "About Privacy",
+      privacyDescription: "For how we handle personal information, please see our ",
+      privacyLinkText: "Privacy Policy",
+      privacySuffix: "."
     }
   },
   zh: {
-    nav: { home: "首页", about: "关于我们", products: "产品&洞察", blog: "博客", contact: "联系我们" },
+    nav: { home: "首页", about: "关于我们", products: "产品&洞察", blog: "博客", contact: "联系我们", security: "安全" },
     hero: {
       title: "比任何人都更快，超越地平线。",
       subtitle: "通过AI打破语言和文化壁垒，实现人们真正相互理解的社会。",
@@ -1021,6 +1089,7 @@ const translations = {
         products: "产品&洞察",
         contact: "联系我们",
         privacy: "隐私",
+        security: "安全",
         legal: "法律声明"
       },
       description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
@@ -1328,7 +1397,8 @@ const translations = {
       contact: { title: "联系我们 · Cor.inc", description: "联系我们的团队，了解更多我们如何帮助您。" },
       products: { title: "产品&洞察 · Cor.inc", description: "探索我们的产品和洞察页面，展示我们的创新IT解决方案和媒体推广。此页面提供有关我们产品组合、开发服务和战略洞察的详细信息。发现我们的尖端技术解决方案，了解我们的创新方法，并了解我们如何帮助改变您的数字形象。适合寻求综合IT服务和产品解决方案的企业。" },
       "404": { title: "未找到 · Cor.inc", description: "页面未找到。请检查地址栏中的URL并重试。" },
-      privacy: { title: "隐私政策 · Cor.inc", description: "我们的隐私政策将帮助您了解收集了哪些信息以及如何使用。" }
+      privacy: { title: "隐私政策 · Cor.inc", description: "我们的隐私政策将帮助您了解收集了哪些信息以及如何使用。" },
+      security: { title: "安全 | Cor.inc", description: "关于 Cor. 股份公司的信息安全、面向 ISMS 认证的体制建设，以及基于本地优先与机密度分级的 AI 开发环境。" }
     },
     privacy: {
       title: "隐私政策",
@@ -1358,10 +1428,42 @@ const translations = {
         linkText: "联系表单",
         suffix: "与我们联系。"
       }
+    },
+    security: {
+      title: "安全",
+      tagline: "自由创造，负责守护。",
+      lead: "Cor. 股份公司正在推进信息安全体制的建设，以兼顾 AI 开发的速度与守护客户重要信息的责任。我们在保持让开发者高效工作的本地优先环境的同时，结合按机密度划分的访问控制、经批准的 AI 工具、最小限度的安全日志以及事件响应体制进行运营。",
+      pillarsTitle: "三大支柱",
+      pillars: [
+        { title: "本地优先", description: "以高配置的公司配发 Mac 为基础，让开发者能够舒适地进行本地开发。通过结合设备加密、MDM、账户管理及必要的安全设置，力求兼顾开发速度与信息管理。" },
+        { title: "最小限度的安全日志与检测响应", description: "并非以预防为名禁止一切，而是在业务所需范围内进行安全可视化，构建在问题发生时能够迅速检测与响应的体制。采集对象仅限于与业务相关的安全遥测数据，方针上不过度采集私人内容。" },
+        { title: "机密度分级", description: "根据所处理信息的机密度，分别使用公司账户、经批准的 AI 工具、访问控制以及必要时的隔离环境。对于非机密的验证注重速度，处理客户机密、个人信息、源代码等时则适用更严格的处理方式。" }
+      ],
+      statusTitle: "体制建设",
+      status: {
+        legal: "自 2026 年 6 月起，我们与顾问律师合作，建立关于合同、个人信息、AI 使用及信息安全运营的法务审查体制。",
+        isms: "Cor. 股份公司正以 2026 年 12 月取得 ISO/IEC 27001 认证为目标，推进 ISMS（信息安全管理体系）的运营建设。"
+      },
+      aiTitle: "AI 使用方针",
+      aiDescription: "Cor. 积极将 AI 工具用于业务。同时，在处理客户机密、个人信息、源代码、训练数据等时，使用不会被用于训练的合同与设置的 AI 工具、公司账户或经批准的环境。AI 的输出由人进行验证，在确认权利、准确性与安全性后方才使用。",
+      tableTitle: "举措一览",
+      tableHead: { area: "领域", effort: "举措", state: "状态" },
+      table: [
+        { area: "法务审查", effort: "与顾问律师合作，审查合同、个人信息、AI 使用及 ISMS 运营", state: "自 2026 年 6 月起建设" },
+        { area: "ISMS", effort: "以取得 ISO/IEC 27001 认证为目标，建设风险管理、培训、规程与审计体制", state: "目标 2026 年 12 月取得" },
+        { area: "设备管理", effort: "公司配发 Mac、设备加密、MDM 及必要设置的分发", state: "分阶段导入" },
+        { area: "AI 使用", effort: "根据机密度适用经批准的 AI 工具、公司账户及不用于训练的设置", state: "运营建设中" },
+        { area: "本地 LLM", effort: "支持避免将机密信息不必要地外泄的 AI 应用", state: "视项目适用" },
+        { area: "事件响应", effort: "将报告渠道、初期响应与防止再发纳入规程", state: "在 ISMS 运营中建设" }
+      ],
+      privacyTitle: "关于隐私",
+      privacyDescription: "关于个人信息的处理，请参阅我们的",
+      privacyLinkText: "隐私政策",
+      privacySuffix: "。"
     }
   },
   ko: {
-    nav: { home: "홈", about: "회사소개", products: "제품&인사이트", blog: "블로그", contact: "문의" },
+    nav: { home: "홈", about: "회사소개", products: "제품&인사이트", blog: "블로그", contact: "문의", security: "보안" },
     hero: {
       title: "누구보다 빠르게, 지평선 너머로.",
       subtitle: "AI로 언어와 문화의 벽을 넘어 사람들이 진정으로 이해하는 사회를 실현합니다.",
@@ -1474,6 +1576,7 @@ const translations = {
         products: "제품&인사이트",
         contact: "문의",
         privacy: "개인정보처리방침",
+        security: "보안",
         legal: "법적 고지"
       },
       description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
@@ -1781,7 +1884,8 @@ const translations = {
       contact: { title: "문의 · Cor.inc", description: "우리 팀에 연락하여 우리가 어떻게 도울 수 있는지 더 알아보세요." },
       products: { title: "제품&인사이트 · Cor.inc", description: "우리의 혁신적인 IT 솔루션과 미디어 확산을 보여주는 제품 및 인사이트 페이지를 탐색하세요. 이 페이지는 우리의 제품 포트폴리오, 개발 서비스 및 전략적 인사이트에 대한 자세한 정보를 제공합니다. 최첨단 기술 솔루션을 발견하고, 우리의 혁신적인 접근 방식에 대해 읽고, 우리가 어떻게 귀하의 디지털 존재를 변화시킬 수 있는지 알아보세요. 포괄적인 IT 서비스와 제품 솔루션을 찾는 기업에 이상적입니다." },
       "404": { title: "찾을 수 없음 · Cor.inc", description: "페이지를 찾을 수 없습니다. 주소 표시줄의 URL을 확인하고 다시 시도하세요." },
-      privacy: { title: "개인정보처리방침 · Cor.inc", description: "우리의 개인정보처리방침은 수집된 정보와 사용 방법을 이해하는 데 도움이 됩니다." }
+      privacy: { title: "개인정보처리방침 · Cor.inc", description: "우리의 개인정보처리방침은 수집된 정보와 사용 방법을 이해하는 데 도움이 됩니다." },
+      security: { title: "보안 | Cor.inc", description: "Cor. 주식회사의 정보 보안, ISMS 인증 취득을 위한 체제, 그리고 로컬 퍼스트와 기밀도 등급에 기반한 AI 개발 환경에 대하여." }
     },
     privacy: {
       title: "개인정보처리방침",
@@ -1811,10 +1915,42 @@ const translations = {
         linkText: "문의 양식",
         suffix: "을 통해 연락해 주세요."
       }
+    },
+    security: {
+      title: "보안",
+      tagline: "자유롭게 만들고, 책임지고 지킵니다.",
+      lead: "Cor. 주식회사는 AI 개발의 속도와 고객의 소중한 정보를 지키는 책임을 양립시키기 위해 정보 보안 체제 정비를 추진하고 있습니다. 개발자가 높은 생산성을 발휘할 수 있는 로컬 퍼스트 환경을 유지하면서, 기밀도에 따른 접근 제어, 승인된 AI 도구, 최소한의 보안 로그, 사고 대응 체제를 조합하여 운영합니다.",
+      pillarsTitle: "세 가지 기둥",
+      pillars: [
+        { title: "로컬 퍼스트", description: "고사양의 회사 지급 Mac을 활용하여 개발자가 쾌적하게 로컬 개발을 할 수 있는 환경을 기본으로 합니다. 단말 암호화, MDM, 계정 관리, 필요한 보안 설정을 조합하여 개발 속도와 정보 관리의 양립을 목표로 합니다." },
+        { title: "최소한의 보안 로그와 탐지·대응", description: "예방적으로 모든 것을 금지하는 것이 아니라, 업무에 필요한 범위에서 보안상의 가시화를 수행하고, 문제 발생 시 신속하게 탐지·대응할 수 있는 체제를 갖춥니다. 수집 대상은 업무 관련 보안 텔레메트리에 한정하며, 사적인 내용을 과도하게 수집하지 않는 방침입니다." },
+        { title: "기밀도 등급", description: "다루는 정보의 기밀도에 따라 회사 계정, 승인된 AI 도구, 접근 제어, 필요 시 격리 환경을 구분하여 사용합니다. 비기밀 검증에서는 속도를 중시하고, 고객 기밀·개인정보·소스 코드 등을 다루는 경우에는 보다 엄격한 취급을 적용합니다." }
+      ],
+      statusTitle: "체제 정비",
+      status: {
+        legal: "2026년 6월부터 고문 변호사와 연계하여 계약, 개인정보, AI 이용, 정보 보안 운영에 관한 법무 검토 체제를 정비하고 있습니다.",
+        isms: "Cor. 주식회사는 2026년 12월 ISO/IEC 27001 인증 취득을 목표로 ISMS(정보 보안 관리 체계)의 운영 정비를 추진하고 있습니다."
+      },
+      aiTitle: "AI 이용 방침",
+      aiDescription: "Cor.는 AI 도구의 업무 활용을 적극적으로 추진합니다. 한편, 고객 기밀, 개인정보, 소스 코드, 학습 데이터 등을 다루는 경우에는 학습에 이용되지 않는 계약·설정의 AI 도구, 회사 계정, 또는 승인된 환경을 사용합니다. AI의 출력은 사람이 검증하여 권리·정확성·안전성을 확인한 후에 이용합니다.",
+      tableTitle: "추진 과제 목록",
+      tableHead: { area: "영역", effort: "추진 과제", state: "상태" },
+      table: [
+        { area: "법무 검토", effort: "고문 변호사와 연계하여 계약·개인정보·AI 이용·ISMS 운영을 확인", state: "2026년 6월부터 정비" },
+        { area: "ISMS", effort: "ISO/IEC 27001 인증 취득을 목표로 리스크 관리·교육·규정·감사 체제 정비", state: "2026년 12월 취득 목표" },
+        { area: "단말 관리", effort: "회사 지급 Mac, 단말 암호화, MDM, 필요한 설정 배포", state: "단계적 도입" },
+        { area: "AI 이용", effort: "기밀도에 따라 승인된 AI 도구·회사 계정·학습 비이용 설정을 적용", state: "운영 정비 중" },
+        { area: "로컬 LLM", effort: "기밀 정보를 외부로 불필요하게 내보내지 않는 AI 활용을 지원", state: "프로젝트에 따라 적용" },
+        { area: "사고 대응", effort: "보고 라인, 초기 대응, 재발 방지를 규정화", state: "ISMS 운영 내에서 정비" }
+      ],
+      privacyTitle: "개인정보에 대하여",
+      privacyDescription: "개인정보의 취급에 대해서는 ",
+      privacyLinkText: "개인정보처리방침",
+      privacySuffix: "을 참조해 주세요."
     }
   },
   es: {
-    nav: { home: "Inicio", about: "Acerca de", products: "Productos&Insights", blog: "Blog", contact: "Contacto" },
+    nav: { home: "Inicio", about: "Acerca de", products: "Productos&Insights", blog: "Blog", contact: "Contacto", security: "Seguridad" },
     hero: {
       title: "Más rápido que cualquiera, más allá del horizonte.",
       subtitle: "Superando las barreras del idioma y la cultura con IA para crear una sociedad donde las personas se entiendan verdaderamente.",
@@ -1927,6 +2063,7 @@ const translations = {
         products: "Productos&Insights",
         contact: "Contacto",
         privacy: "Privacidad",
+        security: "Seguridad",
         legal: "Aviso Legal"
       },
       description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
@@ -2234,7 +2371,8 @@ const translations = {
       contact: { title: "Contacto · Cor.inc", description: "Contacta con nuestro equipo para aprender más sobre cómo podemos ayudarte." },
       products: { title: "Productos&Insights · Cor.inc", description: "Explora nuestra página de productos e insights que muestra nuestras soluciones IT innovadoras y alcance mediático. Esta página ofrece información detallada sobre nuestro portafolio de productos, servicios de desarrollo e insights estratégicos. Descubre nuestras soluciones tecnológicas de vanguardia, lee sobre nuestros enfoques innovadores y aprende cómo podemos ayudar a transformar tu presencia digital. Ideal para empresas que buscan servicios IT integrales y soluciones de productos." },
       "404": { title: "No encontrado · Cor.inc", description: "Página no encontrada. Por favor, verifica la URL en la barra de direcciones e inténtalo de nuevo." },
-      privacy: { title: "Política de privacidad · Cor.inc", description: "Nuestra política de privacidad te ayudará a entender qué información se recopila y cómo se utiliza." }
+      privacy: { title: "Política de privacidad · Cor.inc", description: "Nuestra política de privacidad te ayudará a entender qué información se recopila y cómo se utiliza." },
+      security: { title: "Seguridad | Cor.inc", description: "Sobre la seguridad de la información de Cor. Inc., su hoja de ruta hacia la ISMS y un entorno de desarrollo de IA local-first con niveles de confidencialidad." }
     },
     privacy: {
       title: "Política de privacidad",
@@ -2264,6 +2402,38 @@ const translations = {
         linkText: "formulario de contacto",
         suffix: "."
       }
+    },
+    security: {
+      title: "Seguridad",
+      tagline: "Crea con libertad. Protege con responsabilidad.",
+      lead: "Cor. Inc. está desarrollando su programa de seguridad de la información para equilibrar la velocidad del desarrollo de IA con la responsabilidad de proteger la valiosa información de nuestros clientes. Manteniendo un entorno local-first en el que los desarrolladores pueden ser muy productivos, operamos con una combinación de controles de acceso según la confidencialidad, herramientas de IA aprobadas, un registro de seguridad mínimo y un marco de respuesta a incidentes.",
+      pillarsTitle: "Tres pilares",
+      pillars: [
+        { title: "Local-First", description: "Usamos Macs de alta especificación proporcionados por la empresa como base para que los desarrolladores puedan trabajar cómodamente en un entorno de desarrollo local. Combinando cifrado de dispositivos, MDM, gestión de cuentas y las configuraciones de seguridad necesarias, buscamos equilibrar la velocidad de desarrollo con la gestión de la información." },
+        { title: "Registro de seguridad mínimo, detección y respuesta", description: "En lugar de prohibirlo todo de forma preventiva, mantenemos visibilidad de seguridad en la medida necesaria para nuestro trabajo y construimos un marco que permite detectar y responder con rapidez cuando surgen problemas. Los datos que recopilamos se limitan a la telemetría de seguridad relacionada con el trabajo, y nuestra política es no recopilar contenido privado de forma excesiva." },
+        { title: "Niveles de confidencialidad", description: "Según la confidencialidad de la información tratada, utilizamos de forma selectiva cuentas de empresa, herramientas de IA aprobadas, controles de acceso y entornos aislados cuando es necesario. Para la verificación no confidencial priorizamos la velocidad, mientras que aplicamos un tratamiento más estricto al manejar datos confidenciales de clientes, información personal, código fuente y similares." }
+      ],
+      statusTitle: "Desarrollo del marco",
+      status: {
+        legal: "Desde junio de 2026, en colaboración con nuestro asesor legal, estamos desarrollando un marco de revisión legal que abarca contratos, información personal, uso de IA y operación de la seguridad de la información.",
+        isms: "Cor. Inc. avanza en la preparación operativa de su ISMS (Sistema de Gestión de Seguridad de la Información), con el objetivo de obtener la certificación ISO/IEC 27001 en diciembre de 2026."
+      },
+      aiTitle: "Política de uso de IA",
+      aiDescription: "Cor. aprovecha activamente las herramientas de IA para su trabajo. Al mismo tiempo, al manejar datos confidenciales de clientes, información personal, código fuente, datos de entrenamiento y similares, utilizamos herramientas de IA con contratos y configuraciones que impiden su uso para entrenamiento, cuentas de empresa o entornos aprobados. Los resultados de la IA son verificados por personas y se utilizan solo tras confirmar derechos, exactitud y seguridad.",
+      tableTitle: "Iniciativas",
+      tableHead: { area: "Área", effort: "Iniciativa", state: "Estado" },
+      table: [
+        { area: "Revisión legal", effort: "En colaboración con el asesor legal, revisión de contratos, información personal, uso de IA y operación de ISMS", state: "En desarrollo desde junio de 2026" },
+        { area: "ISMS", effort: "Con el objetivo de la certificación ISO/IEC 27001, desarrollo de gestión de riesgos, formación, políticas y marco de auditoría", state: "Objetivo de certificación en diciembre de 2026" },
+        { area: "Gestión de dispositivos", effort: "Macs proporcionados por la empresa, cifrado de dispositivos, MDM y distribución de las configuraciones necesarias", state: "Implementación por fases" },
+        { area: "Uso de IA", effort: "Aplicación de herramientas de IA aprobadas, cuentas de empresa y configuraciones sin uso para entrenamiento según la confidencialidad", state: "Preparación operativa en curso" },
+        { area: "LLM local", effort: "Apoyo al uso de IA que evita exponer innecesariamente información confidencial al exterior", state: "Aplicado según el proyecto" },
+        { area: "Respuesta a incidentes", effort: "Codificación en políticas de las líneas de notificación, la respuesta inicial y la prevención de recurrencias", state: "En desarrollo dentro de la operación de ISMS" }
+      ],
+      privacyTitle: "Sobre la privacidad",
+      privacyDescription: "Para saber cómo tratamos la información personal, consulta nuestra ",
+      privacyLinkText: "Política de privacidad",
+      privacySuffix: "."
     }
   }
 } as const;
