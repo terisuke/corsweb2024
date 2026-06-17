@@ -25,7 +25,7 @@ const griftUrl = 'https://griftai.org';
           t.homeChallenges.items.map((item) => (
             <li class="flex flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
               <h3 class="text-lg font-medium tracking-tight">{item.title}</h3>
-              <p class="text-base text-primary-950/70 dark:text-primary-200/70">
+              <p class="text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
                 {item.description}
               </p>
             </li>
@@ -38,13 +38,13 @@ const griftUrl = 'https://griftai.org';
           href={griftUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
         >
           {t.homeChallenges.ctaPrimary}
         </a>
         <a
           href={getLocalizedUrl('/contact', currentLocale)}
-          class="inline-flex items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
         >
           {t.homeChallenges.ctaSecondary}
         </a>

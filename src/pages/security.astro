@@ -17,7 +17,7 @@ const t = getTranslations(currentLocale);
       <p class="text-base italic text-primary-950/70 dark:text-primary-200/70">{t.security.tagline}</p>
     </div>
     <div>
-      <p class="mb-4">
+      <p class="mb-4 text-base leading-[1.8]">
         {t.security.lead}
       </p>
 
@@ -27,20 +27,20 @@ const t = getTranslations(currentLocale);
           Array.isArray(t.security?.pillars) && t.security.pillars.map((pillar) => (
             <div>
               <h3 class="mb-2 text-lg font-medium">{pillar.title}</h3>
-              <p>{pillar.description}</p>
+              <p class="text-base leading-[1.8]">{pillar.description}</p>
             </div>
           ))
         }
       </div>
 
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.statusTitle}</h2>
-      <ul class="list-inside list-disc space-y-4">
+      <ul class="list-inside list-disc space-y-4 text-base leading-[1.8]">
         <li>{t.security.status.legal}</li>
         <li>{t.security.status.isms}</li>
       </ul>
 
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.aiTitle}</h2>
-      <p class="mb-4">{t.security.aiDescription}</p>
+      <p class="mb-4 text-base leading-[1.8]">{t.security.aiDescription}</p>
 
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.tableTitle}</h2>
       <div class="overflow-x-auto">
@@ -67,7 +67,7 @@ const t = getTranslations(currentLocale);
       </div>
 
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.privacyTitle}</h2>
-      <p class="mb-4">
+      <p class="mb-4 text-base leading-[1.8]">
         {t.security.privacyDescription}<span class="font-medium"><a href={getLocalizedUrl('/privacy', currentLocale)}>{t.security.privacyLinkText}</a></span>{t.security.privacySuffix}
       </p>
     </div>
