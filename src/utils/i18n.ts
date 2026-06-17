@@ -484,8 +484,8 @@ const translations = {
       kicker: "COR. INC. — AI × CO-CREATION",
       title: "あなたの課題を<br />一緒に形にする。",
       subtitle: "業務の無駄・使いにくいシステム・<br class='sm:hidden' />やりたいけど進まないこと——<br class='sm:hidden' />Cor.が伴走します。",
-      primaryCta: "30秒で見積もりを試す",
-      secondaryCta: "まず相談する",
+      primaryCta: "AIで見積もりを試す（30秒・登録不要）",
+      secondaryCta: "無料で相談する",
       philosophyCta: "きょうそうの思想を読む",
       trustBadges: ["AI駆動開発 4〜5倍（内部実測）", "ローカルLLM・情報を外に出さない", "ISMS取得に向け整備中", "福岡発・全国対応"]
     },
@@ -493,19 +493,21 @@ const translations = {
       eyebrow: "01 / あなたの課題",
       title: "こんな課題、一緒に解きましょう。",
       items: [
-        { title: "老朽化した基幹システムをクラウド化したい", description: "既存DB調査、スキーマ整理、Cloud SQL移行、運用設計まで支援。" },
-        { title: "多言語対応のAI受付・チャットを導入したい", description: "音声、RAG、エージェント、施設/自治体向けの案内体験を設計。" },
-        { title: "生成AIサービスをゼロから本番化したい", description: "要件定義、UX、API、課金、CI/CD、監視まで一気通貫。" },
-        { title: "機密データを外に出さずAI活用したい", description: "ローカルLLM、承認AIツール、機密度ティアに応じた設計。" },
+        { title: "老朽化した基幹システムをクラウド化したい", description: "今使っているデータの整理から、クラウド上への移行・運用設計まで一緒に進めます。" },
+        { title: "多言語対応のAI受付・チャットを導入したい", description: "音声対応や社内資料で学習したAI、自動で動くAIの仕組みを使って、施設・自治体向けの案内体験を設計します。" },
+        { title: "生成AIサービスをゼロから本番化したい", description: "何を作るかの整理から、使い心地の設計、システム同士をつなぐ仕組み、課金、自動テスト・公開、監視まで一気に対応します。" },
+        { title: "機密データを外に出さずAI活用したい", description: "情報を外に出さないAIや、承認済みのAIツールを使って、情報の重要度ランクに合わせた設計をします。" },
         { title: "業界特化のAIツールを作りたい", description: "建築図面、間取り生成、業務固有データのAI処理など。" },
-        { title: "AI駆動開発を社内に内製化したい", description: "AI顧問、AI研修、開発プロセス設計、チーム伴走。" }
+        { title: "AI駆動開発を社内に内製化したい", description: "AIの活用方針づくり、社内向け研修、開発の進め方の整備まで、チームに寄り添って進めます。" }
       ],
-      cta: "無料相談する"
+      cta: "無料相談する",
+      ctaPrimary: "AIで見積もりを試す",
+      ctaSecondary: "まず相談する"
     },
     griftBridge: {
       eyebrow: "Try Our AI / Grift",
       title: "言葉で説明する前に、AIで試してみませんか？",
-      description: "自社AIツール Grift に、あなたの作りたいものを入力するだけ。GitHub実績と市場相場から、根拠ある参考見積もり・納期・類似実績を30秒で生成します。",
+      description: "過去の開発実績と市場の相場をもとに、参考となる費用・納期・似た事例を30秒で出します。",
       cta: "GriftでAI見積もりを試す",
       note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。",
       mock: {
@@ -531,7 +533,7 @@ const translations = {
       cta: "実績を見る"
     },
     services2026: {
-      title: "事業の現場に、AIを実装する。",
+      title: "事業の現場に、AI（人の代わりに考え、動く技術）を実装する。",
       items: [
         { name: "AI受託開発", description: "生成AI、RAG、エージェント、画像/音声処理を使った本番システムを、要件定義から運用まで実装。" },
         { name: "AI顧問・AI研修", description: "経営/開発/現場チームに合わせ、AI活用方針、ツール選定、業務導入、内製化を伴走。" },
@@ -552,7 +554,7 @@ const translations = {
     },
     kyousou: {
       title: "Cor.は、きょうそうを追い続ける。",
-      description: "迎合ではなく、衝突でもなく、互いの価値観を持ち寄り、違いを磨き合い、AIで現場の課題を形にする。それがCor.の考える「きょうそう」です。",
+      description: "迎合ではなく、衝突でもなく、互いの価値観を持ち寄り、違いを磨き合い、AIで現場の課題を形にする。それがCor.の考える「きょうそう（共創・協奏・競争・狂想・狂騒。一緒に作り、磨き合い、響き合うCor.の造語）」です。",
       items: [
         { word: "共創", meaning: "一緒に価値を作る", cor: "顧客・パートナー・AIと共に作る" },
         { word: "協奏", meaning: "異なる強みが響き合う", cor: "人、AI、専門性、地域が役割を持つ" },
@@ -565,7 +567,7 @@ const translations = {
     finalCta: {
       title: "課題から、きょうそうを始めましょう。",
       description: "Griftで参考見積もりを試すか、まだ言語化できていない課題からご相談ください。",
-      primary: "AI見積もりを試す",
+      primary: "AIで見積もりを試す",
       secondary: "相談する"
     },
     works: {
