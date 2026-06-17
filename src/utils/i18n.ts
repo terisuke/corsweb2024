@@ -482,18 +482,18 @@ const translations = {
     },
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
-      title: "現場の課題を、AIで解く。",
-      subtitle: "違いをぶつけ、価値を磨き、AIで形にする。Cor.は受託開発・AI顧問・自社プロダクトGriftを通じて、事業と作り手が本来の力を発揮できる共創を実装します。",
-      primaryCta: "AI見積もりを試す",
-      secondaryCta: "課題から相談する",
+      title: "あなたの課題を<br />一緒に形にする。",
+      subtitle: "業務の無駄・使いにくいシステム・<br class='sm:hidden' />やりたいけど進まないこと——<br class='sm:hidden' />Cor.が伴走します。",
+      primaryCta: "30秒で見積もりを試す",
+      secondaryCta: "まず相談する",
       philosophyCta: "きょうそうの思想を読む",
-      trustBadges: ["福岡100選 2026-2027", "AI駆動開発 4〜5倍生産性", "ローカルLLM × ISMS取得準備中", "OSS 18万行 / 8名貢献"]
+      trustBadges: ["AI駆動開発 4〜5倍（内部実測）", "ローカルLLM・情報を外に出さない", "ISMS取得に向け整備中", "福岡発・全国対応"]
     },
     homeChallenges: {
       eyebrow: "01 / あなたの課題",
       title: "こんな課題、一緒に解きましょう。",
       items: [
-        { title: "老朽化した基幹システムをクラウド化したい", description: "既存DB調査、スキーマ整理、Cloud SQL移行、運用設計まで支援。" },
+        { title: "老朽化した基幹システムをクラウド化したい", description: "既存DB調査、スキーマ整理、Cloud SQL移行、運用設計まで支援。" },
         { title: "多言語対応のAI受付・チャットを導入したい", description: "音声、RAG、エージェント、施設/自治体向けの案内体験を設計。" },
         { title: "生成AIサービスをゼロから本番化したい", description: "要件定義、UX、API、課金、CI/CD、監視まで一気通貫。" },
         { title: "機密データを外に出さずAI活用したい", description: "ローカルLLM、承認AIツール、機密度ティアに応じた設計。" },
