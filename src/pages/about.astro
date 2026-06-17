@@ -3,6 +3,7 @@ import AboutHero from '../components/about/AboutHero.astro';
 import KyousouDefinition from '../components/about/KyousouDefinition.astro';
 import MvvSection from '../components/about/MvvSection.astro';
 import FounderNote from '../components/about/FounderNote.astro';
+import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
 import { getJaTranslations } from '../utils/i18n';
 
@@ -17,4 +18,9 @@ const t = getJaTranslations();
   <KyousouDefinition />
   <MvvSection />
   <FounderNote />
+
+  <NextStep
+    heading="Cor.のことが少し分かったら、実際の仕事を見てみませんか？"
+    ctas={[{ label: '実績・事例を見る', href: '/works', primary: true }]}
+  />
 </Layout>

@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import NextStep from '../components/common/NextStep.astro';
 import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
@@ -71,4 +72,11 @@ const t = getTranslations(currentLocale);
       </p>
     </div>
   </div>
+
+  {currentLocale === 'ja' && (
+    <NextStep
+      heading="安心して任せられそうと感じたら、まずは話してみませんか？"
+      ctas={[{ label: '無料で相談する', href: '/contact', primary: true }]}
+    />
+  )}
 </Layout>

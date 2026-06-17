@@ -3,6 +3,7 @@ import Calendar from '../components/contact/Calendar.astro';
 import ContactForm from '../components/contact/ContactForm.astro';
 import ContactInfo from '../components/contact/ContactInfo.astro';
 import Heading from '../components/contact/Heading.astro';
+import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
 import { getCurrentLocale, getTranslations } from '../utils/i18n';
 
@@ -20,4 +21,11 @@ const t = getTranslations(currentLocale);
   <ContactInfo />
   <Calendar />
   <ContactForm />
+
+  {currentLocale === 'ja' && (
+    <NextStep
+      heading="送信ありがとうございます。返信までの間に、実績をご覧ください。"
+      ctas={[{ label: '実績・事例を見る', href: '/works', primary: true }]}
+    />
+  )}
 </Layout>

@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import NextStep from '../components/common/NextStep.astro';
 import { getJaTranslations } from '../utils/i18n';
 
 const t = getJaTranslations();
@@ -50,13 +51,11 @@ const t = getJaTranslations();
       }
     </ul>
 
-    <div class="mt-16 flex justify-center sm:mt-20">
-      <a
-        class="text-base font-medium text-primary-950/70 underline-offset-4 hover:underline dark:text-primary-200/70"
-        href="/contact"
-      >
-        課題を相談する →
-      </a>
-    </div>
   </div>
+
+  <NextStep
+    heading="気になる実績がありましたか？"
+    lead="あなたの課題も、一緒に考えさせてください。"
+    ctas={[{ label: '課題から相談する', href: '/contact', primary: true }]}
+  />
 </Layout>

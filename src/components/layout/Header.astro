@@ -17,9 +17,20 @@ const baseLinks = [
   { name: t.nav.blog, href: getLocalizedUrl('/blog', currentLocale), isExternal: false },
   { name: t.nav.contact, href: getLocalizedUrl('/contact', currentLocale), isExternal: false },
 ];
+// 現在地ハイライト判定: Astro.url.pathname と各リンクの href を比較。
+// 末尾スラッシュの揺れを吸収するため正規化してから比較する。トップ(/)も対象。
+// ロジックは全言語共通。外部リンク(Grift 等)は判定対象外。
+const normalizePath = (path: string) => {
+  if (!path) return '/';
+  const trimmed = path.replace(/\/+$/, '');
+  return trimmed === '' ? '/' : trimmed;
+};
+const currentPath = normalizePath(Astro.url.pathname);
+
 const links = baseLinks.map((link, index) => ({
   ...link,
   ref: String(index + 1).padStart(2, '0'),
+  isActive: !link.isExternal && normalizePath(link.href) === currentPath,
 }));
 ---
 
@@ -183,7 +194,12 @@ const links = baseLinks.map((link, index) => ({
               <div class="flex flex-1 items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
                 <div class="flex items-center gap-6">
                   <span class="text-xs">{link.ref}</span>
-                  <span class="group-hover:underline">{link.name}</span>
+                  <span
+                    class:list={['group-hover:underline', { 'font-semibold text-[#2d4a6b]': link.isActive }]}
+                    aria-current={link.isActive ? 'page' : undefined}
+                  >
+                    {link.name}
+                  </span>
                 </div>
                 <svg
                   class="h-6 w-6 text-primary-600 dark:text-primary-400 sm:h-8 sm:w-8"
