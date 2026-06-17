@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
@@ -55,6 +56,16 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB }}
           projectId: cor-jp-web
+          expires: 30d
+
+      - name: Deploy to Firebase Hosting (Develop preview)
+        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+        uses: FirebaseExtended/action-hosting-deploy@v0.7.1
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_COR_JP_WEB }}
+          projectId: cor-jp-web
+          channelId: develop
           expires: 30d
 
       - name: Deploy to Firebase Hosting (Production)
