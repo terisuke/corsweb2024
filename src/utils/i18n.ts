@@ -2,7 +2,7 @@ export type Locale = 'ja' | 'en' | 'zh' | 'ko' | 'es';
 
 const translations = {
   ja: {
-    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security", works: "Works", grift: "Grift" },
+    nav: { home: "ホーム", about: "Cor.について", products: "Products&Insights", blog: "ブログ", contact: "お問い合わせ", security: "セキュリティ", works: "実績・事例", grift: "Grift" },
     hero: {
       title: "言葉を超えて、想いを届ける。",
       subtitle: "かつてトランペットで伝えた感動を、今はコードで。元音楽家が追求する「誤解のないコミュニケーション」の実現。",
@@ -112,12 +112,12 @@ const translations = {
       company: "Company",
       legal: "Legal",
       links: {
-        home: "Home",
-        about: "About",
-        products: "Products&Insights",
-        contact: "Contact",
-        privacy: "Privacy",
-        security: "Security",
+        home: "ホーム",
+        about: "Cor.について",
+        products: "サービス・読みもの",
+        contact: "お問い合わせ",
+        privacy: "プライバシー",
+        security: "セキュリティ",
         legal: "特商法表記"
       },
       description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
