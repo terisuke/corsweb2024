@@ -93,9 +93,11 @@ const translations = {
           consultationType: "相談内容",
           consultationTypePlaceholder: "相談内容を選択してください",
           consultationOptions: [
-            "TapForgeについてのご相談",
-            "BoltSiteについてのご相談",
-            "IoTRealmについてのご相談",
+            "Grift / AI見積もりについて",
+            "AI受託開発・システム開発について",
+            "AI顧問・AI研修について",
+            "ローカルLLM・機密データAI活用について",
+            "共創パートナー・採用について",
             "その他"
           ],
           message: "メッセージ"
@@ -695,9 +697,11 @@ const translations = {
           consultationType: "Consultation Type",
           consultationTypePlaceholder: "Please select consultation type",
           consultationOptions: [
-            "Consultation about TapForge",
-            "Consultation about BoltSite",
-            "Consultation about IoTRealm",
+            "Grift / AI estimate",
+            "AI contract & system development",
+            "AI advisory & training",
+            "Local LLM & confidential-data AI",
+            "Co-creation partner & hiring",
             "Other"
           ],
           message: "Message"
@@ -1182,9 +1186,11 @@ const translations = {
           consultationType: "咨询内容",
           consultationTypePlaceholder: "请选择咨询内容",
           consultationOptions: [
-            "关于TapForge的咨询",
-            "关于BoltSite的咨询",
-            "关于IoTRealm的咨询",
+            "Grift / AI报价咨询",
+            "AI受托开发・系统开发",
+            "AI顾问・AI培训",
+            "本地LLM・机密数据AI应用",
+            "共创伙伴・招聘",
             "其他"
           ],
           message: "消息"
@@ -1669,9 +1675,11 @@ const translations = {
           consultationType: "상담 내용",
           consultationTypePlaceholder: "상담 내용을 선택해 주세요",
           consultationOptions: [
-            "TapForge에 대한 상담",
-            "BoltSite에 대한 상담",
-            "IoTRealm에 대한 상담",
+            "Grift / AI 견적 문의",
+            "AI 수탁 개발・시스템 개발",
+            "AI 고문・AI 연수",
+            "로컬 LLM・기밀 데이터 AI 활용",
+            "공동창조 파트너・채용",
             "기타"
           ],
           message: "메시지"
@@ -2156,9 +2164,11 @@ const translations = {
           consultationType: "Tipo de consulta",
           consultationTypePlaceholder: "Seleccione el tipo de consulta",
           consultationOptions: [
-            "Consulta sobre TapForge",
-            "Consulta sobre BoltSite",
-            "Consulta sobre IoTRealm",
+            "Grift / Estimación con IA",
+            "Desarrollo de sistemas y por contrato con IA",
+            "Asesoría y formación en IA",
+            "LLM local y IA con datos confidenciales",
+            "Socio de co-creación y contratación",
             "Otros"
           ],
           message: "Mensaje"
