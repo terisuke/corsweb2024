@@ -517,7 +517,8 @@ const translations = {
         durationLabel: "参考納期",
         duration: "4週間〜",
         similarLabel: "類似実績",
-        similar: "5件"
+        similar: "5件",
+        similarNote: "社内実績ベース"
       }
     },
     proof: {

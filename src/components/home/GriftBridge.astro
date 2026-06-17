@@ -19,7 +19,7 @@ const mock = t.griftBridge.mock;
         <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
           {t.griftBridge.title}
         </h2>
-        <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+        <p class="text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70">
           {t.griftBridge.description}
         </p>
         <div>
@@ -27,7 +27,7 @@ const mock = t.griftBridge.mock;
             href={griftUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-5 py-3 text-base font-medium text-white transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
+            class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-5 py-3 text-base font-medium text-white transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
           >
             {t.griftBridge.cta}
           </a>
@@ -55,6 +55,9 @@ const mock = t.griftBridge.mock;
             <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950">
               <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.similarLabel}</dt>
               <dd class="text-xl font-medium tracking-tight">{mock.similar}</dd>
+              {mock.similarNote && (
+                <dd class="text-xs text-primary-950/60 dark:text-primary-200/60">{mock.similarNote}</dd>
+              )}
             </div>
           </dl>
         </div>

@@ -23,7 +23,7 @@ const griftUrl = 'https://griftai.org';
       </p>
       <div class="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
         <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl" set:html={t.homeHero.title} />
-        <p class="text-lg text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle}></p>
+        <p class="text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle}></p>
       </div>
       <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
         {/* パターンA(凪沙さん #64): 主役=Grift体験を大きく塗りつぶしで、脇役=相談はテキストリンクで。最初の一歩を1つに絞る。 */}
@@ -31,13 +31,13 @@ const griftUrl = 'https://griftai.org';
           href={griftUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
         >
           {t.homeHero.primaryCta}
         </a>
         <a
           href={getLocalizedUrl('/contact', currentLocale)}
-          class="inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-primary-950 underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-full px-5 py-3 text-base font-medium text-primary-950 underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200"
         >
           {t.homeHero.secondaryCta}
         </a>
