@@ -167,7 +167,19 @@ const currentLocale = getCurrentLocale(Astro.url);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      
+
+      /* 日本語の改行を読みやすく: 見出しは文節単位で折り(auto-phrase, 非対応ブラウザは従来動作)、
+         行を均等割り(balance)。本文は孤立行(widow)を回避(pretty)。 */
+      h1, h2, h3, p, li, dd, figcaption {
+        word-break: auto-phrase;
+      }
+      h1, h2, h3 {
+        text-wrap: balance;
+      }
+      p {
+        text-wrap: pretty;
+      }
+
       /* Inter font with optional display - won't block render */
       @font-face {
         font-family: 'Inter';
