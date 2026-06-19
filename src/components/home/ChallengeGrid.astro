@@ -7,10 +7,10 @@ const t = getJaTranslations();
 const griftUrl = 'https://griftai.org';
 ---
 
-<section class="py-16 sm:py-20">
+<section class="py-24 sm:py-32">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col gap-10 sm:gap-12">
-      <div class="flex max-w-3xl flex-col gap-4">
+      <div class="flex max-w-3xl flex-col gap-4" data-reveal>
         <p
           class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
         >
@@ -22,8 +22,12 @@ const griftUrl = 'https://griftai.org';
       </div>
       <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
-          t.homeChallenges.items.map((item) => (
-            <li class="flex flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+          t.homeChallenges.items.map((item, i) => (
+            <li
+              class="flex flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10"
+              data-reveal
+              style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}
+            >
               <h3 class="text-lg font-medium tracking-tight">{item.title}</h3>
               <p class="text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
                 {item.description}
@@ -32,7 +36,7 @@ const griftUrl = 'https://griftai.org';
           ))
         }
       </ul>
-      <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-start">
+      <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-start" data-reveal style="--reveal-delay:0.6s">
         {/* 主役=Grift体験(外部)を大きく塗りつぶしネイビーで、脇役=相談は控えめに（凪沙さん #71）。 */}
         <a
           href={griftUrl}

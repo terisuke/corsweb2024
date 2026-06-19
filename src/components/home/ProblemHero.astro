@@ -13,19 +13,27 @@ const trustBadges = t.homeHero.trustBadges.filter(
 const griftUrl = 'https://griftai.org';
 ---
 
-<section class="py-16 sm:py-20">
-  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+<section class="relative isolate flex min-h-[88vh] items-center overflow-hidden py-20 sm:py-28">
+  {/* 抽象モーション背景（装飾・読み上げ対象外）。prefers-reduced-motion で静止。 */}
+  <div class="motion-bg" aria-hidden="true"></div>
+  <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col items-center gap-8 text-center sm:gap-10">
       <p
         class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
+        data-reveal
+        style="--reveal-delay:0.05s"
       >
         {t.homeHero.kicker}
       </p>
-      <div class="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
-        <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl" set:html={t.homeHero.title} />
-        <p class="text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle}></p>
+      <div class="flex max-w-5xl flex-col items-center gap-6 sm:gap-8">
+        {/* 巨大タイポ＝「視覚で止まる」主役。即描画(LCP死守)のため演出は付けない。 */}
+        <h1
+          class="font-semibold leading-[1.05] tracking-tight text-[clamp(2.25rem,8vw,6.5rem)]"
+          set:html={t.homeHero.title}
+        />
+        <p class="max-w-3xl text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle} data-reveal style="--reveal-delay:0.15s"></p>
       </div>
-      <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+      <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center" data-reveal style="--reveal-delay:0.3s">
         {/* パターンA(凪沙さん #64): 主役=Grift体験を大きく塗りつぶしで、脇役=相談はテキストリンクで。最初の一歩を1つに絞る。 */}
         <a
           href={griftUrl}
@@ -44,7 +52,7 @@ const griftUrl = 'https://griftai.org';
       </div>
       {
         trustBadges.length > 0 && (
-          <ul class="flex flex-wrap items-center justify-center gap-3">
+          <ul class="flex flex-wrap items-center justify-center gap-3" data-reveal style="--reveal-delay:0.45s">
             {trustBadges.map((badge) => (
               <li class="rounded-full bg-primary-500/10 px-4 py-1.5 text-sm text-primary-950/70 dark:bg-primary-400/10 dark:text-primary-200/70">
                 {badge}
@@ -54,5 +62,9 @@ const griftUrl = 'https://griftai.org';
         )
       }
     </div>
+  </div>
+  {/* 「↓」スクロールヒント: 下に続きがあると気づかせ離脱を防ぐ。少しスクロールで消える。 */}
+  <div class="scroll-hint pointer-events-none absolute inset-x-0 bottom-8 z-10 flex justify-center" aria-hidden="true">
+    <span class="scroll-hint-arrow text-2xl text-primary-950/40 dark:text-primary-200/40">↓</span>
   </div>
 </section>

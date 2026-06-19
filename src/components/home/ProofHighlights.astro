@@ -3,18 +3,22 @@ import { getCurrentLocale, getJaTranslations, getLocalizedUrl } from '../../util
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getJaTranslations();
+
+// 見出し → カード(1枚ずつ) → CTA の順に浮き上がる stagger。固定(pin)はせず通常スクロールで通過しながら自動表示。
+const cardBaseDelay = 0.15;
+const cardStep = 0.12;
 ---
 
-<section class="py-16 sm:py-20">
+<section class="py-24 sm:py-32">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex flex-col gap-10 sm:gap-12">
-      <div class="flex max-w-3xl flex-col gap-4">
+      <div class="flex max-w-3xl flex-col gap-4" data-reveal>
         <p
           class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
         >
           {t.proof.eyebrow}
         </p>
-        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+        <h2 class="text-4xl font-semibold tracking-tight sm:text-5xl">
           {t.proof.title}
         </h2>
         <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
@@ -23,16 +27,23 @@ const t = getJaTranslations();
       </div>
       <dl class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {
-          t.proof.stats.map((stat) => (
-            <div class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+          t.proof.stats.map((stat, i) => (
+            <div
+              class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10"
+              data-reveal
+              style={`--reveal-delay:${(cardBaseDelay + i * cardStep).toFixed(2)}s`}
+            >
               <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{stat.label}</dt>
-              <dd class="text-3xl font-medium tracking-tight">{stat.value}</dd>
+              <dd class="text-4xl font-semibold tracking-tight sm:text-5xl">{stat.value}</dd>
               <dd class="text-sm text-primary-950/70 dark:text-primary-200/70">{stat.note}</dd>
             </div>
           ))
         }
       </dl>
-      <div>
+      <div
+        data-reveal
+        style={`--reveal-delay:${(cardBaseDelay + t.proof.stats.length * cardStep).toFixed(2)}s`}
+      >
         <a
           href={getLocalizedUrl('/works', currentLocale)}
           class="inline-flex items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
