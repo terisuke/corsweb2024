@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from '../blog/PostCard.astro';
+import { getCurrentLocale, getLocalizedUrl } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+
+// 注目記事（featured）を新着順で最大4本。トップに「読みもの」として出し、滞在→記事→Grift の動線を作る。
+const featured = (
+  await getCollection('blog', ({ data }) => data.lang === 'ja' && !data.isDraft && data.featured)
+)
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+  .slice(0, 4);
+---
+
+{
+  featured.length > 0 && (
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div class="flex flex-col gap-10 sm:gap-12">
+          <div class="flex max-w-3xl flex-col gap-4" data-reveal>
+            <p class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">
+              読みもの
+            </p>
+            <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+              AIの「進め方」を、記事で。
+            </h2>
+            <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+              AI導入・機密データの安全な活用・見積もりの考え方など、現場で使える視点をまとめています。
+            </p>
+          </div>
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((post, i) => (
+              <div data-reveal style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}>
+                <PostCard post={post} />
+              </div>
+            ))}
+          </div>
+          <div data-reveal style="--reveal-delay:0.45s">
+            <a
+              href={getLocalizedUrl('/blog', currentLocale)}
+              class="inline-flex items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
+            >
+              ブログをすべて見る
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
