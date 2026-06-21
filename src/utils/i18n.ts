@@ -449,7 +449,8 @@ const translations = {
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
       privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." },
       security: { title: "セキュリティ | Cor.inc", description: "Cor.株式会社の情報セキュリティ、ISMS取得に向けた体制、ローカルファーストと機密度ティアによるAI開発環境について。" },
-      works: { title: "実績 | Cor.inc", description: "Cor.株式会社の実績紹介。AI受託開発、基幹DB移行、多言語AI受付、建築AI、自社プロダクトGriftなど、領域の異なる実装実績を順次公開します。" }
+      works: { title: "実績 | Cor.inc", description: "Cor.株式会社の実績紹介。AI受託開発、基幹DB移行、多言語AI受付、建築AI、自社プロダクトGriftなど、領域の異なる実装実績を順次公開します。" },
+      industryMedical: { title: "医療・ヘルスケア向けAI伴走 | Cor.inc", description: "医療現場の課題——院内データ活用、患者対応、情報セキュリティ、AI活用方針、見積もりの整理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。" }
     },
     privacy: {
       title: "プライバシーポリシー",
@@ -570,6 +571,106 @@ const translations = {
       description: "Griftで参考見積もりを試すか、まだ言語化できていない課題からご相談ください。",
       primary: "AIで見積もりを試す",
       secondary: "相談する"
+    },
+    homeIndustries: {
+      eyebrow: "Industry / 業種別",
+      title: "業種によって、止まる理由は違います。",
+      description: "現場の文脈に合わせて、課題の整理から進め方まで一緒に考えます。",
+      tableHead: { industry: "業種", theme: "よくあるテーマ", detail: "" },
+      rows: [
+        {
+          industry: "医療・ヘルスケア",
+          theme: "院内データの整理、患者対応、情報セキュリティ、AI活用方針",
+          link: "/industries/medical",
+          linkLabel: "医療関連の方はこちら →"
+        },
+        {
+          industry: "教育",
+          theme: "基幹システムの刷新、データ移行、運用設計",
+          link: null,
+          linkLabel: null
+        },
+        {
+          industry: "建築・不動産",
+          theme: "図面・間取りのAI処理、業務データの自動化",
+          link: null,
+          linkLabel: null
+        },
+        {
+          industry: "自治体・公共",
+          theme: "多言語案内、問い合わせ対応、情報公開の整理",
+          link: null,
+          linkLabel: null
+        }
+      ]
+    },
+    industryMedical: {
+      hero: {
+        eyebrow: "Medical & Healthcare",
+        title: "医療の現場、こんな“進まない”はありませんか？",
+        subtitle: "院内のデータ整理、患者対応、情報の扱い方——現場ごとに止まる理由は違います。Cor.は、要件を一緒に整理しながら、次の一歩を伴走します。"
+      },
+      challenges: {
+        eyebrow: "01 / よくある課題",
+        title: "医療現場で、よく聞く「止まる理由」。",
+        items: [
+          {
+            title: "レセプト請求の査定・返戻対応",
+            description: "月次のレセプト記載ミスや病名と処置の不整合により、審査支払機関から査定・返戻が発生。医事課スタッフが目視で1件ずつ確認・修正する工数が膨大になっています。"
+          },
+          {
+            title: "電子カルテの入力負荷",
+            description: "診察後のカルテ記載に1患者あたり数分かかり、外来100人超の日は記載が深夜までずれ込む。医師の働き方改革（2024年問題）の直撃ポイントになっています。"
+          },
+          {
+            title: "医師の働き方改革対応（宿日直・タスクシフト記録）",
+            description: "2024年4月施行の医師時間外労働上限規制への対応として、宿日直許可申請・タスクシフト実績の記録・36協定の管理が必要になったが、運用フローが未整備のまま対応が求められています。"
+          },
+          {
+            title: "外来予約・キャンセル管理の非効率",
+            description: "電話予約が主体で無断キャンセルが多発。予約枠の空きをリアルタイムで埋められず、診療収益が漏れています。"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor.の伴走",
+        title: "Cor.は、こうお手伝いします。",
+        intro: "課題ごとに、Cor.のサービスを組み合わせながら一緒に進めます。断定ではなく、現場の文脈に合わせた伴走を大切にしています。",
+        items: [
+          {
+            challenge: "データ整理・システム刷新",
+            service: "AI受託開発",
+            description: "データの整理から、クラウド移行や院内システム連携まで、要件定義から実装・運用まで一緒に進めます。"
+          },
+          {
+            challenge: "問い合わせ・案内対応",
+            service: "AI受託開発",
+            description: "音声対応や社内資料で学習したAI、自動で動く仕組みを使った案内体験の設計をお手伝いします。多言語AI受付の実装知見を活かします。"
+          },
+          {
+            challenge: "情報セキュリティ・機密データ",
+            service: "ローカルLLM・セキュアAI",
+            description: "情報を外に出さないAI環境や、機密度に応じたツール選定・運用設計を一緒に考えます。"
+          },
+          {
+            challenge: "AI活用方針・内製化",
+            service: "AI顧問・AI研修",
+            description: "院内チーム向けに、AI活用方針、ツール選定、業務導入、内製化の進め方を伴走します。"
+          },
+          {
+            challenge: "見積もり・社内説明の整理",
+            service: "Grift",
+            description: "参考見積もりを先に出して、稟議や予算のたたき台に。正式な金額・納期は要件確認後に確定します。"
+          }
+        ]
+      },
+      cta: {
+        title: "まずは、30秒で参考見積もりを試してみませんか？",
+        description: "Griftは、過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
+        primary: "GriftでAI見積もりを試す（30秒・登録不要）",
+        secondary: "無料で相談する",
+        note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
+      }
     },
     works: {
       title: "実装で語る、Cor.の実績。",
