@@ -19,7 +19,7 @@
 
 ## 試運転（cronを待たずに今すぐ）
 - GitHub → **Actions** タブ → 「Blog auto-draft (Claude)」→ **Run workflow**（手動実行）
-- 成功すると `auto-draft/...` ブランチで **下書きPR** が `future2` 宛に作られます
+- 成功すると `auto-draft/...` ブランチで **下書きPR** が `develop` 宛に作られます
 - ローカルで試す場合: `ANTHROPIC_API_KEY=xxxx npm run blog:draft`（最終行に生成ファイルパスが出る）
 
 ## 公開フロー（人の承認）
@@ -37,5 +37,5 @@
 - **モデル**: `claude-opus-4-8`（adaptive thinking、`web_search`内蔵で最新調査＋出典取得）。記事1本あたり概ね数十円程度。
 - **頻度**: 毎日 06:00 JST（`.github/workflows/blog-autodraft.yml` の cron）。試運転が済むまでは cron 行をコメントアウトし手動運用でもOK。
 - **重複回避**: 既存記事の直近タイトルを避けるようプロンプトに渡しています。
-- **ベースブランチ**: 現状 `future2`（新デザイン）。`future2` を `develop` に統合した後は、ワークフロー内の `ref: future2` と `--base future2` を `develop` に変更してください。
+- **ベースブランチ**: `develop`（`ref: develop` / `--base develop`）。実験用の `future2` は develop へ統合のうえ削除済み。開発フローは feature → develop → main（main マージは保護で `kisayama0725` のみ）。
 - **文体を変えたい**: `docs/blog-style-guide.md` を編集するだけで生成トーンが変わります。
