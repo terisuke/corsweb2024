@@ -18,10 +18,10 @@ jobs:
   draft:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (future2 = 新デザインブランチ)
+      - name: Checkout (develop = 統合ブランチ)
         uses: actions/checkout@v4
         with:
-          ref: future2
+          ref: develop
           # PR作成に使うため履歴を取得
           fetch-depth: 0
           # npm ci(依存のpostinstall)時に write 可能なtokenをgit configへ残さない
@@ -66,6 +66,6 @@ jobs:
           git commit -m "draft(blog): 自動下書き ${SLUG}"
           # persist-credentials:false のため push はトークン付きURLで明示的に行う
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/${BRANCH}"
-          gh pr create --base future2 --head "$BRANCH" \
+          gh pr create --base develop --head "$BRANCH" \
             --title "[自動下書き] ${SLUG}" \
             --body $'Claude が自動生成したブログ下書きです（`isDraft: true` なので公開はされません）。\n\n## 公開する場合\nfrontmatter の `isDraft: true` を `false` に変更してこのPRをマージしてください。\n\n## 公開しない場合\nこのPRをクローズしてください。\n\n## ⚠️ 必ず人の目で確認\n- 数値・統計の**出典URLが実在**し、内容が正しいか\n- トーンが「お手伝い目線」か（断定・効果保証になっていないか）\n- 旧事業名・未取得認証の取得済み主張・プレビューURL/下書きキーが無いか\n（自動ガードレール検査は通過済みですが、最終判断は人が行ってください）'
