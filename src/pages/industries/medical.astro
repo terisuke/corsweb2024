@@ -79,19 +79,19 @@ const griftUrl = 'https://griftai.org';
   </section>
 
   <!-- 3. Support -->
-  <section class="bg-[#2d4a6b]/5 py-24 dark:bg-[#2d4a6b]/15 sm:py-32">
+  <section class="bg-[#1b2c40] py-24 sm:py-32">
     <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="flex flex-col gap-10 sm:gap-12">
         <div class="flex max-w-3xl flex-col gap-4" data-reveal>
           <p
-            class="text-sm font-medium uppercase tracking-widest text-[#2d4a6b] dark:text-[#7ba3cc]"
+            class="text-sm font-medium uppercase tracking-widest text-[#7ba3cc]"
           >
             {page.support.eyebrow}
           </p>
-          <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 class="text-3xl font-medium tracking-tight text-white sm:text-4xl">
             {page.support.title}
           </h2>
-          <p class="text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+          <p class="text-lg leading-relaxed text-white/80">
             {page.support.intro}
           </p>
         </div>
@@ -99,20 +99,20 @@ const griftUrl = 'https://griftai.org';
           {
             page.support.items.map((item, i) => (
               <li
-                class="flex flex-col gap-4 rounded-3xl border border-[#2d4a6b]/20 bg-white p-6 dark:border-[#2d4a6b]/30 dark:bg-primary-950"
+                class="flex flex-col gap-4 rounded-3xl bg-white p-6"
                 data-reveal
                 style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}
               >
                 <div class="flex flex-wrap items-center gap-2">
-                  <span class="rounded-full bg-[#2d4a6b]/10 px-3 py-1 text-xs font-medium text-[#2d4a6b] dark:bg-[#2d4a6b]/25 dark:text-[#7ba3cc]">
+                  <span class="rounded-full bg-[#2d4a6b]/10 px-3 py-1 text-xs font-medium text-[#2d4a6b]">
                     {item.challenge}
                   </span>
-                  <span class="text-sm text-primary-950/50 dark:text-primary-200/50">→</span>
+                  <span class="text-sm text-primary-950/50">→</span>
                   <span class="rounded-full bg-[#2d4a6b] px-3 py-1 text-xs font-medium text-white">
                     {item.service}
                   </span>
                 </div>
-                <p class="text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+                <p class="text-base leading-relaxed text-primary-950/70">
                   {item.description}
                 </p>
               </li>
