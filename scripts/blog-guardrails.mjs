@@ -3,6 +3,8 @@
 // 使い方: import { scanForViolations } from './blog-guardrails.mjs'
 //        const violations = scanForViolations(markdownText)  // [] なら合格
 
+import { pathToFileURL } from 'node:url';
+
 const RULES = [
   {
     name: '旧事業名',
@@ -56,7 +58,7 @@ export function scanForViolations(markdown) {
 }
 
 // 単体実行: node scripts/blog-guardrails.mjs <file.md> でチェック
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const fs = await import('node:fs');
   const file = process.argv[2];
   if (!file) {

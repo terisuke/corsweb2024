@@ -158,7 +158,8 @@ if (fs.existsSync(outPath)) {
   process.exit(1);
 }
 
-const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+// JST基準の日付（cronは06:00 JST=21:00 UTC実行のため、UTCだと前日になる）
+const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 const frontmatter = [
   '---',
   `title: ${JSON.stringify(title)}`,
