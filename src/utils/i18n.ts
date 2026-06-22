@@ -168,7 +168,7 @@ const translations = {
       cta: "ホームに戻る"
     },
     aboutPage: {
-      title: 'きょうそうを追い続ける。',
+      title: '「きょうそう」を追い続ける。',
       lead: 'Cor.は、誰とでも無理に分かり合う会社ではありません。自分の価値観を持つ人同士が、違いを隠さず、互いの成長を求め、AIと技術で現場の課題を形にする会社です。',
       kyousouTitle: '「きょうそう」とは。',
       kyousou: [
@@ -178,9 +178,9 @@ const translations = {
         { word: '狂想', usage: 'まだ形のないアイデアを恐れない' },
         { word: '狂騒', usage: '結果として市場に生む熱量' },
       ],
-      kyousouAxis: 'きょうそうとは、違いを成果に変える実装態度である。',
+      kyousouAxis: '「きょうそう」とは、違いを成果に変える実装態度である。',
       mvvTitle: 'Mission / Vision / Values',
-      mission: 'きょうそうを通じて、作り手と事業の可能性を解放する。',
+      mission: '「きょうそう」を通じて、作り手と事業の可能性を解放する。',
       vision: '価値観の違いが、分断ではなく、より良い実装を生む社会をつくる。',
       values: [
         { title: '迎合しない共創', description: '相手に合わせるだけの関係は作らない。率直に問い、必要なら反論し、より良い答えを探す。' },
@@ -486,7 +486,7 @@ const translations = {
       subtitle: "業務の無駄・使いにくいシステム・<br class='sm:hidden' />やりたいけど進まないこと——<br class='sm:hidden' />Cor.が伴走します。",
       primaryCta: "AIで見積もりを試す（30秒・登録不要）",
       secondaryCta: "無料で相談する",
-      philosophyCta: "きょうそうの思想を読む",
+      philosophyCta: "「きょうそう」の思想を読む",
       trustBadges: ["AI駆動開発 4〜5倍（内部実測）", "ローカルLLM・情報を外に出さない", "ISMS取得に向け整備中", "福岡発・全国対応"]
     },
     homeChallenges: {
@@ -554,7 +554,7 @@ const translations = {
       cta: "セキュリティ方針を見る"
     },
     kyousou: {
-      title: "Cor.は、きょうそうを追い続ける。",
+      title: "Cor.は、「きょうそう」を追い続ける。",
       description: "迎合ではなく、衝突でもなく、互いの価値観を持ち寄り、違いを磨き合い、AIで現場の課題を形にする。それがCor.の考える「きょうそう（共創・協奏・競争・狂想・狂騒。一緒に作り、磨き合い、響き合うCor.の造語）」です。",
       items: [
         { word: "共創", meaning: "一緒に価値を作る", cor: "顧客・パートナー・AIと共に作る" },
@@ -566,7 +566,7 @@ const translations = {
       cta: "代表ストーリーを読む"
     },
     finalCta: {
-      title: "課題から、きょうそうを始めましょう。",
+      title: "課題から、「きょうそう」を始めましょう。",
       description: "Griftで参考見積もりを試すか、まだ言語化できていない課題からご相談ください。",
       primary: "AIで見積もりを試す",
       secondary: "相談する"
@@ -2584,6 +2584,12 @@ export function getTranslations(locale: Locale) {
 // セクションで利用する。union ではなく ja の具体型を返すため新規キーに型安全にアクセスできる。
 export function getJaTranslations() {
   return translations.ja;
+}
+
+// ブランド語「きょうそう」を語の途中で折らないよう nowrap で包む（set:html で使用）。
+// 定義文「きょうそう（共創・…）」は対象外（閉じ括弧が直後に来る完全一致のみ）。
+export function emphasizeKyousou(text: string): string {
+  return text.replace(/「きょうそう」/g, '<span class="nowrap">「きょうそう」</span>');
 }
 
 export function getCurrentLocale(url: URL): Locale {

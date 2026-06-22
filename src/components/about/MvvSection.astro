@@ -1,7 +1,7 @@
 ---
 // MVV/Valuesは正本07案・寺田社長(CEO)承認待ちのドラフトです。
 // 最終文言の確定は寺田社長(CEO)の承認後に行ってください。
-import { getJaTranslations } from '../../utils/i18n';
+import { getJaTranslations, emphasizeKyousou } from '../../utils/i18n';
 
 const t = getJaTranslations();
 ---
@@ -19,7 +19,7 @@ const t = getJaTranslations();
           <h3 class="text-sm font-medium uppercase tracking-wide text-primary-600 dark:text-primary-400">
             Mission
           </h3>
-          <p class="text-lg text-primary-950/80 dark:text-primary-200/80">{t.aboutPage.mission}</p>
+          <p class="text-lg text-primary-950/80 dark:text-primary-200/80" set:html={emphasizeKyousou(t.aboutPage.mission)}></p>
         </div>
         <div class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
           <h3 class="text-sm font-medium uppercase tracking-wide text-primary-600 dark:text-primary-400">

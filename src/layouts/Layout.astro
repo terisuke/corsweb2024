@@ -156,7 +156,12 @@ const currentLocale = getCurrentLocale(Astro.url);
 
     <title>{title}</title>
     <ViewTransitions />
-    
+
+    <!-- JS 有効を早期マーク（reveal の初期非表示を JS 環境のみに限定→JS無効でも即表示=離脱防止） -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
     <!-- Critical inline CSS for fastest initial render - v4 cache bust -->
     <style is:inline>
       /* System font stack for immediate text rendering */
@@ -178,6 +183,10 @@ const currentLocale = getCurrentLocale(Astro.url);
       }
       p {
         text-wrap: pretty;
+      }
+      /* ブランド語「きょうそう」は語の途中で折らない（見出し・本文共通）。 */
+      .nowrap {
+        white-space: nowrap;
       }
 
       /* Inter font with optional display - won't block render */
@@ -206,13 +215,94 @@ const currentLocale = getCurrentLocale(Astro.url);
       
       /* Prevent layout shift */
       [x-cloak] { display: none !important; }
-      
+
+      /* ===== スクロール没入演出（軽量・ライブラリ0） ===== */
+      /* 初期非表示は JS 有効時(html.js)のみ。JS 無効/失敗時は即表示＝離脱防止(北極星)を担保。 */
+      /* 動き（フェード＋浮き上がり）は維持しつつ、描画コストの高い blur は使わず軽量化。 */
+      html.js [data-reveal] {
+        opacity: 0;
+        transform: translateY(2.5rem) scale(0.98);
+        transition:
+          opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        transition-delay: var(--reveal-delay, 0s);
+      }
+      html.js [data-reveal].is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* 抽象モーション背景: ゆっくり動くグラデの光（ダークの重さを軽減・没入） */
+      .motion-bg {
+        position: absolute;
+        inset: -20%;
+        z-index: 0;
+        pointer-events: none;
+        filter: blur(60px);
+        opacity: 0.55;
+        background:
+          radial-gradient(40% 40% at 25% 30%, rgba(120, 113, 108, 0.55), transparent 70%),
+          radial-gradient(35% 35% at 75% 25%, rgba(45, 74, 107, 0.45), transparent 70%),
+          radial-gradient(45% 45% at 60% 80%, rgba(168, 162, 158, 0.40), transparent 70%);
+        animation: gradient-shift 18s ease-in-out infinite;
+      }
+      @keyframes gradient-shift {
+        0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+        50% { transform: translate3d(3%, -4%, 0) scale(1.15); }
+      }
+      /* スマホ8割: 連続アニメの再描画コストを避け、小画面では静止グラデに */
+      @media (max-width: 640px) {
+        .motion-bg { animation: none; }
+      }
+
+      /* スクロール進捗バー（上部・細いnavy） */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        z-index: 60;
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        background: #2d4a6b;
+        pointer-events: none;
+      }
+      .dark .scroll-progress { background: #7c9cbf; }
+
+      /* ファーストビューの「↓」スクロールヒント。少しスクロールしたら消える。 */
+      .scroll-hint {
+        transition: opacity 0.4s ease;
+      }
+      html.scrolled .scroll-hint { opacity: 0; }
+      .scroll-hint-arrow {
+        display: inline-block;
+        animation: hint-bounce 1.6s ease-in-out infinite;
+      }
+      @keyframes hint-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(0.4rem); }
+      }
+
+      /* アクセシビリティ: モーションを抑えたいユーザーには演出を完全無効化（即表示） */
+      @media (prefers-reduced-motion: reduce) {
+        html.js [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+        .motion-bg { animation: none !important; }
+        .scroll-hint-arrow { animation: none !important; }
+        .scroll-hint { transition: none !important; }
+      }
+
       /* TailwindのユーティリティクラスはHTMLのclass属性で指定、または@apply推奨 */
     </style>
   </head>
   <body
-    class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200"
+    class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-900 dark:text-primary-200"
   >
+    <div class="scroll-progress" aria-hidden="true"></div>
     <Header />
     <main>
       <slot />
@@ -331,6 +421,63 @@ const currentLocale = getCurrentLocale(Astro.url);
           document.documentElement.classList.add('font-loaded');
         });
       }
+    </script>
+
+    <!-- スクロール没入演出: IntersectionObserver で [data-reveal] に .is-visible を付与（軽量・ライブラリ0） -->
+    <script>
+      let revealObserver = null;
+      function initScrollReveal() {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = document.querySelectorAll('[data-reveal]');
+        // 再初期化(ページ遷移)時は前の observer を破棄して重複監視を防ぐ
+        if (revealObserver) { revealObserver.disconnect(); revealObserver = null; }
+        if (prefersReduced || !('IntersectionObserver' in window)) {
+          // 演出オフ: 即表示（北極星=離脱防止）
+          targets.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              // 双方向: viewport に入れば表示、出れば元に戻す（上下どちらのスクロールでも毎回アニメ）
+              entry.target.classList.toggle('is-visible', entry.isIntersecting);
+            });
+          },
+          // threshold 0 + 下 12% マージンで、上端が入った時点で発火（早すぎ防止）
+          { threshold: 0, rootMargin: '0px 0px -12% 0px' }
+        );
+        targets.forEach((el) => revealObserver.observe(el));
+      }
+      // 初回 + View Transitions のページ遷移後にも再バインド
+      document.addEventListener('astro:page-load', initScrollReveal);
+    </script>
+
+    <!-- スクロール進捗バー + 「↓」ヒントの表示制御（rAF スロットル・軽量） -->
+    <script>
+      let chromeBound = false;
+      function updateScrollChrome() {
+        // bar は View Transition で body ごと差し替わるため毎回取得する
+        const bar = document.querySelector('.scroll-progress');
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+        if (bar instanceof HTMLElement) bar.style.transform = 'scaleX(' + progress + ')';
+        document.documentElement.classList.toggle('scrolled', window.scrollY > 40);
+      }
+      function initScrollChrome() {
+        updateScrollChrome(); // ページ遷移ごとに新しいページ高さで進捗を再計算
+        if (chromeBound) return; // window は VT で破棄されないため listener は一度だけ（多重バインド防止）
+        let ticking = false;
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => { ticking = false; updateScrollChrome(); });
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        chromeBound = true;
+      }
+      document.addEventListener('astro:page-load', initScrollChrome);
     </script>
   </body>
 </html>

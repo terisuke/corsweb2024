@@ -32,11 +32,39 @@ const links = baseLinks.map((link, index) => ({
   ref: String(index + 1).padStart(2, '0'),
   isActive: !link.isExternal && normalizePath(link.href) === currentPath,
 }));
+
+// 言語切替（プルダウン）: 各言語の遷移先URLを現在パスから算出し、一覧から直接選べるようにする。
+const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'] as const;
+const langNames: Record<string, string> = {
+  ja: '日本語',
+  en: 'English',
+  zh: '中文',
+  ko: '한국어',
+  es: 'Español',
+};
+const langFlags: Record<string, string> = {
+  ja: '🇯🇵',
+  en: '🇺🇸',
+  zh: '🇨🇳',
+  ko: '🇰🇷',
+  es: '🇪🇸',
+};
+// 現在パスから locale プレフィックスを除いた基準パス（例: /en/about → /about）。
+const langBasePath = Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
+const langOptions = localeOrder.map((loc) => ({
+  loc,
+  name: langNames[loc],
+  flag: langFlags[loc],
+  // ja は現在ページを維持。非ja は翻訳済みサブページが未整備のため各言語ホームへ（404回避）。
+  // 5言語展開（#60）後に同一パス遷移へ切り替える。
+  href: loc === 'ja' ? langBasePath : `/${loc}`,
+  isCurrent: loc === currentLocale,
+}));
 ---
 
 <header
   x-data="{ open: false }"
-  class="transition"
+  class="relative z-40 transition"
   :class="{ 'bg-primary-500/10 dark:bg-primary-400/10': open, 'bg-primary-50 dark:bg-primary-950': !(open) }"
 >
   <div
@@ -55,69 +83,122 @@ const links = baseLinks.map((link, index) => ({
 
     <!-- Actions -->
     <div class="-mr-2 flex items-center space-x-2 sm:space-x-3">
-      <!-- Toggle theme mode -->
+      <!-- Theme toggle: 一般的なスイッチ式（ノブが現在モードのアイコンを表示してスライド） -->
       <button
         type="button"
-        class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
         x-data
+        role="switch"
+        :aria-checked="($store.theme?.isDark || false).toString()"
         @click="$store.theme?.toggle()"
+        class="relative inline-flex h-8 w-14 shrink-0 items-center rounded-full border border-primary-900/10 bg-primary-500/10 transition focus:outline-none focus-visible:ring-2 ring-primary-950 dark:border-primary-300/10 dark:bg-primary-400/10"
       >
-        <span class="sr-only">Toggle theme mode</span>
-        <svg
-          x-cloak
-          class="h-6 w-6"
-          :class="{ 'hidden': !($store.theme?.isDark) }"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+        <span class="sr-only">ライト / ダークモード切り替え</span>
+        <span
+          class="inline-flex h-6 w-6 transform items-center justify-center rounded-full bg-primary-50 text-primary-950 shadow transition-transform dark:bg-primary-200"
+          :class="{ 'translate-x-7': $store.theme?.isDark, 'translate-x-1': !($store.theme?.isDark) }"
         >
-          <path
-            d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z"
-          ></path>
-        </svg>
-        <svg
-          x-cloak
-          class="h-6 w-6"
-          :class="{ 'hidden': $store.theme?.isDark }"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            d="M10 6C10 10.4183 13.5817 14 18 14C19.4386 14 20.7885 13.6203 21.9549 12.9556C21.4738 18.0302 17.2005 22 12 22C6.47715 22 2 17.5228 2 12C2 6.79948 5.9698 2.52616 11.0444 2.04507C10.3797 3.21152 10 4.56142 10 6ZM4 12C4 16.4183 7.58172 20 12 20C14.9654 20 17.5757 18.3788 18.9571 15.9546C18.6407 15.9848 18.3214 16 18 16C12.4772 16 8 11.5228 8 6C8 5.67863 8.01524 5.35933 8.04536 5.04293C5.62119 6.42426 4 9.03458 4 12ZM18.1642 2.29104L19 2.5V3.5L18.1642 3.70896C17.4476 3.8881 16.8881 4.4476 16.709 5.16417L16.5 6H15.5L15.291 5.16417C15.1119 4.4476 14.5524 3.8881 13.8358 3.70896L13 3.5V2.5L13.8358 2.29104C14.5524 2.1119 15.1119 1.5524 15.291 0.835829L15.5 0H16.5L16.709 0.835829C16.8881 1.5524 17.4476 2.1119 18.1642 2.29104ZM23.1642 7.29104L24 7.5V8.5L23.1642 8.70896C22.4476 8.8881 21.8881 9.4476 21.709 10.1642L21.5 11H20.5L20.291 10.1642C20.1119 9.4476 19.5524 8.8881 18.8358 8.70896L18 8.5V7.5L18.8358 7.29104C19.5524 7.1119 20.1119 6.5524 20.291 5.83583L20.5 5H21.5L21.709 5.83583C21.8881 6.5524 22.4476 7.1119 23.1642 7.29104Z"
-          ></path>
-        </svg>
+          <!-- Moon (dark時) -->
+          <svg
+            x-cloak
+            class="h-4 w-4"
+            :class="{ 'hidden': !($store.theme?.isDark) }"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M10 6C10 10.4183 13.5817 14 18 14C19.4386 14 20.7885 13.6203 21.9549 12.9556C21.4738 18.0302 17.2005 22 12 22C6.47715 22 2 17.5228 2 12C2 6.79948 5.9698 2.52616 11.0444 2.04507C10.3797 3.21152 10 4.56142 10 6ZM4 12C4 16.4183 7.58172 20 12 20C14.9654 20 17.5757 18.3788 18.9571 15.9546C18.6407 15.9848 18.3214 16 18 16C12.4772 16 8 11.5228 8 6C8 5.67863 8.01524 5.35933 8.04536 5.04293C5.62119 6.42426 4 9.03458 4 12Z"
+            ></path>
+          </svg>
+          <!-- Sun (light時) -->
+          <svg
+            x-cloak
+            class="h-4 w-4"
+            :class="{ 'hidden': $store.theme?.isDark }"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z"
+            ></path>
+          </svg>
+        </span>
       </button>
-      <!-- Language switch -->
-      <button
-        @click="$store.lang?.toggle()"
-        class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
-        x-data="{
-          get currentLang() { return $store.lang?.current || 'ja'; },
-          get nextLang() {
-            const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'];
-            const currentIndex = localeOrder.indexOf(this.currentLang);
-            const nextIndex = (currentIndex + 1) % localeOrder.length;
-            return localeOrder[nextIndex];
-          },
-          get langDisplay() {
-            const langMap = { 'ja': '🇯🇵', 'en': '🇺🇸', 'zh': '🇨🇳', 'ko': '🇰🇷', 'es': '🇪🇸' };
-            return langMap[this.currentLang] || '🇯🇵';
-          },
-          get nextLangDisplay() {
-            const langMap = { 'ja': '🇯🇵', 'en': '🇺🇸', 'zh': '🇨🇳', 'ko': '🇰🇷', 'es': '🇪🇸' };
-            return langMap[this.nextLang] || '🇺🇸';
+      <!-- Language switch (プルダウン: 5言語を一覧から直接選択) -->
+      <div
+        class="relative"
+        x-data="{ langOpen: false }"
+        @keydown.escape="langOpen = false"
+        @click.outside="langOpen = false"
+      >
+        <button
+          type="button"
+          @click="langOpen = !langOpen"
+          :aria-expanded="langOpen.toString()"
+          aria-haspopup="true"
+          class="inline-flex h-14 items-center justify-center gap-1.5 rounded-full px-4 text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
+        >
+          <span class="sr-only">言語を切り替え / Language</span>
+          <span class="text-2xl leading-none">{langFlags[currentLocale]}</span>
+          <svg
+            class="h-4 w-4 transition"
+            :class="{ 'rotate-180': langOpen }"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 15L7 10H17L12 15Z"></path>
+          </svg>
+        </button>
+        <ul
+          x-cloak
+          x-show="langOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 -translate-y-1"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-1"
+          aria-label="Language"
+          class="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-primary-900/10 bg-primary-50 py-1 shadow-lg dark:border-primary-300/10 dark:bg-primary-950"
+        >
+          {
+            langOptions.map((o) => (
+              <li>
+                <a
+                  href={o.href}
+                  hreflang={o.loc}
+                  aria-current={o.isCurrent ? 'true' : undefined}
+                  class:list={[
+                    'flex items-center gap-3 px-4 py-3 text-base transition hover:bg-primary-500/10 dark:hover:bg-primary-400/10',
+                    o.isCurrent
+                      ? 'font-semibold text-[#2d4a6b] dark:text-primary-100'
+                      : 'text-primary-950 dark:text-primary-200',
+                  ]}
+                >
+                  <span class="text-xl leading-none">{o.flag}</span>
+                  <span class="flex-1">{o.name}</span>
+                  {o.isCurrent && (
+                    <svg
+                      class="h-4 w-4 text-[#2d4a6b] dark:text-primary-100"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z" />
+                    </svg>
+                  )}
+                </a>
+              </li>
+            ))
           }
-        }"
-      >
-        <span class="sr-only">Language switch</span>
-        <div class="flex flex-col items-center justify-center gap-1">
-          <div class="text-2xl leading-none" x-text="langDisplay"></div>
-          <div class="text-xs opacity-50 mt-1" x-text="nextLangDisplay"></div>
-        </div>
-      </button>
+        </ul>
+      </div>
       <!-- Toggle menu -->
       <button
         type="button"

@@ -7,10 +7,10 @@ const griftUrl = 'https://griftai.org';
 const mock = t.griftBridge.mock;
 ---
 
-<section class="py-16 sm:py-20">
+<section class="py-24 sm:py-32">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-      <div class="flex flex-col gap-4 sm:gap-6">
+      <div class="flex flex-col gap-4 sm:gap-6" data-reveal>
         <p
           class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
         >
@@ -40,19 +40,23 @@ const mock = t.griftBridge.mock;
       <!-- ミニモック -->
       <div class="rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10 sm:p-8">
         <div class="flex flex-col gap-5">
-          <div class="rounded-2xl bg-primary-50 p-4 text-base text-primary-950 dark:bg-primary-950 dark:text-primary-200">
+          <div
+            class="rounded-2xl bg-primary-50 p-4 text-base text-primary-950 dark:bg-primary-950 dark:text-primary-200"
+            data-reveal
+            style="--reveal-delay:0.15s"
+          >
             {mock.input}
           </div>
           <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950">
+            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950" data-reveal style="--reveal-delay:0.4s">
               <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.costLabel}</dt>
               <dd class="text-xl font-medium tracking-tight">{mock.cost}</dd>
             </div>
-            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950">
+            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950" data-reveal style="--reveal-delay:0.55s">
               <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.durationLabel}</dt>
               <dd class="text-xl font-medium tracking-tight">{mock.duration}</dd>
             </div>
-            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950">
+            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950" data-reveal style="--reveal-delay:0.7s">
               <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.similarLabel}</dt>
               <dd class="text-xl font-medium tracking-tight">{mock.similar}</dd>
               {mock.similarNote && (
