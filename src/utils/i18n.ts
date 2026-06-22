@@ -583,7 +583,7 @@ const translations = {
       tableHead: { industry: "業種", theme: "よくあるテーマ", detail: "" },
       rows: [
         {
-          industry: "医療・ヘルスケア",
+          industry: "医療",
           theme: "院内データの整理、患者対応、情報セキュリティ、AI活用方針",
           link: "/industries/medical",
           linkLabel: "医療関連の方はこちら →"
@@ -611,18 +611,6 @@ const translations = {
           theme: "テスト作業、保護者連絡、調査報告、ICT名簿管理",
           link: "/industries/education",
           linkLabel: "教育関連の方はこちら →"
-        },
-        {
-          industry: "建築・不動産",
-          theme: "図面・間取りのAI処理、業務データの自動化",
-          link: null,
-          linkLabel: null
-        },
-        {
-          industry: "自治体・公共",
-          theme: "多言語案内、問い合わせ対応、情報公開の整理",
-          link: null,
-          linkLabel: null
         }
       ]
     },
