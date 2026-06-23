@@ -987,6 +987,474 @@ const translations = {
     }
   },
   en: {
+    homeHero: {
+      kicker: "COR. INC. — AI × CO-CREATION",
+      title: "Let's give your challenge<br />a real shape, together.",
+      subtitle: "Wasted busywork, hard-to-use systems,<br class='sm:hidden' />the things you want to do but can't move forward——<br class='sm:hidden' />Cor. walks alongside you.",
+      primaryCta: "Try an AI estimate (30 sec, no sign-up)",
+      secondaryCta: "Get a free consultation",
+      philosophyCta: "Read about our \"Kyousou\" philosophy",
+      trustBadges: ["AI-driven development, 4–5× (internal measurement)", "Local LLM — your data stays in", "Working toward ISMS readiness", "Born in Fukuoka, serving all of Japan"]
+    },
+    homeChallenges: {
+      eyebrow: "01 / Your Challenges",
+      title: "Let's solve challenges like these, together.",
+      items: [
+        { title: "Move an aging core system to the cloud", description: "From organizing the data you use today to migrating it to the cloud and designing how it runs, we move forward with you." },
+        { title: "Introduce a multilingual AI reception desk or chat", description: "Using voice-enabled AI, AI trained on your internal documents, and AI that runs autonomously, we design guidance experiences for facilities and local governments." },
+        { title: "Take a generative-AI service from zero to production", description: "From defining what to build, to the user experience, the plumbing that connects systems, billing, automated testing and release, and monitoring — we cover it all in one go." },
+        { title: "Use AI without sending confidential data outside", description: "With AI that keeps your data in and approved AI tools, we design around the sensitivity rank of your information." },
+        { title: "Build an industry-specific AI tool", description: "Architectural drawings, floor-plan generation, AI processing of business-specific data, and more." },
+        { title: "Bring AI-driven development in-house", description: "From shaping your AI strategy to internal training and refining how you run development, we work closely with your team." }
+      ],
+      cta: "Get a free consultation",
+      ctaPrimary: "Try an AI estimate",
+      ctaSecondary: "Start with a consultation"
+    },
+    griftBridge: {
+      eyebrow: "Try Our AI / Grift",
+      title: "Before you put it into words, why not try it with AI?",
+      description: "Based on our past development track record and current market rates, we'll give you reference cost, timeline, and similar cases in 30 seconds.",
+      cta: "Try an AI estimate with Grift",
+      note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements.",
+      mock: {
+        input: "I want to automate sales-quote creation with AI",
+        costLabel: "Reference cost",
+        cost: "From ¥1.8M",
+        durationLabel: "Reference timeline",
+        duration: "From 4 weeks",
+        similarLabel: "Similar cases",
+        similar: "5",
+        similarNote: "Based on our own track record"
+      }
+    },
+    proof: {
+      eyebrow: "03 / Proof",
+      title: "We let our work speak, not our claims.",
+      description: "AI SaaS, AI surveys, core-DB migration, multilingual AI reception, architectural AI. A track record that spans different domains and different starting points backs up Cor.'s ability to deliver.",
+      stats: [
+        { label: "OSS implementation", value: "182,368 lines", note: "Engineer Cafe Navigator" },
+        { label: "Lead OSS contribution", value: "87.7%", note: "Commit share, measured via git" },
+        { label: "AI-driven development", value: "4–5×", note: "Internal measurement" },
+        { label: "Domains delivered", value: "5 areas", note: "AI / DB / OSS / Architecture / In-house" }
+      ],
+      cta: "See our work"
+    },
+    securityTrust: {
+      title: "Build freely. Protect responsibly.",
+      description: "To balance developer comfort with the responsibility of protecting our customers' information, Cor. operates a local-first setup, minimal security logging, and a sensitivity-tier-based approach.",
+      items: [
+        "Working with our retained legal counsel to review contracts, AI, personal information, and ISMS operations",
+        "Building out ISMS operations, targeting ISO/IEC 27001 certification",
+        "Choosing approved AI, company accounts, and isolated environments according to sensitivity tier",
+        "Company-issued Macs, encryption, MDM, and lightweight detection-and-response controls"
+      ],
+      cta: "See our security policy"
+    },
+    kyousou: {
+      title: "Cor. keeps chasing \"Kyousou.\"",
+      description: "Not by pandering, not by clashing — but by bringing our values together, sharpening our differences, and using AI to give real shape to the challenges on the ground. That is what Cor. means by \"Kyousou\" (a coined word fusing co-creation, ensemble, competition, fantasy, and fervor — building, sharpening, and resonating together).",
+      items: [
+        { word: "Co-creation", meaning: "Creating value together", cor: "Building together with customers, partners, and AI" },
+        { word: "Ensemble", meaning: "Different strengths resonating", cor: "People, AI, expertise, and region each play a role" },
+        { word: "Competition", meaning: "Sharpening one another", cor: "We refuse yes-men and raise each other through candor" },
+        { word: "Fantasy", meaning: "A vision that has no shape yet", cor: "We turn it into a product instead of leaving it a daydream" },
+        { word: "Fervor", meaning: "Energy, the buzz of the market", cor: "Not something we chase, but something we generate as a result" }
+      ],
+      cta: "Read the founder's story"
+    },
+    finalCta: {
+      title: "Let's start \"Kyousou\" from your challenge.",
+      description: "Try a reference estimate with Grift, or reach out about a challenge you haven't yet been able to put into words.",
+      primary: "Try an AI estimate",
+      secondary: "Get in touch"
+    },
+    homeIndustries: {
+      eyebrow: "Industry",
+      title: "Every industry gets stuck for different reasons.",
+      description: "We stay close to your on-the-ground challenges and think through everything with you, from sorting things out to how to move forward.",
+      tableHead: { industry: "Industry", theme: "Common themes", detail: "" },
+      rows: [
+        {
+          industry: "Healthcare",
+          theme: "Organizing clinical data, patient response, information security, AI strategy",
+          link: "/industries/medical",
+          linkLabel: "For healthcare →"
+        },
+        {
+          industry: "Professional services",
+          theme: "Contract review, applications & registration, deadline management, subsidy applications",
+          link: "/industries/shigyo",
+          linkLabel: "For professional services →"
+        },
+        {
+          industry: "Construction",
+          theme: "Labor management, design changes, safety checks, passing on know-how",
+          link: "/industries/construction",
+          linkLabel: "For construction →"
+        },
+        {
+          industry: "Manufacturing",
+          theme: "Visual inspection, passing on know-how, equipment maintenance, inventory management",
+          link: "/industries/manufacturing",
+          linkLabel: "For manufacturing →"
+        },
+        {
+          industry: "Education",
+          theme: "Test workload, parent communication, surveys & reports, ICT roster management",
+          link: "/industries/education",
+          linkLabel: "For education →"
+        }
+      ]
+    },
+    industryMedical: {
+      hero: {
+        eyebrow: "Medical & Healthcare",
+        title: "Healthcare teams: do any of these \"stuck\" moments sound familiar?",
+        subtitle: "Organizing clinical data, patient response, how information is handled — every site gets stuck for different reasons. Cor. helps you sort out requirements together and walks with you toward the next step."
+      },
+      challenges: {
+        eyebrow: "01 / Common Challenges",
+        title: "The \"reasons things stall\" we often hear in healthcare.",
+        items: [
+          {
+            title: "Handling assessments and rejected medical-fee claims",
+            description: "Monthly errors in fee claims and mismatches between diagnoses and procedures trigger assessments and rejections from review-and-payment bodies. The hours medical-affairs staff spend checking and fixing each case by eye become enormous."
+          },
+          {
+            title: "The burden of electronic medical-record entry",
+            description: "Writing up a chart after each consultation takes several minutes per patient, and on days with 100-plus outpatients the work slips into late at night. It's a direct hit from physicians' work-style reform (the \"2024 problem\")."
+          },
+          {
+            title: "Responding to physicians' work-style reform (on-call shifts and task-shift records)",
+            description: "To comply with the cap on physicians' overtime that took effect in April 2024, hospitals must apply for on-call permits, record task-shift results, and manage Article 36 agreements — yet they're being asked to do so before the operational flow is even in place."
+          },
+          {
+            title: "Inefficient outpatient booking and cancellation management",
+            description: "Bookings are mostly by phone and no-shows are frequent. Open slots can't be filled in real time, so clinical revenue leaks away."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / How Cor. Walks With You",
+        title: "Here's how Cor. helps.",
+        intro: "We move forward together, combining Cor.'s services to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+        items: [
+          {
+            challenge: "Data organization and system renewal",
+            service: "AI contract development",
+            description: "From organizing data to cloud migration and connecting in-hospital systems, we move forward together from requirements definition through implementation and operation."
+          },
+          {
+            challenge: "Inquiries and guidance",
+            service: "AI contract development",
+            description: "We help you design guidance experiences using voice-enabled AI, AI trained on internal documents, and autonomous workflows — drawing on our experience implementing multilingual AI reception."
+          },
+          {
+            challenge: "Information security and confidential data",
+            service: "Local LLM & secure AI",
+            description: "We think through AI environments that keep your data in, plus tool selection and operational design matched to sensitivity, together with you."
+          },
+          {
+            challenge: "AI strategy and bringing it in-house",
+            service: "AI advisory & training",
+            description: "For in-hospital teams, we walk alongside you on AI strategy, tool selection, rolling it into operations, and building in-house capability."
+          },
+          {
+            challenge: "Organizing estimates and internal buy-in",
+            service: "Grift",
+            description: "Get a reference estimate up front to use as a starting point for approval and budgeting. The formal price and timeline are confirmed after we review your requirements."
+          }
+        ]
+      },
+      cta: {
+        title: "Why not start with a 30-second reference estimate?",
+        description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
+        primary: "Try an AI estimate with Grift (30 sec, no sign-up)",
+        secondary: "Get a free consultation",
+        note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      }
+    },
+    industryShigyo: {
+      hero: {
+        eyebrow: "Professional Services",
+        title: "Professional-services work: are you spending too much time and nerve on it?",
+        subtitle: "Reviewing contracts, one law change after another, double entry for government filings, and deadline management you can never afford to miss. Behind the expert work you're meant to focus on, the days are eaten up by endless manual tasks and mental pressure — and Cor. helps you change that, together."
+      },
+      challenges: {
+        eyebrow: "01 / Common Challenges",
+        title: "The \"reasons things stall\" we often hear in professional services.",
+        items: [
+          {
+            title: "The chronic load of reviewing and amending clauses in contracts and legal documents",
+            description: "Checking every word of contracts that arrive from clients, by eye. Because a single oversight can immediately become a risk, it drains extreme concentration and time, and is a major reason review work runs into the night."
+          },
+          {
+            title: "The inefficiency of spec changes and double entry in filings and registrations",
+            description: "Manually copying and re-keying data entrusted by clients to fit the quirky UIs of government and registration systems. Peak-season data entry and visual double-checks burn through enormous hours."
+          },
+          {
+            title: "The \"absolutely no mistakes allowed\" pressure of statutory deadlines, limitation periods, and filing cutoffs",
+            description: "Managing things like patent filings, tax returns, and litigation deadlines, where being even a single day late can lead to catastrophic damage. Relying on calendars and multiple people checking by eye creates heavy mental strain every morning."
+          },
+          {
+            title: "Checking eligibility for subsidies and grants, and drafting mountains of documentation",
+            description: "Reading through frequently changing application guidelines and hand-typing the \"business plan\" narrative an application calls for. The long hours of desk work needed to win approval become a real burden."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / How Cor. Walks With You",
+        title: "Here's how Cor. walks with you.",
+        intro: "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+        items: [
+          {
+            title: "We help you run an initial screening of standard, boilerplate clauses",
+            service: "Local LLM & secure AI",
+            description: "Building on your own templates and review criteria, we support a setup that quickly flags risk clauses and special terms — helping ease the burden of that first read-through by eye."
+          },
+          {
+            title: "We set up the plumbing for data linkage and automatic transcription between systems",
+            service: "AI contract development",
+            description: "We support automating transcription work, such as mapping client data into application formats. Together we build a flow that prevents entry errors and cuts the time spent checking."
+          },
+          {
+            title: "We guide you toward reassuring management through automated alerts and reminders",
+            service: "AI contract development",
+            description: "Linked to your calendar and task management, we propose a setup so important deadlines don't slip by. We build multiple guardrails together that don't rely solely on human eyes, aiming to ease the psychological load."
+          },
+          {
+            title: "We support more efficient drafting of application documents and business plans",
+            service: "AI advisory & training",
+            description: "We support quickly drafting the skeleton and structure of documents, informed by requirement matching and past approval trends. We help create an environment where you spend less time writing from scratch and more time refining as the expert."
+          }
+        ]
+      },
+      cta: {
+        title: "Why not start with a 30-second reference estimate?",
+        description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
+        primary: "Try an AI estimate with Grift in 30 seconds",
+        secondary: "Get a free consultation",
+        note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      }
+    },
+    industryConstruction: {
+      hero: {
+        eyebrow: "Construction",
+        title: "On-site logistics in construction: still stuck on paper and fax?",
+        subtitle: "Labor management, design changes, safety checks, passing on know-how — when on-site logistics are tied to paper and fax, the construction work itself grinds to a halt. Cor. walks with you toward the next step, matched to your on-the-ground challenges."
+      },
+      challenges: {
+        eyebrow: "01 / Common Challenges",
+        title: "The \"reasons things stall\" we often hear on construction sites.",
+        labels: { reality: "On-site reality", risk: "If left unaddressed" },
+        items: [
+          {
+            title: "The limits of labor management and keeping projects on schedule under the overtime cap (the \"2024 problem\")",
+            reality: "Although the regulation from April 2024 set strict caps on overtime, the structural pressures on site — short-deadline orders, weather delays, and more — haven't changed.",
+            risk: "Site managers end up forced to absorb the work by taking paperwork home, leading directly to burned-out staff leaving and to project delays."
+          },
+          {
+            title: "Real-time gaps between drawings/BIM data and the site caused by frequent design changes",
+            reality: "Every time a design change happens on site, the latest drawings and BIM data don't reach craftspeople and partner firms quickly enough, raising the risk of construction errors based on outdated information.",
+            risk: "\"Rework\" (rebuilding) on the scale of millions to tens of millions of yen occurs, which not only squeezes costs but also causes major schedule delays."
+          },
+          {
+            title: "Daily safety checks (KY activities) becoming a formality, and insufficient safety training for an increasingly multinational workforce",
+            reality: "Daily hazard-prediction (KY) activities tend to become routine, with paperwork reduced to copy-paste. And as the number of foreign workers grows, there's a challenge in getting Japan's safety rules across accurately, down to the context.",
+            risk: "The risk of serious workplace accidents rises, which can lead to grave consequences such as halted operations on site and a loss of corporate social trust."
+          },
+          {
+            title: "The break in proprietary construction techniques and know-how as veteran craftspeople age and retire",
+            reality: "With veterans in their 50s and older making up a large share, the techniques aren't written down or turned into manuals, and passing them to younger workers still relies on the person-dependent \"watch and learn\" approach.",
+            risk: "The trades and unique strengths you can handle in-house are lost, leading to weaker competitiveness in winning future work and even the disappearance of the techniques themselves."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / How Cor. Walks With You",
+        title: "Here's how Cor. walks with you.",
+        intro: "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+        items: [
+          {
+            title: "Schedule simulation and visualization of operation logs",
+            service: "AI contract development",
+            description: "We work with you to build setups for calmer site operations — reworking complex schedules and gently detecting bottlenecks from each site's operation logs."
+          },
+          {
+            title: "Automatic extraction of changes and instant suggestions to stakeholders",
+            service: "AI contract development",
+            description: "We compare updated drawing and spec data and have AI summarize and extract the key changes in an easy-to-grasp way. We help build an environment to reliably relay and share them with stakeholders, drawing on our experience implementing drawing processing."
+          },
+          {
+            title: "Context-aware hazard prediction and high-accuracy multilingual translation",
+            service: "AI contract development",
+            description: "We walk with you toward safe team-building on site — with AI suggesting concrete hazard-prediction hints for the day's trade and weather, and high-accuracy multilingual translation that captures the nuance of safety manuals."
+          },
+          {
+            title: "Structuring on-site know-how and building a skill-assist environment",
+            service: "Local LLM & secure AI",
+            description: "We organize veterans' work videos, past construction records, and trouble-response logs into a form AI can learn from easily. We support a setup where younger workers, when they hit a question on site, can draw on the organization's knowledge base."
+          }
+        ]
+      },
+      cta: {
+        title: "Why not start with a 30-second reference estimate?",
+        description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
+        primary: "Try an AI estimate with Grift in 30 seconds",
+        secondary: "Get a free consultation",
+        note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      }
+    },
+    industryManufacturing: {
+      hero: {
+        eyebrow: "Manufacturing",
+        title: "Manufacturing know-how and logistics: are they riding on individuals?",
+        subtitle: "Inspection standards, the craftsperson's touch, equipment maintenance, reading inventory — when on-site know-how concentrates in individuals, the reasons things stall only multiply. Cor. walks with you toward the next step, matched to your on-the-ground challenges."
+      },
+      challenges: {
+        eyebrow: "01 / Common Challenges",
+        title: "The \"reasons things stall\" we often hear in manufacturing.",
+        items: [
+          {
+            title: "Visual inspection riding on individuals, and the risk of defective products slipping through due to inconsistent quality standards between inspectors",
+            description: "A reality where judging scratches and burrs relies on individual feel, and keeping manuals in sync is difficult"
+          },
+          {
+            title: "The break in machining know-how and craftsmanship as skilled workers age and retire, and the resulting delay in training younger workers",
+            description: "A structure where intuitive skills like welding and cutting go unspoken, with no time to spare for OJT"
+          },
+          {
+            title: "Sudden equipment breakdowns causing \"line stoppages\" and the enormous repair costs of reactive maintenance",
+            description: "A reactive fix-it-when-it-breaks approach, with the risk of missing early signs such as faint abnormal noises or vibration in machines"
+          },
+          {
+            title: "The difficulty of reading \"optimal inventory\" while caught between excess stock and stockout risk",
+            description: "Conflict between sales and management anticipating material price hikes and procurement delays, and demand forecasting riding on individuals"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / How Cor. Walks With You",
+        title: "Here's how Cor. walks with you.",
+        intro: "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+        items: [
+          {
+            title: "Helping organize visual-inspection standards into a form usable on site",
+            service: "AI contract development",
+            description: "We work with you to organize inspection criteria and reference images and build a setup that curbs inconsistency in judgments. On the premise that a person makes the final call, we aim to ease the burden of initial screening."
+          },
+          {
+            title: "Putting machining know-how into words and an environment younger workers can draw on",
+            service: "Local LLM & secure AI",
+            description: "We organize skilled workers' work records and procedures into a form AI can learn from easily. We support a setup that keeps on-site confidential information in, letting younger workers draw on the organization's knowledge when a question comes up."
+          },
+          {
+            title: "Exploring a setup to catch early signs from equipment data",
+            service: "AI contract development",
+            description: "We work with you to build a setup that catches early signs of anomalies from data you can capture on site, such as abnormal noise, vibration, and operation logs. We support a gradual shift from reactive to preventive maintenance."
+          },
+          {
+            title: "Pulling inventory and demand reading out of individual dependence",
+            service: "AI advisory & training",
+            description: "We walk with you to organize information from sales, management, and the site into a state where the basis for optimal-inventory judgments can be shared. From organizing the assumptions behind demand forecasting to how to select and roll out tools, we think it through together."
+          }
+        ]
+      },
+      cta: {
+        title: "Why not start with a 30-second reference estimate?",
+        description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
+        primary: "Try an AI estimate with Grift in 30 seconds",
+        secondary: "Get a free consultation",
+        note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      }
+    },
+    industryEducation: {
+      hero: {
+        eyebrow: "Education",
+        title: "In education, is there enough \"teacher time\"?",
+        subtitle: "Writing and grading tests, communicating with parents, surveys and reports, registering rosters in ICT tools — the time meant for actual teaching tends to get taken up by paperwork and data tasks. Cor. walks with you toward the next step, matched to your on-the-ground challenges."
+      },
+      challenges: {
+        eyebrow: "01 / Common Challenges",
+        title: "The \"reasons things stall\" we often hear in education.",
+        items: [
+          {
+            title: "The sleepless death-march when test \"writing, grading, and grade processing\" all pile up at once",
+            description: "During exam periods, everything from writing questions to grading and creating report cards is compressed into a short window, easily squeezing the time you'd rather spend on lesson prep and talking with students."
+          },
+          {
+            title: "Analog parent communication and the normalization of after-hours responses",
+            description: "Phone, printouts, chat — channels are scattered, and checking and replying spills into after-school hours and days off. That kind of burden tends to become the norm on many sites."
+          },
+          {
+            title: "Compiling data and producing documents for the mountain of surveys and reports submitted to the ministry and boards of education",
+            description: "Gathering on-site data and finishing documents to fit each format regularly siphons off teachers' working hours."
+          },
+          {
+            title: "Manual account-registration errors when entering student roster data into various ICT tools right after a new term or class reshuffle",
+            description: "Rosters have to be hand-entered or transcribed into multiple ICT tools, making missed registrations and entry errors likely — the burden tends to be especially heavy at the start of a term."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / How Cor. Walks With You",
+        title: "Here's how Cor. walks with you.",
+        intro: "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+        items: [
+          {
+            title: "Rethinking the exam-period workload with you, starting from organizing it",
+            service: "AI contract development",
+            description: "We help build setups — on the premise that a person makes the final check — for drafting test questions, assisting with grading, and compiling grade data."
+          },
+          {
+            title: "Turning scattered parent communication into a clearer flow",
+            service: "AI contract development",
+            description: "We work with you to design a flow that eases the burden of after-hours responses, including communication channels and drafting reply templates."
+          },
+          {
+            title: "Building support for compiling and drafting surveys and reports",
+            service: "Local LLM & secure AI",
+            description: "We help you explore an environment that keeps student information in while making it easier to compile data and draft the skeleton of reports."
+          },
+          {
+            title: "Pulling roster-to-ICT-tool linkage out of manual work",
+            service: "AI contract development",
+            description: "We work with you to set up automation and linkage for roster transcription and account registration, moving toward fewer entry errors and omissions — drawing on our experience with education-sector data migration."
+          }
+        ]
+      },
+      cta: {
+        title: "Why not start with a 30-second reference estimate?",
+        description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
+        primary: "Try an AI estimate with Grift in 30 seconds",
+        secondary: "Get a free consultation",
+        note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      }
+    },
+    works: {
+      title: "Our work speaks for itself.",
+      intro: "We showcase implementation work spanning different domains and different starting points. We show it through code, operations, and numbers — not claims.",
+      note: "* Contribution rates are commit shares measured via git. For NDA and confidential projects, we withhold client and product names and present the content in abstracted form.",
+      items: [
+        { name: "Engineer Cafe Navigator", tag: "OSS / Publicly named", description: "Open-source multilingual voice AI reception. 182,368 lines, 8 contributors, our own contribution rate 87.7% (measured via git)." },
+        { name: "Grift", tag: "In-house product", description: "Our in-house AI estimation and evaluation platform that generates explainable reference estimates from GitHub track records and market rates.", link: "https://griftai.org" },
+        { name: "cor-jp.com", tag: "In-house build", description: "This corporate site. Built in-house with Astro, 5 languages, AI translation, and fast page loads." },
+        { name: "Multimodal generative-AI SaaS", tag: "Contract / Anonymous", description: "Production development of a generative-AI SaaS handling images, audio, and text (client name undisclosed)." },
+        { name: "Survey-platform renewal", tag: "Contract / Anonymous", description: "Renewed and productionized a handed-over survey platform. Covered migration to an agent platform and setting up testing and CI/CD." },
+        { name: "Cloud migration of a legacy core system", tag: "Contract / NDA", description: "Migrated an education-sector core database to the cloud (details abstracted due to NDA)." },
+        { name: "Architectural drawing & floor-plan generation AI", tag: "Contract / NDA", description: "Rapidly built a suite of AI for architectural drawings and floor plans from zero to one (abstracted; architecture-sector, NDA)." }
+      ]
+    },
+    services2026: {
+      title: "Bringing AI — technology that thinks and acts on people's behalf — into the front lines of your business.",
+      items: [
+        { name: "AI contract development", description: "We help build production systems using generative AI, RAG, agents, and image/audio processing — walking with you from requirements through to operation." },
+        { name: "AI advisory & training", description: "We work alongside your leadership, development, and frontline teams on AI strategy, tool selection, rolling AI into daily work, and building in-house capability." },
+        { name: "Local LLM & secure AI", description: "We help design AI operations that match the sensitivity of your data, without sending confidential information outside when it isn't needed." },
+        { name: "Grift", description: "Our in-house AI tool that generates explainable reference estimates from GitHub track records and market rates." }
+      ]
+    },
     nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security", works: "Works", grift: "Grift" },
     hero: {
       title: "Beyond Words, Delivering Feelings.",
@@ -1476,6 +1944,474 @@ const translations = {
     }
   },
   zh: {
+    homeHero: {
+      kicker: "COR. INC. — AI × CO-CREATION",
+      title: "把你的课题，<br />一起变成现实。",
+      subtitle: "业务中的浪费、不好用的系统、<br class='sm:hidden' />想做却推进不下去的事——<br class='sm:hidden' />Cor. 与你同行。",
+      primaryCta: "用 AI 试算报价（30 秒・无需注册）",
+      secondaryCta: "免费咨询",
+      philosophyCta: "阅读「きょうそう」的理念",
+      trustBadges: ["AI 驱动开发 4～5 倍（内部实测）", "本地 LLM・信息不外泄", "ISMS 认证建设中", "源自福冈・服务全国"]
+    },
+    homeChallenges: {
+      eyebrow: "01 / 你的课题",
+      title: "这些课题，我们一起来解。",
+      items: [
+        { title: "想把老化的核心系统迁移上云", description: "从整理现有数据，到上云迁移与运维设计，我们一起推进。" },
+        { title: "想引入多语言 AI 接待・聊天", description: "运用语音对应、基于内部资料学习的 AI 以及自动运行的 AI 机制，为机构・政府部门设计接待引导体验。" },
+        { title: "想把生成式 AI 服务从零做到上线", description: "从梳理要做什么，到使用体验设计、系统间互联机制、计费、自动测试与发布、监控，一气呵成地对应。" },
+        { title: "想在不外泄机密数据的前提下用 AI", description: "运用信息不外泄的 AI，或经批准的 AI 工具，按信息机密度分级进行设计。" },
+        { title: "想打造行业专属的 AI 工具", description: "建筑图纸、户型生成、业务专属数据的 AI 处理等。" },
+        { title: "想把 AI 驱动开发在公司内部自研化", description: "从制定 AI 应用方针、内部培训，到完善开发推进方式，陪伴团队一起推进。" }
+      ],
+      cta: "免费咨询",
+      ctaPrimary: "用 AI 试算报价",
+      ctaSecondary: "先咨询一下"
+    },
+    griftBridge: {
+      eyebrow: "Try Our AI / Grift",
+      title: "在用语言说明之前，先用 AI 试一试？",
+      description: "基于过往开发实绩与市场行情，30 秒给出可供参考的费用、工期与相似案例。",
+      cta: "用 Grift 试算 AI 报价",
+      note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。",
+      mock: {
+        input: "想用 AI 自动化销售报价单的制作",
+        costLabel: "参考费用",
+        cost: "180 万日元起",
+        durationLabel: "参考工期",
+        duration: "4 周起",
+        similarLabel: "相似实绩",
+        similar: "5 件",
+        similarNote: "基于内部实绩"
+      }
+    },
+    proof: {
+      eyebrow: "03 / 实证",
+      title: "不靠自称，用实装说话。",
+      description: "AI SaaS、AI 问卷、核心数据库迁移、多语言 AI 接待、建筑 AI。领域与起步方式各异的实绩，印证着 Cor. 的实装能力。",
+      stats: [
+        { label: "OSS 实装", value: "182,368 行", note: "Engineer Cafe Navigator" },
+        { label: "主要 OSS 贡献", value: "87.7%", note: "git 实测提交比率" },
+        { label: "AI 驱动开发", value: "4～5 倍", note: "内部实测" },
+        { label: "实绩领域", value: "5 大类", note: "AI/DB/OSS/建筑/自研" }
+      ],
+      cta: "查看实绩"
+    },
+    services2026: {
+      title: "在事业现场，落地实装 AI（代替人去思考、行动的技术）。",
+      items: [
+        { name: "AI 受托开发", description: "运用生成式 AI、RAG、智能体、图像/语音处理，从需求定义到运维实装可投产的系统。" },
+        { name: "AI 顾问・AI 培训", description: "配合经营/开发/现场团队，陪伴推进 AI 应用方针、工具选型、业务导入与自研化。" },
+        { name: "本地 LLM・安全 AI", description: "在不将机密数据不必要地外泄的前提下，按机密度设计 AI 运用方式。" },
+        { name: "Grift", description: "基于 GitHub 实绩与市场行情，生成可解释的参考报价的自研 AI 工具。" }
+      ]
+    },
+    securityTrust: {
+      title: "自由地创造，负责地守护。",
+      description: "为兼顾开发者的顺畅与守护客户信息的责任，Cor. 完善了本地优先、最小限度的安全日志，以及基于机密度分级的运用方式。",
+      items: [
+        "与顾问律师合作，审查合同、AI、个人信息及 ISMS 运营",
+        "以取得 ISO/IEC 27001 认证为目标，推进 ISMS 运营建设",
+        "根据机密度分级，区分使用经批准的 AI、公司账户与隔离环境",
+        "公司配发 Mac、加密、MDM，以及检测响应型的轻量化管控"
+      ],
+      cta: "查看安全方针"
+    },
+    kyousou: {
+      title: "Cor. 持续追寻「きょうそう」。",
+      description: "不迎合，也不冲突，而是带来彼此的价值观，在差异中相互打磨，用 AI 把现场的课题变成现实。这便是 Cor. 所理解的「きょうそう」（共创・协奏・竞争・狂想・狂躁。一起创造、相互打磨、彼此共鸣——这是 Cor. 的造词）。",
+      items: [
+        { word: "共创", meaning: "一起创造价值", cor: "与客户、伙伴、AI 共同创造" },
+        { word: "协奏", meaning: "不同的强项相互共鸣", cor: "人、AI、专业、地域各司其职" },
+        { word: "竞争", meaning: "相互打磨", cor: "拒绝唯唯诺诺，坦诚地彼此提升" },
+        { word: "狂想", meaning: "尚无形态的构想", cor: "不止于空想，而是落地为产品" },
+        { word: "狂躁", meaning: "热度・市场的喧嚣", cor: "并非追逐的对象，而是结果中自然产生的" }
+      ],
+      cta: "阅读代表的故事"
+    },
+    finalCta: {
+      title: "就从课题出发，开始「きょうそう」吧。",
+      description: "可以用 Grift 试算参考报价，也可以带着尚未理清的课题来咨询。",
+      primary: "用 AI 试算报价",
+      secondary: "咨询"
+    },
+    homeIndustries: {
+      eyebrow: "Industry / 分行业",
+      title: "不同行业，卡住的理由各不相同。",
+      description: "贴近现场课题，从梳理到推进方式，与你一起思考。",
+      tableHead: { industry: "行业", theme: "常见课题", detail: "" },
+      rows: [
+        {
+          industry: "医疗",
+          theme: "院内数据整理、患者对应、信息安全、AI 应用方针",
+          link: "/industries/medical",
+          linkLabel: "医疗相关请点这里 →"
+        },
+        {
+          industry: "士业",
+          theme: "合同精查、申请・登记、期限管理、补助金申请",
+          link: "/industries/shigyo",
+          linkLabel: "士业相关请点这里 →"
+        },
+        {
+          industry: "建设",
+          theme: "劳务管理、设计变更、安全确认、经验传承",
+          link: "/industries/construction",
+          linkLabel: "建设相关请点这里 →"
+        },
+        {
+          industry: "制造",
+          theme: "目视检查、经验传承、设备保全、库存管理",
+          link: "/industries/manufacturing",
+          linkLabel: "制造相关请点这里 →"
+        },
+        {
+          industry: "教育",
+          theme: "考试作业、家长联络、调查报告、ICT 名册管理",
+          link: "/industries/education",
+          linkLabel: "教育相关请点这里 →"
+        }
+      ]
+    },
+    industryMedical: {
+      hero: {
+        eyebrow: "Medical & Healthcare",
+        title: "医疗现场，是否也有这些“推进不下去”？",
+        subtitle: "院内数据整理、患者对应、信息处理方式——每个现场卡住的理由都不一样。Cor. 会与你一起梳理需求，陪伴你迈出下一步。"
+      },
+      challenges: {
+        eyebrow: "01 / 常见课题",
+        title: "在医疗现场，常听到的“卡住的理由”。",
+        items: [
+          {
+            title: "诊疗报销的审定・退回处理",
+            description: "每月的报销单填写差错，或病名与处置不一致，导致审查支付机构作出审定・退回。医事科员工逐件目视核对・修正，工时极为庞大。"
+          },
+          {
+            title: "电子病历的录入负担",
+            description: "诊后病历记录每位患者要花数分钟，门诊超过 100 人的日子，记录往往拖到深夜。这正是医师工作方式改革（2024 年问题）的直接冲击点。"
+          },
+          {
+            title: "医师工作方式改革应对（值夜班・任务转移记录）",
+            description: "为应对 2024 年 4 月施行的医师加班时长上限规制，需要进行值夜班许可申请、任务转移实绩记录与 36 协定的管理，但运用流程尚未完善便已被要求落实。"
+          },
+          {
+            title: "门诊预约・取消管理的低效",
+            description: "以电话预约为主，无故爽约频发。预约空位无法实时填补，诊疗收益正在流失。"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor. 的同行",
+        title: "Cor. 会这样帮上忙。",
+        intro: "针对每个课题，我们会组合 Cor. 的各项服务一起推进。不做断言，而是珍视贴合现场课题的同行。",
+        items: [
+          {
+            challenge: "数据整理・系统革新",
+            service: "AI 受托开发",
+            description: "从数据整理，到上云迁移或院内系统对接，从需求定义到实装与运维，我们一起推进。"
+          },
+          {
+            challenge: "咨询・引导对应",
+            service: "AI 受托开发",
+            description: "帮你设计运用语音对应、基于内部资料学习的 AI 与自动运行机制的引导体验。我们会活用多语言 AI 接待的实装经验。"
+          },
+          {
+            challenge: "信息安全・机密数据",
+            service: "本地 LLM・安全 AI",
+            description: "与你一起思考信息不外泄的 AI 环境，以及按机密度的工具选型与运用设计。"
+          },
+          {
+            challenge: "AI 应用方针・自研化",
+            service: "AI 顾问・AI 培训",
+            description: "面向院内团队，陪伴推进 AI 应用方针、工具选型、业务导入与自研化的推进方式。"
+          },
+          {
+            challenge: "报价・内部说明的梳理",
+            service: "Grift",
+            description: "先给出参考报价，作为审批或预算的初稿。正式金额与工期将在确认需求后确定。"
+          }
+        ]
+      },
+      cta: {
+        title: "先花 30 秒，试算一份参考报价吧？",
+        description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
+        primary: "用 Grift 试算 AI 报价（30 秒・无需注册）",
+        secondary: "免费咨询",
+        note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      }
+    },
+    industryShigyo: {
+      hero: {
+        eyebrow: "Professional Services",
+        title: "士业工作，是否在“时间与精神”上耗费过多？",
+        subtitle: "合同精查、接连不断的法规修订、行政申请的重复录入，以及绝不能延误的期限管理。在发挥专业知识的本职工作背后，每天被庞大的手工作业与精神压力追赶——Cor. 会陪你一起去改变这一切。"
+      },
+      challenges: {
+        eyebrow: "01 / 常见课题",
+        title: "在士业现场，常听到的“卡住的理由”。",
+        items: [
+          {
+            title: "合同・法律文书条款核对与修改的长期负担",
+            description: "顾问客户送来的合同要逐字逐句目视确认。一旦疏漏便可能直接酿成风险，因而极度耗费专注力与时间，也成为审阅工作拖到深夜的原因。"
+          },
+          {
+            title: "各类申请・登记手续中规格变更与重复录入的低效",
+            description: "要配合行政系统或登记系统独特的 UI，手工把从客户处接收的数据复制粘贴・转录。旺季的录入作业与目视复核，消耗着庞大的工时。"
+          },
+          {
+            title: "法定期限・时效・申报期限“绝不容许出错”的压力",
+            description: "专利申请、税务申报、诉讼期限等，哪怕迟一天都可能酿成致命损失的管理工作。只能依赖日历与多人目视核对，每天清晨都承受着沉重的精神负担。"
+          },
+          {
+            title: "补助金・补贴的申请条件核对与海量文书撰写",
+            description: "频繁变动的招募要项的研读，以及申请书中“事业计划”等需要构建故事的内容，都靠手工敲字完成。为争取入选的长时间案头工作成为负担。"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor. 的同行",
+        title: "Cor. 会这样同行。",
+        intro: "针对每个课题，我们会组合 AI 受托开发・AI 顾问・本地 LLM・Grift 一起推进。不做断言，而是珍视贴合现场课题的同行。",
+        items: [
+          {
+            title: "一起推进固定・标准条款的初步筛查",
+            service: "本地 LLM・安全 AI",
+            description: "以过往的自有范本与审查标准为基础，协助构建快速发现风险条款与特约的体制。帮你减轻最初目视核对的负担。"
+          },
+          {
+            title: "完善系统间的数据对接・自动转录机制",
+            service: "AI 受托开发",
+            description: "协助实现从客户数据落入申请格式等转录作业的自动化。与你共同搭建可防止录入差错、减少核对耗时的流程。"
+          },
+          {
+            title: "用提醒・通知的自动化，引导走向更安心的管理",
+            service: "AI 受托开发",
+            description: "提议与日历、任务管理联动、不遗漏重要期限的机制。一起完善不完全依赖人眼的多重护栏，力求减轻心理负担。"
+          },
+          {
+            title: "支持申请文书・事业计划构成草案的高效化",
+            service: "AI 顾问・AI 培训",
+            description: "协助快速生成兼顾要件比对与过往入选倾向的文书框架与构成草案。减少从零撰写的时间，助你打造一个能专注于专家级推敲的环境。"
+          }
+        ]
+      },
+      cta: {
+        title: "先花 30 秒，试算一份参考报价吧？",
+        description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
+        primary: "用 Grift 花 30 秒试算 AI 报价",
+        secondary: "免费咨询",
+        note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      }
+    },
+    industryConstruction: {
+      hero: {
+        eyebrow: "Construction",
+        title: "建设现场的“调度”，还停在纸张与传真上吗？",
+        subtitle: "劳务管理、设计变更、安全确认、经验传承——当现场的调度被纸张与传真束缚，本来的施工本身也会停滞。Cor. 会配合现场课题，陪伴你迈出下一步。"
+      },
+      challenges: {
+        eyebrow: "01 / 常见课题",
+        title: "在建设现场，常听到的“卡住的理由”。",
+        labels: { reality: "现场现实", risk: "若放任不管" },
+        items: [
+          {
+            title: "随加班时长上限规制（2024 年问题）而来的劳务管理与工期维持的极限",
+            reality: "尽管 2024 年 4 月起的法规为加班时长设定了严格上限，但短工期发包、天气导致的延误等现场结构性负担并未改变。",
+            risk: "施工管理技师只能靠把文书带回家加班等方式硬扛，直接关联到已到极限的人才离职与工期延误风险。"
+          },
+          {
+            title: "频繁设计变更带来的图纸・BIM 数据与现场施工的实时偏差",
+            reality: "现场每次发生设计变更，最新图纸或 BIM 数据难以迅速送达工人与协力公司，存在依据旧信息施工而出错的隐患。",
+            risk: "可能引发数百万至数千万日元规模的“返工（重做）”，不仅挤压成本，还会招致大幅工期延误。"
+          },
+          {
+            title: "每日清晨安全确认（KY 活动）的形式化，以及对日益多国籍化作业人员安全教育的不足",
+            reality: "每天的危险预知（KY）活动易陷入套路化，文书趋于复制粘贴。同时，面对外国劳动者的增加，日本的安全规则连同上下文难以准确传达。",
+            risk: "重大劳动灾害的发生风险升高，可能招致现场停工、企业社会信誉受损等严重后果。"
+          },
+          {
+            title: "熟练工人老龄化与离职带来的独有施工技术・经验的断层",
+            reality: "在 50 岁以上的资深工人占很大比例的情况下，技术尚未被语言化・手册化，向年轻人的传承仍停留在“看着学”的属人化方式。",
+            risk: "公司可承接的工种与独有强项随之流失，导致未来承接竞争力下降，乃至技术本身的消失。"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor. 的同行",
+        title: "Cor. 会这样同行。",
+        intro: "针对每个课题，我们会组合 AI 受托开发・AI 顾问・本地 LLM・Grift 一起推进。不做断言，而是珍视贴合现场课题的同行。",
+        items: [
+          {
+            title: "工程模拟与运转日志的可视化",
+            service: "AI 受托开发",
+            description: "对复杂工程表的重排，以及从各现场运转日志中平缓发现瓶颈的机制等，一起推进有余裕的现场运用的机制建设。"
+          },
+          {
+            title: "变更点的自动提取与向相关方的即时提示",
+            service: "AI 受托开发",
+            description: "比对图纸或规格书的更新数据，由 AI 通俗地摘要・提取被变更的重要部分。帮你搭建能稳妥传达・共享给相关方的环境。我们会活用图纸处理的实装经验。"
+          },
+          {
+            title: "随情况给出危险预测，以及高精度的多语言翻译",
+            service: "AI 受托开发",
+            description: "由 AI 根据当天的工种与天气提出具体的危险预知提示，或实现领会安全手册语境的高精度多语言翻译等，陪伴现场打造更安全的团队协作。"
+          },
+          {
+            title: "现场经验的结构化与技能辅助环境的搭建",
+            service: "本地 LLM・安全 AI",
+            description: "把资深工人的作业视频、过往施工记录、问题处置实录等，整理成便于 AI 学习的形式。帮你搭建年轻人在现场产生疑问时，能从组织的知识库中调取的机制。"
+          }
+        ]
+      },
+      cta: {
+        title: "先花 30 秒，试算一份参考报价吧？",
+        description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
+        primary: "用 Grift 花 30 秒试算 AI 报价",
+        secondary: "免费咨询",
+        note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      }
+    },
+    industryManufacturing: {
+      hero: {
+        eyebrow: "Manufacturing",
+        title: "制造现场的“经验与调度”，是否过度依赖人？",
+        subtitle: "检查的标准、工人的技艺、设备的保全、库存的判断——当现场的经验集中在个人身上，卡住的理由便会越来越多。Cor. 会配合现场课题，陪伴你迈出下一步。"
+      },
+      challenges: {
+        eyebrow: "01 / 常见课题",
+        title: "在制造现场，常听到的“卡住的理由”。",
+        items: [
+          {
+            title: "目视检查的属人化，以及因检查员而异的“质量标准参差”导致的不良品流出风险",
+            description: "产品的划伤或毛刺判定依赖个人感觉，标准难以在手册中同步统一的现实"
+          },
+          {
+            title: "熟练工老龄化・离职导致的“加工经验・工匠技艺”断层与年轻人培养滞后",
+            description: "焊接、切削等凭感觉的技能未被语言化，也抽不出时间做 OJT 的结构"
+          },
+          {
+            title: "设备突发故障导致的“产线停止（大停机）”，以及事后维修带来的巨额修理费用",
+            description: "陷入坏了再修的运用，难以捕捉机器细微异响或振动等征兆的风险"
+          },
+          {
+            title: "在过剩库存与缺货风险的夹击下，“合理库存”判断之难",
+            description: "预判物料涨价或采购延误的销售侧与管理侧的对立，以及需求预测的属人化"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor. 的同行",
+        title: "Cor. 会这样同行。",
+        intro: "针对每个课题，我们会组合 AI 受托开发・AI 顾问・本地 LLM・Grift 一起推进。不做断言，而是珍视贴合现场课题的同行。",
+        items: [
+          {
+            title: "帮你把目视检查的标准，整理成现场可用的形式",
+            service: "AI 受托开发",
+            description: "整理检查标准与样本图像，一起推进抑制判定参差的机制建设。以最终判断由人来做为前提，力求减轻初步筛查的负担。"
+          },
+          {
+            title: "加工经验的语言化，与让年轻人能调取的环境建设",
+            service: "本地 LLM・安全 AI",
+            description: "把熟练工的作业记录与步骤整理成便于 AI 学习的形式。在不将现场机密外泄的前提下，协助搭建年轻人产生疑问时能调取组织知识的机制。"
+          },
+          {
+            title: "从设备数据捕捉征兆的机制探讨",
+            service: "AI 受托开发",
+            description: "从异响、振动、运转日志等现场可获取的数据中，一起推进能尽早察觉异常迹象的机制建设。分阶段支持从事后维修向预防维修的过渡。"
+          },
+          {
+            title: "把库存・需求的判断，从属人化中抽离出来",
+            service: "AI 顾问・AI 培训",
+            description: "整理销售・管理・现场的信息，陪伴打造可共享合理库存判断依据的状态。从需求预测的前提梳理，到工具选型・导入的推进方式，一起思考。"
+          }
+        ]
+      },
+      cta: {
+        title: "先花 30 秒，试算一份参考报价吧？",
+        description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
+        primary: "用 Grift 花 30 秒试算 AI 报价",
+        secondary: "免费咨询",
+        note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      }
+    },
+    industryEducation: {
+      hero: {
+        eyebrow: "Education",
+        title: "教育现场，“老师的时间”够用吗？",
+        subtitle: "考试的命题与批改、家长联络、调查报告、ICT 的名册录入——本应投向教育的时间，往往被事务与数据作业夺走。Cor. 会配合现场课题，陪伴你迈出下一步。"
+      },
+      challenges: {
+        eyebrow: "01 / 常见课题",
+        title: "在教育现场，常听到的“卡住的理由”。",
+        items: [
+          {
+            title: "定期考试的“命题・批改・成绩处理”集中时期的不眠不休的赶工",
+            description: "考试期间，从命题到批改、成绩单制作集中在短期内完成，容易挤压本想用于备课与师生对话的时间。"
+          },
+          {
+            title: "家长对应・联络的手工方式与课外时间对应的常态化",
+            description: "电话、纸条、聊天等联络手段分散，放学后乃至休息日也要持续确认・回复——这样的负担在不少现场已成常态。"
+          },
+          {
+            title: "为向文部科学省或教育委员会提交的“海量调查物・报告书”而进行的数据汇总・文书制作",
+            description: "收集现场数据、按格式整理成文书的工作，正定期地吞噬着教师的工时。"
+          },
+          {
+            title: "新学期・分班后的“学生名册数据”向各类 ICT 工具手动注册账户时的差错",
+            description: "需要把名册手工录入・转录到多个 ICT 工具，容易出现注册遗漏或录入差错——尤其学期初的负担往往较大。"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor. 的同行",
+        title: "Cor. 会这样同行。",
+        intro: "针对每个课题，我们会组合 AI 受托开发・AI 顾问・本地 LLM・Grift 一起推进。不做断言，而是珍视贴合现场课题的同行。",
+        items: [
+          {
+            title: "把考试期的作业负荷，从梳理开始一起重新审视",
+            service: "AI 受托开发",
+            description: "在命题初稿制作、批改辅助、成绩数据汇总等方面，以人来做最终确认为前提，帮你做机制建设。"
+          },
+          {
+            title: "把家长联络的分散，理顺成一目了然的流程",
+            service: "AI 受托开发",
+            description: "在联络渠道、回复初稿制作等方面，一起推进能减轻课外时间对应负担的流程设计。"
+          },
+          {
+            title: "搭建支持调查・报告书制作中汇总・起草的体制",
+            service: "本地 LLM・安全 AI",
+            description: "在不将学生信息外泄的前提下，帮你探讨便于推进数据汇总与报告书框架起草的环境。"
+          },
+          {
+            title: "把名册数据与 ICT 工具的对接，从手工作业中抽离",
+            service: "AI 受托开发",
+            description: "一起完善名册转录与账户注册的自动化・对接机制，朝着减少录入差错与遗漏的方向推进。我们会活用教育类数据迁移的实装经验。"
+          }
+        ]
+      },
+      cta: {
+        title: "先花 30 秒，试算一份参考报价吧？",
+        description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
+        primary: "用 Grift 花 30 秒试算 AI 报价",
+        secondary: "免费咨询",
+        note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      }
+    },
+    works: {
+      title: "用实装说话的 Cor. 实绩。",
+      intro: "我们刊载领域与起步方式各异的实装实绩。不靠自称，而是用代码、运维与数字来呈现。",
+      note: "※ 贡献率为 git 实测的提交比率。涉及 NDA・机密的案件，会隐去客户名・产品名并将内容抽象化后刊载。",
+      items: [
+        { name: "Engineer Cafe Navigator", tag: "OSS / 实名公开", description: "多语言语音 AI 接待的开源项目。182,368 行・8 人贡献，自有贡献率 87.7%（git 实测）。" },
+        { name: "Grift", tag: "自研产品", description: "基于 GitHub 实绩与市场行情，生成可解释参考报价的自研 AI 报价・评估基础平台。", link: "https://griftai.org" },
+        { name: "cor-jp.com", tag: "自主制作", description: "本企业官网。Astro・5 语言・AI 翻译・高速展示，均由自家实装。" },
+        { name: "多模态生成式 AI SaaS", tag: "受托 / 匿名", description: "处理图像・语音・文本的生成式 AI SaaS 的投产开发（客户名不公开）。" },
+        { name: "问卷平台的革新", tag: "受托 / 匿名", description: "对接手后的问卷平台进行革新・投产化。完成智能体平台迁移、测试与 CI/CD 完善。" },
+        { name: "遗留核心系统的上云迁移", tag: "受托 / NDA", description: "将教育类核心数据库迁移上云（详情因 NDA 抽象化处理）。" },
+        { name: "建筑图纸・户型生成 AI", tag: "受托 / NDA", description: "把处理建筑图纸与户型的 AI 群从 0→1 快速实装（建筑类・因 NDA 抽象化处理）。" }
+      ]
+    },
     nav: { home: "首页", about: "关于我们", products: "产品&洞察", blog: "博客", contact: "联系我们", security: "安全", works: "Works", grift: "Grift" },
     hero: {
       title: "比任何人都更快，超越地平线。",
@@ -1965,6 +2901,474 @@ const translations = {
     }
   },
   ko: {
+    homeHero: {
+      kicker: "COR. INC. — AI × CO-CREATION",
+      title: "당신의 과제를<br />함께 형상화합니다.",
+      subtitle: "업무의 낭비・쓰기 불편한 시스템・<br class='sm:hidden' />하고 싶지만 진행되지 않는 일——<br class='sm:hidden' />Cor.가 함께 달립니다.",
+      primaryCta: "AI로 견적을 체험하기 (30초・가입 불필요)",
+      secondaryCta: "무료로 상담하기",
+      philosophyCta: "「きょうそう」의 사상을 읽기",
+      trustBadges: ["AI 주도 개발 4~5배 (내부 실측)", "로컬 LLM・정보를 외부로 내보내지 않음", "ISMS 취득을 목표로 정비 중", "후쿠오카발・전국 대응"]
+    },
+    homeChallenges: {
+      eyebrow: "01 / 당신의 과제",
+      title: "이런 과제, 함께 풀어봐요.",
+      items: [
+        { title: "노후화된 기간 시스템을 클라우드화하고 싶다", description: "지금 사용 중인 데이터의 정리부터 클라우드로의 이전・운영 설계까지 함께 진행합니다." },
+        { title: "다국어 대응 AI 접수・챗봇을 도입하고 싶다", description: "음성 대응이나 사내 자료로 학습한 AI, 자동으로 동작하는 AI 구조를 활용하여 시설・지자체용 안내 경험을 설계합니다." },
+        { title: "생성 AI 서비스를 제로에서 본격 운영하고 싶다", description: "무엇을 만들지에 대한 정리부터 사용성 설계, 시스템 간 연동 구조, 과금, 자동 테스트・배포, 모니터링까지 한 번에 대응합니다." },
+        { title: "기밀 데이터를 외부로 내보내지 않고 AI를 활용하고 싶다", description: "정보를 외부로 내보내지 않는 AI나 승인된 AI 도구를 활용하여 정보의 중요도 등급에 맞춘 설계를 합니다." },
+        { title: "업계 특화 AI 도구를 만들고 싶다", description: "건축 도면, 평면도 생성, 업무 고유 데이터의 AI 처리 등." },
+        { title: "AI 주도 개발을 사내에 내재화하고 싶다", description: "AI 활용 방침 수립, 사내 연수, 개발 진행 방식 정비까지 팀에 밀착하여 함께 진행합니다." }
+      ],
+      cta: "무료 상담하기",
+      ctaPrimary: "AI로 견적 체험하기",
+      ctaSecondary: "먼저 상담하기"
+    },
+    griftBridge: {
+      eyebrow: "Try Our AI / Grift",
+      title: "말로 설명하기 전에, AI로 먼저 체험해 보지 않으시겠어요?",
+      description: "과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 30초 만에 제시합니다.",
+      cta: "Grift로 AI 견적 체험하기",
+      note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다.",
+      mock: {
+        input: "영업 견적서 작성을 AI로 자동화하고 싶다",
+        costLabel: "참고 비용",
+        cost: "180만 엔~",
+        durationLabel: "참고 납기",
+        duration: "4주~",
+        similarLabel: "유사 실적",
+        similar: "5건",
+        similarNote: "사내 실적 기준"
+      }
+    },
+    proof: {
+      eyebrow: "03 / 실증",
+      title: "자칭이 아니라, 구현으로 말합니다.",
+      description: "AI SaaS, AI 설문, 기간 DB 이전, 다국어 AI 접수, 건축 AI. 영역도 시작 방식도 다른 실적이 Cor.의 구현력을 뒷받침합니다.",
+      stats: [
+        { label: "OSS 구현", value: "182,368행", note: "Engineer Cafe Navigator" },
+        { label: "주요 OSS 기여", value: "87.7%", note: "git 실측 커밋 비율" },
+        { label: "AI 주도 개발", value: "4~5배", note: "내부 실측" },
+        { label: "실적 영역", value: "5계통", note: "AI/DB/OSS/건축/자사" }
+      ],
+      cta: "실적 보기"
+    },
+    securityTrust: {
+      title: "자유롭게 만들고, 책임지고 지킵니다.",
+      description: "Cor.는 개발자의 쾌적함과 고객의 정보를 지키는 책임을 양립시키기 위해 로컬 퍼스트, 최소한의 보안 로그, 기밀도 등급에 기반한 운영을 정비하고 있습니다.",
+      items: [
+        "고문 변호사와 연계하여 계약・AI・개인정보・ISMS 운영을 검토",
+        "ISO/IEC 27001 인증 취득을 목표로 ISMS 운영을 정비 중",
+        "기밀도 등급에 따라 승인 AI・회사 계정・격리 환경을 구분하여 사용",
+        "회사 지급 Mac, 암호화, MDM, 탐지・대응형 경량 통제"
+      ],
+      cta: "보안 방침 보기"
+    },
+    kyousou: {
+      title: "Cor.는 「きょうそう」를 끊임없이 추구합니다.",
+      description: "영합도 아니고 충돌도 아닌, 서로의 가치관을 가지고 모여 차이를 갈고닦으며 AI로 현장의 과제를 형상화한다. 그것이 Cor.가 생각하는 「きょうそう(共創 공동창조・協奏 협주・競争 경쟁・狂想 광상・狂騒 광소. 함께 만들고 갈고닦으며 울려 퍼지는 Cor.의 조어)」입니다.",
+      items: [
+        { word: "共創", meaning: "함께 가치를 만든다", cor: "고객・파트너・AI와 함께 만든다" },
+        { word: "協奏", meaning: "서로 다른 강점이 울려 퍼진다", cor: "사람, AI, 전문성, 지역이 각자의 역할을 가진다" },
+        { word: "競争", meaning: "서로를 갈고닦는다", cor: "예스맨을 거부하고 솔직하게 함께 높여간다" },
+        { word: "狂想", meaning: "아직 형태가 없는 구상", cor: "망상으로 끝내지 않고 제품으로 구현한다" },
+        { word: "狂騒", meaning: "열량・시장의 술렁임", cor: "쫓는 대상이 아니라 결과로서 만들어내는 것" }
+      ],
+      cta: "대표 이야기 읽기"
+    },
+    finalCta: {
+      title: "과제에서, 「きょうそう」를 시작합시다.",
+      description: "Grift로 참고 견적을 체험하거나, 아직 언어화하지 못한 과제부터 상담해 주세요.",
+      primary: "AI로 견적 체험하기",
+      secondary: "상담하기"
+    },
+    homeIndustries: {
+      eyebrow: "Industry / 업종별",
+      title: "업종에 따라, 멈추는 이유는 다릅니다.",
+      description: "현장의 과제에 밀착하여 정리부터 진행 방식까지 함께 고민합니다.",
+      tableHead: { industry: "업종", theme: "자주 보이는 테마", detail: "" },
+      rows: [
+        {
+          industry: "의료",
+          theme: "원내 데이터 정리, 환자 대응, 정보 보안, AI 활용 방침",
+          link: "/industries/medical",
+          linkLabel: "의료 관련 분이라면 이쪽 →"
+        },
+        {
+          industry: "전문직(士業)",
+          theme: "계약서 정밀 검토, 신청・등기, 기일 관리, 보조금 신청",
+          link: "/industries/shigyo",
+          linkLabel: "전문직 관련 분이라면 이쪽 →"
+        },
+        {
+          industry: "건설",
+          theme: "노무 관리, 설계 변경, 안전 확인, 노하우 계승",
+          link: "/industries/construction",
+          linkLabel: "건설 관련 분이라면 이쪽 →"
+        },
+        {
+          industry: "제조",
+          theme: "육안 검사, 노하우 계승, 설비 보전, 재고 관리",
+          link: "/industries/manufacturing",
+          linkLabel: "제조 관련 분이라면 이쪽 →"
+        },
+        {
+          industry: "교육",
+          theme: "시험 업무, 학부모 연락, 조사 보고, ICT 명부 관리",
+          link: "/industries/education",
+          linkLabel: "교육 관련 분이라면 이쪽 →"
+        }
+      ]
+    },
+    industryMedical: {
+      hero: {
+        eyebrow: "Medical & Healthcare",
+        title: "의료 현장, 이런 “진행되지 않는” 상황은 없으신가요?",
+        subtitle: "원내 데이터 정리, 환자 대응, 정보 취급 방식——현장마다 멈추는 이유는 다릅니다. Cor.는 요건을 함께 정리하면서 다음 한 걸음을 함께 달립니다."
+      },
+      challenges: {
+        eyebrow: "01 / 자주 보이는 과제",
+        title: "의료 현장에서 자주 듣는 「멈추는 이유」.",
+        items: [
+          {
+            title: "진료비 청구의 심사・반려 대응",
+            description: "월별 진료비 청구서의 기재 오류나 병명과 처치의 불일치로 인해 심사지급기관으로부터 심사・반려가 발생합니다. 의무과 직원이 육안으로 한 건씩 확인・수정하는 공수가 막대해지고 있습니다."
+          },
+          {
+            title: "전자 차트 입력 부담",
+            description: "진찰 후 차트 기재에 환자 1명당 수 분이 걸려, 외래가 100명을 넘는 날은 기재가 심야까지 밀립니다. 의사의 근무 방식 개혁(2024년 문제)의 직격 포인트가 되고 있습니다."
+          },
+          {
+            title: "의사 근무 방식 개혁 대응(당직・태스크 시프트 기록)",
+            description: "2024년 4월 시행된 의사 시간외 노동 상한 규제에 대한 대응으로 당직 허가 신청・태스크 시프트 실적 기록・36협정 관리가 필요해졌지만, 운영 흐름이 미정비된 채 대응이 요구되고 있습니다."
+          },
+          {
+            title: "외래 예약・취소 관리의 비효율",
+            description: "전화 예약이 주를 이루어 무단 취소가 빈발합니다. 예약 빈자리를 실시간으로 채우지 못해 진료 수익이 새어 나가고 있습니다."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor.의 동반",
+        title: "Cor.는 이렇게 돕습니다.",
+        intro: "과제별로 Cor.의 서비스를 조합하면서 함께 진행합니다. 단정이 아니라 현장의 과제에 맞춘 동반을 소중히 여깁니다.",
+        items: [
+          {
+            challenge: "데이터 정리・시스템 쇄신",
+            service: "AI 수탁 개발",
+            description: "데이터 정리부터 클라우드 이전이나 원내 시스템 연동까지, 요건 정의부터 구현・운영까지 함께 진행합니다."
+          },
+          {
+            challenge: "문의・안내 대응",
+            service: "AI 수탁 개발",
+            description: "음성 대응이나 사내 자료로 학습한 AI, 자동으로 동작하는 구조를 활용한 안내 경험 설계를 돕습니다. 다국어 AI 접수 구현 노하우를 활용합니다."
+          },
+          {
+            challenge: "정보 보안・기밀 데이터",
+            service: "로컬 LLM・시큐어 AI",
+            description: "정보를 외부로 내보내지 않는 AI 환경이나 기밀도에 따른 도구 선정・운영 설계를 함께 고민합니다."
+          },
+          {
+            challenge: "AI 활용 방침・내재화",
+            service: "AI 고문・AI 연수",
+            description: "원내 팀을 대상으로 AI 활용 방침, 도구 선정, 업무 도입, 내재화 진행 방식을 함께 달립니다."
+          },
+          {
+            challenge: "견적・사내 설명의 정리",
+            service: "Grift",
+            description: "참고 견적을 먼저 제시하여 품의나 예산의 초안으로. 정식 금액・납기는 요건 확인 후에 확정됩니다."
+          }
+        ]
+      },
+      cta: {
+        title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
+        description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
+        primary: "Grift로 AI 견적 체험하기 (30초・가입 불필요)",
+        secondary: "무료로 상담하기",
+        note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
+      }
+    },
+    industryShigyo: {
+      hero: {
+        eyebrow: "Professional Services",
+        title: "전문직 업무, “시간과 신경”을 너무 많이 쓰고 있지 않으신가요?",
+        subtitle: "계약서 정밀 검토, 거듭되는 법 개정, 행정 신청의 이중 입력, 그리고 절대 늦출 수 없는 기일 관리. 전문 지식을 살리는 본래 업무 뒤편에서 막대한 수작업과 정신적 압박에 쫓기는 나날을, Cor.가 함께 바꿔 가도록 돕습니다."
+      },
+      challenges: {
+        eyebrow: "01 / 자주 보이는 과제",
+        title: "전문직 현장에서 자주 듣는 「멈추는 이유」.",
+        items: [
+          {
+            title: "계약서・법적 서면의 조항 점검과 수정의 만성적 부담",
+            description: "고문처에서 도착하는 계약서를 한 글자 한 구절 육안으로 확인합니다. 누락이 곧바로 리스크로 이어지기 때문에 극도의 집중력과 시간을 빼앗기고, 검토 업무가 심야까지 이어지는 원인이 되고 있습니다."
+          },
+          {
+            title: "각종 신청・등기 절차에서의 사양 변경과 이중 입력의 비효율",
+            description: "행정 시스템이나 등기 시스템의 독특한 UI에 맞춰, 고객에게서 받은 데이터를 수작업으로 복사・전기합니다. 성수기의 입력 작업과 육안 더블 체크에 막대한 공수가 녹아 사라집니다."
+          },
+          {
+            title: "법정 기일・시효・신고 기한의 「절대 실수가 허용되지 않는」 압박",
+            description: "특허 출원, 세무 신고, 소송 기일 등 하루라도 늦으면 치명적인 손해로 이어지는 관리 업무. 캘린더나 육안에 의한 여러 사람 체크에 의존하며, 매일 아침 강한 정신적 부담이 가해집니다."
+          },
+          {
+            title: "보조금・지원금의 신청 요건 점검과 방대한 서류 작성",
+            description: "자주 바뀌는 공모 요령의 숙독이나 신청서에 써야 할 「사업 계획」 등의 스토리 구성을 수작업으로 타이핑합니다. 채택을 위한 장시간의 책상 업무가 부담이 되고 있습니다."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor.의 동반",
+        title: "Cor.는 이렇게 함께 달립니다.",
+        intro: "과제별로 AI 수탁 개발・AI 고문・로컬 LLM・Grift를 조합하면서 함께 진행합니다. 단정이 아니라 현장의 과제에 맞춘 동반을 소중히 여깁니다.",
+        items: [
+          {
+            title: "정형・표준 조항의 초기 스크리닝을 함께 진행합니다",
+            service: "로컬 LLM・시큐어 AI",
+            description: "과거의 자사 양식이나 심사 기준을 바탕으로 리스크 조항이나 특약의 유무를 신속하게 탐지하는 체제 구축을 지원합니다. 첫 육안 점검의 부담을 덜어드리도록 돕습니다."
+          },
+          {
+            title: "시스템 간 데이터 연동・자동 전기 구조를 정비합니다",
+            service: "AI 수탁 개발",
+            description: "고객 데이터에서 신청 포맷으로의 반영 등 전기 작업의 자동화를 지원합니다. 입력 실수를 방지하고 점검에 들이는 시간을 줄이는 흐름을 함께 구축합니다."
+          },
+          {
+            title: "알림・리마인드 자동화로 안심할 수 있는 관리로 이끕니다",
+            service: "AI 수탁 개발",
+            description: "캘린더나 작업 관리와 연동하여 중요한 기일을 놓치지 않는 구조를 제안합니다. 사람의 눈에만 의존하지 않는 다중 가드레일을 함께 정비하여 심리적 부담의 경감을 목표로 합니다."
+          },
+          {
+            title: "신청 서류・사업 계획의 구성안 작성 효율화를 지원합니다",
+            service: "AI 고문・AI 연수",
+            description: "요건 대조나 과거의 채택 경향을 반영한 서류의 골격・구성안의 빠른 작성을 지원합니다. 제로에서 작문하는 시간을 줄이고, 전문가로서의 퇴고에 집중할 수 있는 환경 만들기를 응원합니다."
+          }
+        ]
+      },
+      cta: {
+        title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
+        description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
+        primary: "Grift로 30초, AI 견적 체험하기",
+        secondary: "무료로 상담하기",
+        note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
+      }
+    },
+    industryConstruction: {
+      hero: {
+        eyebrow: "Construction",
+        title: "건설 현장의 “단도리(공정 준비)”, 종이와 팩스에 묶여 멈춰 있지 않으신가요?",
+        subtitle: "노무 관리, 설계 변경, 안전 확인, 노하우 계승——현장의 단도리가 종이와 팩스에 묶이면 본래의 시공 자체가 멈춥니다. Cor.는 현장의 과제에 맞춰 다음 한 걸음을 함께 달립니다."
+      },
+      challenges: {
+        eyebrow: "01 / 자주 보이는 과제",
+        title: "건설 현장에서 자주 듣는 「멈추는 이유」.",
+        labels: { reality: "현장의 현실", risk: "방치하면" },
+        items: [
+          {
+            title: "시간외 노동 상한 규제(2024년 문제)에 따른 노무 관리와 공정 유지의 한계",
+            reality: "2024년 4월부터의 법 규제로 잔업 시간에 엄격한 상한이 마련되었지만, 짧은 납기의 발주나 날씨로 인한 지연 등 현장의 구조적 부담은 변하지 않았습니다.",
+            risk: "시공관리기사가 서류를 집으로 가져가 처리하는 등 무리하게 대응할 수밖에 없어, 한계에 다다른 인재의 이직이나 공기 지연 리스크로 직결됩니다."
+          },
+          {
+            title: "잦은 설계 변경에 따른 도면・BIM 데이터와 현장 간의 실시간 시공 어긋남",
+            reality: "현장에서 설계 변경이 일어날 때마다 최신 도면이나 BIM 데이터가 직인이나 협력 회사에 신속하게 전달되지 못해, 오래된 정보에 기반한 시공 실수가 우려됩니다.",
+            risk: "수백만~수천만 엔 규모의 「재작업(다시 만들기)」이 발생하여 비용 압박뿐만 아니라 대폭적인 공기 지연을 초래하는 원인이 됩니다."
+          },
+          {
+            title: "매일 아침 안전 확인(KY 활동)의 형식화와, 다국적화하는 작업원에 대한 안전 교육 부족",
+            reality: "매일의 위험 예지(KY) 활동이 매너리즘에 빠져 서류가 복사 상태가 되는 경향이 있습니다. 또한 외국인 노동자의 증가에 대해 일본의 안전 규칙이 맥락까지 정확히 전달되기 어려운 과제가 있습니다.",
+            risk: "중대한 노동 재해의 발생 리스크가 높아져 현장 가동 정지나 기업의 사회적 신용 실추 같은 심각한 사태를 초래할 수 있습니다."
+          },
+          {
+            title: "숙련 직인의 고령화와 퇴직에 따른 고유 시공 기술・노하우의 단절",
+            reality: "50대 이상의 베테랑 직인이 큰 비율을 차지하는 가운데, 기술이 언어화・매뉴얼화되어 있지 않아 젊은 인력으로의 계승이 「보고 익혀라」 식의 속인화에 의존한 채로 있습니다.",
+            risk: "자사가 대응할 수 있는 공종이나 고유의 강점이 사라져, 장래의 수주 경쟁력 저하나 기술 자체의 소실로 이어집니다."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor.의 동반",
+        title: "Cor.는 이렇게 함께 달립니다.",
+        intro: "과제별로 AI 수탁 개발・AI 고문・로컬 LLM・Grift를 조합하면서 함께 진행합니다. 단정이 아니라 현장의 과제에 맞춘 동반을 소중히 여깁니다.",
+        items: [
+          {
+            title: "공정 시뮬레이션과 가동 로그의 시각화",
+            service: "AI 수탁 개발",
+            description: "복잡한 공정표의 재구성이나 현장별 가동 로그에서 병목을 완만하게 탐지하는 구조 등, 여유를 가진 현장 운영을 위한 구조 만들기를 함께 진행합니다."
+          },
+          {
+            title: "변경점의 자동 추출과 관계자에 대한 즉시 제안",
+            service: "AI 수탁 개발",
+            description: "도면이나 사양서의 갱신 데이터를 비교하여 변경된 중요 부분을 AI가 알기 쉽게 요약・추출합니다. 관계자에게 확실히 전달・공유하기 위한 환경 구축을 돕습니다. 도면 처리 구현 노하우를 활용합니다."
+          },
+          {
+            title: "상황에 따른 위험 예측 제시와 고정밀 다국어 번역",
+            service: "AI 수탁 개발",
+            description: "그날의 공종이나 날씨에 따른 구체적인 위험 예지 힌트를 AI가 제안하거나, 안전 매뉴얼의 뉘앙스를 살린 고정밀 다국어 번역의 구현 등으로 현장의 안전한 팀 빌딩에 동반합니다."
+          },
+          {
+            title: "현장 노하우의 구조화와 기능 보조 환경의 구축",
+            service: "로컬 LLM・시큐어 AI",
+            description: "베테랑의 작업 영상이나 과거의 시공 기록, 트러블 대응 기록 등을 AI가 학습하기 쉬운 형태로 정리합니다. 젊은 인력이 현장에서 의문이 생겼을 때 조직의 지혜를 바탕으로 끌어낼 수 있는 구조 만들기를 지원합니다."
+          }
+        ]
+      },
+      cta: {
+        title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
+        description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
+        primary: "Grift로 30초, AI 견적 체험하기",
+        secondary: "무료로 상담하기",
+        note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
+      }
+    },
+    industryManufacturing: {
+      hero: {
+        eyebrow: "Manufacturing",
+        title: "제조 현장의 “지혜와 단도리”, 사람에게 의존하고 있지 않으신가요?",
+        subtitle: "검사의 기준, 장인의 기술, 설비의 보전, 재고의 예측——현장의 지혜가 사람에게 집중되면 멈추는 이유는 늘어갑니다. Cor.는 현장의 과제에 맞춰 다음 한 걸음을 함께 달립니다."
+      },
+      challenges: {
+        eyebrow: "01 / 자주 보이는 과제",
+        title: "제조 현장에서 자주 듣는 「멈추는 이유」.",
+        items: [
+          {
+            title: "육안 검사의 속인화와, 검사원마다의 「품질 기준 편차」에 의한 불량품 유출 리스크",
+            description: "제품의 흠집이나 버(burr) 판정이 개인의 감각에 의존하여 매뉴얼 통일이 어려운 현실"
+          },
+          {
+            title: "숙련공의 고령화・퇴직에 의한 「가공 노하우・장인 기술」의 단절과 젊은 인력 육성 지연",
+            description: "용접이나 절삭 등의 감각적 기능이 언어화되지 않고, OJT 시간도 할애하지 못하는 구조"
+          },
+          {
+            title: "돌발적 설비 고장에 의한 「라인 정지(돌발 정지)」와, 사후 보전에 의한 막대한 수리 비용",
+            description: "고장 난 뒤 고치는 운영이 되어, 기계의 미세한 이음이나 진동 등의 전조를 포착하지 못하는 리스크"
+          },
+          {
+            title: "과잉 재고와 결품 리스크 사이의 딜레마로 인한 「적정 재고」 예측의 어려움",
+            description: "자재 급등이나 조달 지연을 내다본 영업 측과 관리 측의 대립, 수요 예측의 속인화"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor.의 동반",
+        title: "Cor.는 이렇게 함께 달립니다.",
+        intro: "과제별로 AI 수탁 개발・AI 고문・로컬 LLM・Grift를 조합하면서 함께 진행합니다. 단정이 아니라 현장의 과제에 맞춘 동반을 소중히 여깁니다.",
+        items: [
+          {
+            title: "육안 검사 기준을 현장에서 쓸 수 있는 형태로 정리하는 지원",
+            service: "AI 수탁 개발",
+            description: "검사 기준이나 견본 이미지를 정리하여 판정의 편차를 억제하기 위한 구조 만들기를 함께 진행합니다. 최종 판단은 사람이 한다는 전제로, 초기 스크리닝의 부담 경감을 목표로 합니다."
+          },
+          {
+            title: "가공 노하우의 언어화와, 젊은 인력이 끌어낼 수 있는 환경 만들기",
+            service: "로컬 LLM・시큐어 AI",
+            description: "숙련공의 작업 기록이나 절차를 AI가 학습하기 쉬운 형태로 정리합니다. 현장의 기밀을 외부로 내보내지 않고, 젊은 인력이 의문이 생겼을 때 조직의 지혜를 끌어낼 수 있는 구조의 구축을 지원합니다."
+          },
+          {
+            title: "설비 데이터에서 전조를 포착하는 구조의 검토",
+            service: "AI 수탁 개발",
+            description: "이음・진동・가동 로그 등 현장에서 얻을 수 있는 데이터에서 이상의 징후를 일찍 알아챌 수 있는 구조 만들기를 함께 진행합니다. 사후 보전에서 예방 보전으로의 이행을 단계적으로 지원합니다."
+          },
+          {
+            title: "재고・수요 예측을 속인화에서 끄집어내기",
+            service: "AI 고문・AI 연수",
+            description: "영업・관리・현장의 정보를 정리하여 적정 재고의 판단 재료를 공유할 수 있는 상태 만들기에 동반합니다. 수요 예측의 전제 정리부터 도구 선정・도입 진행 방식까지 함께 고민합니다."
+          }
+        ]
+      },
+      cta: {
+        title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
+        description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
+        primary: "Grift로 30초, AI 견적 체험하기",
+        secondary: "무료로 상담하기",
+        note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
+      }
+    },
+    industryEducation: {
+      hero: {
+        eyebrow: "Education",
+        title: "교육 현장, “선생님의 시간”은 충분하신가요?",
+        subtitle: "시험 출제와 채점, 학부모 연락, 조사 보고, ICT 명부 등록——본래 교육을 향한 시간이 사무와 데이터 작업에 빼앗기기 쉽습니다. Cor.는 현장의 과제에 맞춰 다음 한 걸음을 함께 달립니다."
+      },
+      challenges: {
+        eyebrow: "01 / 자주 보이는 과제",
+        title: "교육 현장에서 자주 듣는 「멈추는 이유」.",
+        items: [
+          {
+            title: "정기 시험의 「출제・채점・성적 처리」가 집중되는 시기의 밤샘 데스 마치",
+            description: "시험 기간에 출제부터 채점, 성적표 작성까지가 짧은 기간에 집중되어, 지도 준비나 학생과의 대화에 쓰고 싶은 시간이 압박받기 쉬운 구조가 되고 있습니다."
+          },
+          {
+            title: "학부모 대응・연락의 아날로그 대응과 시간외 대응의 상시화",
+            description: "전화, 인쇄물, 챗 등 연락 수단이 분산되어, 방과 후나 휴일에도 확인・답신이 이어지는——그런 부담이 상시화되기 쉬운 현장이 있습니다."
+          },
+          {
+            title: "문부과학성이나 교육위원회에 제출하는 「방대한 조사물・보고서」를 위한 데이터 집계・서류 작성",
+            description: "현장의 데이터를 모아 양식에 맞춰 서류를 완성하는 작업에 교원의 공수가 정기적으로 빨려 들어가고 있습니다."
+          },
+          {
+            title: "신학기・반 편성 직후의 「학생 명부 데이터」 각종 ICT 도구로의 수동 계정 등록 실수",
+            description: "여러 ICT 도구에 명부를 수기 입력・전기해야 하여 등록 누락이나 입력 실수가 일어나기 쉬운——특히 학기 초의 부담이 커지기 쉽습니다."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / Cor.의 동반",
+        title: "Cor.는 이렇게 함께 달립니다.",
+        intro: "과제별로 AI 수탁 개발・AI 고문・로컬 LLM・Grift를 조합하면서 함께 진행합니다. 단정이 아니라 현장의 과제에 맞춘 동반을 소중히 여깁니다.",
+        items: [
+          {
+            title: "시험 시기의 작업 부하를 정리부터 함께 재검토",
+            service: "AI 수탁 개발",
+            description: "출제의 초안 작성이나 채점 보조, 성적 데이터의 집계 등 사람이 최종 확인하는 전제의 구조 만들기를 돕습니다."
+          },
+          {
+            title: "학부모 연락의 분산을 한눈에 보기 좋은 흐름으로 정리",
+            service: "AI 수탁 개발",
+            description: "연락 채널이나 답신의 초안 작성 등 시간외 대응의 부담을 덜어주는 흐름 설계를 함께 진행합니다."
+          },
+          {
+            title: "조사・보고서 작성의 집계・초안을 지원하는 체제 만들기",
+            service: "로컬 LLM・시큐어 AI",
+            description: "학생의 정보를 외부로 내보내지 않고, 데이터 집계나 보고서의 골격 만들기를 수월하게 진행할 수 있는 환경의 검토를 돕습니다."
+          },
+          {
+            title: "명부 데이터의 ICT 도구 연동을 수작업에서 끄집어내기",
+            service: "AI 수탁 개발",
+            description: "명부의 전기나 계정 등록의 자동화・연동 구조를 함께 정비하여 입력 실수나 누락을 줄이는 방향으로 진행합니다. 교육계 데이터 이전 구현 노하우를 활용합니다."
+          }
+        ]
+      },
+      cta: {
+        title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
+        description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
+        primary: "Grift로 30초, AI 견적 체험하기",
+        secondary: "무료로 상담하기",
+        note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
+      }
+    },
+    works: {
+      title: "구현으로 말하는, Cor.의 실적.",
+      intro: "영역도 시작 방식도 다른 구현 실적을 게재하고 있습니다. 자칭이 아니라 코드・운영・숫자로 보여드립니다.",
+      note: "※ 기여율은 git 실측 커밋 비율입니다. NDA・기밀 안건은 클라이언트명・제품명을 가리고 내용을 추상화하여 게재하고 있습니다.",
+      items: [
+        { name: "Engineer Cafe Navigator", tag: "OSS / 실명 공개", description: "다국어 음성 AI 접수의 오픈소스. 182,368행・8명 기여, 자사 기여율 87.7%(git 실측)." },
+        { name: "Grift", tag: "자사 제품", description: "GitHub 실적과 시장 시세에서 설명 가능한 참고 견적을 생성하는 자사 AI 견적・평가 기반.", link: "https://griftai.org" },
+        { name: "cor-jp.com", tag: "자사 제작", description: "이 코퍼레이트 사이트. Astro・5개 언어・AI 번역・고속 표시를 자사에서 구현." },
+        { name: "멀티모달 생성 AI SaaS", tag: "수탁 / 익명", description: "이미지・음성・텍스트를 다루는 생성 AI SaaS의 본격 개발(클라이언트명은 비공개)." },
+        { name: "설문 기반의 쇄신", tag: "수탁 / 익명", description: "인계 후의 설문 기반을 쇄신・본격 운영. 에이전트 기반 이전, 테스트・CI/CD 정비까지 대응." },
+        { name: "레거시 기간 시스템의 클라우드 이전", tag: "수탁 / NDA", description: "교육계 기간 데이터베이스를 클라우드로 이전(상세는 NDA로 인해 추상화)." },
+        { name: "건축 도면・평면도 생성 AI", tag: "수탁 / NDA", description: "건축 도면이나 평면도를 다루는 AI군을 0→1로 고속 구현(건축계・NDA로 인해 추상화)." }
+      ]
+    },
+    services2026: {
+      title: "사업 현장에 AI(사람을 대신해 생각하고 움직이는 기술)를 함께 도입합니다.",
+      items: [
+        { name: "AI 수탁 개발", description: "생성 AI, RAG, 에이전트, 이미지/음성 처리를 활용한 운영 시스템을 요건 정의부터 운용까지 함께 만들어 갑니다." },
+        { name: "AI 고문・AI 연수", description: "경영・개발・현장 팀에 맞춰 AI 활용 방침, 도구 선정, 업무 도입, 내재화를 함께 동반합니다." },
+        { name: "로컬 LLM・시큐어 AI", description: "기밀 데이터를 불필요하게 외부로 내보내지 않고, 기밀도에 맞춘 AI 운용을 함께 설계합니다." },
+        { name: "Grift", description: "GitHub 실적과 시장 시세에서 설명 가능한 참고 견적을 생성하는 자사 AI 도구입니다." }
+      ]
+    },
     nav: { home: "홈", about: "회사소개", products: "제품&인사이트", blog: "블로그", contact: "문의", security: "보안", works: "Works", grift: "Grift" },
     hero: {
       title: "누구보다 빠르게, 지평선 너머로.",
@@ -2454,6 +3858,474 @@ const translations = {
     }
   },
   es: {
+    homeHero: {
+      kicker: "COR. INC. — AI × CO-CREATION",
+      title: "Damos forma a tu desafío,<br />juntos.",
+      subtitle: "Procesos con desperdicios, sistemas difíciles de usar,<br class='sm:hidden' />proyectos que quieres iniciar pero no avanzan——<br class='sm:hidden' />Cor. te acompaña en el camino.",
+      primaryCta: "Prueba un presupuesto con IA (30 s · sin registro)",
+      secondaryCta: "Consulta gratis",
+      philosophyCta: "Lee la filosofía de «Kyousou»",
+      trustBadges: ["Desarrollo asistido por IA 4–5× (medición interna)", "LLM local · tu información no sale al exterior", "ISMS en preparación", "Desde Fukuoka · cobertura nacional"]
+    },
+    homeChallenges: {
+      eyebrow: "01 / Tu desafío",
+      title: "Resolvamos juntos desafíos como estos.",
+      items: [
+        { title: "Llevar a la nube un sistema central obsoleto", description: "Desde ordenar los datos que usas hoy hasta la migración a la nube y el diseño operativo, avanzamos contigo." },
+        { title: "Implementar recepción y chat con IA multilingüe", description: "Con IA de voz, IA entrenada con documentos internos y mecanismos automatizados, diseñamos una experiencia de atención para instalaciones y administraciones públicas." },
+        { title: "Llevar a producción un servicio de IA generativa desde cero", description: "Desde definir qué construir hasta el diseño de la experiencia, la integración entre sistemas, la facturación, las pruebas y publicación automatizadas y la monitorización: lo abordamos de principio a fin." },
+        { title: "Aprovechar la IA sin que los datos confidenciales salgan al exterior", description: "Con IA que no expone tu información y herramientas de IA aprobadas, diseñamos según el nivel de confidencialidad de cada dato." },
+        { title: "Crear una herramienta de IA especializada por sector", description: "Planos de arquitectura, generación de distribuciones, procesamiento con IA de datos propios del negocio, y más." },
+        { title: "Internalizar el desarrollo asistido por IA en tu equipo", description: "Desde definir la estrategia de uso de la IA hasta la formación interna y la organización del flujo de desarrollo, acompañamos a tu equipo de cerca." }
+      ],
+      cta: "Consulta gratis",
+      ctaPrimary: "Prueba un presupuesto con IA",
+      ctaSecondary: "Empieza por una consulta"
+    },
+    griftBridge: {
+      eyebrow: "Try Our AI / Grift",
+      title: "Antes de explicarlo con palabras, ¿por qué no lo pruebas con IA?",
+      description: "A partir de proyectos de desarrollo anteriores y de las tarifas del mercado, te ofrecemos en 30 segundos un coste, un plazo y casos similares de referencia.",
+      cta: "Prueba un presupuesto con IA en Grift",
+      note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos.",
+      mock: {
+        input: "Quiero automatizar con IA la creación de presupuestos de ventas",
+        costLabel: "Coste de referencia",
+        cost: "desde 1,8 M JPY",
+        durationLabel: "Plazo de referencia",
+        duration: "desde 4 semanas",
+        similarLabel: "Casos similares",
+        similar: "5",
+        similarNote: "Según proyectos internos"
+      }
+    },
+    proof: {
+      eyebrow: "03 / Evidencia",
+      title: "No lo decimos: lo demostramos con implementación.",
+      description: "IA SaaS, encuestas con IA, migración de bases de datos centrales, recepción con IA multilingüe, IA para arquitectura. Proyectos con dominios y orígenes distintos que respaldan la capacidad de implementación de Cor.",
+      stats: [
+        { label: "Implementación OSS", value: "182.368 líneas", note: "Engineer Cafe Navigator" },
+        { label: "Contribución principal a OSS", value: "87,7 %", note: "Proporción de commits medida en git" },
+        { label: "Desarrollo asistido por IA", value: "4–5×", note: "Medición interna" },
+        { label: "Dominios de proyectos", value: "5 líneas", note: "IA/BD/OSS/Arquitectura/Propios" }
+      ],
+      cta: "Ver nuestros proyectos"
+    },
+    securityTrust: {
+      title: "Crear con libertad. Proteger con responsabilidad.",
+      description: "Para conciliar la comodidad del desarrollador con la responsabilidad de proteger la información de nuestros clientes, Cor. organiza su operación en torno a un enfoque local-first, un registro de seguridad mínimo y niveles de confidencialidad.",
+      items: [
+        "Revisión de contratos, IA, información personal y operación de ISMS en colaboración con nuestro asesor legal",
+        "Preparación operativa del ISMS con el objetivo de obtener la certificación ISO/IEC 27001",
+        "Uso selectivo de IA aprobada, cuentas de empresa y entornos aislados según el nivel de confidencialidad",
+        "Macs proporcionados por la empresa, cifrado, MDM y controles ligeros de detección y respuesta"
+      ],
+      cta: "Ver nuestra política de seguridad"
+    },
+    kyousou: {
+      title: "Cor. persigue sin descanso el «Kyousou».",
+      description: "Ni complacencia ni mera confrontación: aportar los valores de cada uno, pulir las diferencias entre todos y dar forma con IA a los desafíos del terreno. Eso es lo que Cor. entiende por «Kyousou» (un término propio que combina co-creación, concertación, competencia, fantasía audaz y bullicio: crear juntos, pulirnos mutuamente y resonar en sintonía).",
+      items: [
+        { word: "Co-creación", meaning: "Crear valor juntos", cor: "Crear junto a clientes, socios y la IA" },
+        { word: "Concertación", meaning: "Fortalezas distintas que resuenan", cor: "Personas, IA, especialidad y territorio con un rol propio" },
+        { word: "Competencia", meaning: "Pulirnos mutuamente", cor: "Rechazar la complacencia y crecer con franqueza" },
+        { word: "Fantasía audaz", meaning: "Una idea que aún no tiene forma", cor: "No quedarse en el sueño, sino convertirlo en producto" },
+        { word: "Bullicio", meaning: "Energía y rumor del mercado", cor: "No algo que perseguir, sino un resultado que generamos" }
+      ],
+      cta: "Lee la historia de nuestro fundador"
+    },
+    finalCta: {
+      title: "Empecemos el «Kyousou» desde tu desafío.",
+      description: "Prueba un presupuesto de referencia con Grift, o consúltanos partiendo de un desafío que aún no logras poner en palabras.",
+      primary: "Prueba un presupuesto con IA",
+      secondary: "Consulta"
+    },
+    homeIndustries: {
+      eyebrow: "Industry / Por sector",
+      title: "Cada sector se detiene por motivos distintos.",
+      description: "Nos acercamos a los desafíos del terreno y pensamos juntos, desde el orden hasta la forma de avanzar.",
+      tableHead: { industry: "Sector", theme: "Temas frecuentes", detail: "" },
+      rows: [
+        {
+          industry: "Medicina",
+          theme: "Orden de los datos internos, atención al paciente, seguridad de la información, estrategia de uso de IA",
+          link: "/industries/medical",
+          linkLabel: "Si eres del sector médico, por aquí →"
+        },
+        {
+          industry: "Profesiones colegiadas",
+          theme: "Revisión de contratos, trámites y registros, control de plazos, solicitud de subvenciones",
+          link: "/industries/shigyo",
+          linkLabel: "Si eres profesional colegiado, por aquí →"
+        },
+        {
+          industry: "Construcción",
+          theme: "Gestión laboral, cambios de diseño, comprobaciones de seguridad, transmisión del know-how",
+          link: "/industries/construction",
+          linkLabel: "Si eres del sector de la construcción, por aquí →"
+        },
+        {
+          industry: "Industria",
+          theme: "Inspección visual, transmisión del know-how, mantenimiento de equipos, gestión de inventario",
+          link: "/industries/manufacturing",
+          linkLabel: "Si eres del sector industrial, por aquí →"
+        },
+        {
+          industry: "Educación",
+          theme: "Tareas de evaluación, comunicación con familias, informes, gestión de listas en herramientas TIC",
+          link: "/industries/education",
+          linkLabel: "Si eres del sector educativo, por aquí →"
+        }
+      ]
+    },
+    industryMedical: {
+      hero: {
+        eyebrow: "Medical & Healthcare",
+        title: "En el ámbito sanitario, ¿no tienes también estos «atascos»?",
+        subtitle: "Orden de los datos internos, atención al paciente, manejo de la información——cada terreno se detiene por motivos distintos. Cor. ordena los requisitos contigo y te acompaña en el siguiente paso."
+      },
+      challenges: {
+        eyebrow: "01 / Desafíos frecuentes",
+        title: "Los «motivos de atasco» que más se oyen en el ámbito sanitario.",
+        items: [
+          {
+            title: "Gestión de revisiones y devoluciones de la facturación sanitaria",
+            description: "Errores en la facturación mensual o incoherencias entre diagnóstico y tratamiento provocan revisiones y devoluciones por parte de la entidad evaluadora. El personal administrativo dedica un esfuerzo enorme a revisar y corregir cada caso a la vista."
+          },
+          {
+            title: "Carga de registro en la historia clínica electrónica",
+            description: "Registrar la consulta lleva varios minutos por paciente y, en jornadas con más de 100 consultas externas, la documentación se alarga hasta la madrugada. Es un punto de impacto directo de la reforma laboral médica (el «problema 2024»)."
+          },
+          {
+            title: "Adecuación a la reforma laboral médica (registro de guardias y traspaso de tareas)",
+            description: "Para cumplir con el límite de horas extra del personal médico vigente desde abril de 2024, hace falta gestionar las solicitudes de guardia, el registro del traspaso de tareas y los acuerdos laborales, pero se exige cumplirlo sin un flujo operativo definido."
+          },
+          {
+            title: "Ineficiencia en la gestión de citas y cancelaciones de consulta externa",
+            description: "Con reservas mayoritariamente telefónicas se producen muchas cancelaciones sin aviso. Al no poder cubrir los huecos en tiempo real, se pierden ingresos asistenciales."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / El acompañamiento de Cor.",
+        title: "Así es como te ayudamos.",
+        intro: "Para cada desafío avanzamos juntos combinando los servicios de Cor. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+        items: [
+          {
+            challenge: "Orden de datos · renovación de sistemas",
+            service: "Desarrollo a medida con IA",
+            description: "Desde ordenar los datos hasta la migración a la nube y la integración de sistemas internos, avanzamos juntos desde la definición de requisitos hasta la implementación y la operación."
+          },
+          {
+            challenge: "Consultas y atención informativa",
+            service: "Desarrollo a medida con IA",
+            description: "Te ayudamos a diseñar una experiencia de atención con IA de voz, IA entrenada con documentos internos y mecanismos automatizados. Aprovechamos el conocimiento adquirido al implementar recepción con IA multilingüe."
+          },
+          {
+            challenge: "Seguridad de la información · datos confidenciales",
+            service: "LLM local · IA segura",
+            description: "Pensamos contigo un entorno de IA que no expone tu información y un diseño de selección y operación de herramientas según el nivel de confidencialidad."
+          },
+          {
+            challenge: "Estrategia de uso de IA · internalización",
+            service: "Asesoría y formación en IA",
+            description: "Acompañamos al equipo interno en la estrategia de uso de IA, la selección de herramientas, su adopción operativa y la forma de internalizarla."
+          },
+          {
+            challenge: "Presupuestos y preparación de la justificación interna",
+            service: "Grift",
+            description: "Obtén primero un presupuesto de referencia como base para tu solicitud de aprobación o tu presupuesto. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+          }
+        ]
+      },
+      cta: {
+        title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+        description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+        primary: "Prueba un presupuesto con IA en Grift (30 s · sin registro)",
+        secondary: "Consulta gratis",
+        note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      }
+    },
+    industryShigyo: {
+      hero: {
+        eyebrow: "Professional Services",
+        title: "En las profesiones colegiadas, ¿no inviertes demasiado «tiempo y energía mental»?",
+        subtitle: "Revisión de contratos, reformas legales constantes, doble carga de datos en los trámites administrativos y un control de plazos que no admite retrasos. Cor. te ayuda a cambiar, juntos, esos días de incesante trabajo manual y presión que acompañan a la labor experta que de verdad aporta valor."
+      },
+      challenges: {
+        eyebrow: "01 / Desafíos frecuentes",
+        title: "Los «motivos de atasco» que más se oyen en las profesiones colegiadas.",
+        items: [
+          {
+            title: "La carga crónica de revisar y corregir cláusulas de contratos y documentos legales",
+            description: "Revisar palabra por palabra los contratos que llegan de los clientes a la vista. Como cualquier descuido se convierte de inmediato en un riesgo, exige una concentración extrema y mucho tiempo, y prolonga la revisión hasta la madrugada."
+          },
+          {
+            title: "La ineficiencia de los cambios de formato y la doble entrada en trámites y registros",
+            description: "Copiar y transcribir a mano los datos confiados por el cliente para adaptarlos a las peculiares interfaces de los sistemas administrativos y de registro. En temporada alta, se consume un esfuerzo enorme en la introducción de datos y en la doble verificación a la vista."
+          },
+          {
+            title: "La presión de «no poder cometer ningún error» con plazos legales, prescripciones y vencimientos",
+            description: "Tareas de control en las que un solo día de retraso puede causar un daño grave: solicitudes de patente, declaraciones fiscales, plazos procesales. Dependen del calendario y de comprobaciones cruzadas a la vista, y generan cada mañana una fuerte presión psicológica."
+          },
+          {
+            title: "La verificación de requisitos de subvenciones y la enorme redacción de documentos",
+            description: "Leer las bases de las convocatorias, que cambian con frecuencia, y construir a mano el relato del «plan de negocio» y demás contenidos del formulario. Un largo trabajo de escritorio para lograr la concesión que supone una gran carga."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / El acompañamiento de Cor.",
+        title: "Así te acompañamos.",
+        intro: "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+        items: [
+          {
+            title: "Avanzamos contigo en el cribado inicial de cláusulas estándar y rutinarias",
+            service: "LLM local · IA segura",
+            description: "A partir de tus propias plantillas y criterios de revisión, apoyamos la creación de un sistema que detecta con rapidez cláusulas de riesgo y condiciones especiales. Te ayudamos a aligerar la carga de esa primera revisión a la vista."
+          },
+          {
+            title: "Ordenamos la integración de datos entre sistemas y la transcripción automática",
+            service: "Desarrollo a medida con IA",
+            description: "Apoyamos la automatización de transcripciones, como el volcado de los datos del cliente a los formatos de solicitud. Construimos contigo un flujo que evita errores de entrada y reduce el tiempo dedicado a la verificación."
+          },
+          {
+            title: "Te llevamos hacia una gestión más tranquila con alertas y recordatorios automáticos",
+            service: "Desarrollo a medida con IA",
+            description: "Proponemos un mecanismo, conectado a tu calendario y tu gestión de tareas, que evita pasar por alto plazos importantes. Organizamos contigo varias barreras de protección que no dependen solo del ojo humano, buscando reducir la carga psicológica."
+          },
+          {
+            title: "Apoyamos la eficiencia en la estructura de documentos y planes de negocio",
+            service: "Asesoría y formación en IA",
+            description: "Apoyamos la creación rápida del esqueleto y la estructura de los documentos teniendo en cuenta el cotejo de requisitos y las tendencias de concesión anteriores. Te ayudamos a reducir el tiempo de redactar desde cero y a concentrarte en el pulido propio del experto."
+          }
+        ]
+      },
+      cta: {
+        title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+        description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        secondary: "Consulta gratis",
+        note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      }
+    },
+    industryConstruction: {
+      hero: {
+        eyebrow: "Construction",
+        title: "En la obra, ¿la «organización» sigue atascada en papel y fax?",
+        subtitle: "Gestión laboral, cambios de diseño, comprobaciones de seguridad, transmisión del know-how——cuando la organización del terreno queda atada al papel y al fax, la propia ejecución de la obra se detiene. Cor. te acompaña en el siguiente paso, adaptándose a los desafíos del terreno."
+      },
+      challenges: {
+        eyebrow: "01 / Desafíos frecuentes",
+        title: "Los «motivos de atasco» que más se oyen en la obra.",
+        labels: { reality: "La realidad del terreno", risk: "Si se deja pasar" },
+        items: [
+          {
+            title: "El límite de la gestión laboral y del mantenimiento del cronograma ante el tope de horas extra (el «problema 2024»)",
+            reality: "Aunque desde abril de 2024 la normativa fija límites estrictos a las horas extra, la carga estructural del terreno —encargos de plazo corto, retrasos por el clima— no ha cambiado.",
+            risk: "Los técnicos de gestión de obra se ven obligados a procesarlo todo llevándose trabajo a casa, lo que se traduce directamente en riesgo de fuga de personal exhausto y de retrasos en los plazos."
+          },
+          {
+            title: "El desajuste en tiempo real entre planos, datos BIM y la obra ante los frecuentes cambios de diseño",
+            reality: "Cada vez que cambia el diseño, los planos y los datos BIM más recientes no llegan con rapidez a operarios y empresas colaboradoras, con el riesgo de errores de ejecución basados en información desfasada.",
+            risk: "Se producen «rehaceres» (volver a ejecutar) de millones a decenas de millones de yenes, que no solo presionan los costes, sino que también provocan grandes retrasos en los plazos."
+          },
+          {
+            title: "La rutina vacía de la comprobación de seguridad diaria (actividad KY) y la falta de formación para una plantilla cada vez más internacional",
+            reality: "La actividad diaria de previsión de riesgos (KY) tiende a volverse rutinaria y los documentos a quedar copiados sin más. Además, ante el aumento de trabajadores extranjeros, las normas de seguridad japonesas no siempre se transmiten con precisión hasta su contexto.",
+            risk: "Aumenta el riesgo de accidentes laborales graves, lo que puede provocar la paralización de la obra o la pérdida de la confianza social de la empresa."
+          },
+          {
+            title: "La ruptura de las técnicas y el know-how propios por el envejecimiento y la jubilación de los operarios veteranos",
+            reality: "Con una gran proporción de operarios veteranos de más de 50 años, la técnica no está documentada ni convertida en manual, y su transmisión a los jóvenes sigue dependiendo del «míralo y apréndelo» personal.",
+            risk: "Se pierden los oficios que la empresa puede abordar y sus fortalezas propias, lo que deriva en una menor competitividad para captar encargos en el futuro y en la desaparición de la propia técnica."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / El acompañamiento de Cor.",
+        title: "Así te acompañamos.",
+        intro: "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+        items: [
+          {
+            title: "Simulación de procesos y visualización de los registros de actividad",
+            service: "Desarrollo a medida con IA",
+            description: "Avanzamos juntos en mecanismos para una operación de obra con margen: reordenar cronogramas complejos o detectar de forma suave los cuellos de botella a partir de los registros de actividad de cada obra."
+          },
+          {
+            title: "Extracción automática de cambios y sugerencia inmediata a los implicados",
+            service: "Desarrollo a medida con IA",
+            description: "Comparando los datos actualizados de planos y especificaciones, la IA resume y extrae de forma clara los puntos clave modificados. Te ayudamos a construir un entorno que los transmite y comparte con seguridad entre los implicados. Aprovechamos el conocimiento adquirido en el procesamiento de planos."
+          },
+          {
+            title: "Sugerencia de riesgos según la situación y traducción multilingüe de alta precisión",
+            service: "Desarrollo a medida con IA",
+            description: "La IA propone pistas concretas de previsión de riesgos según el oficio y el clima del día, o realiza una traducción multilingüe de alta precisión que capta los matices del manual de seguridad: así acompañamos la construcción de equipos seguros en el terreno."
+          },
+          {
+            title: "Estructuración del know-how del terreno y entorno de asistencia técnica",
+            service: "LLM local · IA segura",
+            description: "Ordenamos los vídeos de trabajo de los veteranos, los registros de obra anteriores y los historiales de incidencias en un formato fácil de aprender para la IA. Apoyamos la creación de un sistema del que los jóvenes puedan extraer el saber de la organización cuando surjan dudas en la obra."
+          }
+        ]
+      },
+      cta: {
+        title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+        description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        secondary: "Consulta gratis",
+        note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      }
+    },
+    industryManufacturing: {
+      hero: {
+        eyebrow: "Manufacturing",
+        title: "En la fábrica, ¿el «saber y la organización» dependen de las personas?",
+        subtitle: "Los criterios de inspección, la técnica del operario, el mantenimiento de los equipos, la lectura del inventario——cuando el saber del terreno se concentra en las personas, los motivos de atasco se multiplican. Cor. te acompaña en el siguiente paso, adaptándose a los desafíos del terreno."
+      },
+      challenges: {
+        eyebrow: "01 / Desafíos frecuentes",
+        title: "Los «motivos de atasco» que más se oyen en la fábrica.",
+        items: [
+          {
+            title: "El riesgo de defectos por la dependencia personal en la inspección visual y la «variabilidad de los criterios de calidad» entre inspectores",
+            description: "La realidad de que la valoración de arañazos o rebabas depende de la percepción individual y resulta difícil unificar en un manual"
+          },
+          {
+            title: "La ruptura del «know-how de fabricación y la maestría artesanal» y el retraso en la formación de los jóvenes por el envejecimiento y la jubilación de los operarios expertos",
+            description: "Una estructura en la que destrezas intuitivas como la soldadura o el mecanizado no se documentan y no queda tiempo para la formación en el puesto"
+          },
+          {
+            title: "La «parada de línea» por averías imprevistas de los equipos y los enormes costes de reparación del mantenimiento correctivo",
+            description: "El riesgo de operar reparando solo tras la avería y no captar las señales previas, como leves ruidos o vibraciones de la máquina"
+          },
+          {
+            title: "La dificultad de leer el «inventario adecuado» atrapados entre el exceso de stock y el riesgo de rotura",
+            description: "El conflicto entre el área comercial y la de gestión ante la subida de materiales y los retrasos de aprovisionamiento, y la dependencia personal en la previsión de la demanda"
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / El acompañamiento de Cor.",
+        title: "Así te acompañamos.",
+        intro: "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+        items: [
+          {
+            title: "Te ayudamos a ordenar los criterios de inspección visual en un formato útil para el terreno",
+            service: "Desarrollo a medida con IA",
+            description: "Ordenamos los criterios de inspección y las imágenes de muestra para avanzar juntos en un mecanismo que reduzca la variabilidad de las valoraciones. Partiendo de que la decisión final la toma una persona, buscamos aligerar la carga del cribado inicial."
+          },
+          {
+            title: "Documentación del know-how de fabricación y entorno del que los jóvenes puedan extraerlo",
+            service: "LLM local · IA segura",
+            description: "Ordenamos los registros de trabajo y los procedimientos de los operarios expertos en un formato fácil de aprender para la IA. Sin que la información sensible del terreno salga al exterior, apoyamos la construcción de un sistema del que los jóvenes puedan extraer el saber de la organización cuando surjan dudas."
+          },
+          {
+            title: "Estudio de un mecanismo que capte señales previas a partir de los datos de los equipos",
+            service: "Desarrollo a medida con IA",
+            description: "Avanzamos juntos en un mecanismo que permita advertir pronto los indicios de anomalía a partir de los datos disponibles en el terreno, como ruidos, vibraciones o registros de actividad. Apoyamos de forma gradual la transición del mantenimiento correctivo al preventivo."
+          },
+          {
+            title: "Sacar la lectura del inventario y la demanda de la dependencia personal",
+            service: "Asesoría y formación en IA",
+            description: "Ordenamos la información del área comercial, de gestión y del terreno y acompañamos la creación de un estado en el que se puedan compartir los criterios de un inventario adecuado. Pensamos contigo desde el ordenamiento de las premisas de la previsión de demanda hasta la forma de seleccionar y adoptar las herramientas."
+          }
+        ]
+      },
+      cta: {
+        title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+        description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        secondary: "Consulta gratis",
+        note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      }
+    },
+    industryEducation: {
+      hero: {
+        eyebrow: "Education",
+        title: "En la educación, ¿alcanza el «tiempo del profesorado»?",
+        subtitle: "Crear y corregir exámenes, comunicarse con las familias, elaborar informes, registrar listas en herramientas TIC——el tiempo que debería dedicarse a la verdadera educación se lo lleva fácilmente el trabajo administrativo y de datos. Cor. te acompaña en el siguiente paso, adaptándose a los desafíos del terreno."
+      },
+      challenges: {
+        eyebrow: "01 / Desafíos frecuentes",
+        title: "Los «motivos de atasco» que más se oyen en la educación.",
+        items: [
+          {
+            title: "La maratón sin descanso de los periodos en que se concentran la «creación de exámenes, la corrección y el procesamiento de notas»",
+            description: "En época de exámenes, desde crear las pruebas hasta corregirlas y elaborar los boletines se concentra en poco tiempo, lo que tiende a comprimir el tiempo que se querría dedicar a preparar las clases y a hablar con el alumnado."
+          },
+          {
+            title: "La atención analógica a las familias y la normalización de la atención fuera de horario",
+            description: "Los canales de comunicación se dispersan entre teléfono, circulares y chat, y la revisión y respuesta continúan por la tarde y los fines de semana——hay centros donde esa carga tiende a volverse habitual."
+          },
+          {
+            title: "La recopilación de datos y la elaboración de los «numerosos informes y encuestas» que se entregan al ministerio y a las juntas de educación",
+            description: "El trabajo de reunir los datos del terreno y completar los documentos conforme a los formatos absorbe periódicamente el esfuerzo del profesorado."
+          },
+          {
+            title: "Los errores de registro manual de cuentas en distintas herramientas TIC con los «datos de las listas de alumnado» tras el nuevo curso y los cambios de clase",
+            description: "Es necesario introducir y transcribir a mano las listas en varias herramientas TIC, lo que facilita omisiones y errores de entrada——la carga tiende a ser especialmente alta al inicio del curso."
+          }
+        ]
+      },
+      support: {
+        eyebrow: "02 / El acompañamiento de Cor.",
+        title: "Así te acompañamos.",
+        intro: "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+        items: [
+          {
+            title: "Revisar juntos la carga de trabajo de la época de exámenes, empezando por ordenarla",
+            service: "Desarrollo a medida con IA",
+            description: "Te ayudamos a crear un mecanismo —partiendo de que una persona hace la comprobación final— para el borrador de las pruebas, la ayuda a la corrección o el cálculo de los datos de notas."
+          },
+          {
+            title: "Ordenar la dispersión de la comunicación con las familias en un flujo más claro",
+            service: "Desarrollo a medida con IA",
+            description: "Avanzamos juntos en el diseño de un flujo que alivie la carga de la atención fuera de horario, como la organización de los canales de comunicación o los borradores de respuesta."
+          },
+          {
+            title: "Crear un sistema que apoye el cálculo y el borrador de encuestas e informes",
+            service: "LLM local · IA segura",
+            description: "Sin que la información del alumnado salga al exterior, te ayudamos a estudiar un entorno que facilite el cálculo de los datos y la creación del esqueleto de los informes."
+          },
+          {
+            title: "Sacar del trabajo manual la integración de las listas con las herramientas TIC",
+            service: "Desarrollo a medida con IA",
+            description: "Organizamos contigo la automatización y la integración de la transcripción de listas y el registro de cuentas, avanzando en la dirección de reducir errores y omisiones de entrada. Aprovechamos el conocimiento adquirido en la migración de datos del ámbito educativo."
+          }
+        ]
+      },
+      cta: {
+        title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+        description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        secondary: "Consulta gratis",
+        note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      }
+    },
+    works: {
+      title: "Hablamos con implementación: los proyectos de Cor.",
+      intro: "Mostramos proyectos de implementación con dominios y orígenes distintos. No lo decimos: lo demostramos con código, operación y cifras.",
+      note: "* La proporción de contribución es la proporción de commits medida en git. En proyectos bajo NDA o confidenciales ocultamos el nombre del cliente y del producto y publicamos el contenido de forma abstracta.",
+      items: [
+        { name: "Engineer Cafe Navigator", tag: "OSS / Público", description: "Recepción con IA de voz multilingüe de código abierto. 182.368 líneas, 8 colaboradores, 87,7 % de contribución propia (medición en git)." },
+        { name: "Grift", tag: "Producto propio", description: "Plataforma propia de presupuestos y evaluación con IA que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado.", link: "https://griftai.org" },
+        { name: "cor-jp.com", tag: "Producción propia", description: "Este sitio corporativo. Astro, 5 idiomas, traducción con IA y visualización rápida, implementado por nosotros mismos." },
+        { name: "SaaS de IA generativa multimodal", tag: "A medida / Anónimo", description: "Desarrollo en producción de un SaaS de IA generativa que maneja imagen, voz y texto (nombre del cliente no divulgado)." },
+        { name: "Renovación de una plataforma de encuestas", tag: "A medida / Anónimo", description: "Renovación y puesta en producción de una plataforma de encuestas heredada. Cubrimos la migración a una plataforma de agentes y la preparación de pruebas y CI/CD." },
+        { name: "Migración a la nube de un sistema central heredado", tag: "A medida / NDA", description: "Migración a la nube de una base de datos central del ámbito educativo (detalles abstraídos por NDA)." },
+        { name: "IA de planos de arquitectura y generación de distribuciones", tag: "A medida / NDA", description: "Implementación rápida de 0 a 1 de un conjunto de IA que maneja planos y distribuciones de arquitectura (ámbito de arquitectura, abstraído por NDA)." }
+      ]
+    },
+    services2026: {
+      title: "Llevamos la IA —tecnología que piensa y actúa en lugar de las personas— al día a día de tu negocio, contigo.",
+      items: [
+        { name: "Desarrollo a medida con IA", description: "Te acompañamos para construir sistemas en producción con IA generativa, RAG, agentes y procesamiento de imagen/voz, desde la definición de requisitos hasta la operación." },
+        { name: "Asesoría y formación en IA", description: "Caminamos junto a tus equipos de dirección, desarrollo y operación en la estrategia de IA, la elección de herramientas, su adopción en el trabajo diario y el desarrollo de capacidades internas." },
+        { name: "LLM local · IA segura", description: "Diseñamos contigo una operación de IA acorde al nivel de confidencialidad de tus datos, sin sacar fuera información sensible cuando no es necesario." },
+        { name: "Grift", description: "Nuestra herramienta de IA propia que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado." }
+      ]
+    },
     nav: { home: "Inicio", about: "Acerca de", products: "Productos&Insights", blog: "Blog", contact: "Contacto", security: "Seguridad", works: "Works", grift: "Grift" },
     hero: {
       title: "Más rápido que cualquiera, más allá del horizonte.",
