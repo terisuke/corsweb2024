@@ -3,15 +3,33 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
-import { getCurrentLocale } from '../utils/i18n';
+import { getCurrentLocale, type Locale } from '../utils/i18n';
 
 interface Props {
   description: string;
   title: string;
+  // この URL に実在する言語版だけを hreflang に出す（既定は全5言語）。
+  // ja のみのページ（/works, /industries/*）は ['ja'] を渡す。
+  availableLocales?: readonly Locale[];
 }
 
-const { description, title } = Astro.props;
+const OG_LOCALES: Record<Locale, string> = {
+  ja: 'ja_JP',
+  en: 'en_US',
+  zh: 'zh_CN',
+  ko: 'ko_KR',
+  es: 'es_ES',
+};
+const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
+
+const { description, title, availableLocales = ALL_LOCALES } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
+// 現在のパスからロケール接頭辞を外した ja 基準パス（hreflang の各ロケールURL生成に使う）
+const basePath =
+  currentLocale === 'ja'
+    ? Astro.url.pathname
+    : Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
+const ogImage = new URL('/logo.png', Astro.site);
 ---
 
 <!doctype html>
@@ -33,28 +51,23 @@ const currentLocale = getCurrentLocale(Astro.url);
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     
-    <!-- Hreflang tags for bilingual SEO -->
-    {currentLocale === 'ja' ? (
-      <>
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="ja" />
-        <link rel="alternate" href={new URL(`/en${Astro.url.pathname}`, Astro.site)} hreflang="en" />
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="x-default" />
-      </>
-    ) : (
-      <>
-        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="ja" />
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="en" />
-        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="x-default" />
-      </>
-    )}
+    <!-- Hreflang: この URL に実在する言語版のみ出力（ja基準パスから各ロケールURLを生成） -->
+    {availableLocales.map((loc) => (
+      <link
+        rel="alternate"
+        href={new URL(loc === 'ja' ? basePath : `/${loc}${basePath}`, Astro.site)}
+        hreflang={loc}
+      />
+    ))}
+    <link rel="alternate" href={new URL(basePath, Astro.site)} hreflang="x-default" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/logo.png" />
-    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={OG_LOCALES[currentLocale]} />
     <meta property="og:site_name" content="Cor.inc" />
     <meta property="article:author" content="寺田康佑" />
     
@@ -65,7 +78,7 @@ const currentLocale = getCurrentLocale(Astro.url);
     <meta name="twitter:url" content={Astro.url} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/logo.png" />
+    <meta name="twitter:image" content={ogImage} />
     
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
