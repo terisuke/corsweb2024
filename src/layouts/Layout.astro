@@ -3,17 +3,17 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
-import { getCurrentLocale } from '../utils/i18n';
+import { getCurrentLocale, type Locale } from '../utils/i18n';
 
 interface Props {
   description: string;
   title: string;
   // この URL に実在する言語版だけを hreflang に出す（既定は全5言語）。
   // ja のみのページ（/works, /industries/*）は ['ja'] を渡す。
-  availableLocales?: readonly string[];
+  availableLocales?: readonly Locale[];
 }
 
-const OG_LOCALES: Record<string, string> = {
+const OG_LOCALES: Record<Locale, string> = {
   ja: 'ja_JP',
   en: 'en_US',
   zh: 'zh_CN',
@@ -28,7 +28,7 @@ const currentLocale = getCurrentLocale(Astro.url);
 const basePath =
   currentLocale === 'ja'
     ? Astro.url.pathname
-    : Astro.url.pathname.replace(/^\/(en|zh|ko|es)/, '') || '/';
+    : Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
 const ogImage = new URL('/logo.png', Astro.site);
 ---
 
