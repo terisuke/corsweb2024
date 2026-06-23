@@ -1,8 +1,8 @@
 ---
-import { getCurrentLocale, getJaTranslations, getLocalizedUrl, emphasizeKyousou } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl, emphasizeKyousou } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
-const t = getJaTranslations();
+const t = getTranslations(currentLocale);
 
 const griftUrl = 'https://griftai.org';
 ---

@@ -1,8 +1,8 @@
 ---
-import { getCurrentLocale, getJaTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
-const t = getJaTranslations();
+const t = getTranslations(currentLocale);
 
 // 見出し → カード(1枚ずつ) → CTA の順に浮き上がる stagger。固定(pin)はせず通常スクロールで通過しながら自動表示。
 const cardBaseDelay = 0.15;

@@ -1,8 +1,8 @@
 ---
-import { getCurrentLocale, getJaTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
-const t = getJaTranslations();
+const t = getTranslations(currentLocale);
 
 // 福岡100選 2026-2027 の badge は公開可能日まで非表示（正本ガードレール）。
 const HIDDEN_TRUST_BADGES = ['福岡100選 2026-2027'];
