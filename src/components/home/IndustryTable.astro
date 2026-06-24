@@ -1,7 +1,8 @@
 ---
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
 
-const t = getTranslations(getCurrentLocale(Astro.url));
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 ---
 
 <section class="py-24 sm:py-32">
@@ -45,7 +46,7 @@ const t = getTranslations(getCurrentLocale(Astro.url));
                   <td class="py-4 whitespace-nowrap">
                     {row.link && row.linkLabel ? (
                       <a
-                        href={row.link}
+                        href={getLocalizedUrl(row.link, currentLocale)}
                         class="inline-flex items-center gap-1 font-medium text-[#2d4a6b] underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b] dark:text-[#7ba3cc]"
                       >
                         {row.linkLabel}
