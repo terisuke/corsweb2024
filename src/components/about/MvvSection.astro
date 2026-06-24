@@ -1,9 +1,9 @@
 ---
 // MVV/Valuesは正本07案・寺田社長(CEO)承認待ちのドラフトです。
 // 最終文言の確定は寺田社長(CEO)の承認後に行ってください。
-import { getJaTranslations, emphasizeKyousou } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, emphasizeKyousou } from '../../utils/i18n';
 
-const t = getJaTranslations();
+const t = getTranslations(getCurrentLocale(Astro.url));
 ---
 
 <section class="py-16 sm:py-20">

@@ -1,7 +1,7 @@
 ---
-import { getJaTranslations, emphasizeKyousou } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, emphasizeKyousou } from '../../utils/i18n';
 
-const t = getJaTranslations();
+const t = getTranslations(getCurrentLocale(Astro.url));
 ---
 
 <section id="kyousou" class="py-16 sm:py-20">
