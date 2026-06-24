@@ -1623,8 +1623,30 @@ const translations = {
       cta: "Go back home"
     },
     aboutPage: {
-      title: "About",
-      subtitle: "Being the company that thinks most about 'happiness' in the world, and being the company that seeks true happiness and co-creates society the most in the world."
+      title: 'Chasing "Kyousou."',
+      lead: "Cor. is not a company where everyone is forced to get along. It is a company where people who hold their own values come together, don't hide their differences, seek each other's growth, and use AI and technology to give shape to real challenges on the ground.",
+      kyousouTitle: 'What "Kyousou" means.',
+      kyousou: [
+        { word: 'Co-creation', usage: 'Building together with customers, AI, and partners' },
+        { word: 'Ensemble', usage: 'People, AI, and expertise each play a role and resonate' },
+        { word: 'Competition', usage: 'Refusing yes-men and sharpening one another' },
+        { word: 'Fantasy', usage: 'Not fearing ideas that have no shape yet' },
+        { word: 'Fervor', usage: 'The energy generated in the market as a result' },
+      ],
+      kyousouAxis: '"Kyousou" is the implementation mindset that turns differences into outcomes.',
+      mvvTitle: 'Mission / Vision / Values',
+      mission: 'Through "Kyousou," unlock the potential of makers and their businesses.',
+      vision: 'Build a society where differences in values lead not to division, but to better implementation.',
+      values: [
+        { title: 'Co-creation without pandering', description: "We don't build relationships based only on going along with the other side. We ask candidly, push back when needed, and search for a better answer." },
+        { title: 'Speak through proof', description: "We don't stop at ideas alone. We show it through code, products, operations, and numbers." },
+        { title: 'Balance freedom and responsibility', description: "We don't bind people's abilities, and we protect the information that must be protected. We design comfort and trust at the same time." },
+        { title: 'Sharpen our differences together', description: 'We turn differences in cognitive traits, expertise, and values into outcomes rather than compromise.' },
+        { title: "Unlock makers' true ability", description: 'We use AI not as a tool to replace people, but as an extension that lets people bring out their true strength.' },
+      ],
+      founderTitle: "Founder's Story",
+      founderLead: "Cor.'s \"Kyousou\" grew out of the experience of our founder, Kosuke Terada.",
+      founderPlaceholder: "The details of the founder's story are being prepared.",
     },
     values: {
       title: "Our Values"
@@ -2581,8 +2603,30 @@ const translations = {
       cta: "返回首页"
     },
     aboutPage: {
-      title: "About",
-      subtitle: "世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。"
+      title: '持续追寻「きょうそう」。',
+      lead: 'Cor. 并不是一家强求所有人彼此理解的公司。而是让拥有各自价值观的人聚到一起，不掩饰差异，追求彼此的成长，用 AI 与技术把现场的课题变成现实的公司。',
+      kyousouTitle: '何谓「きょうそう」。',
+      kyousou: [
+        { word: '共创', usage: '与客户、AI、伙伴共同创造' },
+        { word: '协奏', usage: '人、AI、专业各司其职、彼此共鸣' },
+        { word: '竞争', usage: '拒绝唯唯诺诺，相互打磨' },
+        { word: '狂想', usage: '不惧怕尚无形态的构想' },
+        { word: '狂躁', usage: '作为结果在市场中产生的热度' },
+      ],
+      kyousouAxis: '所谓「きょうそう」，是把差异转化为成果的落地态度。',
+      mvvTitle: 'Mission / Vision / Values',
+      mission: '通过「きょうそう」，释放作者与事业的可能性。',
+      vision: '营造一个让价值观的差异不导向分裂、而催生更好实现的社会。',
+      values: [
+        { title: '不迎合的共创', description: '不建立只是一味顺从对方的关系。坦诚地发问，必要时提出反对，寻找更好的答案。' },
+        { title: '用实证说话', description: '不止于思想。用代码、产品、运营与数字来呈现。' },
+        { title: '兼顾自由与责任', description: '不束缚人的能力，守护该守护的信息。同时设计舒适与信赖。' },
+        { title: '在差异中相互打磨', description: '把认知特性、专业、价值观的差异，不以妥协而是化为成果。' },
+        { title: '释放作者的实力', description: '把 AI 用作让人发挥本来力量的延伸，而非取代人的工具。' },
+      ],
+      founderTitle: '代表的故事',
+      founderLead: 'Cor. 的「きょうそう」源自代表寺田康佑的经历。',
+      founderPlaceholder: '代表故事的详细内容正在准备中。',
     },
     values: {
       title: "我们的价值观"
@@ -3539,8 +3583,30 @@ const translations = {
       cta: "홈으로 돌아가기"
     },
     aboutPage: {
-      title: "About",
-      subtitle: "世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。"
+      title: '「きょうそう」를 끊임없이 추구합니다.',
+      lead: 'Cor.는 누구와도 억지로 이해해야 하는 회사가 아닙니다. 각자의 가치관을 지닌 사람들이 차이를 숨기지 않고, 서로의 성장을 추구하며, AI와 기술로 현장의 과제를 형상화하는 회사입니다.',
+      kyousouTitle: '「きょうそう」란.',
+      kyousou: [
+        { word: '共創', usage: '고객, AI, 파트너와 함께 만든다' },
+        { word: '協奏', usage: '사람・AI・전문성이 각자의 역할을 가지고 울려 퍼진다' },
+        { word: '競争', usage: '예스맨을 거부하고 서로를 갈고닦는다' },
+        { word: '狂想', usage: '아직 형태가 없는 아이디어를 두려워하지 않는다' },
+        { word: '狂騒', usage: '결과로서 시장에 만들어내는 열량' },
+      ],
+      kyousouAxis: '「きょうそう」란, 차이를 성과로 바꾸는 구현 태도입니다.',
+      mvvTitle: 'Mission / Vision / Values',
+      mission: '「きょうそう」를 통해 만드는 사람과 사업의 가능성을 해방한다.',
+      vision: '가치관의 차이가 분단이 아니라 더 나은 구현을 낳는 사회를 만든다.',
+      values: [
+        { title: '영합하지 않는 공동창조', description: '상대에게 맞추기만 하는 관계는 만들지 않는다. 솔직하게 묻고, 필요하면 반론하며, 더 나은 답을 찾는다.' },
+        { title: '실증으로 말한다', description: '사상만으로 끝내지 않는다. 코드, 제품, 운영, 숫자로 보여준다.' },
+        { title: '자유와 책임을 양립시킨다', description: '사람의 힘을 옭아매지 않고, 지켜야 할 정보는 지킨다. 쾌적함과 신뢰를 동시에 설계한다.' },
+        { title: '차이를 서로 갈고닦는다', description: '인지 특성, 전문성, 가치관의 차이를 타협이 아니라 성과로 바꾼다.' },
+        { title: '만드는 사람의 실력을 해방한다', description: 'AI를 사람을 대체하는 도구가 아니라, 사람이 본래의 힘을 발휘하기 위한 확장으로 사용한다.' },
+      ],
+      founderTitle: '대표 스토리',
+      founderLead: 'Cor.의 「きょうそう」는 대표 데라다 코스케의 경험에서 비롯되었습니다.',
+      founderPlaceholder: '대표 스토리의 상세 내용은 준비 중입니다.',
     },
     values: {
       title: "우리의 가치관"
@@ -4497,8 +4563,30 @@ const translations = {
       cta: "Volver al inicio"
     },
     aboutPage: {
-      title: "About",
-      subtitle: "世界で一番「幸せ」のことを考えている企業であること、そして世界で一番本当の幸せを求めて社会を共創する企業であること。"
+      title: 'Persiguiendo el «Kyousou».',
+      lead: 'Cor. no es una empresa donde todos deban entenderse a la fuerza. Es una empresa donde personas con sus propios valores se reúnen, no ocultan sus diferencias, buscan el crecimiento mutuo y dan forma con IA y tecnología a los desafíos del terreno.',
+      kyousouTitle: 'Qué es el «Kyousou».',
+      kyousou: [
+        { word: 'Co-creación', usage: 'Crear junto a clientes, IA y socios' },
+        { word: 'Concertación', usage: 'Personas, IA y especialidad con un rol propio que resuenan' },
+        { word: 'Competencia', usage: 'Rechazar la complacencia y pulirnos mutuamente' },
+        { word: 'Fantasía audaz', usage: 'No temer a las ideas que aún no tienen forma' },
+        { word: 'Bullicio', usage: 'La energía que generamos en el mercado como resultado' },
+      ],
+      kyousouAxis: 'El «Kyousou» es la actitud de implementación que convierte las diferencias en resultados.',
+      mvvTitle: 'Mission / Vision / Values',
+      mission: 'A través del «Kyousou», liberar el potencial de quienes crean y de sus negocios.',
+      vision: 'Construir una sociedad donde las diferencias de valores no lleven a la división, sino a una mejor implementación.',
+      values: [
+        { title: 'Co-creación sin complacencia', description: 'No construimos relaciones basadas solo en seguir la corriente. Preguntamos con franqueza, refutamos cuando hace falta y buscamos una mejor respuesta.' },
+        { title: 'Hablar con evidencia', description: 'No nos quedamos solo en las ideas. Lo mostramos con código, productos, operación y cifras.' },
+        { title: 'Conciliar libertad y responsabilidad', description: 'No atamos la capacidad de las personas y protegemos la información que debe protegerse. Diseñamos comodidad y confianza al mismo tiempo.' },
+        { title: 'Pulir nuestras diferencias entre todos', description: 'Convertimos las diferencias de rasgos cognitivos, especialidad y valores en resultados, no en concesiones.' },
+        { title: 'Liberar la verdadera capacidad de quienes crean', description: 'Usamos la IA no como una herramienta para reemplazar a las personas, sino como una extensión para que den lo mejor de sí.' },
+      ],
+      founderTitle: 'Historia del fundador',
+      founderLead: 'El «Kyousou» de Cor. nació de la experiencia de nuestro fundador, Kosuke Terada.',
+      founderPlaceholder: 'Los detalles de la historia del fundador están en preparación.',
     },
     values: {
       title: "Nuestros Valores"
