@@ -2,6 +2,7 @@ export type Locale = 'ja' | 'en' | 'zh' | 'ko' | 'es';
 
 const translations = {
   ja: {
+    homeBlog: {"eyebrow":"読みもの","title":"AIの「進め方」を、記事で。","description":"AI導入・機密データの安全な活用・見積もりの考え方など、現場で使える視点をまとめています。","cta":"ブログをすべて見る"},
     nav: { home: "ホーム", about: "Cor.について", products: "Products&Insights", blog: "ブログ", contact: "お問い合わせ", security: "セキュリティ", works: "実績・事例", grift: "Grift" },
     hero: {
       title: "言葉を超えて、想いを届ける。",
@@ -987,6 +988,7 @@ const translations = {
     }
   },
   en: {
+    homeBlog: {"eyebrow":"Insights","title":"The \"how\" of AI, in articles.","description":"AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.","cta":"See all articles"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
       title: "Let's give your challenge<br />a real shape, together.",
@@ -1944,6 +1946,7 @@ const translations = {
     }
   },
   zh: {
+    homeBlog: {"eyebrow":"读物","title":"AI 的「推进方式」，用文章讲清楚。","description":"AI 导入、机密数据的安全运用、报价的思路等，汇总了现场可用的视角。","cta":"查看全部文章"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
       title: "把你的课题，<br />一起变成现实。",
@@ -2901,6 +2904,7 @@ const translations = {
     }
   },
   ko: {
+    homeBlog: {"eyebrow":"읽을거리","title":"AI의 ‘진행 방법’을, 글로.","description":"AI 도입, 기밀 데이터의 안전한 활용, 견적에 대한 사고방식 등 현장에서 바로 쓸 수 있는 관점을 정리했습니다.","cta":"블로그 전체 보기"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
       title: "당신의 과제를<br />함께 형상화합니다.",
@@ -3858,6 +3862,7 @@ const translations = {
     }
   },
   es: {
+    homeBlog: {"eyebrow":"Lecturas","title":"El «cómo» de la IA, en artículos.","description":"Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.","cta":"Ver todos los artículos"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
       title: "Damos forma a tu desafío,<br />juntos.",
