@@ -3,8 +3,25 @@ import { verifyAccessEmail } from './auth';
 import { collectTopics } from './collect';
 import { generateArticle, buildMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
-import { makeOctokit, getFileContent, commitArticle } from './github';
-import { assertSlug, normalizeCategory, sanitizeText } from './validate';
+import { makeOctokit, getFileContent, commitArticle, listArticleSlugs } from './github';
+import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
+import { ADMIN_HTML } from './ui';
+
+// 管理画面は自己完結（外部リソース無し・同一オリジンfetchのみ）。
+// インライン style/script のみ許可し、外部読込・iframe埋め込み・データ送信先を遮断する。
+const CSP =
+  "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; " +
+  "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
+const html = (body: string, status = 200): Response =>
+  new Response(body, {
+    status,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'content-security-policy': CSP,
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'no-referrer',
+    },
+  });
 
 const json = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), {
@@ -41,6 +58,18 @@ export default {
     }
 
     try {
+      // 管理画面（凪沙さん用UI）。Access 認証済みのブラウザにHTMLを返す。
+      if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
+        return html(ADMIN_HTML);
+      }
+
+      // 既存記事スラッグ一覧（重複テーマ回避用）
+      if (req.method === 'GET' && url.pathname === '/api/recent') {
+        const octokit = makeOctokit(env);
+        const slugs = await listArticleSlugs(env, octokit);
+        return json({ slugs });
+      }
+
       // ① 情報収集
       if (req.method === 'POST' && url.pathname === '/api/collect') {
         const body = await readJsonBody(req);
@@ -69,7 +98,10 @@ export default {
             title,
             summary: sanitizeText(theme.summary, 500),
             sources: Array.isArray(theme.sources)
-              ? theme.sources.slice(0, 5).map((s) => sanitizeText(s, 300)).filter(Boolean)
+              ? theme.sources
+                  .slice(0, 5)
+                  .map((s) => sanitizeText(s, 300))
+                  .filter((s) => /^https?:\/\//i.test(s)) // http(s) のみ（javascript: 等を排除）
               : [],
             freshnessHours: Number(theme.freshnessHours) || 0,
           },
@@ -79,42 +111,23 @@ export default {
         return json({ article, markdown, violations });
       }
 
+      // ⑤ レビュー: コミットせずガードレール検査のみ（編集後の再チェック用）
+      if (req.method === 'POST' && url.pathname === '/api/validate') {
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const norm = normalizeArticle(body.article as ArticleInput | undefined);
+        if (!norm.ok) return json({ error: norm.error }, norm.status);
+        const violations = scanForViolations(buildMarkdown(norm.article));
+        return json({ violations });
+      }
+
       // ⑥ 公開（記事botが main へコミット → 既存の静的デプロイで公開）
       if (req.method === 'POST' && url.pathname === '/api/publish') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-        const a = body.article as
-          | {
-              slug?: string;
-              title?: string;
-              description?: string;
-              category?: string;
-              tags?: unknown;
-              body?: string;
-            }
-          | undefined;
-        if (!a?.slug || !a?.body || !a?.title || !a?.description) {
-          return json({ error: 'article.slug / title / description / body は必須です' }, 400);
-        }
-        // パストラバーサル防止: slug を厳格に再検証（generate と同一ルール）
-        try {
-          assertSlug(a.slug);
-        } catch (e) {
-          return json({ error: e instanceof Error ? e.message : 'slug が不正です' }, 400);
-        }
-        const normalized = {
-          slug: a.slug,
-          title: sanitizeText(a.title, 200),
-          description: sanitizeText(a.description, 500),
-          category: normalizeCategory(a.category),
-          tags: Array.isArray(a.tags)
-            ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
-            : [],
-          body: String(a.body).slice(0, 100_000), // markdown構造を保つため制御文字は除去せず長さのみ制限
-        };
-        if (!normalized.title || !normalized.description) {
-          return json({ error: 'title / description が空です' }, 400);
-        }
+        const norm = normalizeArticle(body.article as ArticleInput | undefined);
+        if (!norm.ok) return json({ error: norm.error }, norm.status);
+        const normalized = norm.article;
         // 公開直前にもう一度ガードレールを通す（最終防衛線）
         const markdown = buildMarkdown(normalized);
         const violations = scanForViolations(markdown);
