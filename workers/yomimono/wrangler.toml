@@ -3,6 +3,10 @@ main = "src/index.ts"
 compatibility_date = "2025-01-09"
 compatibility_flags = ["nodejs_compat"]
 
+# cor-jp.com の /brog* だけをこの Worker に流す（HP本体は Firebase のまま）。
+# cor-jp.com は Cloudflare の裏にいるため、このルートで「HPと同じドメインの隠しページ」になる。
+routes = [{ pattern = "cor-jp.com/brog*", zone_name = "cor-jp.com" }]
+
 # 公開可能な設定値（非シークレット）。記事botのIDは公開情報なのでここでOK。
 [vars]
 GH_OWNER = "Cor-Incorporated"
@@ -13,6 +17,8 @@ BLOG_DIR = "src/content/blog"
 PUBLISH_BRANCH = "main"
 ALLOWED_EMAIL_DOMAIN = "cor-jp.com"
 STYLE_GUIDE_PATH = "docs/blog-style-guide.md"
+# ↓ BASE_PATH は上の routes の pattern と必ず一致させること（/brog ⇔ cor-jp.com/brog*）
+BASE_PATH = "/brog"          # cor-jp.com/brog* に載せるためのプレフィックス
 # ↓ Cloudflare Access アプリ作成後に値を入れる（空のままだと全リクエストを拒否＝安全側）
 CF_ACCESS_TEAM_DOMAIN = ""   # 例: cor.cloudflareaccess.com
 CF_ACCESS_AUD = ""            # Access アプリ設定画面の Application Audience (AUD) タグ
