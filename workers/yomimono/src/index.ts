@@ -4,7 +4,7 @@ import { collectTopics } from './collect';
 import { generateArticle, buildMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
 import { makeOctokit, getFileContent, commitArticle, listArticleSlugs } from './github';
-import { assertSlug, normalizeCategory, sanitizeText } from './validate';
+import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
 import { ADMIN_HTML } from './ui';
 
 const html = (body: string, status = 200): Response =>
@@ -30,51 +30,6 @@ async function readJsonBody(req: Request): Promise<Record<string, unknown> | nul
 function sanitizeTitles(input: unknown): string[] {
   if (!Array.isArray(input)) return [];
   return input.slice(0, 50).map((t) => sanitizeText(t, 200)).filter(Boolean);
-}
-
-interface ArticleInput {
-  slug?: string;
-  title?: string;
-  description?: string;
-  category?: string;
-  tags?: unknown;
-  body?: string;
-}
-type NormalizedArticle = {
-  slug: string;
-  title: string;
-  description: string;
-  category: ReturnType<typeof normalizeCategory>;
-  tags: string[];
-  body: string;
-};
-
-// publish / validate 共通: 受け取った article を検証・正規化（パストラバーサル防止含む）。
-function normalizeArticle(
-  a: ArticleInput | undefined,
-): { ok: true; article: NormalizedArticle } | { ok: false; error: string; status: number } {
-  if (!a?.slug || !a?.body || !a?.title || !a?.description) {
-    return { ok: false, error: 'article.slug / title / description / body は必須です', status: 400 };
-  }
-  try {
-    assertSlug(a.slug);
-  } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : 'slug が不正です', status: 400 };
-  }
-  const article: NormalizedArticle = {
-    slug: a.slug,
-    title: sanitizeText(a.title, 200),
-    description: sanitizeText(a.description, 500),
-    category: normalizeCategory(a.category),
-    tags: Array.isArray(a.tags)
-      ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
-      : [],
-    body: String(a.body).slice(0, 100_000), // markdown構造を保つため制御文字は除去せず長さのみ制限
-  };
-  if (!article.title || !article.description) {
-    return { ok: false, error: 'title / description が空です', status: 400 };
-  }
-  return { ok: true, article };
 }
 
 export default {

@@ -191,7 +191,7 @@ export const ADMIN_HTML = `<!doctype html>
     };
     $(uid+'_recheck').addEventListener('click', function(){
       var btn=this; btn.disabled=true; $(uid+'_msg').textContent='チェック中…';
-      api('/api/validate', getArticle()).then(function(j){
+      api('/api/validate', { article: getArticle() }).then(function(j){
         var v = j.violations || [];
         if (v.length){
           $(uid+'_msg').innerHTML='<span style="color:#dc2626">違反 '+v.length+'件: '+esc(v.map(function(x){return x.name;}).join(', '))+'</span>';
@@ -205,7 +205,7 @@ export const ADMIN_HTML = `<!doctype html>
     });
     $(uid+'_pub').addEventListener('click', function(){
       var btn=this; btn.disabled=true; btn.innerHTML='<span class="spin"></span>公開中…'; $(uid+'_msg').textContent='';
-      api('/api/publish', getArticle()).then(function(j){ finishPublish(slot, uid, j); })
+      api('/api/publish', { article: getArticle() }).then(function(j){ finishPublish(slot, uid, j); })
         .catch(function(e){ $(uid+'_msg').innerHTML='<span style="color:#dc2626">'+esc(e.message)+'</span>'; btn.disabled=false; btn.textContent='公開する'; });
     });
   }

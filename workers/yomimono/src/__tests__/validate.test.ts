@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { assertSlug, normalizeCategory, sanitizeText, SLUG_RE } from '../validate';
+import { assertSlug, normalizeArticle, normalizeCategory, sanitizeText, SLUG_RE } from '../validate';
 
 describe('assertSlug — パストラバーサル防止（CRITICAL修正の要）', () => {
   // バグ（slug未検証）が存在すれば、これらは throw せず素通りしてしまう。
@@ -36,6 +36,72 @@ describe('normalizeCategory', () => {
   it('未知カテゴリは ai にフォールバック', () => {
     expect(normalizeCategory('malicious')).toBe('ai');
     expect(normalizeCategory(undefined)).toBe('ai');
+  });
+});
+
+describe('normalizeArticle — publish/validate 共通の検証・正規化', () => {
+  const base = {
+    slug: 'valid-slug-123',
+    title: 'タイトル',
+    description: '説明',
+    category: 'engineering',
+    tags: ['a', 'b'],
+    body: '## 本文\n\n内容',
+  };
+
+  it('正当な記事を ok:true で正規化する', () => {
+    const r = normalizeArticle(base);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.slug).toBe('valid-slug-123');
+      expect(r.article.category).toBe('engineering');
+    }
+  });
+
+  it.each([
+    ['slug欠落', { ...base, slug: undefined }],
+    ['title欠落', { ...base, title: undefined }],
+    ['description欠落', { ...base, description: undefined }],
+    ['body欠落', { ...base, body: undefined }],
+    ['undefined', undefined],
+  ])('必須欠落(%s)は ok:false / 400', (_n, input) => {
+    const r = normalizeArticle(input as never);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(400);
+  });
+
+  it.each(['../../../etc/passwd', 'foo/bar', 'UP', 'a'.repeat(81)])(
+    'パストラバーサル/不正slug(%s)は 400 で拒否',
+    (slug) => {
+      const r = normalizeArticle({ ...base, slug });
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.status).toBe(400);
+    },
+  );
+
+  it('未知カテゴリは ai にフォールバック、tagsは10件・各50字に制限', () => {
+    const r = normalizeArticle({
+      ...base,
+      category: 'evil',
+      tags: Array.from({ length: 20 }, (_, i) => 'tag' + i),
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.category).toBe('ai');
+      expect(r.article.tags.length).toBe(10);
+    }
+  });
+
+  it('body は100k字で打ち切る（markdown構造は保持＝制御文字以外そのまま）', () => {
+    const r = normalizeArticle({ ...base, body: 'x'.repeat(200_000) });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.body.length).toBe(100_000);
+  });
+
+  it('サニタイズ後に title が空なら 400', () => {
+    const r = normalizeArticle({ ...base, title: '```' });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(400);
   });
 });
 
