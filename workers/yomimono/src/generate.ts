@@ -85,5 +85,7 @@ export function buildMarkdown(article: Article, isDraft = false): string {
     '---',
     '',
   ].join('\n');
-  return `${frontmatter}${article.body}\n`;
+  // body 先頭が `---` だと frontmatter 区切りと紛らわしいので、先頭の区切り行のみ除去する。
+  const body = article.body.replace(/^(?:\s*\n)*-{3,}[ \t]*(?:\n|$)/, '');
+  return `${frontmatter}${body}\n`;
 }
