@@ -10,5 +10,6 @@
         "name": "@astrojs/ts-plugin"
       }
     ]
-  }
+  },
+  "exclude": ["node_modules", "dist", ".astro", "workers"]
 }
