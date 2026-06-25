@@ -12,6 +12,16 @@ const json = (data: unknown, status = 200): Response =>
     headers: { 'content-type': 'application/json; charset=utf-8' },
   });
 
+// JSON ボディを解析。不正JSONは null（呼び出し側で400を返し、サイレント処理を避ける）。
+async function readJsonBody(req: Request): Promise<Record<string, unknown> | null> {
+  try {
+    const data = await req.json();
+    return data && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
 // クライアント由来の文字列配列を上限つきでサニタイズ（プロンプト注入対策）。
 function sanitizeTitles(input: unknown): string[] {
   if (!Array.isArray(input)) return [];
@@ -33,18 +43,23 @@ export default {
     try {
       // ① 情報収集
       if (req.method === 'POST' && url.pathname === '/api/collect') {
-        const body = (await req.json().catch(() => ({}))) as { recentTitles?: unknown };
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const candidates = await collectTopics(env, sanitizeTitles(body.recentTitles));
         return json({ candidates });
       }
 
       // ④ 記事生成（＋ガードレール検査結果を同梱して⑤レビューへ）
       if (req.method === 'POST' && url.pathname === '/api/generate') {
-        const body = (await req.json().catch(() => ({}))) as {
-          theme?: { title?: unknown; summary?: unknown; sources?: unknown; freshnessHours?: unknown };
-          recentTitles?: unknown;
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const theme = (body.theme ?? {}) as {
+          title?: unknown;
+          summary?: unknown;
+          sources?: unknown;
+          freshnessHours?: unknown;
         };
-        const title = sanitizeText(body.theme?.title, 200);
+        const title = sanitizeText(theme.title, 200);
         if (!title) return json({ error: 'theme.title は必須です' }, 400);
         const octokit = makeOctokit(env);
         const styleGuide = await getFileContent(env, octokit, env.STYLE_GUIDE_PATH);
@@ -52,11 +67,11 @@ export default {
           env,
           {
             title,
-            summary: sanitizeText(body.theme?.summary, 500),
-            sources: Array.isArray(body.theme?.sources)
-              ? body.theme.sources.slice(0, 5).map((s) => sanitizeText(s, 300)).filter(Boolean)
+            summary: sanitizeText(theme.summary, 500),
+            sources: Array.isArray(theme.sources)
+              ? theme.sources.slice(0, 5).map((s) => sanitizeText(s, 300)).filter(Boolean)
               : [],
-            freshnessHours: Number(body.theme?.freshnessHours) || 0,
+            freshnessHours: Number(theme.freshnessHours) || 0,
           },
           sanitizeTitles(body.recentTitles),
           styleGuide,
@@ -66,17 +81,18 @@ export default {
 
       // ⑥ 公開（記事botが main へコミット → 既存の静的デプロイで公開）
       if (req.method === 'POST' && url.pathname === '/api/publish') {
-        const body = (await req.json().catch(() => ({}))) as {
-          article?: {
-            slug?: string;
-            title?: string;
-            description?: string;
-            category?: string;
-            tags?: unknown;
-            body?: string;
-          };
-        };
-        const a = body.article;
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const a = body.article as
+          | {
+              slug?: string;
+              title?: string;
+              description?: string;
+              category?: string;
+              tags?: unknown;
+              body?: string;
+            }
+          | undefined;
         if (!a?.slug || !a?.body || !a?.title || !a?.description) {
           return json({ error: 'article.slug / title / description / body は必須です' }, 400);
         }
