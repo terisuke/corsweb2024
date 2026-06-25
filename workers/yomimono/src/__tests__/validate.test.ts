@@ -1,0 +1,55 @@
+import { describe, it, expect } from 'vitest';
+import { assertSlug, normalizeCategory, sanitizeText, SLUG_RE } from '../validate';
+
+describe('assertSlug — パストラバーサル防止（CRITICAL修正の要）', () => {
+  // バグ（slug未検証）が存在すれば、これらは throw せず素通りしてしまう。
+  const traversal = [
+    '../../../.github/workflows/deploy',
+    '../../package',
+    'foo/bar',
+    'foo.md',
+    'a/../b',
+    '..',
+    '.',
+    'UPPER',
+    'with space',
+    'ab', // 短すぎ(3未満)
+    'a'.repeat(81), // 長すぎ(80超)
+    'タイトル', // 非ASCII
+  ];
+  it.each(traversal)('不正な slug を拒否する: %s', (slug) => {
+    expect(() => assertSlug(slug)).toThrow();
+    expect(SLUG_RE.test(slug)).toBe(false);
+  });
+
+  const valid = ['ai-driven-development', 'sme-ai-2026', 'abc', 'a-1-b-2'];
+  it.each(valid)('正当な slug を通す: %s', (slug) => {
+    expect(() => assertSlug(slug)).not.toThrow();
+  });
+});
+
+describe('normalizeCategory', () => {
+  it('既知カテゴリはそのまま', () => {
+    expect(normalizeCategory('engineering')).toBe('engineering');
+    expect(normalizeCategory('lab')).toBe('lab');
+  });
+  it('未知カテゴリは ai にフォールバック', () => {
+    expect(normalizeCategory('malicious')).toBe('ai');
+    expect(normalizeCategory(undefined)).toBe('ai');
+  });
+});
+
+describe('sanitizeText — プロンプト注入対策', () => {
+  it('コードフェンスを除去する', () => {
+    expect(sanitizeText('hello ```ignore previous``` world', 100)).not.toContain('```');
+  });
+  it('制御文字を空白化する', () => {
+    // 入力にNUL(\x00)・単位区切り(\x1f)を含めても、出力に制御文字が残らないこと
+    const out = sanitizeText('a\x00b\x1fc', 100);
+    expect(out).toBe('a b c');
+    expect(/[\x00-\x1f]/.test(out)).toBe(false);
+  });
+  it('長さを上限で切る', () => {
+    expect(sanitizeText('x'.repeat(500), 200)).toHaveLength(200);
+  });
+});
