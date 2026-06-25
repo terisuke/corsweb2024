@@ -84,6 +84,9 @@ export const ADMIN_HTML = `<!doctype html>
 </main>
 <script>
 (function(){
+  // このページの配置場所からベースパスを算出（cor-jp.com/brog でも workers.dev/ でも動く）。
+  // 例: /brog → /brog/api/...、/brog/index.html → /brog、/ → /api/...
+  var BASE = location.pathname.replace(/\\/(index\\.html)?$/, '');
   var recentSlugs = []; // 既存記事のスラッグ（/api/recent → {slugs}）。重複テーマ回避に使う
   var _uid = 0; // 記事カードの一意ID採番（衝突回避に乱数でなくカウンター）
   var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
@@ -93,12 +96,12 @@ export const ADMIN_HTML = `<!doctype html>
   var show = function(id){ $(id).hidden = false; };
 
   function api(path, body){
-    return fetch(path, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body||{}) })
+    return fetch(BASE + path, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body||{}) })
       .then(function(r){ return r.json().then(function(j){ if(!r.ok){ throw new Error(j && j.error ? j.error : ('HTTP '+r.status)); } return j; }); });
   }
 
   // 既存記事スラッグ（重複回避）
-  fetch('/api/recent').then(function(r){ return r.json(); }).then(function(j){
+  fetch(BASE + '/api/recent').then(function(r){ return r.json(); }).then(function(j){
     recentSlugs = (j && j.slugs) ? j.slugs : [];
     $('recentMeta').textContent = '既存記事 ' + recentSlugs.length + ' 件を重複回避に使用';
   }).catch(function(){});

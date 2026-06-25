@@ -11,6 +11,7 @@ export interface Env {
   PUBLISH_BRANCH: string;
   ALLOWED_EMAIL_DOMAIN: string;
   STYLE_GUIDE_PATH: string;
+  BASE_PATH: string; // マウントプレフィックス（例 /brog）。cor-jp.com/brog* ルートで使用。空ならルート直下。
   // Cloudflare Access（JWT検証用）。Accessアプリ作成後に設定。未設定なら全リクエスト拒否（fail closed）。
   CF_ACCESS_TEAM_DOMAIN: string; // 例: cor.cloudflareaccess.com
   CF_ACCESS_AUD: string; // Access アプリの Application Audience (AUD) タグ

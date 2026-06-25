@@ -48,8 +48,15 @@ function sanitizeTitles(input: unknown): string[] {
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
+    // マウントプレフィックス(/brog)を剥がして論理パスに正規化。
+    // cor-jp.com/brog* ルートでは /brog/api/x → /api/x、/brog → / に変換する。
+    // BASE_PATH 未設定（ルート直下=workers.dev）でもそのまま動く。
+    const base = env.BASE_PATH || '';
+    let path = url.pathname;
+    if (base && path === base) path = '/';
+    else if (base && path.startsWith(base + '/')) path = path.slice(base.length);
 
-    if (url.pathname === '/health') return json({ ok: true });
+    if (path === '/health') return json({ ok: true });
 
     // 認証: Cloudflare Access の JWT を暗号検証（ヘッダ盲信はしない）
     const email = await verifyAccessEmail(req, env);
@@ -59,19 +66,19 @@ export default {
 
     try {
       // 管理画面（凪沙さん用UI）。Access 認証済みのブラウザにHTMLを返す。
-      if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
+      if (req.method === 'GET' && (path === '/' || path === '/index.html')) {
         return html(ADMIN_HTML);
       }
 
       // 既存記事スラッグ一覧（重複テーマ回避用）
-      if (req.method === 'GET' && url.pathname === '/api/recent') {
+      if (req.method === 'GET' && path === '/api/recent') {
         const octokit = makeOctokit(env);
         const slugs = await listArticleSlugs(env, octokit);
         return json({ slugs });
       }
 
       // ① 情報収集
-      if (req.method === 'POST' && url.pathname === '/api/collect') {
+      if (req.method === 'POST' && path === '/api/collect') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const candidates = await collectTopics(env, sanitizeTitles(body.recentTitles));
@@ -79,7 +86,7 @@ export default {
       }
 
       // ④ 記事生成（＋ガードレール検査結果を同梱して⑤レビューへ）
-      if (req.method === 'POST' && url.pathname === '/api/generate') {
+      if (req.method === 'POST' && path === '/api/generate') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const theme = (body.theme ?? {}) as {
@@ -112,7 +119,7 @@ export default {
       }
 
       // ⑤ レビュー: コミットせずガードレール検査のみ（編集後の再チェック用）
-      if (req.method === 'POST' && url.pathname === '/api/validate') {
+      if (req.method === 'POST' && path === '/api/validate') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const norm = normalizeArticle(body.article as ArticleInput | undefined);
@@ -122,7 +129,7 @@ export default {
       }
 
       // ⑥ 公開（記事botが main へコミット → 既存の静的デプロイで公開）
-      if (req.method === 'POST' && url.pathname === '/api/publish') {
+      if (req.method === 'POST' && path === '/api/publish') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const norm = normalizeArticle(body.article as ArticleInput | undefined);
