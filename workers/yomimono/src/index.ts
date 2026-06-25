@@ -7,8 +7,21 @@ import { makeOctokit, getFileContent, commitArticle, listArticleSlugs } from './
 import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
 import { ADMIN_HTML } from './ui';
 
+// 管理画面は自己完結（外部リソース無し・同一オリジンfetchのみ）。
+// インライン style/script のみ許可し、外部読込・iframe埋め込み・データ送信先を遮断する。
+const CSP =
+  "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; " +
+  "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
 const html = (body: string, status = 200): Response =>
-  new Response(body, { status, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  new Response(body, {
+    status,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'content-security-policy': CSP,
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'no-referrer',
+    },
+  });
 
 const json = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), {

@@ -84,7 +84,8 @@ export const ADMIN_HTML = `<!doctype html>
 </main>
 <script>
 (function(){
-  var recentTitles = [];
+  var recentSlugs = []; // 既存記事のスラッグ（/api/recent → {slugs}）。重複テーマ回避に使う
+  var _uid = 0; // 記事カードの一意ID採番（衝突回避に乱数でなくカウンター）
   var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
   // href に使う前にスキームを http(s) のみ許可（javascript: 等を無効化）
   var safeUrl = function(u){ u = String(u==null?'':u).trim(); return /^https?:\\/\\//i.test(u) ? u : '#'; };
@@ -98,15 +99,15 @@ export const ADMIN_HTML = `<!doctype html>
 
   // 既存記事スラッグ（重複回避）
   fetch('/api/recent').then(function(r){ return r.json(); }).then(function(j){
-    recentTitles = (j && j.slugs) ? j.slugs : [];
-    $('recentMeta').textContent = '既存記事 ' + recentTitles.length + ' 件を重複回避に使用';
+    recentSlugs = (j && j.slugs) ? j.slugs : [];
+    $('recentMeta').textContent = '既存記事 ' + recentSlugs.length + ' 件を重複回避に使用';
   }).catch(function(){});
 
   // STEP 1: 情報収集
   $('collectBtn').addEventListener('click', function(){
     var b = $('collectBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span>収集中…（30〜60秒）';
     $('collectErr').innerHTML = '';
-    api('/api/collect', { recentTitles: recentTitles }).then(function(j){
+    api('/api/collect', { recentTitles: recentSlugs }).then(function(j){
       renderCands(j.candidates || []);
       show('s2'); $('s2').scrollIntoView({behavior:'smooth'});
     }).catch(function(e){
@@ -157,7 +158,7 @@ export const ADMIN_HTML = `<!doctype html>
       b.innerHTML = '<span class="spin"></span>生成中 ' + (i+1) + '/' + idx.length + '…';
       var slot = document.createElement('div'); slot.className='card'; slot.innerHTML='<div class="meta"><span class="spin" style="border-color:#1b2c40;border-top-color:transparent"></span>「'+esc(theme.title)+'」を生成中…</div>';
       $('arts').appendChild(slot);
-      api('/api/generate', { theme: theme, recentTitles: recentTitles }).then(function(j){
+      api('/api/generate', { theme: theme, recentTitles: recentSlugs }).then(function(j){
         renderArticle(slot, j.article, j.violations||[]);
       }).catch(function(e){
         slot.innerHTML = '<div class="err">生成に失敗しました（'+esc(theme.title)+'）: '+esc(e.message)+'</div>';
@@ -167,7 +168,7 @@ export const ADMIN_HTML = `<!doctype html>
   });
 
   function renderArticle(slot, a, viol){
-    var uid = 'a' + Math.floor(Math.random()*1e9);
+    var uid = 'a' + (++_uid);
     var violHtml = '';
     if (viol.length){
       var items = viol.map(function(v){ return '・['+esc(v.name)+'] '+esc(v.reason)+'（'+esc(v.match)+' / '+esc(v.line)+'行目）'; }).join('<br>');
@@ -181,7 +182,7 @@ export const ADMIN_HTML = `<!doctype html>
       + violHtml
       + '<div class="field"><label>タイトル</label><input id="'+uid+'_title" value="'+esc(a.title)+'"></div>'
       + '<div class="field"><label>説明（カード・OGP用）</label><input id="'+uid+'_desc" value="'+esc(a.description)+'"></div>'
-      + '<div class="field"><label>本文（Markdown・編集可）</label><textarea id="'+uid+'_body">'+esc(a.body)+'</textarea></div>'
+      + '<div class="field"><label>本文（Markdown・編集可）</label><textarea id="'+uid+'_body" maxlength="100000">'+esc(a.body)+'</textarea></div>'
       + '<div class="row"><button class="pub" id="'+uid+'_pub"'+(viol.length?' disabled':'')+'>公開する</button>'
       + '<button class="ghost" id="'+uid+'_recheck">再チェック</button>'
       + '<span id="'+uid+'_msg" class="meta"></span></div>';
