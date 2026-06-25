@@ -41,6 +41,26 @@ export async function getFileContent(env: Env, octokit: Octokit, path: string): 
   return base64ToUtf8(data.content);
 }
 
+// 既存記事のスラッグ一覧（重複テーマ回避用）。BLOG_DIR/ja のファイル名から .md を除いたもの。
+export async function listArticleSlugs(env: Env, octokit: Octokit): Promise<string[]> {
+  try {
+    const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: env.GH_OWNER,
+      repo: env.GH_REPO,
+      path: `${env.BLOG_DIR}/ja`,
+      ref: env.PUBLISH_BRANCH,
+    });
+    const items = res.data as Array<{ name: string; type: string }>;
+    return Array.isArray(items)
+      ? items
+          .filter((it) => it.type === 'file' && it.name.endsWith('.md'))
+          .map((it) => it.name.replace(/\.md$/, ''))
+      : [];
+  } catch {
+    return []; // 一覧取得失敗は致命的でない（重複回避が弱まるだけ）
+  }
+}
+
 // 記事 .md を PUBLISH_BRANCH（既定 main）へコミット。
 // content-bot はこのパス（記事のみ）にしか書かない＝コードには触れない。
 export async function commitArticle(
