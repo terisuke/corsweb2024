@@ -1,12 +1,14 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Env } from './types';
 
-export const MODEL = 'claude-opus-4-8';
+export const MODEL_HEAVY = 'claude-opus-4-8'; // 記事生成（品質重視）
+export const MODEL_LIGHT = 'claude-sonnet-4-6'; // 情報収集（web_search→整形, コスト重視）
 const MAX_PAUSE_TURNS = 8;
 
 interface CallOptions {
   system: string;
   userText: string;
+  model?: string;
   maxTokens?: number;
   useWebSearch?: boolean;
 }
@@ -24,7 +26,7 @@ export async function callClaude(env: Env, opts: CallOptions): Promise<string> {
   let response: Anthropic.Message | undefined;
   for (let i = 0; i < MAX_PAUSE_TURNS; i++) {
     response = await client.messages.create({
-      model: MODEL,
+      model: opts.model ?? MODEL_HEAVY,
       max_tokens: opts.maxTokens ?? 16000,
       thinking: { type: 'adaptive' },
       system: opts.system,

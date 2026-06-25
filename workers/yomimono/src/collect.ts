@@ -1,4 +1,4 @@
-import { callClaude, parseLastJsonBlock } from './anthropic';
+import { callClaude, parseLastJsonBlock, MODEL_LIGHT } from './anthropic';
 import type { Env, TopicCandidate } from './types';
 
 // ① 情報収集: 直近約27時間の AI/DX/ローカルLLM 等から候補テーマを 10〜15 件ランキングで返す。
@@ -32,6 +32,7 @@ ${recentTitles.map((t) => `- ${t}`).join('\n')}
     system,
     userText:
       '直近約27時間のトピックを web_search で調べ、中小企業向け読みものの候補テーマを10〜15件、ランキングで提案してください。最後に指定のJSONのみを出力してください。',
+    model: MODEL_LIGHT, // 収集は Sonnet で十分（コスト約40〜50%削減）
     useWebSearch: true,
     maxTokens: 8000,
   });

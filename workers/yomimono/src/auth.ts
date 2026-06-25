@@ -19,16 +19,26 @@ interface JwtPayload {
   email?: string;
 }
 
-let certCache: { keys: Jwk[]; fetchedAt: number } | null = null;
+// インフライトの fetch を Promise ごと共有し、TTL切れ直後の同時多発 fetch（スタンピード）を防ぐ。
+let certCachePromise: Promise<{ keys: Jwk[]; fetchedAt: number }> | null = null;
 
 async function getCerts(teamDomain: string): Promise<Jwk[]> {
   const now = Date.now();
-  if (certCache && now - certCache.fetchedAt < 3_600_000) return certCache.keys;
-  const res = await fetch(`https://${teamDomain}/cdn-cgi/access/certs`);
-  if (!res.ok) throw new Error('Cloudflare Access の証明書取得に失敗しました');
-  const data = (await res.json()) as { keys: Jwk[] };
-  certCache = { keys: data.keys ?? [], fetchedAt: now };
-  return certCache.keys;
+  if (certCachePromise) {
+    const cached = await certCachePromise;
+    if (now - cached.fetchedAt < 3_600_000) return cached.keys;
+  }
+  certCachePromise = fetch(`https://${teamDomain}/cdn-cgi/access/certs`)
+    .then(async (res) => {
+      if (!res.ok) throw new Error('Cloudflare Access の証明書取得に失敗しました');
+      const data = (await res.json()) as { keys: Jwk[] };
+      return { keys: data.keys ?? [], fetchedAt: Date.now() };
+    })
+    .catch((err) => {
+      certCachePromise = null; // エラー時はキャッシュを破棄して次回リトライ可能に
+      throw err;
+    });
+  return (await certCachePromise).keys;
 }
 
 function b64urlToBytes(s: string): Uint8Array {

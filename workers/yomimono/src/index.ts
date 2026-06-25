@@ -88,12 +88,17 @@ export default {
         }
         const normalized = {
           slug: a.slug,
-          title: a.title,
-          description: a.description,
+          title: sanitizeText(a.title, 200),
+          description: sanitizeText(a.description, 500),
           category: normalizeCategory(a.category),
-          tags: Array.isArray(a.tags) ? a.tags.map(String).slice(0, 10) : [],
-          body: a.body,
+          tags: Array.isArray(a.tags)
+            ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
+            : [],
+          body: String(a.body).slice(0, 100_000), // markdown構造を保つため制御文字は除去せず長さのみ制限
         };
+        if (!normalized.title || !normalized.description) {
+          return json({ error: 'title / description が空です' }, 400);
+        }
         // 公開直前にもう一度ガードレールを通す（最終防衛線）
         const markdown = buildMarkdown(normalized);
         const violations = scanForViolations(markdown);

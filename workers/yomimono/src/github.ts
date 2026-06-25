@@ -67,12 +67,16 @@ export async function commitArticle(
     if (status !== 404) throw e; // 404 = 未存在＝新規でOK。それ以外は本物のエラー
   }
 
+  // 公開コミットは public 履歴に残るため、メールアドレス全体は埋め込まない（収集対策）。
+  // ローカル部のみ記録し、完全なメールはサーバー側ログにのみ残す。
+  const author = authorEmail.split('@')[0];
+  console.log('yomimono publish:', { slug, authorEmail });
   const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: env.GH_OWNER,
     repo: env.GH_REPO,
     path,
     branch: env.PUBLISH_BRANCH,
-    message: `post(yomimono): ${slug}（公開: ${authorEmail}）`,
+    message: `post(yomimono): ${slug}（公開: ${author}）`,
     content: utf8ToBase64(markdown),
   });
   const data = res.data as { commit?: { html_url?: string } };
