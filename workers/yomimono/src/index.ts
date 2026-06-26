@@ -87,8 +87,8 @@ function sanitizeTitles(input: unknown): string[] {
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
-    // マウントプレフィックス(/brog)を剥がして論理パスに正規化。
-    // cor-jp.com/brog* ルートでは /brog/api/x → /api/x、/brog → / に変換する。
+    // マウントプレフィックス(/blog-admin)を剥がして論理パスに正規化。
+    // cor-jp.com/blog-admin* ルートでは /blog-admin/api/x → /api/x、/blog-admin → / に変換する。
     // BASE_PATH 未設定（ルート直下=workers.dev）でもそのまま動く。
     const base = env.BASE_PATH || '';
     let path = url.pathname;

@@ -10,7 +10,7 @@ export interface Env {
   BLOG_DIR: string;
   PUBLISH_BRANCH: string;
   STYLE_GUIDE_PATH: string;
-  BASE_PATH: string; // マウントプレフィックス（例 /brog）。cor-jp.com/brog* ルートで使用。空ならルート直下。
+  BASE_PATH: string; // マウントプレフィックス（例 /blog-admin）。cor-jp.com/blog-admin* ルートで使用。空ならルート直下。
   // ログイン（Worker内蔵セッション）。どちらか未設定なら全リクエスト拒否（fail closed）。secretで登録。
   ACCESS_PASSWORD: string; // ログインの合言葉
   SESSION_SECRET: string; // セッションCookieのHMAC署名鍵（ランダム32バイト推奨）

@@ -11,7 +11,7 @@ import type { Env } from '../types';
 const env = {
   ACCESS_PASSWORD: 'correct-horse-battery-staple',
   SESSION_SECRET: 'unit-test-session-secret-0123456789',
-  BASE_PATH: '/brog',
+  BASE_PATH: '/blog-admin',
 } as unknown as Env;
 
 // undici(Node)は Request の Cookie ヘッダを禁止ヘッダとして落とすため、最小モックで渡す。
