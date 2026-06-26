@@ -36,8 +36,10 @@ npx wrangler login        # 初回のみ（Cloudflareアカウントでブラウ
 # シークレット登録（値は対話で入力。コード/gitには残らない）
 npx wrangler secret put ANTHROPIC_API_KEY      # Claude（既存 blog-autodraft 用と同じでOK）
 npx wrangler secret put GH_APP_PRIVATE_KEY     # cor-yomimono-bot.*.private-key.pem の中身を貼り付け
+npx wrangler secret put ACCESS_PASSWORD        # ログインの合言葉（チーム共通）
+npx wrangler secret put SESSION_SECRET         # セッション署名鍵。`openssl rand -hex 32` の出力を貼る
 
-npm run deploy            # 公開（*.workers.dev のURLが発行される）
+npm run deploy            # cor-jp.com/brog* に公開（routes 設定済）
 ```
 
 `wrangler.toml` の `[vars]` に App ID / Installation ID 等の非シークレット設定が入っている（編集不要）。
@@ -46,15 +48,28 @@ npm run deploy            # 公開（*.workers.dev のURLが発行される）
 
 `wrangler.toml` の `routes = [{ pattern = "cor-jp.com/brog*", zone_name = "cor-jp.com" }]` により、`npm run deploy` で **cor-jp.com の `/brog*` だけがこの Worker に流れる**。cor-jp.com は Cloudflare の裏にいる（NS が `*.ns.cloudflare.com`）ため、HP本体（Firebase 配信）はそのまま、`/brog` だけ Worker が応答する。`zone_name` の cor-jp.com が同じ Cloudflare アカウントにある必要がある。
 
-## 認証（Cloudflare Access）— デプロイ後に設定
+## ログイン（Worker内蔵セッション）
 
-1. Cloudflare ダッシュボード → **Zero Trust** → **Access → Applications → Add an application → Self-hosted**
-2. アプリのドメイン/パスに **`cor-jp.com`** + パス **`/brog`**（サブパス含む）を指定
-3. ポリシー: **Action=Allow**, **Include → Emails ending in → `@cor-jp.com`**
-4. ログイン方法に Google（または One-time PIN）を追加 → 保存
-5. アプリ設定の **Application Audience (AUD) タグ** をコピーし、`wrangler.toml` の `CF_ACCESS_AUD` に貼る。`CF_ACCESS_TEAM_DOMAIN` にはチームドメイン（例 `cor.cloudflareaccess.com`）を入れて `npm run deploy` で再デプロイ。
+Cloudflare Access は使わず、Worker 自身がログインを管理する（Access は zone と同一アカウントの Zero Trust 管理権限が要るため、会社アカウントの権限事情で採用）。
 
-これで cor-jp.com のメンバーだけが `cor-jp.com/brog` にログインでき、Worker は JWT を暗号検証してメールを得る。HP の一般訪問者には `/brog` は見えない（リンクを置かない限り）。
+- `cor-jp.com/brog` を開く → **合言葉（`ACCESS_PASSWORD`）の入力画面**（`/brog/login`）
+- 正しければ **HMAC署名つきセッションCookie**（HttpOnly / Secure / SameSite=Lax / 7日）を発行
+- 以降は `verifySession()` がCookieを検証（署名鍵 = `SESSION_SECRET`）
+- `ACCESS_PASSWORD` と `SESSION_SECRET` の両方が未設定だと全リクエスト拒否（fail closed）
+
+署名鍵は `openssl rand -hex 32 | npx wrangler secret put SESSION_SECRET` で登録。HP の一般訪問者には `/brog` は見えない（リンクを置かない限り）。チーム共通パスワード方式（個人別SSOではない）。セッションは48時間有効。
+
+### セキュリティ運用（重要）
+
+合言葉がこのツール（main 書込み＋API予算）の唯一の鍵なので、**高エントロピー必須**:
+
+- `ACCESS_PASSWORD` は**ランダム生成**して password manager で配布する（覚えやすい語句は不可）。例:
+  ```bash
+  openssl rand -base64 24 | npx wrangler secret put ACCESS_PASSWORD
+  ```
+  Worker は16文字未満の合言葉を拒否（503）する。
+- **総当たり対策（推奨）**: Cloudflare ダッシュボード → **Security → WAF → Rate limiting rules** で `cor-jp.com/brog/api/login` の POST を「5回/10分/IP → block」に。Worker内にも簡易レート制限＋失敗遅延を実装済みだが、エッジのWAFルールが本命。
+- **緊急時の全ログアウト**: `SESSION_SECRET` を再生成して再デプロイすると、発行済みの全セッションが無効化される（合言葉漏洩時のキルスイッチ）。
 
 ### コスト保護（推奨）
 
