@@ -15,8 +15,11 @@ const CSP =
   "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; " +
   "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
 // __BASE__ プレースホルダを実際のマウントパス(env.BASE_PATH)へ置換して配信。
-const html = (body: string, env: Env, status = 200): Response =>
-  new Response(body.split('__BASE__').join(env.BASE_PATH || ''), {
+// BASE_PATH は JS文字列(var BASE="__BASE__") と HTML属性(href="__BASE__/ai") の両方に入るため、
+// パスに使う文字種のみへ正規化してから埋め込む（万一の注入を構造的に防ぐ）。
+const html = (body: string, env: Env, status = 200): Response => {
+  const base = (env.BASE_PATH || '').replace(/[^a-zA-Z0-9/_-]/g, '');
+  return new Response(body.split('__BASE__').join(base), {
     status,
     headers: {
       'content-type': 'text/html; charset=utf-8',
@@ -25,6 +28,7 @@ const html = (body: string, env: Env, status = 200): Response =>
       'referrer-policy': 'no-referrer',
     },
   });
+};
 
 const json = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), {

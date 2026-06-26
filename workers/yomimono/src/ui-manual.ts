@@ -95,7 +95,8 @@ const JS = `
     var html = mdToHtml($('m_body').value);
     $('m_prev').innerHTML = html || '<p class="meta">ここに表示されます。</p>';
   }
-  $('m_body').addEventListener('input', updatePreview);
+  var _pvTimer = null;
+  $('m_body').addEventListener('input', function(){ if(_pvTimer) clearTimeout(_pvTimer); _pvTimer=setTimeout(updatePreview, 120); });
 
   // --- 画像アップロード ---
   function insertAtCursor(text){
