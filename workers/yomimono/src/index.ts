@@ -68,6 +68,60 @@ const json = (data: unknown, status = 200): Response =>
     headers: { 'content-type': 'application/json; charset=utf-8' },
   });
 
+// 長時間処理（AI＋web検索）向け。即座にヘッダを返し、処理中は空白を送り続けて
+// Cloudflare の 524（無応答100秒）を回避する。完了時に最終行として JSON を送る。
+// クライアントは本文の最終行を JSON.parse する（apiLong）。エラーも 200 のボディ内で返す。
+function friendlyError(e: unknown): string {
+  const m = e instanceof Error ? e.message : String(e);
+  if (/credit balance/i.test(m)) {
+    return 'Anthropic API のクレジット残高が不足しています（コンソールでチャージしてください）';
+  }
+  if (/\b524\b|timeout|timed out|ETIMEDOUT/i.test(m)) {
+    return 'AIの応答がタイムアウトしました。テーマを絞ってもう一度お試しください';
+  }
+  // callClaude / generate が投げる自前の日本語メッセージは安全なのでそのまま返す
+  if (/web_search|継続上限|JSON|拒否|refusal|必須|不正|空です/.test(m)) return m;
+  return '処理中にエラーが発生しました';
+}
+
+function streamJson(work: Promise<unknown>): Response {
+  const enc = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      let done = false;
+      const hb = setInterval(() => {
+        if (!done) {
+          try {
+            controller.enqueue(enc.encode(' '));
+          } catch {
+            /* closed */
+          }
+        }
+      }, 5000);
+      const finish = (payload: unknown) => {
+        done = true;
+        clearInterval(hb);
+        try {
+          controller.enqueue(enc.encode('\n' + JSON.stringify(payload)));
+          controller.close();
+        } catch {
+          /* closed */
+        }
+      };
+      work.then(
+        (result) => finish(result),
+        (e) => {
+          console.error('yomimono error:', e instanceof Error ? e.message : String(e));
+          finish({ error: friendlyError(e) });
+        },
+      );
+    },
+  });
+  return new Response(stream, {
+    headers: { 'content-type': 'application/json; charset=utf-8', 'x-content-type-options': 'nosniff' },
+  });
+}
+
 // JSON ボディを解析。不正JSONは null（呼び出し側で400を返し、サイレント処理を避ける）。
 async function readJsonBody(req: Request): Promise<Record<string, unknown> | null> {
   try {
@@ -183,12 +237,13 @@ export default {
         return json(result);
       }
 
-      // ① 情報収集
+      // ① 情報収集（長時間化しうるため streamJson でハートビート送信＝524回避）
       if (req.method === 'POST' && path === '/api/collect') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-        const candidates = await collectTopics(env, sanitizeTitles(body.recentTitles));
-        return json({ candidates });
+        return streamJson(
+          collectTopics(env, sanitizeTitles(body.recentTitles)).then((candidates) => ({ candidates })),
+        );
       }
 
       // ④ 記事生成（＋ガードレール検査結果を同梱して⑤レビューへ）
@@ -203,25 +258,27 @@ export default {
         };
         const title = sanitizeText(theme.title, 200);
         if (!title) return json({ error: 'theme.title は必須です' }, 400);
-        const octokit = makeOctokit(env);
-        const styleGuide = await getFileContent(env, octokit, env.STYLE_GUIDE_PATH);
-        const { article, markdown, violations } = await generateArticle(
-          env,
-          {
-            title,
-            summary: sanitizeText(theme.summary, 500),
-            sources: Array.isArray(theme.sources)
-              ? theme.sources
-                  .slice(0, 5)
-                  .map((s) => sanitizeText(s, 300))
-                  .filter((s) => /^https?:\/\//i.test(s)) // http(s) のみ（javascript: 等を排除）
-              : [],
-            freshnessHours: Number(theme.freshnessHours) || 0,
-          },
-          sanitizeTitles(body.recentTitles),
-          styleGuide,
+        const recentTitles = sanitizeTitles(body.recentTitles);
+        const sources = Array.isArray(theme.sources)
+          ? theme.sources
+              .slice(0, 5)
+              .map((s) => sanitizeText(s, 300))
+              .filter((s) => /^https?:\/\//i.test(s)) // http(s) のみ（javascript: 等を排除）
+          : [];
+        // 生成は最も長くかかるため streamJson でハートビート送信（524回避）
+        return streamJson(
+          (async () => {
+            const octokit = makeOctokit(env);
+            const styleGuide = await getFileContent(env, octokit, env.STYLE_GUIDE_PATH);
+            const { article, markdown, violations } = await generateArticle(
+              env,
+              { title, summary: sanitizeText(theme.summary, 500), sources, freshnessHours: Number(theme.freshnessHours) || 0 },
+              recentTitles,
+              styleGuide,
+            );
+            return { article, markdown, violations };
+          })(),
         );
-        return json({ article, markdown, violations });
       }
 
       // ⑤ レビュー: コミットせずガードレール検査のみ（編集後の再チェック用）

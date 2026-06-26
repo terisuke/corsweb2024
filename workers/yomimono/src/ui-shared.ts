@@ -84,6 +84,8 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){re
 var safeUrl=function(u){u=String(u==null?'':u).trim();return (/^https?:\\/\\//i.test(u)||/^\\/[a-z0-9_~-]/i.test(u))?u:'#';};
 var $=function(id){return document.getElementById(id);};
 function api(p,b){return fetch(BASE+p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b||{})}).then(function(r){return r.json().then(function(j){if(!r.ok){throw new Error(j&&j.error?j.error:('HTTP '+r.status));}return j;});});}
+// 長時間API（収集/生成）用: 本文は「空白ハートビート + 改行 + 最終JSON」。最終行をparse。
+function apiLong(p,b){return fetch(BASE+p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b||{})}).then(function(r){return r.text().then(function(t){var lines=String(t).split('\\n').filter(function(s){return s.trim();});var last=lines.length?lines[lines.length-1]:'';var j;try{j=JSON.parse(last);}catch(e){throw new Error('応答の解析に失敗しました（時間がかかりすぎた可能性）');}if(j&&j.error)throw new Error(j.error);return j;});});}
 `;
 
 function escHtml(s: string): string {
