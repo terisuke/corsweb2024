@@ -69,6 +69,8 @@ export const CSS = `
   .preview img { max-width:100%; border-radius:8px; margin:8px 0; }
   .preview p { margin:8px 0; }
   .preview code { background:#f1f5f9; padding:1px 5px; border-radius:4px; font-size:13px; }
+  .preview pre { background:#0f172a; color:#e2e8f0; padding:12px 14px; border-radius:8px; overflow:auto; font-size:13px; line-height:1.55; }
+  .preview pre code { background:none; color:inherit; padding:0; }
   .preview ul,.preview ol { padding-left:22px; }
   .preview a { color:var(--accent); }
   .toolbar { display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
@@ -79,17 +81,21 @@ export const CSS = `
 export const COMMON_JS = `
 var BASE="__BASE__";
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
-var safeUrl=function(u){u=String(u==null?'':u).trim();return (/^https?:\\/\\//i.test(u)||/^\\/[a-z0-9._~-]/i.test(u))?u:'#';};
+var safeUrl=function(u){u=String(u==null?'':u).trim();return (/^https?:\\/\\//i.test(u)||/^\\/[a-z0-9_~-]/i.test(u))?u:'#';};
 var $=function(id){return document.getElementById(id);};
 function api(p,b){return fetch(BASE+p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b||{})}).then(function(r){return r.json().then(function(j){if(!r.ok){throw new Error(j&&j.error?j.error:('HTTP '+r.status));}return j;});});}
 `;
+
+function escHtml(s: string): string {
+  return s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] as string);
+}
 
 export function head(title: string): string {
   return (
     '<!doctype html><html lang="ja"><head><meta charset="utf-8" />' +
     '<meta name="viewport" content="width=device-width, initial-scale=1" />' +
     '<title>' +
-    title +
+    escHtml(title) +
     '</title><style>' +
     CSS +
     '</style></head><body>'

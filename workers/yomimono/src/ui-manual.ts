@@ -68,10 +68,16 @@ const JS = `
   }
   function mdToHtml(md){
     var lines = String(md||'').split(/\\r?\\n/);
-    var out = [], list = null;
+    var out = [], list = null, inCode = false, codeBuf = [];
     function closeList(){ if(list){ out.push('</'+list+'>'); list=null; } }
     for (var i=0;i<lines.length;i++){
       var ln = lines[i];
+      if (/^\`\`\`/.test(ln)){
+        if (inCode){ out.push('<pre><code>'+codeBuf.join('\\n')+'</code></pre>'); inCode=false; codeBuf=[]; }
+        else { closeList(); inCode=true; }
+        continue;
+      }
+      if (inCode){ codeBuf.push(esc(ln)); continue; }
       var mh = ln.match(/^(#{1,3})\\s+(.*)$/);
       var mu = ln.match(/^\\s*[-*]\\s+(.*)$/);
       var mo = ln.match(/^\\s*\\d+\\.\\s+(.*)$/);
@@ -81,6 +87,7 @@ const JS = `
       else if (/^\\s*$/.test(ln)){ closeList(); }
       else { closeList(); out.push('<p>'+inline(ln)+'</p>'); }
     }
+    if (inCode){ out.push('<pre><code>'+codeBuf.join('\\n')+'</code></pre>'); } // 未閉じフェンスも描画
     closeList();
     return out.join('');
   }

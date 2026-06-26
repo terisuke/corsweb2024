@@ -96,7 +96,7 @@ export default {
           return json({ error: 'filename と dataBase64 は必須です' }, 400);
         }
         if (dataBase64.length > 7_000_000) {
-          return json({ error: '画像が大きすぎます（5MBまで）' }, 413);
+          return json({ error: '画像が大きすぎます（約5MBまで）' }, 413);
         }
         const octokit = makeOctokit(env);
         const result = await commitImage(env, octokit, filename, dataBase64, email);
