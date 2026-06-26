@@ -1,61 +1,9 @@
-// 管理画面（凪沙さん用）。Worker が GET / でこの HTML を返す。
-// Cloudflare Access と同一オリジンのため、fetch は自動で認証される（CORS なし）。
-// 注: 文字列内に ${ とバックティックを入れないこと（外側のTSテンプレートリテラルが壊れる）。
-//     ページ側のJSは文字列連結で書いている。
-export const ADMIN_HTML = `<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>読みもの 作成スタジオ — Cor.</title>
-<style>
-  :root { --navy:#1b2c40; --navy2:#243a54; --ink:#1b2330; --muted:#64748b; --line:#e2e8f0; --bg:#f6f8fb; --ok:#16a34a; --warn:#dc2626; --accent:#2563eb; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN',system-ui,sans-serif; color:var(--ink); background:var(--bg); line-height:1.7; }
-  header { background:var(--navy); color:#fff; padding:18px 24px; }
-  header h1 { margin:0; font-size:18px; letter-spacing:.04em; }
-  header p { margin:4px 0 0; font-size:12px; color:#aebfd4; }
-  main { max-width:860px; margin:0 auto; padding:24px 16px 80px; }
-  .step { background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:18px; box-shadow:0 1px 2px rgba(16,24,40,.04); }
-  .step h2 { margin:0 0 4px; font-size:15px; color:var(--navy); }
-  .step .hint { margin:0 0 14px; font-size:12px; color:var(--muted); }
-  .num { display:inline-flex; width:22px; height:22px; border-radius:50%; background:var(--navy); color:#fff; font-size:12px; align-items:center; justify-content:center; margin-right:8px; }
-  button { font:inherit; cursor:pointer; border:none; border-radius:10px; padding:11px 18px; font-weight:600; }
-  .primary { background:var(--navy); color:#fff; }
-  .primary:hover { background:var(--navy2); }
-  .primary:disabled { background:#9aa7b8; cursor:not-allowed; }
-  .ghost { background:#eef2f7; color:var(--ink); }
-  .pub { background:var(--ok); color:#fff; }
-  .pub:disabled { background:#bbb; cursor:not-allowed; }
-  .card { border:1px solid var(--line); border-radius:12px; padding:14px; margin:10px 0; }
-  .card.sel { border-color:var(--accent); background:#f0f6ff; }
-  .card label { display:flex; gap:10px; align-items:flex-start; cursor:pointer; }
-  .card .t { font-weight:700; font-size:14px; }
-  .card .s { font-size:13px; color:#374151; margin:4px 0; }
-  .card .src a { font-size:11px; color:var(--accent); margin-right:10px; word-break:break-all; }
-  .badge { display:inline-block; font-size:11px; background:#eef2f7; color:var(--muted); border-radius:20px; padding:2px 9px; margin-left:6px; }
-  .field { margin:10px 0; }
-  .field label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
-  .field input, .field textarea { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:8px; font:inherit; }
-  .field textarea { min-height:280px; resize:vertical; font-family:ui-monospace,Menlo,monospace; font-size:13px; line-height:1.6; }
-  .viol { background:#fff1f2; border:1px solid #fecaca; color:#991b1b; border-radius:8px; padding:10px 12px; font-size:12px; margin:8px 0; }
-  .viol b { display:block; margin-bottom:4px; }
-  .done { background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; border-radius:8px; padding:10px 12px; font-size:13px; }
-  .done a { color:#166534; }
-  .err { background:#fff1f2; border:1px solid #fecaca; color:#991b1b; border-radius:8px; padding:10px 12px; font-size:13px; margin:8px 0; }
-  .spin { display:inline-block; width:15px; height:15px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:sp .8s linear infinite; vertical-align:-2px; margin-right:6px; }
-  @keyframes sp { to { transform:rotate(360deg); } }
-  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  .meta { font-size:12px; color:var(--muted); }
-  [hidden] { display:none; }
-</style>
-</head>
-<body>
-<header>
-  <h1>読みもの 作成スタジオ</h1>
-  <p>情報収集 → テーマ選定 → 生成 → レビュー → 公開（main マージ不要で公開されます）</p>
-</header>
-<main>
+import { head, header, tail } from './ui-shared';
+
+// AI生成ページ（情報収集→テーマ選択→生成→レビュー→公開）。
+// 共通JS(BASE/esc/safeUrl/$/api)は ui-shared の COMMON_JS から供給される。
+const BODY = `<main>
+  <p class="lead">情報収集 → テーマ選定 → 生成 → レビュー → 公開（main マージ不要で公開されます）</p>
   <section class="step" id="s1">
     <h2><span class="num">1</span>情報収集</h2>
     <p class="hint">直近およそ27時間の AI / DX / ローカルLLM などの話題から、中小企業に刺さる候補テーマを集めます。</p>
@@ -65,7 +13,6 @@ export const ADMIN_HTML = `<!doctype html>
     </div>
     <div id="collectErr"></div>
   </section>
-
   <section class="step" id="s2" hidden>
     <h2><span class="num">2</span>テーマを選ぶ（複数可）</h2>
     <p class="hint">書きたいテーマにチェックを入れて、記事生成へ進んでください。</p>
@@ -75,38 +22,23 @@ export const ADMIN_HTML = `<!doctype html>
       <span class="meta" id="selMeta">0 件選択中</span>
     </div>
   </section>
-
   <section class="step" id="s3" hidden>
     <h2><span class="num">3</span>レビュー & 公開</h2>
     <p class="hint">本文を確認・編集してから「公開する」を押してください。ガードレール違反があると公開できません。</p>
     <div id="arts"></div>
   </section>
-</main>
-<script>
-(function(){
-  // このページの配置場所からベースパスを算出（cor-jp.com/brog でも workers.dev/ でも動く）。
-  // 例: /brog → /brog/api/...、/brog/index.html → /brog、/ → /api/...
-  var BASE = location.pathname.replace(/\\/(index\\.html)?$/, '');
-  var recentSlugs = []; // 既存記事のスラッグ（/api/recent → {slugs}）。重複テーマ回避に使う
-  var _uid = 0; // 記事カードの一意ID採番（衝突回避に乱数でなくカウンター）
-  var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
-  // href に使う前にスキームを http(s) のみ許可（javascript: 等を無効化）
-  var safeUrl = function(u){ u = String(u==null?'':u).trim(); return /^https?:\\/\\//i.test(u) ? u : '#'; };
-  var $ = function(id){ return document.getElementById(id); };
+</main>`;
+
+const JS = `
+  var recentSlugs = [];
+  var _uid = 0;
   var show = function(id){ $(id).hidden = false; };
 
-  function api(path, body){
-    return fetch(BASE + path, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body||{}) })
-      .then(function(r){ return r.json().then(function(j){ if(!r.ok){ throw new Error(j && j.error ? j.error : ('HTTP '+r.status)); } return j; }); });
-  }
-
-  // 既存記事スラッグ（重複回避）
   fetch(BASE + '/api/recent').then(function(r){ return r.json(); }).then(function(j){
     recentSlugs = (j && j.slugs) ? j.slugs : [];
     $('recentMeta').textContent = '既存記事 ' + recentSlugs.length + ' 件を重複回避に使用';
   }).catch(function(){});
 
-  // STEP 1: 情報収集
   $('collectBtn').addEventListener('click', function(){
     var b = $('collectBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span>収集中…（30〜60秒）';
     $('collectErr').innerHTML = '';
@@ -149,7 +81,6 @@ export const ADMIN_HTML = `<!doctype html>
     for (var m=0;m<idx.length;m++){ var el=$('cand'+idx[m]); if(el) el.classList.add('sel'); }
   }
 
-  // STEP 2 -> 3: 生成
   $('genBtn').addEventListener('click', function(){
     var idx = selectedIdx(); if(!idx.length) return;
     var b = $('genBtn'); b.disabled = true;
@@ -218,7 +149,6 @@ export const ADMIN_HTML = `<!doctype html>
     var link = j && j.commitUrl ? ('<a href="'+esc(safeUrl(j.commitUrl))+'" target="_blank" rel="noopener">コミットを見る</a>') : '';
     slot.innerHTML = '<div class="done">✓ 公開しました（main にコミット → 数分でサイトに反映されます） '+link+'</div>';
   }
-})();
-</script>
-</body>
-</html>`;
+`;
+
+export const AI_HTML = head('AI生成 — 読みもの 作成スタジオ') + header('ai') + BODY + tail(JS);

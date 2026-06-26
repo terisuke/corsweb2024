@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
-import { assertSlug } from './validate';
+import { assertSlug, safeImageName } from './validate';
 import type { Env } from './types';
 
 export function makeOctokit(env: Env): Octokit {
@@ -101,4 +101,34 @@ export async function commitArticle(
   });
   const data = res.data as { commit?: { html_url?: string } };
   return { committed: true, path, commitUrl: data.commit?.html_url ?? '' };
+}
+
+// 手動エディタからの画像を public/images/blog/uploads/ へコミットし、公開URLを返す。
+// content-bot はここ（画像）と記事 .md にしか書かない。
+export async function commitImage(
+  env: Env,
+  octokit: Octokit,
+  filename: string,
+  base64: string,
+  uploaderEmail: string,
+): Promise<{ url: string; path: string; commitUrl: string }> {
+  const name = safeImageName(filename); // 拡張子検証＋パストラバーサル防止
+  const content = base64.replace(/\s/g, '');
+  if (!content || !/^[A-Za-z0-9+/]+={0,2}$/.test(content)) {
+    throw new Error('画像データ（base64）が不正です');
+  }
+  const full = `${Date.now()}-${name}`;
+  const path = `public/images/blog/uploads/${full}`;
+  const author = uploaderEmail.split('@')[0];
+  console.log('yomimono image upload:', { path, uploaderEmail });
+  const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+    owner: env.GH_OWNER,
+    repo: env.GH_REPO,
+    path,
+    branch: env.PUBLISH_BRANCH,
+    message: `img(yomimono): ${full}（${author}）`,
+    content, // GitHub Contents API は base64 を期待。画像はクライアントが base64 化済み。
+  });
+  const data = res.data as { commit?: { html_url?: string } };
+  return { url: `/images/blog/uploads/${full}`, path, commitUrl: data.commit?.html_url ?? '' };
 }

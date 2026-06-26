@@ -29,6 +29,28 @@ export function sanitizeText(s: unknown, maxLen: number): string {
     .slice(0, maxLen);
 }
 
+export const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'] as const;
+
+// アップロード画像のファイル名を安全な basename に正規化（パストラバーサル/拡張子偽装を防ぐ）。
+// 戻り値は `<stem>.<ext>` のみ（スラッシュ・連続ドット無し）。svg等は拒否。
+export function safeImageName(filename: unknown): string {
+  const raw = String(filename ?? '')
+    .toLowerCase()
+    .replace(/[\x00-\x1f\x7f]/g, '');
+  const ext = (raw.split('.').pop() || '').replace(/[^a-z0-9]/g, '');
+  if (!(IMAGE_EXT as readonly string[]).includes(ext)) {
+    throw new Error('対応していない画像形式です（png/jpg/jpeg/gif/webp/avif）');
+  }
+  const stem =
+    raw
+      .replace(/\.[^.]+$/, '')
+      .replace(/[^a-z0-9_-]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'image';
+  return stem + '.' + ext;
+}
+
 export interface ArticleInput {
   slug?: string;
   title?: string;
