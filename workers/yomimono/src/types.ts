@@ -9,12 +9,11 @@ export interface Env {
   GH_INSTALLATION_ID: string;
   BLOG_DIR: string;
   PUBLISH_BRANCH: string;
-  ALLOWED_EMAIL_DOMAIN: string;
   STYLE_GUIDE_PATH: string;
-  BASE_PATH: string; // マウントプレフィックス（例 /brog）。cor-jp.com/brog* ルートで使用。空ならルート直下。
-  // Cloudflare Access（JWT検証用）。Accessアプリ作成後に設定。未設定なら全リクエスト拒否（fail closed）。
-  CF_ACCESS_TEAM_DOMAIN: string; // 例: cor.cloudflareaccess.com
-  CF_ACCESS_AUD: string; // Access アプリの Application Audience (AUD) タグ
+  BASE_PATH: string; // マウントプレフィックス（例 /blog-admin）。cor-jp.com/blog-admin* ルートで使用。空ならルート直下。
+  // ログイン（Worker内蔵セッション）。どちらか未設定なら全リクエスト拒否（fail closed）。secretで登録。
+  ACCESS_PASSWORD: string; // ログインの合言葉
+  SESSION_SECRET: string; // セッションCookieのHMAC署名鍵（ランダム32バイト推奨）
 }
 
 export interface TopicCandidate {

@@ -1,5 +1,10 @@
 import type { Env } from './types';
-import { verifyAccessEmail } from './auth';
+import {
+  verifySession,
+  checkPassword,
+  createSessionCookie,
+  clearSessionCookie,
+} from './session';
 import { collectTopics } from './collect';
 import { generateArticle, buildMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
@@ -8,6 +13,33 @@ import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
 import { HUB_HTML } from './ui-hub';
 import { AI_HTML } from './ui-ai';
 import { MANUAL_HTML } from './ui-manual';
+import { LOGIN_HTML } from './ui-login';
+
+// コミット attribution（Access廃止で個人メールが無いため固定名）。
+const EDITOR = 'yomimono';
+const MIN_PASSWORD_LEN = 16;
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+// ログイン失敗の簡易レート制限（IP単位・isolate内メモリ。ベストエフォート）。
+// 確実な対策は「高エントロピー合言葉」＋ Cloudflare WAF のレート制限ルール（README参照）。
+const LOGIN_WINDOW_MS = 5 * 60 * 1000;
+const LOGIN_MAX_FAILS = 8;
+const loginFails = new Map<string, { n: number; until: number }>();
+function isRateLimited(ip: string): boolean {
+  const e = loginFails.get(ip);
+  return !!e && e.until > Date.now() && e.n >= LOGIN_MAX_FAILS;
+}
+function recordLoginFailure(ip: string): void {
+  if (loginFails.size > 5000) loginFails.clear(); // 暴走防止（best-effort）
+  const now = Date.now();
+  const e = loginFails.get(ip);
+  if (!e || e.until < now) loginFails.set(ip, { n: 1, until: now + LOGIN_WINDOW_MS });
+  else {
+    e.n += 1;
+    e.until = now + LOGIN_WINDOW_MS;
+  }
+}
 
 // 管理画面は自己完結（外部リソース無し・同一オリジンfetchのみ）。
 // インライン style/script のみ許可し、外部読込・iframe埋め込み・データ送信先を遮断する。
@@ -55,8 +87,8 @@ function sanitizeTitles(input: unknown): string[] {
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
-    // マウントプレフィックス(/brog)を剥がして論理パスに正規化。
-    // cor-jp.com/brog* ルートでは /brog/api/x → /api/x、/brog → / に変換する。
+    // マウントプレフィックス(/blog-admin)を剥がして論理パスに正規化。
+    // cor-jp.com/blog-admin* ルートでは /blog-admin/api/x → /api/x、/blog-admin → / に変換する。
     // BASE_PATH 未設定（ルート直下=workers.dev）でもそのまま動く。
     const base = env.BASE_PATH || '';
     let path = url.pathname;
@@ -65,14 +97,58 @@ export default {
 
     if (path === '/health') return json({ ok: true });
 
-    // 認証: Cloudflare Access の JWT を暗号検証（ヘッダ盲信はしない）
-    const email = await verifyAccessEmail(req, env);
-    if (!email) {
-      return json({ error: '認証が必要です（Cloudflare Access / cor-jp.com のみ許可）' }, 401);
-    }
-
     try {
-      // 管理画面（凪沙さん用UI）。Access 認証済みのブラウザにHTMLを返す。
+      // --- 認証不要: ログイン画面 + ログイン/ログアウトAPI ---
+      if (req.method === 'GET' && path === '/login') {
+        return html(LOGIN_HTML, env);
+      }
+      if (req.method === 'POST' && path === '/api/login') {
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        if (!env.ACCESS_PASSWORD || !env.SESSION_SECRET) {
+          return json({ error: 'ログインが未設定です（管理者にお問い合わせください）' }, 503);
+        }
+        // 弱い合言葉を拒否（総当たり耐性。openssl rand -base64 24 等の高エントロピー必須）
+        if (env.ACCESS_PASSWORD.length < MIN_PASSWORD_LEN) {
+          return json({ error: 'ログイン設定が不十分です（合言葉が短すぎます。管理者にお問い合わせください）' }, 503);
+        }
+        // 簡易レート制限（IP単位・isolate内ベストエフォート）。本命は高エントロピー合言葉＋WAFルール。
+        const ip = req.headers.get('CF-Connecting-IP') || 'unknown';
+        if (isRateLimited(ip)) {
+          return json({ error: '試行回数が多すぎます。しばらく待ってから再試行してください' }, 429);
+        }
+        if (!(await checkPassword(env, body.password))) {
+          recordLoginFailure(ip);
+          await sleep(700); // 失敗時に遅延を入れ、総当たりの速度を落とす
+          return json({ error: '合言葉が違います' }, 401);
+        }
+        const cookie = await createSessionCookie(env);
+        return new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: { 'content-type': 'application/json; charset=utf-8', 'set-cookie': cookie },
+        });
+      }
+      if (req.method === 'POST' && path === '/api/logout') {
+        return new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'set-cookie': clearSessionCookie(env),
+          },
+        });
+      }
+
+      // --- ここから先はログインセッション必須 ---
+      const authed = await verifySession(req, env);
+      if (!authed) {
+        // ページは /login へリダイレクト、APIは401
+        if (req.method === 'GET') {
+          return new Response(null, { status: 302, headers: { location: base + '/login' } });
+        }
+        return json({ error: 'ログインが必要です' }, 401);
+      }
+
+      // 管理画面（凪沙さん用UI）。ログイン済みのブラウザにHTMLを返す。
       if (req.method === 'GET' && (path === '/' || path === '/index.html')) {
         return html(HUB_HTML, env); // ハブ（AI生成 / 手動作成）
       }
@@ -103,7 +179,7 @@ export default {
           return json({ error: '画像が大きすぎます（約5MBまで）' }, 413);
         }
         const octokit = makeOctokit(env);
-        const result = await commitImage(env, octokit, filename, dataBase64, email);
+        const result = await commitImage(env, octokit, filename, dataBase64, EDITOR);
         return json(result);
       }
 
@@ -172,14 +248,15 @@ export default {
           return json({ error: 'ガードレール違反のため公開を中止しました', violations }, 422);
         }
         const octokit = makeOctokit(env);
-        const result = await commitArticle(env, octokit, normalized.slug, markdown, email);
+        const result = await commitArticle(env, octokit, normalized.slug, markdown, EDITOR);
         return json(result);
       }
 
       return json({ error: 'Not Found' }, 404);
     } catch (e: unknown) {
       // 詳細はサーバー側ログのみ。クライアントには汎用メッセージ（内部情報の漏洩防止）。
-      console.error('yomimono error:', e);
+      // 生のエラーオブジェクトはログに出さない（ライブラリが鍵/JWTを埋め込む可能性を排除）。
+      console.error('yomimono error:', e instanceof Error ? e.message : String(e));
       return json({ error: '処理中にエラーが発生しました' }, 500);
     }
   },
