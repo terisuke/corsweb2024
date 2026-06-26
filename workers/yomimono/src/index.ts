@@ -3,17 +3,20 @@ import { verifyAccessEmail } from './auth';
 import { collectTopics } from './collect';
 import { generateArticle, buildMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
-import { makeOctokit, getFileContent, commitArticle, listArticleSlugs } from './github';
+import { makeOctokit, getFileContent, commitArticle, commitImage, listArticleSlugs } from './github';
 import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
-import { ADMIN_HTML } from './ui';
+import { HUB_HTML } from './ui-hub';
+import { AI_HTML } from './ui-ai';
+import { MANUAL_HTML } from './ui-manual';
 
 // 管理画面は自己完結（外部リソース無し・同一オリジンfetchのみ）。
 // インライン style/script のみ許可し、外部読込・iframe埋め込み・データ送信先を遮断する。
 const CSP =
   "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; " +
   "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
-const html = (body: string, status = 200): Response =>
-  new Response(body, {
+// __BASE__ プレースホルダを実際のマウントパス(env.BASE_PATH)へ置換して配信。
+const html = (body: string, env: Env, status = 200): Response =>
+  new Response(body.split('__BASE__').join(env.BASE_PATH || ''), {
     status,
     headers: {
       'content-type': 'text/html; charset=utf-8',
@@ -67,7 +70,13 @@ export default {
     try {
       // 管理画面（凪沙さん用UI）。Access 認証済みのブラウザにHTMLを返す。
       if (req.method === 'GET' && (path === '/' || path === '/index.html')) {
-        return html(ADMIN_HTML);
+        return html(HUB_HTML, env); // ハブ（AI生成 / 手動作成）
+      }
+      if (req.method === 'GET' && path === '/ai') {
+        return html(AI_HTML, env);
+      }
+      if (req.method === 'GET' && path === '/manual') {
+        return html(MANUAL_HTML, env);
       }
 
       // 既存記事スラッグ一覧（重複テーマ回避用）
@@ -75,6 +84,23 @@ export default {
         const octokit = makeOctokit(env);
         const slugs = await listArticleSlugs(env, octokit);
         return json({ slugs });
+      }
+
+      // 画像アップロード（手動エディタ用）。public/images/blog/uploads/ にコミットしURLを返す。
+      if (req.method === 'POST' && path === '/api/upload-image') {
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const filename = typeof body.filename === 'string' ? body.filename : '';
+        const dataBase64 = typeof body.dataBase64 === 'string' ? body.dataBase64 : '';
+        if (!filename || !dataBase64) {
+          return json({ error: 'filename と dataBase64 は必須です' }, 400);
+        }
+        if (dataBase64.length > 7_000_000) {
+          return json({ error: '画像が大きすぎます（5MBまで）' }, 413);
+        }
+        const octokit = makeOctokit(env);
+        const result = await commitImage(env, octokit, filename, dataBase64, email);
+        return json(result);
       }
 
       // ① 情報収集

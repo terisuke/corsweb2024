@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { assertSlug, normalizeArticle, normalizeCategory, sanitizeText, SLUG_RE } from '../validate';
+import {
+  assertSlug,
+  normalizeArticle,
+  normalizeCategory,
+  safeImageName,
+  sanitizeText,
+  SLUG_RE,
+} from '../validate';
 
 describe('assertSlug — パストラバーサル防止（CRITICAL修正の要）', () => {
   // バグ（slug未検証）が存在すれば、これらは throw せず素通りしてしまう。
@@ -102,6 +109,27 @@ describe('normalizeArticle — publish/validate 共通の検証・正規化', ()
     const r = normalizeArticle({ ...base, title: '```' });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.status).toBe(400);
+  });
+});
+
+describe('safeImageName — 画像名のパストラバーサル/拡張子偽装防止', () => {
+  it('パストラバーサルを安全名に潰す（スラッシュ・ドット除去）', () => {
+    const n = safeImageName('../../../etc/passwd.png');
+    expect(n).not.toMatch(/[/\\]/);
+    expect(n).not.toContain('..');
+    expect(n.endsWith('.png')).toBe(true);
+  });
+  it('スペース・大文字を正規化する', () => {
+    expect(safeImageName('My Photo.PNG')).toBe('my-photo.png');
+  });
+  it.each(['photo.svg', 'evil.html', 'noext', 'script.js', ''])(
+    '非対応拡張子(%s)は拒否',
+    (name) => {
+      expect(() => safeImageName(name)).toThrow();
+    },
+  );
+  it.each(['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'])('対応拡張子(%s)を通す', (ext) => {
+    expect(safeImageName('pic.' + ext)).toBe('pic.' + ext);
   });
 });
 
