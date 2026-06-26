@@ -108,6 +108,7 @@ const JS = `
     if(!file || !/^image\\//.test(file.type||'')){ $('m_imgMsg').textContent='画像ファイルのみ対応です'; return; }
     $('m_imgMsg').innerHTML='<span class="spin" style="border-color:#1b2c40;border-top-color:transparent"></span>アップロード中…';
     var reader=new FileReader();
+    reader.onerror=function(){ $('m_imgMsg').innerHTML='<span style="color:#dc2626">画像の読み込みに失敗しました</span>'; };
     reader.onload=function(){
       var dataUrl=String(reader.result||'');
       var base64=dataUrl.split(',')[1]||'';
@@ -159,6 +160,7 @@ const JS = `
       var link = j && j.commitUrl ? ('<a href="'+esc(safeUrl(j.commitUrl))+'" target="_blank" rel="noopener">コミットを見る</a>') : '';
       $('m_result').innerHTML='<div class="done">✓ 公開しました（main にコミット → 数分でサイトに反映されます） '+link+'</div>';
       $('m_msg').textContent='';
+      btn.disabled=false; btn.innerHTML='公開する'; // 成功後もボタンを復帰（別記事を続けて書けるように）
     }).catch(function(e){ $('m_msg').innerHTML='<span style="color:#dc2626">'+esc(e.message)+'</span>'; btn.disabled=false; btn.innerHTML='公開する'; });
   });
 `;
