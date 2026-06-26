@@ -14,25 +14,29 @@ interface CallOptions {
 }
 
 // web_search はサーバーサイドツール。stop_reason: "pause_turn" が出たら継続再送する。
-// （scripts/generate-blog-draft.mjs と同じ手順を踏襲）
+// 重要: messages.stream() で逐次受信する。web検索は1回の応答が長くなりがちで、
+// Cloudflare Workers のサブリクエスト上限(~100s)を超えると 524 になるため、
+// ストリーミングで接続を保ち続ける。max_uses で検索回数も抑える。
 export async function callClaude(env: Env, opts: CallOptions): Promise<string> {
   const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   const tools: Anthropic.ToolUnion[] | undefined = opts.useWebSearch
-    ? [{ type: 'web_search_20260209', name: 'web_search' }]
+    ? [{ type: 'web_search_20260209', name: 'web_search', max_uses: 5 }]
     : undefined;
 
   const messages: Anthropic.MessageParam[] = [{ role: 'user', content: opts.userText }];
 
   let response: Anthropic.Message | undefined;
   for (let i = 0; i < MAX_PAUSE_TURNS; i++) {
-    response = await client.messages.create({
-      model: opts.model ?? MODEL_HEAVY,
-      max_tokens: opts.maxTokens ?? 16000,
-      thinking: { type: 'adaptive' },
-      system: opts.system,
-      tools,
-      messages,
-    });
+    response = await client.messages
+      .stream({
+        model: opts.model ?? MODEL_HEAVY,
+        max_tokens: opts.maxTokens ?? 16000,
+        thinking: { type: 'adaptive' },
+        system: opts.system,
+        tools,
+        messages,
+      })
+      .finalMessage();
     if (response.stop_reason === 'pause_turn') {
       messages.push({ role: 'assistant', content: response.content });
       continue;

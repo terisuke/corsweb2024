@@ -42,7 +42,7 @@ const JS = `
   $('collectBtn').addEventListener('click', function(){
     var b = $('collectBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span>収集中…（30〜60秒）';
     $('collectErr').innerHTML = '';
-    api('/api/collect', { recentTitles: recentSlugs }).then(function(j){
+    apiLong('/api/collect', { recentTitles: recentSlugs }).then(function(j){
       renderCands(j.candidates || []);
       show('s2'); $('s2').scrollIntoView({behavior:'smooth'});
     }).catch(function(e){
@@ -92,7 +92,7 @@ const JS = `
       b.innerHTML = '<span class="spin"></span>生成中 ' + (i+1) + '/' + idx.length + '…';
       var slot = document.createElement('div'); slot.className='card'; slot.innerHTML='<div class="meta"><span class="spin" style="border-color:#1b2c40;border-top-color:transparent"></span>「'+esc(theme.title)+'」を生成中…</div>';
       $('arts').appendChild(slot);
-      api('/api/generate', { theme: theme, recentTitles: recentSlugs }).then(function(j){
+      apiLong('/api/generate', { theme: theme, recentTitles: recentSlugs }).then(function(j){
         renderArticle(slot, j.article, j.violations||[]);
       }).catch(function(e){
         slot.innerHTML = '<div class="err">生成に失敗しました（'+esc(theme.title)+'）: '+esc(e.message)+'</div>';
