@@ -5,9 +5,16 @@ import MvvSection from '../components/about/MvvSection.astro';
 import FounderNote from '../components/about/FounderNote.astro';
 import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
-import { getJaTranslations } from '../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
 
-const t = getJaTranslations();
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+// /works は ja のみ存在。ja は実績ページへ、非ja は 404 回避のため同言語の相談ページへ誘導する。
+const nextStepHref =
+  currentLocale === 'ja'
+    ? getLocalizedUrl('/works', currentLocale)
+    : getLocalizedUrl('/contact', currentLocale);
 ---
 
 <Layout
@@ -20,7 +27,7 @@ const t = getJaTranslations();
   <FounderNote />
 
   <NextStep
-    heading="Cor.のことが少し分かったら、実際の仕事を見てみませんか？"
-    ctas={[{ label: '実績・事例を見る', href: '/works', primary: true }]}
+    heading={t.nextStep.about.heading}
+    ctas={[{ label: t.nextStep.about.ctaLabel, href: nextStepHref, primary: true }]}
   />
 </Layout>

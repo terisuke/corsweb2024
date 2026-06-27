@@ -5,10 +5,16 @@ import ContactInfo from '../components/contact/ContactInfo.astro';
 import Heading from '../components/contact/Heading.astro';
 import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
-import { getCurrentLocale, getTranslations } from '../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+
+// /works は ja のみ存在。ja は実績ページへ、非ja は 404 回避のため同言語の相談ページへ誘導する。
+const nextStepHref =
+  currentLocale === 'ja'
+    ? getLocalizedUrl('/works', currentLocale)
+    : getLocalizedUrl('/contact', currentLocale);
 ---
 
 <script src="https://www.google.com/recaptcha/api.js" async defer is:inline></script>
@@ -22,11 +28,9 @@ const t = getTranslations(currentLocale);
   <Calendar />
   <ContactForm />
 
-  {currentLocale === 'ja' && (
-    <NextStep
-      heading="お問い合わせの前に"
-      lead="Cor.の実績も、ぜひご覧ください。"
-      ctas={[{ label: '実績・事例を見る', href: '/works', primary: true }]}
-    />
-  )}
+  <NextStep
+    heading={t.nextStep.contact.heading}
+    lead={t.nextStep.contact.lead}
+    ctas={[{ label: t.nextStep.contact.ctaLabel, href: nextStepHref, primary: true }]}
+  />
 </Layout>

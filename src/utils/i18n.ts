@@ -895,6 +895,21 @@ const translations = {
       privacyDescription: "個人情報の取り扱いについては、",
       privacyLinkText: "プライバシーポリシー",
       privacySuffix: "をご覧ください。"
+    },
+    nextStep: {
+      about: {
+        heading: "Cor.のことが少し分かったら、実際の仕事を見てみませんか？",
+        ctaLabel: "実績・事例を見る"
+      },
+      contact: {
+        heading: "お問い合わせの前に",
+        lead: "Cor.の実績も、ぜひご覧ください。",
+        ctaLabel: "実績・事例を見る"
+      },
+      security: {
+        heading: "安心して任せられそうと感じたら、まずは話してみませんか？",
+        ctaLabel: "無料で相談する"
+      }
     }
   },
   en: {
@@ -1790,6 +1805,21 @@ const translations = {
       privacyDescription: "For how we handle personal information, please see our ",
       privacyLinkText: "Privacy Policy",
       privacySuffix: "."
+    },
+    nextStep: {
+      about: {
+        heading: "Now that you know a little about Cor., shall we talk about your project?",
+        ctaLabel: "Talk to us"
+      },
+      contact: {
+        heading: "Before you reach out",
+        lead: "Feel free to tell us what you have in mind — we're happy to help.",
+        ctaLabel: "Get in touch"
+      },
+      security: {
+        heading: "If it feels like something you can trust us with, why not start with a conversation?",
+        ctaLabel: "Get a free consultation"
+      }
     }
   },
   zh: {
@@ -2685,6 +2715,21 @@ const translations = {
       privacyDescription: "关于个人信息的处理，请参阅我们的",
       privacyLinkText: "隐私政策",
       privacySuffix: "。"
+    },
+    nextStep: {
+      about: {
+        heading: "对 Cor. 有了一些了解之后，要不要聊聊您的项目？",
+        ctaLabel: "联系我们"
+      },
+      contact: {
+        heading: "在联系我们之前",
+        lead: "欢迎告诉我们您的想法，我们很乐意提供帮助。",
+        ctaLabel: "与我们联系"
+      },
+      security: {
+        heading: "如果觉得可以放心交给我们，不妨先聊一聊？",
+        ctaLabel: "免费咨询"
+      }
     }
   },
   ko: {
@@ -3580,6 +3625,21 @@ const translations = {
       privacyDescription: "개인정보의 취급에 대해서는 ",
       privacyLinkText: "개인정보처리방침",
       privacySuffix: "을 참조해 주세요."
+    },
+    nextStep: {
+      about: {
+        heading: "Cor.에 대해 조금 아셨다면, 프로젝트에 대해 이야기 나눠 보지 않으시겠어요?",
+        ctaLabel: "문의하기"
+      },
+      contact: {
+        heading: "문의하기 전에",
+        lead: "생각하고 계신 내용을 편하게 알려 주세요. 기꺼이 도와드리겠습니다.",
+        ctaLabel: "연락하기"
+      },
+      security: {
+        heading: "안심하고 맡길 수 있을 것 같다면, 먼저 이야기부터 나눠 보시겠어요?",
+        ctaLabel: "무료로 상담하기"
+      }
     }
   },
   es: {
@@ -4475,6 +4535,21 @@ const translations = {
       privacyDescription: "Para saber cómo tratamos la información personal, consulta nuestra ",
       privacyLinkText: "Política de privacidad",
       privacySuffix: "."
+    },
+    nextStep: {
+      about: {
+        heading: "Ahora que conoces un poco a Cor., ¿hablamos de tu proyecto?",
+        ctaLabel: "Contáctanos"
+      },
+      contact: {
+        heading: "Antes de escribirnos",
+        lead: "Cuéntanos lo que tienes en mente; estaremos encantados de ayudarte.",
+        ctaLabel: "Ponte en contacto"
+      },
+      security: {
+        heading: "Si sientes que puedes confiarnos tu proyecto, ¿por qué no empezamos con una conversación?",
+        ctaLabel: "Solicita una consulta gratuita"
+      }
     }
   }
 } as const;

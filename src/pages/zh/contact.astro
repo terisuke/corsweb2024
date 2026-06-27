@@ -3,8 +3,9 @@ import Calendar from '../../components/contact/Calendar.astro';
 import ContactForm from '../../components/contact/ContactForm.astro';
 import ContactInfo from '../../components/contact/ContactInfo.astro';
 import Heading from '../../components/contact/Heading.astro';
+import NextStep from '../../components/common/NextStep.astro';
 import Layout from '../../layouts/Layout.astro';
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -20,4 +21,10 @@ const t = getTranslations(currentLocale);
   <ContactInfo />
   <Calendar />
   <ContactForm />
+
+  <NextStep
+    heading={t.nextStep.contact.heading}
+    lead={t.nextStep.contact.lead}
+    ctas={[{ label: t.nextStep.contact.ctaLabel, href: getLocalizedUrl('/contact', currentLocale), primary: true }]}
+  />
 </Layout>
