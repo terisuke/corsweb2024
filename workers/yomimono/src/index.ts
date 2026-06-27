@@ -14,6 +14,7 @@ import { HUB_HTML } from './ui-hub';
 import { AI_HTML } from './ui-ai';
 import { MANUAL_HTML } from './ui-manual';
 import { LOGIN_HTML } from './ui-login';
+import { STYLE_GUIDE_FALLBACK } from './style-guide';
 
 // コミット attribution（Access廃止で個人メールが無いため固定名）。
 const EDITOR = 'yomimono';
@@ -269,7 +270,14 @@ export default {
         return streamJson(
           (async () => {
             const octokit = makeOctokit(env);
-            const styleGuide = await getFileContent(env, octokit, env.STYLE_GUIDE_PATH);
+            // 文体ガイドは PUBLISH_BRANCH から取得。無い/失敗時は同梱フォールバックを使う
+            // （main に docs/blog-style-guide.md が未マージでも生成できるように）。
+            let styleGuide: string;
+            try {
+              styleGuide = await getFileContent(env, octokit, env.STYLE_GUIDE_PATH);
+            } catch {
+              styleGuide = STYLE_GUIDE_FALLBACK;
+            }
             const { article, markdown, violations } = await generateArticle(
               env,
               { title, summary: sanitizeText(theme.summary, 500), sources, freshnessHours: Number(theme.freshnessHours) || 0 },
