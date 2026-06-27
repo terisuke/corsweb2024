@@ -8,8 +8,12 @@ Allow: /
 Allow: /blog/
 Allow: /en/blog/
 
-# Disallow unnecessary paths
+# Disallow admin / API / preview surfaces
+Disallow: /admin/
+Disallow: /blog-admin/
+Disallow: /dashboard/
 Disallow: /api/
+Disallow: /preview/
 Disallow: /_astro/
 Disallow: /remark-link-card-plus/
 
