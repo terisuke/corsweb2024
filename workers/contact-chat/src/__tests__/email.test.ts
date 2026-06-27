@@ -75,6 +75,12 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
     expect(payload.to).toBe('info@cor-jp.com');
     expect(payload.from).toBe('noreply@cor-jp.com');
     expect(payload.text).toContain('taro@example.com');
+    // reply_to に問い合わせ者のメールが入る（担当者の返信が顧客へ届く）
+    expect(payload.reply_to).toBe('taro@example.com');
+    // セキュリティ: html は絶対に送らない（staff webmail の stored-XSS 防止）。text のみ。
+    expect(payload.html).toBeUndefined();
+    expect('html' in payload).toBe(false);
+    expect(typeof payload.text).toBe('string');
     // Authorization に鍵が載るが、レスポンス/ログには出さない設計（ここでは送信ヘッダのみ確認）
     expect((init.headers as Record<string, string>).authorization).toContain('re_test');
   });

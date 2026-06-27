@@ -68,6 +68,20 @@ npm run test        # vitest run
 npx wrangler deploy --dry-run
 ```
 
+## 本番デプロイ チェックリスト（必読）
+
+- [ ] **`TURNSTILE_SECRET` を必ず設定する。** Turnstile が実質的な bot 対策。同一オリジンチェックは
+      `Origin` ヘッダ依存で、非ブラウザ（curl/スクリプト）は `Origin` を付けないため通過しうる＝bot 対策にはならない。本番では Turnstile を **必須** とみなすこと。
+- [ ] **Cloudflare WAF のレート制限ルールを `cor-jp.com/api/contact/*` に設定する（権威ある制限）。**
+      コード内の IP レート制限は **ベストエフォート（参考値）に過ぎない**。Worker は isolate ごとに
+      独立したメモリを持つため、分散クライアントは（isolate 数 N に対し）実質 N 倍まで叩ける。
+      確実な上限は WAF 側のレート制限ルールで担保すること。
+- [ ] `ANTHROPIC_API_KEY` / `RESEND_API_KEY` を設定済み（未設定だと該当エンドポイントは 503）。
+- [ ] `CONTACT_TO_EMAIL` の宛先、`CONTACT_FROM_EMAIL` のドメインが Resend で検証済み。
+- [ ] **フロントエンド ウィジェットは chat の `reply` を必ず PLAIN TEXT（`textContent`）で描画する。**
+      `reply` は攻撃者が誘導可能な LLM 出力であり、`innerHTML` や「markdown→HTML」で描画すると
+      XSS の発火点になる。HTML として解釈させないこと（リンク化等も信用しない）。
+
 ## セキュリティ設計
 
 - **fail closed**: `ANTHROPIC_API_KEY` / `RESEND_API_KEY` 未設定時はエラー応答（黙って成功にしない）。Turnstileのみ未設定時 fail open（任意機能のため）。

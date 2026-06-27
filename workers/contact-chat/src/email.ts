@@ -2,8 +2,9 @@ import type { Env, NormalizedInquiry } from './types';
 
 // --- メール送信プロバイダ抽象化 ---
 // 既定実装は Resend API。将来 SendGrid / SES 等を足すときは EmailProvider を実装するだけ。
+// replyTo: 問い合わせ者のメール（担当者が「返信」で直接顧客に届くようにする）。
 export interface EmailProvider {
-  send(to: string, from: string, subject: string, text: string): Promise<void>;
+  send(to: string, from: string, subject: string, text: string, replyTo?: string): Promise<void>;
 }
 
 const RESEND_URL = 'https://api.resend.com/emails';
@@ -11,14 +12,26 @@ const RESEND_URL = 'https://api.resend.com/emails';
 class ResendProvider implements EmailProvider {
   constructor(private readonly apiKey: string) {}
 
-  async send(to: string, from: string, subject: string, text: string): Promise<void> {
+  async send(
+    to: string,
+    from: string,
+    subject: string,
+    text: string,
+    replyTo?: string,
+  ): Promise<void> {
+    // 重要(セキュリティ): 本文は必ず `text` のみで送る。`html` は使わない。
+    // reply は LLM 出力ではないが（ここは /submit のPII本文）、staff の webmail での
+    // stored-XSS を構造的に防ぐため、HTMLレンダリングされる経路を作らない方針を徹底する。
+    const payload: Record<string, unknown> = { from, to, subject, text };
+    // reply_to は isValidEmail 済み（単一アドレス・CRLFなし）なのでヘッダ注入の心配なし。
+    if (replyTo) payload.reply_to = replyTo;
     const res = await fetch(RESEND_URL, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${this.apiKey}`,
         'content-type': 'application/json',
       },
-      body: JSON.stringify({ from, to, subject, text }),
+      body: JSON.stringify(payload),
     });
     if (!res.ok) {
       // 本文（鍵を含みうる）はログに出さず、ステータスのみ。
@@ -76,8 +89,9 @@ export function buildBody(inquiry: NormalizedInquiry): string {
   return lines.join('\n');
 }
 
-// 問い合わせメールを社内インボックスへ送る。reply-to に問い合わせ者のメールを入れたいが、
-// Resend の text 送信に留め、差出人は CONTACT_FROM_EMAIL 固定（なりすまし防止）。
+// 問い合わせメールを社内インボックスへ送る。
+// 差出人は CONTACT_FROM_EMAIL 固定（なりすまし防止）だが、reply_to に問い合わせ者の
+// メールを入れることで、担当者が「返信」すると顧客へ直接届く（contact flow を壊さない）。
 export async function sendInquiryEmail(
   env: Env,
   provider: EmailProvider,
@@ -88,5 +102,6 @@ export async function sendInquiryEmail(
     env.CONTACT_FROM_EMAIL,
     buildSubject(inquiry),
     buildBody(inquiry),
+    inquiry.email, // reply_to: isValidEmail 済みの単一アドレス
   );
 }

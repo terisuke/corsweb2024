@@ -39,7 +39,9 @@ async function readJsonBody(req: Request): Promise<Record<string, unknown> | nul
   } catch {
     return null;
   }
-  if (text.length > MAX_BODY_BYTES) return null;
+  // 読み取り後のサイズ確認はバイト数で行う（Content-Length はバイト、text.length は
+  // UTF-16コード単位。CJKでは1文字3バイト等になり、文字数だと上限がザルになる）。
+  if (new TextEncoder().encode(text).length > MAX_BODY_BYTES) return null;
   try {
     const data = JSON.parse(text);
     return data && typeof data === 'object' ? (data as Record<string, unknown>) : null;
@@ -51,26 +53,69 @@ async function readJsonBody(req: Request): Promise<Record<string, unknown> | nul
 // LLM の出力（JSON文字列のはず）を厳格にパースし、ChatResult へ正規化する。
 // 形式が崩れていても安全側に倒す（reply はテキストとして扱い、分類は genuine 既定）。
 const VALID_CLASS: readonly Classification[] = ['genuine', 'sales', 'spam'];
-function parseChatResult(raw: string): ChatResult {
-  let reply = raw.trim();
+
+// 文字列リテラルを尊重しながら、最初のトップレベル `{...}` を抜き出す。
+// 散文に包まれた JSON（"Sure!\n{...}"）や、reply 値に ``` を含むケースでも、
+// JSON 部分だけを正しく取り出せる（フェンス正規表現では取りこぼす）。
+export function extractJsonObject(s: string): string | null {
+  const start = s.indexOf('{');
+  if (start < 0) return null;
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  for (let i = start; i < s.length; i++) {
+    const ch = s[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === '\\') esc = true;
+      else if (ch === '"') inStr = false;
+    } else if (ch === '"') inStr = true;
+    else if (ch === '{') depth++;
+    else if (ch === '}' && --depth === 0) return s.slice(start, i + 1);
+  }
+  return null;
+}
+
+// LLM の出力（JSON文字列のはず）を厳格にパースし、ChatResult へ正規化する。
+// 形式が崩れていても安全側に倒す（生のモデル出力を reply として漏らさない）。
+// 試行順: (a) フェンスブロック → (b) trim 全体 → (c) extractJsonObject。
+// 全て失敗したときのみ素のテキストへフォールバックする。
+export function parseChatResult(raw: string): ChatResult {
+  const trimmed = raw.trim();
   let classification: Classification = 'genuine';
   let readyForContact = false;
 
-  // ```json フェンスが付いていた場合に備えて剥がす。
-  const fenced = reply.match(/```(?:json)?\s*([\s\S]*?)```/);
-  const candidate = fenced ? fenced[1].trim() : reply;
-  try {
-    const obj = JSON.parse(candidate) as Partial<ChatResult>;
-    if (obj && typeof obj === 'object') {
-      if (typeof obj.reply === 'string') reply = obj.reply.trim();
-      if (typeof obj.classification === 'string' && VALID_CLASS.includes(obj.classification)) {
-        classification = obj.classification;
+  // 候補を優先順で構築（最初に parse 成功したものを採用）。
+  const candidates: string[] = [];
+  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fenced) candidates.push(fenced[1].trim());
+  candidates.push(trimmed);
+  const extracted = extractJsonObject(trimmed);
+  if (extracted) candidates.push(extracted);
+
+  let reply = '';
+  let parsedOk = false;
+  for (const candidate of candidates) {
+    try {
+      const obj = JSON.parse(candidate);
+      // 配列/数値/null も JSON.parse は通すため、オブジェクトのみ採用する。
+      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) continue;
+      const o = obj as Partial<ChatResult>;
+      if (typeof o.reply === 'string') reply = o.reply.trim();
+      if (typeof o.classification === 'string' && VALID_CLASS.includes(o.classification)) {
+        classification = o.classification;
       }
-      if (typeof obj.readyForContact === 'boolean') readyForContact = obj.readyForContact;
+      if (typeof o.readyForContact === 'boolean') readyForContact = o.readyForContact;
+      parsedOk = true;
+      break;
+    } catch {
+      // 次の候補へ。
     }
-  } catch {
-    // JSON でなければ、モデルの素の文章を reply として返す（会話を止めない）。
   }
+
+  // どの候補も object として parse できなければ、素の文章を reply とする（会話を止めない）。
+  // ただし生の JSON ブロブをそのまま返さないよう、parse 成功時は reply のみを使う。
+  if (!parsedOk) reply = trimmed;
   if (!reply) reply = '申し訳ありません、もう一度お聞かせいただけますか？';
   return { reply, classification, readyForContact };
 }
