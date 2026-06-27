@@ -1,52 +1,124 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCurrentLocale, getTranslations } from '../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+const p = t.privacy;
+const contactUrl = getLocalizedUrl('/contact', currentLocale);
+const securityUrl = getLocalizedUrl('/security', currentLocale);
 ---
 
 <Layout
-  description={t.privacy.intro}
+  description={t.meta.privacy.description}
   title={t.meta.privacy.title}
 >
   <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <div class="sm:pb:20 flex flex-col gap-4 pb-16 text-center">
-      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{t.privacy.title}</h1>
-      <p class="text-base">{t.privacy.lastUpdate}</p>
+    <div class="flex flex-col gap-4 pb-16 text-center sm:pb-20">
+      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{p.title}</h1>
+      <p class="text-base text-primary-950/70 dark:text-primary-200/70">{p.lastUpdate}</p>
     </div>
-    <div>
-      <p class="mb-4">
-        {t.privacy.intro}
-      </p>
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.privacy.section1.title}</h2>
-      <p class="mb-6">
-        {t.privacy.section1.description}
-      </p>
-      <ul class="list-inside list-disc space-y-4">
+
+    <div class="text-base leading-[1.8]">
+      {
+        p.note && (
+          <p class="mb-6 rounded-md border border-primary-900/15 bg-primary-900/[0.03] px-4 py-3 text-sm dark:border-primary-300/15 dark:bg-primary-300/[0.04]">
+            {p.note}
+          </p>
+        )
+      }
+
+      <p class="mb-4">{p.intro}</p>
+
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.businessTitle}</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full max-w-full border-collapse text-left text-sm sm:text-base">
+          <tbody>
+            {
+              Array.isArray(p.businessTable) && p.businessTable.map((row) => (
+                <tr class="border-b border-primary-900/10 align-top dark:border-primary-300/10">
+                  <th class="w-1/3 py-3 pr-4 font-medium">{row.label}</th>
+                  <td class="py-3">{row.value}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.purposeTitle}</h2>
+      <p class="mb-6">{p.purposeLead}</p>
+      <div class="flex flex-col gap-8">
         {
-          t.privacy.section1.items.map((item) => (
-            <li>{item}</li>
+          Array.isArray(p.purposeGroups) && p.purposeGroups.map((group) => (
+            <div>
+              <h3 class="mb-3 text-lg font-medium">{group.title}</h3>
+              <dl class="flex flex-col gap-2">
+                {group.lines.map((line) => (
+                  <div>
+                    <dt class="font-medium">{line.label}</dt>
+                    <dd>{line.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           ))
         }
-      </ul>
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.privacy.section2.title}</h2>
-      <p class="mb-4">{t.privacy.section2.description}</p>
-      <ul class="list-inside list-disc space-y-4">
-        {
-          t.privacy.section2.items.map((item) => (
-            <li>{item}</li>
-          ))
-        }
-      </ul>
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.privacy.contact.title}</h2>
-      <p class="mb-4">
-        {t.privacy.contact.description}<br />
-        <span class="font-medium">
-          <a href="/contact">{t.privacy.contact.linkText}</a>
-        </span>
-        {t.privacy.contact.suffix}
+      </div>
+      <p class="mt-6 text-sm text-primary-950/70 dark:text-primary-200/70">{p.purposeNote}</p>
+
+      {
+        Array.isArray(p.sections) && p.sections.map((section) => (
+          <section>
+            <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{section.title}</h2>
+            {Array.isArray(section.body) && section.body.map((para) => <p class="mb-4">{para}</p>)}
+            {Array.isArray(section.list) && (
+              <ul class="mb-4 list-inside list-disc space-y-3">
+                {section.list.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            )}
+            {Array.isArray(section.bodyAfter) && section.bodyAfter.map((para) => <p class="mb-4">{para}</p>)}
+          </section>
+        ))
+      }
+
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.inquiryTitle}</h2>
+      <p class="mb-6">{p.inquiryLead}</p>
+      <div class="overflow-x-auto">
+        <table class="w-full max-w-full border-collapse text-left text-sm sm:text-base">
+          <tbody>
+            {
+              Array.isArray(p.inquiryTable) && p.inquiryTable.map((row, index) => (
+                <tr class="border-b border-primary-900/10 align-top dark:border-primary-300/10">
+                  <th class="w-1/3 py-3 pr-4 font-medium">{row.label}</th>
+                  <td class="py-3">
+                    {index === p.inquiryTable.length - 1 ? (
+                      <a class="font-medium underline" href={contactUrl}>
+                        {row.value}
+                      </a>
+                    ) : (
+                      row.value
+                    )}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.revisionTitle}</h2>
+      {Array.isArray(p.revisionBody) && p.revisionBody.map((para) => <p class="mb-4">{para}</p>)}
+
+      <p class="mb-4 mt-8">
+        {p.securityLinkPrefix}<a class="font-medium underline" href={securityUrl}>{p.securityLinkText}</a>{p.securityLinkSuffix}
       </p>
+
+      <hr class="my-10 border-primary-900/15 dark:border-primary-300/15" />
+      <p class="text-sm text-primary-950/70 dark:text-primary-200/70">{p.footer}</p>
+      <p class="mt-2 text-sm text-primary-950/70 dark:text-primary-200/70">{p.footerNote}</p>
     </div>
   </div>
 </Layout>
