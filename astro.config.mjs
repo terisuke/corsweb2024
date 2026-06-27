@@ -76,10 +76,16 @@ export default defineConfig({
         'https://cor-jp.com/blog/category/lab',
       ],
       filter: (page) => {
-        // Exclude API routes and unnecessary pages
-        if (page.includes('/api/') || 
-            page.includes('/_astro/') || 
+        // Exclude API routes and build assets.
+        if (page.includes('/api/') ||
+            page.includes('/_astro/') ||
             page.includes('/remark-link-card-plus/')) {
+          return false;
+        }
+        // Exclude non-indexable utility / test / payment-callback pages
+        // (slug must be the final path segment, optionally locale-prefixed, so
+        //  real blog posts like /blog/test-blog-foo are NOT excluded).
+        if (/\/(styleguide|test-blog|tip-success|tip-cancelled)\/?$/.test(page)) {
           return false;
         }
         return true;
