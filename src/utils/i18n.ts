@@ -1885,7 +1885,7 @@ const translations = {
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
-      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." },
+      privacy: { title: "Privacy policy · Cor.inc", description: "Cor.inc's privacy policy: the personal information we collect and our purposes of use, provision to third parties and outsourcing, overseas transfers, security control measures, requests for disclosure, and our contact point for inquiries." },
       security: { title: "Security | Cor.inc", description: "Cor. Inc.'s information security: our ISMS roadmap, and a local-first, sensitivity-tiered AI development environment." }
     },
     privacy: {
@@ -2912,7 +2912,7 @@ const translations = {
       contact: { title: "联系我们 · Cor.inc", description: "联系我们的团队，了解更多我们如何帮助您。" },
       products: { title: "产品&洞察 · Cor.inc", description: "探索我们的产品和洞察页面，展示我们的创新IT解决方案和媒体推广。此页面提供有关我们产品组合、开发服务和战略洞察的详细信息。发现我们的尖端技术解决方案，了解我们的创新方法，并了解我们如何帮助改变您的数字形象。适合寻求综合IT服务和产品解决方案的企业。" },
       "404": { title: "未找到 · Cor.inc", description: "页面未找到。请检查地址栏中的URL并重试。" },
-      privacy: { title: "隐私政策 · Cor.inc", description: "我们的隐私政策将帮助您了解收集了哪些信息以及如何使用。" },
+      privacy: { title: "隐私政策 · Cor.inc", description: "Cor.的隐私政策（个人信息保护方针）：关于我们收集的个人信息与使用目的、向第三方提供与委托、跨境移转、安全管理措施、披露等请求，以及咨询窗口。" },
       security: { title: "安全 | Cor.inc", description: "关于 Cor. 股份公司的信息安全、面向 ISMS 认证的体制建设，以及基于本地优先与机密度分级的 AI 开发环境。" }
     },
     privacy: {
@@ -3939,7 +3939,7 @@ const translations = {
       contact: { title: "문의 · Cor.inc", description: "우리 팀에 연락하여 우리가 어떻게 도울 수 있는지 더 알아보세요." },
       products: { title: "제품&인사이트 · Cor.inc", description: "우리의 혁신적인 IT 솔루션과 미디어 확산을 보여주는 제품 및 인사이트 페이지를 탐색하세요. 이 페이지는 우리의 제품 포트폴리오, 개발 서비스 및 전략적 인사이트에 대한 자세한 정보를 제공합니다. 최첨단 기술 솔루션을 발견하고, 우리의 혁신적인 접근 방식에 대해 읽고, 우리가 어떻게 귀하의 디지털 존재를 변화시킬 수 있는지 알아보세요. 포괄적인 IT 서비스와 제품 솔루션을 찾는 기업에 이상적입니다." },
       "404": { title: "찾을 수 없음 · Cor.inc", description: "페이지를 찾을 수 없습니다. 주소 표시줄의 URL을 확인하고 다시 시도하세요." },
-      privacy: { title: "개인정보처리방침 · Cor.inc", description: "우리의 개인정보처리방침은 수집된 정보와 사용 방법을 이해하는 데 도움이 됩니다." },
+      privacy: { title: "개인정보처리방침 · Cor.inc", description: "Cor.의 개인정보처리방침. 수집하는 개인정보와 이용 목적, 제3자 제공·위탁, 국외 이전, 안전관리조치, 공개 등의 청구, 문의 창구에 대해 안내합니다." },
       security: { title: "보안 | Cor.inc", description: "Cor. 주식회사의 정보 보안, ISMS 인증 취득을 위한 체제, 그리고 로컬 퍼스트와 기밀도 등급에 기반한 AI 개발 환경에 대하여." }
     },
     privacy: {
@@ -4966,7 +4966,7 @@ const translations = {
       contact: { title: "Contacto · Cor.inc", description: "Contacta con nuestro equipo para aprender más sobre cómo podemos ayudarte." },
       products: { title: "Productos&Insights · Cor.inc", description: "Explora nuestra página de productos e insights que muestra nuestras soluciones IT innovadoras y alcance mediático. Esta página ofrece información detallada sobre nuestro portafolio de productos, servicios de desarrollo e insights estratégicos. Descubre nuestras soluciones tecnológicas de vanguardia, lee sobre nuestros enfoques innovadores y aprende cómo podemos ayudar a transformar tu presencia digital. Ideal para empresas que buscan servicios IT integrales y soluciones de productos." },
       "404": { title: "No encontrado · Cor.inc", description: "Página no encontrada. Por favor, verifica la URL en la barra de direcciones e inténtalo de nuevo." },
-      privacy: { title: "Política de privacidad · Cor.inc", description: "Nuestra política de privacidad te ayudará a entender qué información se recopila y cómo se utiliza." },
+      privacy: { title: "Política de privacidad · Cor.inc", description: "Política de privacidad de Cor.: la información personal que recopilamos y sus finalidades, la comunicación a terceros y los encargados, las transferencias internacionales, las medidas de seguridad, las solicitudes de acceso y nuestro punto de contacto." },
       security: { title: "Seguridad | Cor.inc", description: "Sobre la seguridad de la información de Cor. Inc., su hoja de ruta hacia la ISMS y un entorno de desarrollo de IA local-first con niveles de confidencialidad." }
     },
     privacy: {
