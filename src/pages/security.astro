@@ -73,10 +73,8 @@ const t = getTranslations(currentLocale);
     </div>
   </div>
 
-  {currentLocale === 'ja' && (
-    <NextStep
-      heading="安心して任せられそうと感じたら、まずは話してみませんか？"
-      ctas={[{ label: '無料で相談する', href: '/contact', primary: true }]}
-    />
-  )}
+  <NextStep
+    heading={t.nextStep.security.heading}
+    ctas={[{ label: t.nextStep.security.ctaLabel, href: getLocalizedUrl('/contact', currentLocale), primary: true }]}
+  />
 </Layout>

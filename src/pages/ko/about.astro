@@ -3,8 +3,9 @@ import AboutHero from '../../components/about/AboutHero.astro';
 import KyousouDefinition from '../../components/about/KyousouDefinition.astro';
 import MvvSection from '../../components/about/MvvSection.astro';
 import FounderNote from '../../components/about/FounderNote.astro';
+import NextStep from '../../components/common/NextStep.astro';
 import Layout from '../../layouts/Layout.astro';
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -18,4 +19,9 @@ const t = getTranslations(currentLocale);
   <KyousouDefinition />
   <MvvSection />
   <FounderNote />
+
+  <NextStep
+    heading={t.nextStep.about.heading}
+    ctas={[{ label: t.nextStep.about.ctaLabel, href: getLocalizedUrl('/contact', currentLocale), primary: true }]}
+  />
 </Layout>
