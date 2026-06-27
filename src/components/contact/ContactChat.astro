@@ -23,9 +23,11 @@ const isDev = import.meta.env.DEV;
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
 ---
 
+{/* Turnstile は明示レンダリング（render=explicit）。自動スキャンを止め、handoff フォームを
+    表示したタイミングで JS から render する（hidden コンテナ内で 0px になるのを防ぐ）。 */}
 {turnstileSiteKey && (
   <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
     async
     defer
     is:inline
@@ -175,8 +177,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
           />
         </div>
 
+        {/* Turnstile は handoff 表示時に JS で明示レンダリングする（cf-turnstile クラスを付けず
+            自動レンダリングを抑止。hidden コンテナ内で 0px レンダリングされるのを防ぐ）。 */}
         {turnstileSiteKey && (
-          <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+          <div id="handoff-turnstile" data-sitekey={turnstileSiteKey}></div>
         )}
 
         <button
@@ -215,12 +219,18 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
 
     // 会話履歴（API へ送る messages）。PII は含めない。
     var history = [{ role: 'assistant', content: strings.greeting }];
-    var turnstileSent = false; // /chat の初回のみトークンを付与する。
+    var turnstileWidgetId; // handoff フォーム内の Turnstile ウィジェット ID（明示レンダリング時に保持）。
 
+    // Turnstile トークンは /submit（PII送信点）でのみ使用する。
+    // /chat には付与しない（トークンは単回使用で、複数ターン会話では2ターン目以降に
+    // 新しいトークンが無く 403 になるため）。
     function turnstileToken() {
       if (!turnstileSiteKey || typeof window.turnstile === 'undefined') return undefined;
       try {
-        var tok = window.turnstile.getResponse();
+        var tok =
+          turnstileWidgetId !== undefined
+            ? window.turnstile.getResponse(turnstileWidgetId)
+            : window.turnstile.getResponse();
         return tok || undefined;
       } catch (e) {
         return undefined;
@@ -281,11 +291,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
 
     function callChat(messages) {
       if (isDev) return devMockChat(messages);
+      // /chat には Turnstile トークンを付与しない（単回使用トークンが2ターン目以降に枯れて
+      // 403 になるのを防ぐ）。Turnstile は /submit でのみ使う。
       var body = { messages: messages };
-      if (!turnstileSent) {
-        var tok = turnstileToken();
-        if (tok) { body.turnstileToken = tok; turnstileSent = true; }
-      }
       return fetch('/api/contact/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -308,11 +316,37 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
       });
     }
 
+    // Turnstile ウィジェットを handoff フォーム内で明示的にレンダリングする。
+    // 自動レンダリングだと hidden コンテナ内（display:none）でサイズが 0 になり実質使えない
+    // ことがあるため、handoff を表示したタイミングで明示 render する。
+    // turnstile スクリプトの読み込みが間に合わない場合に備えてポーリングする。
+    function renderTurnstile() {
+      if (!turnstileSiteKey || turnstileWidgetId !== undefined) return;
+      var el = document.getElementById('handoff-turnstile');
+      if (!el) return;
+      var attempts = 0;
+      (function tryRender() {
+        if (turnstileWidgetId !== undefined) return;
+        if (typeof window.turnstile !== 'undefined' && window.turnstile.render) {
+          try {
+            turnstileWidgetId = window.turnstile.render(el, { sitekey: turnstileSiteKey });
+          } catch (e) {
+            // 既に自動レンダリング済み等。getResponse() の素のフォールバックに任せる。
+            turnstileWidgetId = undefined;
+          }
+          return;
+        }
+        if (attempts++ < 40) setTimeout(tryRender, 100); // 最大 ~4s 待つ
+      })();
+    }
+
     function revealHandoff(seedMessage) {
       if (handoffWrap.classList.contains('hidden')) {
         handoffWrap.classList.remove('hidden');
         var msgField = document.getElementById('handoff-message');
         if (msgField && !msgField.value && seedMessage) msgField.value = seedMessage;
+        // 表示後（display:none 解除後）に Turnstile を明示レンダリングして可視・操作可能にする。
+        renderTurnstile();
         handoffWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
         var nameField = document.getElementById('handoff-name');
         if (nameField) nameField.focus();
@@ -324,15 +358,23 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
       var text = (input.value || '').trim();
       if (!text) return;
 
+      // UI 吹き出しは即座に表示するが、history（API へ送る transcript）には
+      // 成功時のみユーザー発話をコミットする。失敗時に末尾がユーザー発話のまま残ると、
+      // 次回リクエストで「アシスタント応答の無いユーザー発話」が末尾に付いた transcript を
+      // 送ってしまうため（孤立ターン）。送信用配列は history のコピー＋今回の発話で作る。
       appendMessage('user', text);
-      history.push({ role: 'user', content: text });
+      var userTurn = { role: 'user', content: text };
+      var outgoing = history.slice();
+      outgoing.push(userTurn);
       input.value = '';
       autoGrow();
       setBusy(true);
 
-      callChat(history.slice())
+      callChat(outgoing)
         .then(function (data) {
           setBusy(false);
+          // 応答が得られたので、ここで初めてユーザー発話を history に確定する。
+          history.push(userTurn);
           var reply = data && typeof data.reply === 'string' ? data.reply : '';
           if (reply) {
             appendMessage('assistant', reply);
@@ -349,6 +391,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
         })
         .catch(function () {
           setBusy(false);
+          // 失敗時は userTurn を history に確定しない（孤立ユーザーターンを残さない）。
+          // UI 吹き出しは表示済みのまま、エラーメッセージを追記する。
           appendMessage('assistant', strings.chatError);
         });
     });

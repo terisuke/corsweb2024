@@ -204,6 +204,26 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(res.status).toBe(503);
   });
 
+  it('chat: TURNSTILE_SECRET 設定済みでもトークン無しで 403 にならない（Turnstileは/chatでは検証しない）', async () => {
+    // Turnstile トークンは単回使用のため /chat では検証しない（複数ターン会話が壊れるのを防ぐ）。
+    // TURNSTILE_SECRET を設定しても、トークン無しの /chat が 403 にならないことを保証する。
+    // siteverify が呼ばれていないことも確認する（fetch をスパイ）。
+    const fetchSpy = vi.fn();
+    vi.stubGlobal('fetch', fetchSpy);
+    const envWithTurnstile = { ...ENV, TURNSTILE_SECRET: 'secret' } as unknown as Env;
+    const res = await worker.fetch(
+      post('/api/contact/chat', { messages: [{ role: 'user', content: 'hi' }] }, {
+        'cf-connecting-ip': '198.51.100.20',
+      }),
+      envWithTurnstile,
+    );
+    // ANTHROPIC_API_KEY 未設定なので 503（fail closed）になるが、重要なのは 403 でないこと。
+    expect(res.status).not.toBe(403);
+    expect(res.status).toBe(503);
+    // siteverify(Turnstile) が呼ばれていないこと（/chat では検証しない）。
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it('submit: RESEND_API_KEY 未設定は 503 fail closed', async () => {
     const res = await worker.fetch(
       post(
