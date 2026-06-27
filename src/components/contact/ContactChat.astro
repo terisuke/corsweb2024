@@ -1,0 +1,427 @@
+---
+// お問い合わせ AI チャット ウィジェット（機能フラグで切替・src/config/contact.ts）。
+//
+// セキュリティ要件（バックエンド README の必読項目）:
+//   chat の `reply` は攻撃者が誘導しうる LLM 出力のため、必ず textContent で
+//   PLAIN TEXT として描画する。innerHTML / markdown→HTML は使わない。
+//
+// API（本番は同一オリジン cor-jp.com/api/contact/*）:
+//   POST /api/contact/chat   { messages, turnstileToken? } -> { reply, classification, readyForContact }
+//   POST /api/contact/submit { name, email, company?, message, conversationSummary?, turnstileToken?, website } -> { ok: true }
+//
+// 環境変数:
+//   PUBLIC_TURNSTILE_SITEKEY  Cloudflare Turnstile のサイトキー（任意）。
+//                             未設定なら Turnstile ウィジェットは描画しない（開発時）。
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+const c = t.contactChat;
+
+// import.meta.env.DEV は SSG ビルド時に静的に解決される（dev=true / build=false）。
+const isDev = import.meta.env.DEV;
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
+---
+
+{turnstileSiteKey && (
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+    is:inline
+  ></script>
+)}
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-3">
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{c.heading}</h2>
+      <p class="text-lg text-primary-950/70 dark:text-primary-200/70">{c.intro}</p>
+
+      <!-- PII 注意喚起（常時表示） -->
+      <p
+        class="rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-300/60 dark:bg-amber-950/40 dark:text-amber-200 dark:ring-amber-700/40"
+        role="note"
+      >
+        {c.piiNotice}
+      </p>
+    </div>
+
+    <div
+      id="contact-chat"
+      class="mt-6 flex flex-col overflow-hidden rounded-2xl bg-primary-50 ring-1 ring-primary-900/15 dark:bg-primary-950 dark:ring-primary-200/15"
+      data-dev={isDev ? 'true' : 'false'}
+      data-turnstile-sitekey={turnstileSiteKey}
+    >
+      <!-- メッセージ一覧 -->
+      <div
+        id="chat-messages"
+        class="flex min-h-[18rem] flex-col gap-3 overflow-y-auto p-4 sm:p-6"
+        aria-live="polite"
+        aria-atomic="false"
+        aria-label={c.assistantLabel}
+      >
+        <!-- 初期グリーティング（assistant・PLAIN TEXT で挿入） -->
+        <div class="flex flex-col items-start gap-1">
+          <span class="text-xs font-medium text-primary-950/50 dark:text-primary-200/50">{c.assistantLabel}</span>
+          <div
+            class="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-base text-primary-950 shadow-sm dark:bg-primary-900 dark:text-primary-100"
+          >
+            {c.greeting}
+          </div>
+        </div>
+      </div>
+
+      <!-- 入力中インジケータ -->
+      <div id="chat-typing" class="hidden px-4 pb-2 sm:px-6" aria-hidden="true">
+        <span class="inline-flex items-center gap-2 text-sm text-primary-950/60 dark:text-primary-200/60">
+          <span class="inline-flex gap-1">
+            <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.3s]"></span>
+            <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.15s]"></span>
+            <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400"></span>
+          </span>
+          {c.thinking}
+        </span>
+      </div>
+
+      <!-- 入力フォーム -->
+      <form id="chat-form" class="flex items-end gap-2 border-t border-primary-900/10 p-3 dark:border-primary-200/10">
+        <label for="chat-input" class="sr-only">{c.placeholder}</label>
+        <textarea
+          id="chat-input"
+          rows="1"
+          placeholder={c.placeholder}
+          autocomplete="off"
+          class="block max-h-40 min-h-[48px] w-full resize-none appearance-none rounded-xl border-0 bg-white px-4 py-3 text-base text-primary-950 ring-1 ring-primary-900/20 transition placeholder:text-primary-950/50 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-900 dark:text-primary-100 dark:ring-primary-200/20 dark:placeholder:text-primary-200/50 dark:focus:ring-primary-400"
+        ></textarea>
+        <button
+          type="submit"
+          id="chat-send"
+          class="inline-flex min-h-[48px] min-w-[48px] items-center justify-center rounded-xl bg-primary-600 px-5 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
+        >
+          {c.send}
+        </button>
+      </form>
+    </div>
+
+    <!-- 連絡先フォーム（readyForContact=true で表示） -->
+    <div id="contact-handoff" class="mt-6 hidden">
+      <p
+        class="mb-4 rounded-md bg-primary-100 px-4 py-3 text-base text-primary-950 dark:bg-primary-900 dark:text-primary-100"
+        role="status"
+      >
+        {c.readyNotice}
+      </p>
+
+      <form id="handoff-form" class="flex flex-col gap-y-4" novalidate>
+        <h3 class="text-xl font-medium tracking-tight">{c.form.title}</h3>
+
+        <div>
+          <label for="handoff-name" class="mb-1 block text-sm font-medium">{c.form.name} *</label>
+          <input
+            type="text"
+            id="handoff-name"
+            name="name"
+            autocomplete="name"
+            required
+            class="block min-h-[48px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
+          />
+        </div>
+
+        <div>
+          <label for="handoff-email" class="mb-1 block text-sm font-medium">{c.form.email} *</label>
+          <input
+            type="email"
+            id="handoff-email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            required
+            class="block min-h-[48px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
+          />
+        </div>
+
+        <div>
+          <label for="handoff-company" class="mb-1 block text-sm font-medium">{c.form.company}</label>
+          <input
+            type="text"
+            id="handoff-company"
+            name="company"
+            autocomplete="organization"
+            class="block min-h-[48px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
+          />
+        </div>
+
+        <div>
+          <label for="handoff-message" class="mb-1 block text-sm font-medium">{c.form.message} *</label>
+          <textarea
+            id="handoff-message"
+            name="message"
+            rows="4"
+            required
+            class="block min-h-[120px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
+          ></textarea>
+        </div>
+
+        <!-- ハニーポット: 人間には見えない。bot が埋めると submit 側で握り潰される。 -->
+        <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+          <label for="handoff-website">Website</label>
+          <input
+            type="text"
+            id="handoff-website"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        {turnstileSiteKey && (
+          <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+        )}
+
+        <button
+          type="submit"
+          id="handoff-submit"
+          class="inline-flex min-h-[48px] items-center justify-center self-start rounded-full bg-primary-600 px-6 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
+        >
+          {c.form.submit}
+        </button>
+
+        <p id="handoff-status" class="hidden text-base" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- i18n 文字列を JSON でクライアントへ渡す（set:html ではなく define:vars で安全に） -->
+<script is:inline define:vars={{ strings: c }}>
+  (function () {
+    'use strict';
+    var root = document.getElementById('contact-chat');
+    if (!root) return;
+
+    var isDev = root.dataset.dev === 'true';
+    var turnstileSiteKey = root.dataset.turnstileSitekey || '';
+
+    var messagesEl = document.getElementById('chat-messages');
+    var typingEl = document.getElementById('chat-typing');
+    var chatForm = document.getElementById('chat-form');
+    var input = document.getElementById('chat-input');
+    var sendBtn = document.getElementById('chat-send');
+    var handoffWrap = document.getElementById('contact-handoff');
+    var handoffForm = document.getElementById('handoff-form');
+    var handoffSubmit = document.getElementById('handoff-submit');
+    var handoffStatus = document.getElementById('handoff-status');
+
+    // 会話履歴（API へ送る messages）。PII は含めない。
+    var history = [{ role: 'assistant', content: strings.greeting }];
+    var turnstileSent = false; // /chat の初回のみトークンを付与する。
+
+    function turnstileToken() {
+      if (!turnstileSiteKey || typeof window.turnstile === 'undefined') return undefined;
+      try {
+        var tok = window.turnstile.getResponse();
+        return tok || undefined;
+      } catch (e) {
+        return undefined;
+      }
+    }
+
+    // メッセージ吹き出しを追加する。content は必ず textContent で描画（XSS 対策・絶対 innerHTML しない）。
+    function appendMessage(role, content) {
+      var wrap = document.createElement('div');
+      wrap.className =
+        'flex flex-col gap-1 ' + (role === 'user' ? 'items-end' : 'items-start');
+
+      var label = document.createElement('span');
+      label.className = 'text-xs font-medium text-primary-950/50 dark:text-primary-200/50';
+      label.textContent = role === 'user' ? strings.youLabel : strings.assistantLabel;
+
+      var bubble = document.createElement('div');
+      bubble.className =
+        'max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-base shadow-sm ' +
+        (role === 'user'
+          ? 'rounded-tr-sm bg-primary-600 text-white dark:bg-primary-400 dark:text-primary-950'
+          : 'rounded-tl-sm bg-white text-primary-950 dark:bg-primary-900 dark:text-primary-100');
+      // 攻撃者が誘導しうる LLM 出力を含むため、PLAIN TEXT としてのみ描画する。
+      bubble.textContent = content;
+
+      wrap.appendChild(label);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function setBusy(busy) {
+      sendBtn.disabled = busy;
+      input.disabled = busy;
+      typingEl.classList.toggle('hidden', !busy);
+      typingEl.setAttribute('aria-hidden', busy ? 'false' : 'true');
+    }
+
+    function autoGrow() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+    }
+    input.addEventListener('input', autoGrow);
+
+    // 開発用モック（DEV のみ）。本番 Worker が無いため /chat /submit が 404 になるので、
+    // UI をデモ・スクショ可能にする最小限のダミー応答を返す。本番（!isDev）では実 fetch を使う。
+    function devMockChat(messages) {
+      var userTurns = messages.filter(function (m) { return m.role === 'user'; }).length;
+      var ready = userTurns >= 2;
+      var reply = ready
+        ? '[DEV モック] ご相談内容を承りました。下のフォームにご連絡先をご記入ください。'
+        : '[DEV モック] ありがとうございます。もう少し詳しくお聞かせいただけますか？';
+      return Promise.resolve({ reply: reply, classification: 'genuine', readyForContact: ready });
+    }
+    function devMockSubmit() {
+      return Promise.resolve({ ok: true });
+    }
+
+    function callChat(messages) {
+      if (isDev) return devMockChat(messages);
+      var body = { messages: messages };
+      if (!turnstileSent) {
+        var tok = turnstileToken();
+        if (tok) { body.turnstileToken = tok; turnstileSent = true; }
+      }
+      return fetch('/api/contact/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      }).then(function (res) {
+        if (!res.ok) throw new Error('chat ' + res.status);
+        return res.json();
+      });
+    }
+
+    function callSubmit(payload) {
+      if (isDev) return devMockSubmit();
+      return fetch('/api/contact/submit', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).then(function (res) {
+        if (!res.ok) throw new Error('submit ' + res.status);
+        return res.json();
+      });
+    }
+
+    function revealHandoff(seedMessage) {
+      if (handoffWrap.classList.contains('hidden')) {
+        handoffWrap.classList.remove('hidden');
+        var msgField = document.getElementById('handoff-message');
+        if (msgField && !msgField.value && seedMessage) msgField.value = seedMessage;
+        handoffWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var nameField = document.getElementById('handoff-name');
+        if (nameField) nameField.focus();
+      }
+    }
+
+    chatForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var text = (input.value || '').trim();
+      if (!text) return;
+
+      appendMessage('user', text);
+      history.push({ role: 'user', content: text });
+      input.value = '';
+      autoGrow();
+      setBusy(true);
+
+      callChat(history.slice())
+        .then(function (data) {
+          setBusy(false);
+          var reply = data && typeof data.reply === 'string' ? data.reply : '';
+          if (reply) {
+            appendMessage('assistant', reply);
+            history.push({ role: 'assistant', content: reply });
+          }
+          if (data && data.readyForContact) {
+            // 直近のユーザー発話を message 欄の初期値に流用する。
+            var lastUser = '';
+            for (var i = history.length - 1; i >= 0; i--) {
+              if (history[i].role === 'user') { lastUser = history[i].content; break; }
+            }
+            revealHandoff(lastUser);
+          }
+        })
+        .catch(function () {
+          setBusy(false);
+          appendMessage('assistant', strings.chatError);
+        });
+    });
+
+    // Enter で送信、Shift+Enter で改行。
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.requestSubmit();
+      }
+    });
+
+    function showStatus(message, ok) {
+      handoffStatus.textContent = message;
+      handoffStatus.classList.remove('hidden');
+      handoffStatus.className =
+        'text-base ' +
+        (ok
+          ? 'text-green-700 dark:text-green-400'
+          : 'text-red-700 dark:text-red-400');
+    }
+
+    handoffForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = (document.getElementById('handoff-name').value || '').trim();
+      var email = (document.getElementById('handoff-email').value || '').trim();
+      var company = (document.getElementById('handoff-company').value || '').trim();
+      var message = (document.getElementById('handoff-message').value || '').trim();
+      var website = (document.getElementById('handoff-website').value || '');
+
+      if (!name || !email || !message) {
+        showStatus(strings.form.required, false);
+        return;
+      }
+
+      // 会話の書き起こしをサマリとして送る（PII は含まない会話のみ）。
+      var summary = history
+        .map(function (m) {
+          var who = m.role === 'user' ? strings.youLabel : strings.assistantLabel;
+          return who + ': ' + m.content;
+        })
+        .join('\n');
+
+      var payload = {
+        name: name,
+        email: email,
+        company: company,
+        message: message,
+        conversationSummary: summary,
+        website: website,
+      };
+      if (!isDev) {
+        var tok = turnstileToken();
+        if (tok) payload.turnstileToken = tok;
+      }
+
+      handoffSubmit.disabled = true;
+      handoffStatus.classList.add('hidden');
+
+      callSubmit(payload)
+        .then(function (data) {
+          if (data && data.ok) {
+            showStatus(strings.success, true);
+            handoffForm.reset();
+          } else {
+            handoffSubmit.disabled = false;
+            showStatus(strings.submitError, false);
+          }
+        })
+        .catch(function () {
+          handoffSubmit.disabled = false;
+          showStatus(strings.submitError, false);
+        });
+    });
+  })();
+</script>

@@ -1,10 +1,12 @@
 ---
 import Calendar from '../components/contact/Calendar.astro';
+import ContactChat from '../components/contact/ContactChat.astro';
 import ContactForm from '../components/contact/ContactForm.astro';
 import ContactInfo from '../components/contact/ContactInfo.astro';
 import Heading from '../components/contact/Heading.astro';
 import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
+import { CONTACT_CHAT_ENABLED } from '../config/contact';
 import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
@@ -17,16 +19,26 @@ const nextStepHref =
     : getLocalizedUrl('/contact', currentLocale);
 ---
 
-<script src="https://www.google.com/recaptcha/api.js" async defer is:inline></script>
+{!CONTACT_CHAT_ENABLED && (
+  <script src="https://www.google.com/recaptcha/api.js" async defer is:inline></script>
+)}
 
 <Layout
   description={t.meta.contact.description}
   title={t.meta.contact.title}
 >
   <Heading />
-  <ContactInfo />
-  <Calendar />
-  <ContactForm />
+  {
+    CONTACT_CHAT_ENABLED ? (
+      <ContactChat />
+    ) : (
+      <>
+        <ContactInfo />
+        <Calendar />
+        <ContactForm />
+      </>
+    )
+  }
 
   <NextStep
     heading={t.nextStep.contact.heading}

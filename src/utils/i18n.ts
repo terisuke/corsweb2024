@@ -87,6 +87,32 @@ const translations = {
         reset: "リセット"
       }
     },
+    contactChat: {
+      heading: "AI アシスタントに相談する",
+      intro: "ご相談内容をチャットでお聞かせください。AI が内容を整理し、担当者へのお取り次ぎをサポートします。",
+      piiNotice: "チャット欄には氏名・連絡先などの個人情報を入力しないでください。連絡先は最後の送信フォームでのみお伺いします。",
+      greeting: "こんにちは。Cor.inc の AI アシスタントです。どのようなご相談でしょうか？お気軽にご記入ください。",
+      placeholder: "メッセージを入力…",
+      send: "送信",
+      sending: "送信中…",
+      thinking: "担当チームに確認しています…",
+      youLabel: "あなた",
+      assistantLabel: "AI アシスタント",
+      chatError: "通信に失敗しました。お手数ですが、もう一度お試しください。",
+      readyNotice: "ありがとうございます。下記のフォームにご連絡先をご記入のうえ送信してください。",
+      form: {
+        title: "ご連絡先の入力",
+        name: "お名前",
+        email: "メールアドレス",
+        company: "会社名（任意）",
+        message: "お問い合わせ内容",
+        submit: "この内容で送信する",
+        submitting: "送信中…",
+        required: "必須項目です"
+      },
+      success: "お問い合わせを受け付けました。3 営業日以内に担当者よりご連絡いたします。",
+      submitError: "送信に失敗しました。お手数ですが、時間をおいて再度お試しください。"
+    },
     footer: {
       title: "Footer",
       social: "Social",
@@ -1466,6 +1492,32 @@ const translations = {
         reset: "Reset"
       }
     },
+    contactChat: {
+      heading: "Chat with our AI assistant",
+      intro: "Tell us about your inquiry in the chat. Our AI will help organise the details and connect you with the right person.",
+      piiNotice: "Please do not enter personal information such as your name or contact details in the chat. We will ask for your contact details only in the final form.",
+      greeting: "Hello! I'm Cor.inc's AI assistant. How can we help you today? Feel free to describe your inquiry.",
+      placeholder: "Type a message…",
+      send: "Send",
+      sending: "Sending…",
+      thinking: "Checking with our team…",
+      youLabel: "You",
+      assistantLabel: "AI assistant",
+      chatError: "Something went wrong. Please try sending your message again.",
+      readyNotice: "Thank you! Please fill in your contact details below and submit.",
+      form: {
+        title: "Your contact details",
+        name: "Name",
+        email: "Email",
+        company: "Company (optional)",
+        message: "Your message",
+        submit: "Send this inquiry",
+        submitting: "Sending…",
+        required: "This field is required"
+      },
+      success: "Thank you. We've received your inquiry and will get back to you within 3 business days.",
+      submitError: "Submission failed. Please wait a moment and try again."
+    },
     footer: {
       title: "Footer",
       social: "Social",
@@ -2375,6 +2427,32 @@ const translations = {
         submit: "发送",
         reset: "重置"
       }
+    },
+    contactChat: {
+      heading: "与 AI 助手沟通",
+      intro: "请在聊天中告诉我们您的咨询内容。AI 将帮助整理信息，并为您对接相应的负责人。",
+      piiNotice: "请勿在聊天框中输入姓名、联系方式等个人信息。我们仅会在最后的表单中询问您的联系方式。",
+      greeting: "您好！我是 Cor.inc 的 AI 助手。请问有什么可以帮您？欢迎描述您的咨询内容。",
+      placeholder: "输入消息…",
+      send: "发送",
+      sending: "发送中…",
+      thinking: "正在与团队确认…",
+      youLabel: "您",
+      assistantLabel: "AI 助手",
+      chatError: "通信失败，请重新发送您的消息。",
+      readyNotice: "谢谢！请在下方填写您的联系方式并提交。",
+      form: {
+        title: "填写联系方式",
+        name: "姓名",
+        email: "电子邮箱",
+        company: "公司名称（选填）",
+        message: "咨询内容",
+        submit: "提交此咨询",
+        submitting: "提交中…",
+        required: "此项为必填项"
+      },
+      success: "感谢您的咨询，我们已收到，将在 3 个工作日内与您联系。",
+      submitError: "提交失败，请稍后再试。"
     },
     footer: {
       title: "页脚",
@@ -3286,6 +3364,32 @@ const translations = {
         reset: "초기화"
       }
     },
+    contactChat: {
+      heading: "AI 어시스턴트와 상담하기",
+      intro: "채팅으로 문의 내용을 알려주세요. AI가 내용을 정리하고 담당자에게 연결해 드립니다.",
+      piiNotice: "채팅창에는 이름·연락처 등 개인정보를 입력하지 마세요. 연락처는 마지막 전송 양식에서만 여쭤봅니다.",
+      greeting: "안녕하세요. Cor.inc의 AI 어시스턴트입니다. 어떤 상담을 원하시나요? 편하게 작성해 주세요.",
+      placeholder: "메시지를 입력하세요…",
+      send: "보내기",
+      sending: "전송 중…",
+      thinking: "담당 팀에 확인하고 있습니다…",
+      youLabel: "나",
+      assistantLabel: "AI 어시스턴트",
+      chatError: "통신에 실패했습니다. 메시지를 다시 보내 주세요.",
+      readyNotice: "감사합니다. 아래 양식에 연락처를 입력하신 후 전송해 주세요.",
+      form: {
+        title: "연락처 입력",
+        name: "이름",
+        email: "이메일",
+        company: "회사명 (선택)",
+        message: "문의 내용",
+        submit: "이 내용으로 보내기",
+        submitting: "전송 중…",
+        required: "필수 항목입니다"
+      },
+      success: "문의가 접수되었습니다. 3영업일 이내에 담당자가 연락드리겠습니다.",
+      submitError: "전송에 실패했습니다. 잠시 후 다시 시도해 주세요."
+    },
     footer: {
       title: "푸터",
       social: "소셜",
@@ -4195,6 +4299,32 @@ const translations = {
         submit: "Enviar",
         reset: "Restablecer"
       }
+    },
+    contactChat: {
+      heading: "Habla con nuestro asistente de IA",
+      intro: "Cuéntanos tu consulta en el chat. Nuestra IA te ayudará a organizar los detalles y te pondrá en contacto con la persona adecuada.",
+      piiNotice: "Por favor, no introduzcas datos personales como tu nombre o tus datos de contacto en el chat. Te pediremos tus datos de contacto solo en el formulario final.",
+      greeting: "¡Hola! Soy el asistente de IA de Cor.inc. ¿En qué podemos ayudarte? Describe tu consulta con total libertad.",
+      placeholder: "Escribe un mensaje…",
+      send: "Enviar",
+      sending: "Enviando…",
+      thinking: "Consultando con nuestro equipo…",
+      youLabel: "Tú",
+      assistantLabel: "Asistente de IA",
+      chatError: "Algo salió mal. Por favor, intenta enviar tu mensaje de nuevo.",
+      readyNotice: "¡Gracias! Rellena tus datos de contacto a continuación y envía el formulario.",
+      form: {
+        title: "Tus datos de contacto",
+        name: "Nombre",
+        email: "Correo electrónico",
+        company: "Empresa (opcional)",
+        message: "Tu mensaje",
+        submit: "Enviar esta consulta",
+        submitting: "Enviando…",
+        required: "Este campo es obligatorio"
+      },
+      success: "Gracias. Hemos recibido tu consulta y te responderemos en un plazo de 3 días laborables.",
+      submitError: "El envío ha fallado. Espera un momento e inténtalo de nuevo."
     },
     footer: {
       title: "Pie de página",
