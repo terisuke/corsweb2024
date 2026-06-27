@@ -121,14 +121,13 @@ export function parseChatResult(raw: string): ChatResult {
 }
 
 // POST /api/contact/chat — 会話による問い合わせの絞り込み。PIIは扱わない。
+// Turnstile は付与しない（トークンは単回使用で、複数ターン会話では2ターン目以降に
+// 新しいトークンが無く 403 になってしまうため）。/chat の悪用対策は
+// レート制限＋同一オリジン＋（必須の）Cloudflare WAF レート制限ルールで担保する。
+// PII を扱う本命の濫用点である /submit でのみ Turnstile を要求する。
 async function handleChat(req: Request, env: Env): Promise<Response> {
   const body = await readJsonBody(req);
   if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-
-  // Turnstile（シークレットがあれば検証。無ければスキップ＝fail open）。
-  const ip = clientIp(req);
-  const ts = await verifyTurnstile(env, body.turnstileToken, ip);
-  if (!ts.ok) return json({ error: ts.error }, ts.status);
 
   const norm = normalizeMessages(body.messages);
   if (!norm.ok) return json({ error: norm.error }, norm.status);
