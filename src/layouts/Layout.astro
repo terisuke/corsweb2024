@@ -3,6 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
+import Analytics from '../components/analytics/Analytics.astro';
 import { getCurrentLocale, type Locale } from '../utils/i18n';
 
 interface Props {
@@ -311,6 +312,8 @@ const ogImage = new URL('/logo.png', Astro.site);
 
       /* TailwindのユーティリティクラスはHTMLのclass属性で指定、または@apply推奨 */
     </style>
+
+    <Analytics />
   </head>
   <body
     class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-900 dark:text-primary-200"

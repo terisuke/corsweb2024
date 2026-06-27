@@ -3,6 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
+import Analytics from '../components/analytics/Analytics.astro';
 import { getCurrentLocale } from '../utils/i18n';
 import { BLOG_CATEGORIES } from '../config/categories';
 import type { CollectionEntry } from 'astro:content';
@@ -498,6 +499,8 @@ const websiteJsonLd = {
         color: #a8a29e;
       }
     </style>
+
+    <Analytics />
   </head>
   <body class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200">
     <Header />
