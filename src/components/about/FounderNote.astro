@@ -1,5 +1,6 @@
 ---
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import RandomPlayer from '../youtube/RandomPlayer.astro';
 
 const t = getTranslations(getCurrentLocale(Astro.url));
 ---
@@ -16,6 +17,16 @@ const t = getTranslations(getCurrentLocale(Astro.url));
       <p class="rounded-3xl bg-primary-500/10 p-6 text-base text-primary-950/60 dark:bg-primary-400/10 dark:text-primary-200/60">
         {t.aboutPage.founderPlaceholder}
       </p>
+    </div>
+
+    <div class="mt-12 flex max-w-4xl flex-col gap-6">
+      <h3 class="text-2xl font-medium tracking-tight sm:text-3xl">
+        {t.aboutPage.founderYoutubeTitle}
+      </h3>
+      <p class="text-base text-primary-950/70 dark:text-primary-200/70">
+        {t.aboutPage.founderYoutubeDescription}
+      </p>
+      <RandomPlayer messages={t.aboutPage.founderYoutubeMessages} />
     </div>
   </div>
 </section>

@@ -56,26 +56,6 @@ const translations = {
         "それが、Cor.incの原点です。"
       ]
     },
-    productBackstory: {
-      title: "なぜこのサービスなのか",
-      products: [
-        {
-          name: "TapForge",
-          subtitle: "「出会い」から始まるコミュニケーション革新",
-          story: "リクルートで営業をしていた時、名刺交換後に名刺が山のように溜まり、誰が誰だかわからなくなる状況を何度も経験しました。名刺交換という「儀式」は、本来「これから関係を築きましょう」という意思表示のはずが、実際には「一応連絡先を交換しました」という形式的な記録にしかなっていない。ここに大きなミスコミュニケーションを感じていました。TapForgeは、名刺交換を「本当の出会い」に変えるためのプロダクトです。タップ一つで相手のプロフィール、SNS、ポートフォリオ、予約カレンダーなど、あらゆる情報に瞬時にアクセスできる。「私はこういう仕事をしています」と口頭で説明する代わりに、タップ一つで自分の全てを視覚的に、直感的に伝えられる。これが、「言葉を超えたコミュニケーション」の第一歩です。"
-        },
-        {
-          name: "BoltSite",
-          subtitle: "企業の「想い」を形にする",
-          story: "リクルートで営業をしていた時、多くの企業のホームページを見ましたが、その企業の「想い」や「情熱」が全く伝わってこないものばかりでした。経営者は熱い想いを持っている。自社の製品やサービスに誇りを持っている。でも、それがホームページに全く反映されていない。既存のツールの枠の中でしか表現できないからです。BoltSiteは、Astroというフレームワークを使った超高速なホームページ制作サービスですが、私が本当に大切にしているのは「その企業らしさ」を引き出すことです。ホームページ制作の打ち合わせでは、ひたすら経営者の話を聞きます。「なぜこの事業を始めたのか」「どんな想いで製品を作っているのか」。そして、その言葉の裏にある、言葉にならない想いを読み取り、デザインとコピーに落とし込む。結果として出来上がるのは、単なる「企業情報サイト」ではなく、その企業の「人格」が感じられるホームページです。"
-        },
-        {
-          name: "IoTRealm",
-          subtitle: "想いを形にする受託開発",
-          story: "名刺とホームページで信頼関係を築いた後、多くの経営者が「実は、こういうことができたらいいなって思ってるんだけど...」と語ります。それは時に曖昧で、時に壮大で、時に技術的に可能なのかすらわからないアイデアです。でも、その奥には確実に「こうなったら嬉しい」という純粋な想いがある。IoTRealmは、そんな「想い」を形にするための受託開発サービスです。例えば、ある不動産・建設系スタートアップの代表は、「AIに敷地図を渡すだけで自動的に間取りを生成するプロダクト」を提案し、優勝しましたが、技術的な実現方法が分からず困っていました。私は2週間でプロトタイプを作成。YOLOという画像認識AIを使って敷地図から建設可能地を自動判定し、簡易的な間取り図を生成するアプリです。これもまた、「言葉を超えたコミュニケーション」です。複雑な法規制や計算を、視覚的なデータに変換することで、専門家と素人の間の知識の壁を取り払い、誤解なく情報を共有できます。"
-        }
-      ]
-    },
     contact: {
       title: "お気軽にご相談ください！",
       description1: "お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡させていただきます。今しばらくお待ちください。",
@@ -193,6 +173,18 @@ const translations = {
       founderTitle: '代表ストーリー',
       founderLead: 'Cor.の「きょうそう」は、代表 寺田康佑の経験から生まれています。',
       founderPlaceholder: '代表ストーリーの詳細は準備中です。',
+      founderYoutubeTitle: '代表の発信',
+      founderYoutubeDescription: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
+      founderYoutubeMessages: {
+        apiNotConfigured: 'YouTube APIが設定されていません',
+        watchDirectly: 'YouTubeチャンネルを直接ご覧ください',
+        loading: '動画を読み込み中...',
+        noVideosFound: '動画が見つかりませんでした',
+        loadFailed: '動画の読み込みに失敗しました',
+        playbackError: '動画の再生でエラーが発生しました',
+        channelNotFound: 'チャンネルが見つかりません',
+        videosNotFound: '動画が見つかりません'
+      },
     },
     values: {
       title: "Our Values"
@@ -283,88 +275,6 @@ const translations = {
       description: "ご質問やご相談、お見積もりのご依頼など、お気軽にお問い合わせください。",
       button: "Contact us"
     },
-    productsTable: {
-      title: "事業一覧",
-      demoLabel: "Demo / Repo",
-      mediaTitle: "外部メディア",
-      products: [
-        {
-          name: 'TapForge',
-          description: 'タップ一つで繋がる、次世代ビジネスカード',
-          demo: 'https://tapforge.pages.dev/',
-        },
-        {
-          name: 'BoltSite',
-          description: '光速0.3秒表示とSEO満点を実現する<br/>高性能Web制作',
-          demo: 'https://boltsite.pages.dev/',
-        },
-        {
-          name: 'IoTRealm',
-          description: 'デジタルと現実を融合した<br/>革新的ソリューション',
-          demo: 'https://iotrealm.pages.dev/',
-        },
-      ],
-      pricing: {
-        title: "料金一覧（税込）",
-        services: [
-          {
-            name: "TapForge",
-            items: [
-              { item: "月額利用料金*", price: "500円〜700円/月" },
-              { item: "2枚目以降", price: "600円/枚" },
-              { item: "100枚以上一括注文時", price: "500円/枚", note: "*NFC名刺カード1枚サービス含む" }
-            ]
-          },
-          {
-            name: "BoltSite",
-            items: [
-              { item: "スタンダードプラン", price: "15,000円/月" },
-              { item: "プロフェッショナルプラン", price: "25,000円/月" },
-              { item: "エンタープライズ", price: "50,000円〜/月" }
-            ],
-            notes: ["パフォーマンス保証（3ヶ月）", "ビジネス成果保証（6ヶ月）", "年間契約プランあり（10%割引）"]
-          },
-          {
-            name: "IoTRealm",
-            items: [
-              { item: "PoC（概念実証）", price: "100万円〜500万円" },
-              { item: "本開発", price: "500万円〜" },
-              { item: "保守・運用", price: "10万円〜/月" }
-            ]
-          }
-        ]
-      },
-      articles: [
-        {
-          name: 'Note',
-          description: '生成 AI 活用術や経営視点コラムを発信',
-          icon: '/assets/Note.avif',
-          action: 'https://note.com/cor_instrument',
-        },
-      ],
-      youtube: [
-        {
-          name: 'YouTube',
-          description: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
-          isFlagged: true,
-          icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cor.Incorporated',
-        },
-      ],
-      youtubeMessages: {
-        apiNotConfigured: 'YouTube APIが設定されていません',
-        watchDirectly: 'YouTubeチャンネルを直接ご覧ください',
-        loading: '動画を読み込み中...',
-        noVideosFound: '動画が見つかりませんでした',
-        loadFailed: '動画の読み込みに失敗しました',
-        playbackError: '動画の再生でエラーが発生しました',
-        channelNotFound: 'チャンネルが見つかりません',
-        videosNotFound: '動画が見つかりません'
-      },
-      buttonTexts: {
-        goTo: 'Go'
-      }
-    },
     contactInfo: {
       address: {
         label: "Postal address",
@@ -422,7 +332,7 @@ const translations = {
         job: 'CEO',
         description: '音大卒 → 楽器メーカー営業 → メガベンチャーで法人営業 → IT へ転身という異色の経歴を活かし、"技術と言葉の橋渡し" に挑戦しています。',
         comingSoon: false,
-        link: 'https://www.tapforge.org/p/company',
+        link: 'https://cor-jp.com/about',
       },
       {
         name: 'Cloudia Sorano',
@@ -1510,26 +1420,6 @@ const translations = {
         "That is the origin of Cor.inc."
       ]
     },
-    productBackstory: {
-      title: "Why These Services?",
-      products: [
-        {
-          name: "TapForge",
-          subtitle: "Communication Revolution Starting from 'Meeting'",
-          story: "During my time as a salesperson at Recruit, I repeatedly experienced situations where business cards would pile up after exchanges, making it impossible to remember who was who. The 'ritual' of exchanging business cards should be a declaration of intent to 'build a relationship,' but in reality, it only becomes a formal record of 'we exchanged contact information.' I felt a significant miscommunication here. TapForge is a product designed to transform business card exchanges into 'real encounters.' With just one tap, you can instantly access all information—profiles, SNS, portfolios, appointment calendars. Instead of verbally explaining 'This is what I do,' you can convey everything about yourself visually and intuitively with a single tap. This is the first step toward 'communication beyond words.'"
-        },
-        {
-          name: "BoltSite",
-          subtitle: "Shaping Companies' 'Feelings'",
-          story: "When I was in sales at Recruit, I saw many company websites, but most failed to convey the 'feelings' or 'passion' of those companies. Business owners have passionate thoughts. They take pride in their products and services. But this is not reflected on their websites at all—because they can only express within the framework of existing tools. BoltSite is an ultra-fast website creation service using the Astro framework, but what I truly value is bringing out 'that company's essence.' In website creation meetings, I listen intently to business owners. 'Why did you start this business?' 'What feelings do you have when creating products?' Then, I interpret the unspoken feelings behind those words and translate them into design and copy. The result is not just a 'corporate information site' but a website where you can feel that company's 'personality.'"
-        },
-        {
-          name: "IoTRealm",
-          subtitle: "Contract Development to Shape Feelings",
-          story: "After building trust through business cards and websites, many business owners say, 'Actually, I've been thinking it would be nice if we could do this...' Sometimes it's vague, sometimes grandiose, sometimes unclear if it's even technically possible. But behind it, there's definitely a pure desire: 'It would be great if this happened.' IoTRealm is a contract development service to shape such 'feelings.' For example, a real estate and construction startup representative proposed 'a product that automatically generates floor plans just by giving AI a site map,' won an award, but was struggling because they didn't know how to technically realize it. I created a prototype in two weeks—an app that uses YOLO image recognition AI to automatically determine buildable areas from site maps and generate simple floor plans. This is also 'communication beyond words.' By converting complex regulations and calculations into visual data, we can break down the knowledge barrier between experts and laypeople and share information without misunderstanding."
-        }
-      ]
-    },
     contact: {
       title: "Feel free to contact us!",
       description1: "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
@@ -1647,6 +1537,18 @@ const translations = {
       founderTitle: "Founder's Story",
       founderLead: "Cor.'s \"Kyousou\" grew out of the experience of our founder, Kosuke Terada.",
       founderPlaceholder: "The details of the founder's story are being prepared.",
+      founderYoutubeTitle: "From the Founder",
+      founderYoutubeDescription: "Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.",
+      founderYoutubeMessages: {
+        apiNotConfigured: 'YouTube API is not configured',
+        watchDirectly: 'Please watch directly on the YouTube channel',
+        loading: 'Loading video...',
+        noVideosFound: 'No videos found',
+        loadFailed: 'Failed to load video',
+        playbackError: 'Video playback error occurred',
+        channelNotFound: 'Channel not found',
+        videosNotFound: 'No videos found'
+      },
     },
     values: {
       title: "Our Values"
@@ -1737,88 +1639,6 @@ const translations = {
       description: "Feel free to contact us for any questions, consultations, or quote requests.",
       button: "Contact us"
     },
-    productsTable: {
-      title: "Business List",
-      demoLabel: "Demo / Repo",
-      mediaTitle: "External Media",
-      products: [
-        {
-          name: 'TapForge',
-          description: 'Connect with just a tap -<br/>Next-gen business networking',
-          demo: 'https://tapforge.pages.dev/en/',
-        },
-        {
-          name: 'BoltSite',
-          description: 'Ultra-fast 0.3s loading with<br/>perfect SEO scores',
-          demo: 'https://boltsite.pages.dev/en/',
-        },
-        {
-          name: 'IoTRealm',
-          description: 'Bridging digital innovation<br/>with physical reality',
-          demo: 'https://iotrealm.pages.dev/en/',
-        },
-      ],
-      pricing: {
-        title: "Pricing List (Tax Included)",
-        services: [
-          {
-            name: "TapForge",
-            items: [
-              { item: "Monthly usage fee*", price: "¥500-700/month" },
-              { item: "2nd card onwards", price: "¥600/card" },
-              { item: "100+ cards bulk order", price: "¥500/card", note: "*1 NFC business card service included" }
-            ]
-          },
-          {
-            name: "BoltSite",
-            items: [
-              { item: "Standard Plan", price: "¥15,000/month" },
-              { item: "Professional Plan", price: "¥25,000/month" },
-              { item: "Enterprise", price: "¥50,000+/month" }
-            ],
-            notes: ["Performance guarantee (3 months)", "Business results guarantee (6 months)", "Annual contract available (10% discount)"]
-          },
-          {
-            name: "IoTRealm",
-            items: [
-              { item: "PoC (Proof of Concept)", price: "¥1M-5M" },
-              { item: "Full Development", price: "¥5M+" },
-              { item: "Maintenance & Support", price: "¥100K+/month" }
-            ]
-          }
-        ]
-      },
-      articles: [
-        {
-          name: 'Note',
-          description: 'Publishing generative AI utilization techniques and management perspective columns',
-          icon: '/assets/Note.avif',
-          action: 'https://note.com/cor_instrument',
-        },
-      ],
-      youtube: [
-        {
-          name: 'YouTube',
-          description: 'Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.',
-          isFlagged: true,
-          icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cor.Incorporated',
-        },
-      ],
-      youtubeMessages: {
-        apiNotConfigured: 'YouTube API is not configured',
-        watchDirectly: 'Please watch directly on the YouTube channel',
-        loading: 'Loading video...',
-        noVideosFound: 'No videos found',
-        loadFailed: 'Failed to load video',
-        playbackError: 'Video playback error occurred',
-        channelNotFound: 'Channel not found',
-        videosNotFound: 'No videos found'
-      },
-      buttonTexts: {
-        goTo: 'Go'
-      }
-    },
     contactInfo: {
       address: {
         label: "Postal address",
@@ -1876,7 +1696,7 @@ const translations = {
         job: 'CEO',
         description: 'Music college graduate → Musical instrument manufacturer sales → Corporate sales at mega-venture → Career change to IT. Leveraging this unique background to challenge "bridging technology and language."',
         comingSoon: false,
-        link: 'https://www.tapforge.org/p/company',
+        link: 'https://cor-jp.com/about',
       },
       {
         name: 'Cloudia Sorano',
@@ -2495,26 +2315,6 @@ const translations = {
         "这就是Cor.inc的起源。"
       ]
     },
-    productBackstory: {
-      title: "为什么是这些服务？",
-      products: [
-        {
-          name: "TapForge",
-          subtitle: "从'相遇'开始的沟通革命",
-          story: "在Recruit做销售时，我多次经历名片交换后名片堆积如山，不知道谁是谁的情况。名片交换这个'仪式'本应是'让我们建立关系'的意向表达，但实际上只成为了'我们交换了联系方式'的形式记录。我在这里感受到了巨大的误解。TapForge是一个旨在将名片交换转变为'真正相遇'的产品。只需一次点击，您就可以立即访问所有信息——个人资料、社交媒体、作品集、预约日历。不用口头解释'我做这个工作'，只需一次点击就能视觉化、直观地传达您的一切。这是迈向'超越语言的沟通'的第一步。"
-        },
-        {
-          name: "BoltSite",
-          subtitle: "塑造企业的'情感'",
-          story: "在Recruit做销售时，我看到了许多公司网站，但大多数都无法传达这些公司的'情感'或'热情'。企业主有热情的想法。他们为自己的产品和服务感到自豪。但这完全没有反映在他们的网站上——因为他们只能在现有工具的框架内表达。BoltSite是使用Astro框架的超高速网站创建服务，但我真正重视的是展现'那个公司的本质'。在网站创建会议中，我专注地倾听企业主的想法。'您为什么创办这项业务？''您在制造产品时有什么感受？'然后，我解读这些话语背后未说出口的感受，并将它们转化为设计和文案。结果不仅仅是'企业信息网站'，而是一个能让您感受到那个公司'个性'的网站。"
-        },
-        {
-          name: "IoTRealm",
-          subtitle: "塑造情感的承包开发",
-          story: "通过名片和网站建立信任后，许多企业主会说：'实际上，我一直在想如果能做到这个就好了...'有时模糊，有时宏大，有时甚至不清楚技术上是否可行。但背后肯定有一个纯粹的愿望：'如果能实现这个就太好了'。IoTRealm是一个承包开发服务，旨在塑造这些'情感'。例如，一家房地产和建筑初创公司的代表提出了'只需给AI一个场地图就能自动生成平面图的产品'，并获得了奖项，但由于不知道如何在技术上实现而苦恼。我在两周内创建了一个原型——使用YOLO图像识别AI从场地图自动判断可建筑区域并生成简单平面图的应用程序。这也是'超越语言的沟通'。通过将复杂的法规和计算转换为视觉数据，我们可以打破专家和外行之间的知识壁垒，无误地分享信息。"
-        }
-      ]
-    },
     contact: {
       title: "请随时咨询！",
       description1: "确认咨询内容后，我们将在3个工作日内由负责人联系您。请稍等片刻。",
@@ -2632,6 +2432,18 @@ const translations = {
       founderTitle: '代表的故事',
       founderLead: 'Cor. 的「きょうそう」源自代表寺田康佑的经历。',
       founderPlaceholder: '代表故事的详细内容正在准备中。',
+      founderYoutubeTitle: '代表的分享',
+      founderYoutubeDescription: '我们提供技术和商业战略相关的视频内容。分享AI应用案例和产品开发的幕后故事。',
+      founderYoutubeMessages: {
+        apiNotConfigured: 'YouTube API未配置',
+        watchDirectly: '请直接在YouTube频道观看',
+        loading: '正在加载视频...',
+        noVideosFound: '未找到视频',
+        loadFailed: '视频加载失败',
+        playbackError: '视频播放发生错误',
+        channelNotFound: '未找到频道',
+        videosNotFound: '未找到视频'
+      },
     },
     values: {
       title: "我们的价值观"
@@ -2722,88 +2534,6 @@ const translations = {
       description: "如有任何问题、咨询或报价请求，请随时联系我们。",
       button: "联系我们"
     },
-    productsTable: {
-      title: "业务列表",
-      demoLabel: "演示/仓库",
-      mediaTitle: "外部媒体",
-      products: [
-        {
-          name: 'TapForge',
-          description: '一键连接，<br/>下一代商务网络',
-          demo: 'https://tapforge.pages.dev/zh/',
-        },
-        {
-          name: 'BoltSite',
-          description: '超快0.3秒加载<br/>完美SEO评分',
-          demo: 'https://boltsite.pages.dev/zh/',
-        },
-        {
-          name: 'IoTRealm',
-          description: '数字创新<br/>与物理现实的桥梁',
-          demo: 'https://iotrealm.pages.dev/zh/',
-        },
-      ],
-      pricing: {
-        title: "价格表（含税）",
-        services: [
-          {
-            name: "TapForge",
-            items: [
-              { item: "月使用费*", price: "¥500-700/月" },
-              { item: "第2张起", price: "¥600/张" },
-              { item: "100张以上批量订购", price: "¥500/张", note: "*含1张NFC名片服务" }
-            ]
-          },
-          {
-            name: "BoltSite",
-            items: [
-              { item: "标准计划", price: "¥15,000/月" },
-              { item: "专业计划", price: "¥25,000/月" },
-              { item: "企业版", price: "¥50,000+/月" }
-            ],
-            notes: ["性能保证（3个月）", "业务成果保证（6个月）", "可选年度合同（10%折扣）"]
-          },
-          {
-            name: "IoTRealm",
-            items: [
-              { item: "PoC（概念验证）", price: "¥100万~500万" },
-              { item: "正式开发", price: "¥500万~" },
-              { item: "维护运营", price: "¥10万~/月" }
-            ]
-          }
-        ]
-      },
-      articles: [
-        {
-          name: 'Note',
-          description: '发布生成AI活用技巧和经营视角专栏',
-          icon: '/assets/Note.avif',
-          action: 'https://note.com/cor_instrument',
-        },
-      ],
-      youtube: [
-        {
-          name: 'YouTube',
-          description: '我们提供技术和商业战略相关的视频内容。分享AI应用案例和产品开发的幕后故事。',
-          isFlagged: true,
-          icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cor.Incorporated',
-        },
-      ],
-      youtubeMessages: {
-        apiNotConfigured: 'YouTube API未配置',
-        watchDirectly: '请直接在YouTube频道观看',
-        loading: '正在加载视频...',
-        noVideosFound: '未找到视频',
-        loadFailed: '视频加载失败',
-        playbackError: '视频播放发生错误',
-        channelNotFound: '未找到频道',
-        videosNotFound: '未找到视频'
-      },
-      buttonTexts: {
-        goTo: '前往'
-      }
-      },
       contactInfo: {
         address: {
           label: "邮寄地址",
@@ -2861,7 +2591,7 @@ const translations = {
         job: 'CEO',
         description: '音乐学院毕业 → 乐器制造商销售 → 大型风险投资企业销售 → 转行IT。利用这一独特背景挑战"技术与语言的桥梁"。',
         comingSoon: false,
-        link: 'https://www.tapforge.org/p/company',
+        link: 'https://cor-jp.com/about',
       },
       {
         name: 'Cloudia Sorano',
@@ -3480,26 +3210,6 @@ const translations = {
         "그것이 Cor.inc의 원점입니다."
       ]
     },
-    productBackstory: {
-      title: "왜 이 서비스들인가?",
-      products: [
-        {
-          name: "TapForge",
-          subtitle: "'만남'에서 시작되는 소통 혁신",
-          story: "Recruit에서 영업을 하던 시절, 명함 교환 후 명함이 산처럼 쌓여 누가 누구인지 알 수 없게 되는 상황을 여러 번 경험했습니다. 명함 교환이라는 '의식'은 본래 '앞으로 관계를 쌓아가자'는 의사 표시여야 하는데, 실제로는 '일단 연락처를 교환했습니다'라는 형식적인 기록에 불과했습니다. 여기에서 큰 미스커뮤니케이션을 느꼈습니다. TapForge는 명함 교환을 '진정한 만남'으로 바꾸기 위한 제품입니다. 한 번의 탭으로 프로필, SNS, 포트폴리오, 예약 캘린더 등 모든 정보에 즉시 접근할 수 있습니다. '저는 이런 일을 합니다'라고 구두로 설명하는 대신, 한 번의 탭으로 자신의 모든 것을 시각적으로, 직관적으로 전달할 수 있습니다. 이것이 '언어를 넘어선 소통'의 첫 번째 단계입니다."
-        },
-        {
-          name: "BoltSite",
-          subtitle: "기업의 '마음'을 형상화",
-          story: "Recruit에서 영업을 할 때 많은 기업 웹사이트를 봤지만, 대부분 그 기업의 '마음'이나 '열정'이 전혀 전달되지 않았습니다. 경영자는 열정적인 생각을 가지고 있습니다. 자사 제품과 서비스에 자부심을 가지고 있습니다. 하지만 그것이 웹사이트에 전혀 반영되지 않습니다—기존 도구의 틀 안에서만 표현할 수 있기 때문입니다. BoltSite는 Astro 프레임워크를 사용한 초고속 웹사이트 제작 서비스이지만, 제가 진정으로 중요하게 여기는 것은 '그 기업다움'을 끌어내는 것입니다. 웹사이트 제작 미팅에서는 경영자의 이야기를 끊임없이 듣습니다. '왜 이 사업을 시작했나요?' '제품을 만들 때 어떤 마음이었나요?' 그리고 그 말 뒤에 있는, 말로 표현되지 않은 마음을 읽어내어 디자인과 카피에 담아냅니다. 그 결과 만들어지는 것은 단순한 '기업 정보 사이트'가 아니라, 그 기업의 '인격'이 느껴지는 웹사이트입니다."
-        },
-        {
-          name: "IoTRealm",
-          subtitle: "마음을 형상화하는 수탁 개발",
-          story: "명함과 웹사이트로 신뢰 관계를 구축한 후, 많은 경영자들이 '사실은 이런 걸 할 수 있으면 좋겠다고 생각하고 있는데...'라고 말합니다. 때로는 모호하고, 때로는 거대하며, 때로는 기술적으로 가능한지조차 불분명한 아이디어입니다. 하지만 그 뒤에는 확실히 '이렇게 되면 좋겠다'는 순수한 마음이 있습니다. IoTRealm은 그런 '마음'을 형상화하기 위한 수탁 개발 서비스입니다. 예를 들어, 한 부동산·건설 스타트업 대표가 'AI에 부지 지도를 넘기기만 하면 자동으로 평면도를 생성하는 제품'을 제안해 우승했지만, 기술적으로 어떻게 실현할지 몰라 고민하고 있었습니다. 저는 2주 만에 프로토타입을 만들었습니다—YOLO 이미지 인식 AI를 사용해 부지 지도에서 건축 가능 지역을 자동 판정하고 간단한 평면도를 생성하는 앱입니다. 이것 역시 '언어를 넘어선 소통'입니다. 복잡한 법 규제와 계산을 시각적 데이터로 변환함으로써 전문가와 비전문가 사이의 지식 장벽을 허물고 오해 없이 정보를 공유할 수 있습니다."
-        }
-      ]
-    },
     contact: {
       title: "언제든지 문의하세요!",
       description1: "문의 내용을 확인한 후, 3 영업일 이내에 담당자가 연락드리겠습니다. 잠시만 기다려 주세요.",
@@ -3617,6 +3327,18 @@ const translations = {
       founderTitle: '대표 스토리',
       founderLead: 'Cor.의 「きょうそう」는 대표 데라다 코스케의 경험에서 비롯되었습니다.',
       founderPlaceholder: '대표 스토리의 상세 내용은 준비 중입니다.',
+      founderYoutubeTitle: '대표의 발신',
+      founderYoutubeDescription: '테크놀로지와 비즈니스 전략에 관한 동영상 콘텐츠를 배송합니다. AI 활용 사례와 제품 개발의 무대 뒤를 공개하고 있습니다.',
+      founderYoutubeMessages: {
+        apiNotConfigured: 'YouTube API가 설정되지 않았습니다',
+        watchDirectly: 'YouTube 채널에서 직접 시청해 주세요',
+        loading: '동영상 로딩 중...',
+        noVideosFound: '동영상을 찾을 수 없습니다',
+        loadFailed: '동영상 로딩에 실패했습니다',
+        playbackError: '동영상 재생 중 오류가 발생했습니다',
+        channelNotFound: '채널을 찾을 수 없습니다',
+        videosNotFound: '동영상을 찾을 수 없습니다'
+      },
     },
     values: {
       title: "우리의 가치관"
@@ -3707,88 +3429,6 @@ const translations = {
       description: "질문이나 상담, 견적 요청 등 언제든지 문의해 주세요.",
       button: "문의하기"
     },
-    productsTable: {
-      title: "사업 목록",
-      demoLabel: "데모/저장소",
-      mediaTitle: "외부 미디어",
-      products: [
-        {
-          name: 'TapForge',
-          description: '한 번의 탭으로 연결되는<br/>차세대 비즈니스 네트워킹',
-          demo: 'https://tapforge.pages.dev/ko/',
-        },
-        {
-          name: 'BoltSite',
-          description: '초고속 0.3초 로딩<br/>완벽한 SEO 점수',
-          demo: 'https://boltsite.pages.dev/ko/',
-        },
-        {
-          name: 'IoTRealm',
-          description: '디지털 혁신과<br/>물리적 현실의 다리',
-          demo: 'https://iotrealm.pages.dev/ko/',
-        },
-      ],
-      pricing: {
-        title: "가격표 (세금 포함)",
-        services: [
-          {
-            name: "TapForge",
-            items: [
-              { item: "월 사용료*", price: "¥500-700/월" },
-              { item: "2장부터", price: "¥600/장" },
-              { item: "100장 이상 일괄 주문", price: "¥500/장", note: "*NFC 명함 1장 서비스 포함" }
-            ]
-          },
-          {
-            name: "BoltSite",
-            items: [
-              { item: "스탠다드 플랜", price: "¥15,000/월" },
-              { item: "프로페셔널 플랜", price: "¥25,000/월" },
-              { item: "엔터프라이즈", price: "¥50,000+/월" }
-            ],
-            notes: ["성능 보장 (3개월)", "비즈니스 성과 보장 (6개월)", "연간 계약 가능 (10% 할인)"]
-          },
-          {
-            name: "IoTRealm",
-            items: [
-              { item: "PoC (개념 증명)", price: "¥100만~500만" },
-              { item: "본 개발", price: "¥500만~" },
-              { item: "유지보수·운영", price: "¥10만~/월" }
-            ]
-          }
-        ]
-      },
-      articles: [
-        {
-          name: 'Note',
-          description: '생성 AI 활용 기법과 경영 관점 칼럼 발행',
-          icon: '/assets/Note.avif',
-          action: 'https://note.com/cor_instrument',
-        },
-      ],
-      youtube: [
-        {
-          name: 'YouTube',
-          description: '테크놀로지와 비즈니스 전략에 관한 동영상 콘텐츠를 배송합니다. AI 활용 사례와 제품 개발의 무대 뒤를 공개하고 있습니다.',
-          isFlagged: true,
-          icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cor.Incorporated',
-        },
-      ],
-      youtubeMessages: {
-        apiNotConfigured: 'YouTube API가 설정되지 않았습니다',
-        watchDirectly: 'YouTube 채널에서 직접 시청해 주세요',
-        loading: '동영상 로딩 중...',
-        noVideosFound: '동영상을 찾을 수 없습니다',
-        loadFailed: '동영상 로딩에 실패했습니다',
-        playbackError: '동영상 재생 중 오류가 발생했습니다',
-        channelNotFound: '채널을 찾을 수 없습니다',
-        videosNotFound: '동영상을 찾을 수 없습니다'
-      },
-      buttonTexts: {
-        goTo: '이동'
-      }
-      },
       contactInfo: {
         address: {
           label: "우편 주소",
@@ -3846,7 +3486,7 @@ const translations = {
         job: 'CEO',
         description: '음악대학 졸업 → 악기 제조업체 영업 → 메가벤처 기업영업 → IT 전환. 이 독특한 배경을 활용해 "기술과 언어의 다리"에 도전합니다.',
         comingSoon: false,
-        link: 'https://www.tapforge.org/p/company',
+        link: 'https://cor-jp.com/about',
       },
       {
         name: 'Cloudia Sorano',
@@ -4465,26 +4105,6 @@ const translations = {
         "Ese es el origen de Cor.inc."
       ]
     },
-    productBackstory: {
-      title: "¿Por Qué Estos Servicios?",
-      products: [
-        {
-          name: "TapForge",
-          subtitle: "Revolución de Comunicación que Comienza desde el 'Encuentro'",
-          story: "Durante mi tiempo como vendedor en Recruit, experimenté repetidamente situaciones donde las tarjetas de presentación se acumulaban después del intercambio, haciendo imposible recordar quién era quién. El 'ritual' de intercambiar tarjetas de presentación debería ser una declaración de intención de 'construir una relación', pero en realidad, solo se convierte en un registro formal de 'intercambiamos información de contacto'. Sentí una comunicación errónea significativa aquí. TapForge es un producto diseñado para transformar el intercambio de tarjetas de presentación en 'encuentros reales'. Con solo un toque, puede acceder instantáneamente a toda la información: perfiles, redes sociales, portafolios, calendarios de citas. En lugar de explicar verbalmente 'Esto es lo que hago', puede transmitir todo sobre usted de manera visual e intuitiva con un solo toque. Este es el primer paso hacia la 'comunicación más allá de las palabras'."
-        },
-        {
-          name: "BoltSite",
-          subtitle: "Dando Forma a los 'Sentimientos' de las Empresas",
-          story: "Cuando estaba en ventas en Recruit, vi muchos sitios web de empresas, pero la mayoría no lograba transmitir los 'sentimientos' o la 'pasión' de esas empresas. Los dueños de negocios tienen pensamientos apasionados. Se enorgullecen de sus productos y servicios. Pero esto no se refleja en absoluto en sus sitios web, porque solo pueden expresarse dentro del marco de las herramientas existentes. BoltSite es un servicio de creación de sitios web ultrarrápido que utiliza el framework Astro, pero lo que realmente valoro es sacar 'la esencia de esa empresa'. En las reuniones de creación de sitios web, escucho atentamente a los dueños de negocios. '¿Por qué comenzó este negocio?' '¿Qué sentimientos tiene al crear productos?' Luego, interpreto los sentimientos no expresados detrás de esas palabras y los traduzco en diseño y copia. El resultado no es solo un 'sitio de información corporativa', sino un sitio web donde puede sentir la 'personalidad' de esa empresa."
-        },
-        {
-          name: "IoTRealm",
-          subtitle: "Desarrollo por Contrato para Dar Forma a los Sentimientos",
-          story: "Después de construir confianza a través de tarjetas de presentación y sitios web, muchos dueños de negocios dicen: 'En realidad, he estado pensando que sería bueno si pudiéramos hacer esto...' A veces es vago, a veces grandioso, a veces poco claro si es técnicamente posible. Pero detrás, definitivamente hay un deseo puro: 'Sería genial si esto sucediera'. IoTRealm es un servicio de desarrollo por contrato para dar forma a tales 'sentimientos'. Por ejemplo, un representante de una startup inmobiliaria y de construcción propuso 'un producto que genera automáticamente planos simplemente dándole a la IA un mapa del sitio', ganó un premio, pero estaba luchando porque no sabía cómo realizarlo técnicamente. Creé un prototipo en dos semanas: una aplicación que usa IA de reconocimiento de imágenes YOLO para determinar automáticamente áreas edificables a partir de mapas del sitio y generar planos simples. Esto también es 'comunicación más allá de las palabras'. Al convertir regulaciones y cálculos complejos en datos visuales, podemos derribar la barrera del conocimiento entre expertos y profanos y compartir información sin malentendidos."
-        }
-      ]
-    },
     contact: {
       title: "¡Consulte con confianza!",
       description1: "Después de confirmar el contenido de la consulta, nos pondremos en contacto con usted dentro de 3 días hábiles. Por favor, espere un momento.",
@@ -4602,6 +4222,18 @@ const translations = {
       founderTitle: 'Historia del fundador',
       founderLead: 'El «Kyousou» de Cor. nació de la experiencia de nuestro fundador, Kosuke Terada.',
       founderPlaceholder: 'Los detalles de la historia del fundador están en preparación.',
+      founderYoutubeTitle: 'Del fundador',
+      founderYoutubeDescription: 'Distribuimos contenido de video sobre tecnología y estrategia empresarial. Publicamos casos de uso de IA y detrás de escena del desarrollo de productos.',
+      founderYoutubeMessages: {
+        apiNotConfigured: 'YouTube API no está configurado',
+        watchDirectly: 'Por favor, vea directamente en el canal de YouTube',
+        loading: 'Cargando video...',
+        noVideosFound: 'No se encontraron videos',
+        loadFailed: 'Error al cargar el video',
+        playbackError: 'Error en la reproducción del video',
+        channelNotFound: 'Canal no encontrado',
+        videosNotFound: 'No se encontraron videos'
+      },
     },
     values: {
       title: "Nuestros Valores"
@@ -4692,88 +4324,6 @@ const translations = {
       description: "No dude en contactarnos para cualquier pregunta, consulta o solicitud de cotización.",
       button: "Contáctanos"
     },
-    productsTable: {
-      title: "Lista de negocios",
-      demoLabel: "Demo/Repositorio",
-      mediaTitle: "Medios externos",
-      products: [
-        {
-          name: 'TapForge',
-          description: 'Conecta con un solo toque -<br/>Redes de negocios de próxima generación',
-          demo: 'https://tapforge.pages.dev/es/',
-        },
-        {
-          name: 'BoltSite',
-          description: 'Carga ultra rápida de 0.3s con<br/>puntuaciones SEO perfectas',
-          demo: 'https://boltsite.pages.dev/es/',
-        },
-        {
-          name: 'IoTRealm',
-          description: 'Tendiendo puentes entre la innovación digital<br/>y la realidad física',
-          demo: 'https://iotrealm.pages.dev/es/',
-        },
-      ],
-      pricing: {
-        title: "Lista de precios (impuestos incluidos)",
-        services: [
-          {
-            name: "TapForge",
-            items: [
-              { item: "Tarifa de uso mensual*", price: "¥500-700/mes" },
-              { item: "Desde la 2da tarjeta", price: "¥600/tarjeta" },
-              { item: "Pedido masivo de 100+ tarjetas", price: "¥500/tarjeta", note: "*1 tarjeta de presentación NFC incluida" }
-            ]
-          },
-          {
-            name: "BoltSite",
-            items: [
-              { item: "Plan Estándar", price: "¥15,000/mes" },
-              { item: "Plan Profesional", price: "¥25,000/mes" },
-              { item: "Empresarial", price: "¥50,000+/mes" }
-            ],
-            notes: ["Garantía de rendimiento (3 meses)", "Garantía de resultados empresariales (6 meses)", "Contrato anual disponible (10% descuento)"]
-          },
-          {
-            name: "IoTRealm",
-            items: [
-              { item: "PoC (Prueba de Concepto)", price: "¥100万~500万" },
-              { item: "Desarrollo completo", price: "¥500万~" },
-              { item: "Mantenimiento y operación", price: "¥10万~/mes" }
-            ]
-          }
-        ]
-      },
-      articles: [
-        {
-          name: 'Note',
-          description: 'Publicando técnicas de utilización de IA generativa y columnas de perspectiva empresarial',
-          icon: '/assets/Note.avif',
-          action: 'https://note.com/cor_instrument',
-        },
-      ],
-      youtube: [
-        {
-          name: 'YouTube',
-          description: 'Distribuimos contenido de video sobre tecnología y estrategia empresarial. Publicamos casos de uso de IA y detrás de escena del desarrollo de productos.',
-          isFlagged: true,
-          icon: '/assets/Youtube.avif',
-          action: 'https://www.youtube.com/@Cor.Incorporated',
-        },
-      ],
-      youtubeMessages: {
-        apiNotConfigured: 'YouTube API no está configurado',
-        watchDirectly: 'Por favor, vea directamente en el canal de YouTube',
-        loading: 'Cargando video...',
-        noVideosFound: 'No se encontraron videos',
-        loadFailed: 'Error al cargar el video',
-        playbackError: 'Error en la reproducción del video',
-        channelNotFound: 'Canal no encontrado',
-        videosNotFound: 'No se encontraron videos'
-      },
-      buttonTexts: {
-        goTo: 'Ir'
-      }
-      },
       contactInfo: {
         address: {
           label: "Dirección postal",
@@ -4831,7 +4381,7 @@ const translations = {
         job: 'CEO',
         description: 'Graduado de universidad de música → Ventas en fabricante de instrumentos → Ventas corporativas en mega-venture → Transición a IT. Aprovechando este trasfondo único para desafiar "tender puentes entre tecnología y lenguaje".',
         comingSoon: false,
-        link: 'https://www.tapforge.org/p/company',
+        link: 'https://cor-jp.com/about',
       },
       {
         name: 'Cloudia Sorano',

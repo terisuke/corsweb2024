@@ -10,12 +10,22 @@
     "redirects": [
       {
         "source": "/pricing",
-        "destination": "/products",
+        "destination": "/works",
         "type": 301
       },
       {
         "source": "/pricing/",
-        "destination": "/products",
+        "destination": "/works",
+        "type": 301
+      },
+      {
+        "source": "/products",
+        "destination": "/works",
+        "type": 301
+      },
+      {
+        "source": "/products/",
+        "destination": "/works",
         "type": 301
       }
     ],
