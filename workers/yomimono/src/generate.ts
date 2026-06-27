@@ -45,9 +45,10 @@ ${recentTitles.map((t) => `- ${t}`).join('\n')}
   const text = await callClaude(env, {
     system,
     userText:
-      '指定テーマの記事を1本、最新情報を web_search で調べたうえで、社長の文体で書いてください。最後に指定のJSONのみを出力してください。',
+      '指定テーマの記事を1本、最新情報を web_search で3〜4回ざっと調べたうえで、社長の文体で書いてください。検索は深追いせず手早く。最後に指定のJSONのみを出力してください。',
     useWebSearch: true,
-    maxTokens: 16000,
+    maxWebUses: 4, // 記事の裏取りは4回まで（速度のため）
+    maxTokens: 12000,
   });
 
   const raw = parseLastJsonBlock<Partial<Article>>(text);

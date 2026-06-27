@@ -11,6 +11,7 @@ interface CallOptions {
   model?: string;
   maxTokens?: number;
   useWebSearch?: boolean;
+  maxWebUses?: number; // web検索の最大回数（少ないほど速い）
 }
 
 // web_search はサーバーサイドツール。stop_reason: "pause_turn" が出たら継続再送する。
@@ -20,7 +21,7 @@ interface CallOptions {
 export async function callClaude(env: Env, opts: CallOptions): Promise<string> {
   const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   const tools: Anthropic.ToolUnion[] | undefined = opts.useWebSearch
-    ? [{ type: 'web_search_20260209', name: 'web_search', max_uses: 5 }]
+    ? [{ type: 'web_search_20260209', name: 'web_search', max_uses: opts.maxWebUses ?? 5 }]
     : undefined;
 
   const messages: Anthropic.MessageParam[] = [{ role: 'user', content: opts.userText }];

@@ -40,7 +40,7 @@ const JS = `
   }).catch(function(){});
 
   $('collectBtn').addEventListener('click', function(){
-    var b = $('collectBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span>収集中…（30〜60秒）';
+    var b = $('collectBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span>web検索中…（1〜2分かかります）';
     $('collectErr').innerHTML = '';
     apiLong('/api/collect', { recentTitles: recentSlugs }).then(function(j){
       renderCands(j.candidates || []);
@@ -90,7 +90,7 @@ const JS = `
       if (i >= idx.length){ b.disabled=false; b.innerHTML='選択したテーマで記事を生成'; return; }
       var theme = window.__cands[idx[i]];
       b.innerHTML = '<span class="spin"></span>生成中 ' + (i+1) + '/' + idx.length + '…';
-      var slot = document.createElement('div'); slot.className='card'; slot.innerHTML='<div class="meta"><span class="spin" style="border-color:#1b2c40;border-top-color:transparent"></span>「'+esc(theme.title)+'」を生成中…</div>';
+      var slot = document.createElement('div'); slot.className='card'; slot.innerHTML='<div class="meta"><span class="spin" style="border-color:#1b2c40;border-top-color:transparent"></span>「'+esc(theme.title)+'」を生成中…（web検索＋執筆で数分かかります）</div>';
       $('arts').appendChild(slot);
       apiLong('/api/generate', { theme: theme, recentTitles: recentSlugs }).then(function(j){
         renderArticle(slot, j.article, j.violations||[]);
