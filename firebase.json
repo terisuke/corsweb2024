@@ -27,6 +27,26 @@
         "source": "/products/",
         "destination": "/works",
         "type": 301
+      },
+      {
+        "source": "/en/products{,/}",
+        "destination": "/en",
+        "type": 301
+      },
+      {
+        "source": "/zh/products{,/}",
+        "destination": "/zh",
+        "type": 301
+      },
+      {
+        "source": "/ko/products{,/}",
+        "destination": "/ko",
+        "type": 301
+      },
+      {
+        "source": "/es/products{,/}",
+        "destination": "/es",
+        "type": 301
       }
     ],
     "headers": [
