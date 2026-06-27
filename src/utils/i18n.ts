@@ -384,7 +384,7 @@ const translations = {
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
-      privacy: { title: "Privacy policy · Cor.inc", description: "Our privacy policy will help you understand what information is collected and how it is used." },
+      privacy: { title: "個人情報保護方針 | Cor.inc", description: "Cor.株式会社の個人情報保護方針（プライバシーポリシー）。取得する個人情報と利用目的、第三者提供・委託、安全管理措置、開示等の請求、お問い合わせ窓口について。" },
       security: { title: "セキュリティ | Cor.inc", description: "Cor.株式会社の情報セキュリティ、ISMS取得に向けた体制、ローカルファーストと機密度ティアによるAI開発環境について。" },
       works: { title: "実績 | Cor.inc", description: "Cor.株式会社の実績紹介。AI受託開発、基幹DB移行、多言語AI受付、建築AI、自社プロダクトGriftなど、領域の異なる実装実績を順次公開します。" },
       industryMedical: { title: "医療・ヘルスケア向けAI伴走 | Cor.inc", description: "医療現場の課題——院内データ活用、患者対応、情報セキュリティ、AI活用方針、見積もりの整理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。" },
@@ -394,33 +394,124 @@ const translations = {
       industryEducation: { title: "教育向けAI伴走 | Cor.inc", description: "教育現場の課題——テスト作業、保護者連絡、調査報告、ICT名簿管理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。" }
     },
     privacy: {
-      title: "プライバシーポリシー",
-      lastUpdate: "Last update: May 13, 2024",
-      intro: "Cor.incでは、お客様のプライバシーを最優先し、その保護に努めています。本プライバシーポリシーでは、ウェブ解析ツール、Flutterアプリ、機械学習ソリューションなど、弊社のサービスをご利用いただく際の個人情報の収集、使用、保護に関する弊社のアプローチについて詳しく説明します。当社の取り組みをご理解いただくため、本ポリシーをご確認いただくことをお勧めします。",
-      section1: {
-        title: "1. 当社が収集する情報",
-        description: "当社のサービスをご利用いただく際に、当社は以下のような様々な種類の個人情報を収集することがあります：",
-        items: [
-          "お客様が提供する情報：これには、お客様がアカウントを作成したり、当社サービスの特定の機能を利用したりする際に、お客様の氏名、Eメールアドレス、連絡先、その他の関連データが含まれる場合があります。",
-          "利用データ：当社は、お客様のIPアドレス、ブラウザの種類、デバイス情報、訪問したページ、および当社サービスとのインタラクションを含む、お客様の当社サービスの利用に関するデータを収集します。",
-          "クッキーおよび類似技術：ユーザーエクスペリエンスを向上させ、利用パターンを把握するため、当社サービスではクッキーおよび類似の技術を利用しています。"
-        ]
-      },
-      section2: {
-        title: "2. お客様の情報の使用方法",
-        description: "当社は、お客様の個人情報を以下の目的で利用することがあります：",
-        items: [
-          "サービスの提供と改善：当社では、パーソナライズされた体験を提供し、当社サービスの機能を向上させるためにお客様のデータを使用します。",
-          "コミュニケーション：お客様のEメールアドレスおよび連絡先情報は、最新情報、ニュースレター、販促資料の送付に使用されることがあります。これらの通信を拒否するオプションがあります。",
-          "アナリティクス：ユーザーの行動をよりよく理解し、当社のサービスを向上させるために、当社は集計および匿名化されたデータを分析します。"
-        ]
-      },
-      contact: {
-        title: "お問い合わせ",
-        description: "当社の個人情報保護方針についてご質問やご不明な点がございましたら、",
-        linkText: "お問い合わせフォーム",
-        suffix: "までご連絡ください。"
-      }
+      title: "個人情報保護方針（プライバシーポリシー）",
+      lastUpdate: "基準日：2026年6月13日（第0.1版・案）",
+      note: "",
+      intro: "Cor.株式会社（以下「当社」といいます。）は、当社が取り扱う個人情報の重要性を認識し、個人情報の保護に関する法律（以下「個人情報保護法」といいます。）その他の関係法令、ガイドライン及びISO/IEC 27001:2022（JIS Q 27001:2023）に基づく情報セキュリティマネジメントシステムに従い、お客様・従業員・採用応募者その他の皆様の個人情報を適正に取り扱います。当社は、以下の方針に基づき個人情報を保護します。",
+      businessTitle: "1. 事業者の情報",
+      businessTable: [
+        { label: "事業者の名称", value: "Cor.株式会社" },
+        { label: "所在地", value: "福岡県（本社）" },
+        { label: "代表者", value: "代表取締役 寺田 康佑" },
+        { label: "事業内容", value: "AIソリューションの企画・要件定義・開発・運用、及びこれに付随する経理・財務業務" },
+        { label: "個人情報保護管理者", value: "ISMS管理責任者 寺田 凪沙" },
+        { label: "お問い合わせ窓口", value: "第9項に定める窓口による。" }
+      ],
+      purposeTitle: "2. 取得する個人情報と利用目的",
+      purposeLead: "当社は、個人情報を取得するにあたり、その利用目的をできる限り特定し、適法かつ公正な手段により取得します。当社は、あらかじめご本人の同意を得た場合を除き、特定した利用目的の達成に必要な範囲を超えて個人情報を取り扱いません。当社が取り扱う個人情報の種類及び利用目的は、次のとおりです。",
+      purposeGroups: [
+        {
+          title: "(1) お客様（取引先・見込み客を含む）",
+          lines: [
+            { label: "取得する情報", value: "氏名・会社名・部署・役職・メールアドレス・電話番号・取引に関する情報等" },
+            { label: "利用目的", value: "お問い合わせ・ご依頼への対応／契約の締結・履行、AIソリューションの開発・運用・保守の提供／請求・支払その他の経理・財務処理／サービスに関する連絡・ご案内／取引・契約の管理及び法令上の義務の履行" }
+          ]
+        },
+        {
+          title: "(2) 従業員（役員・パートタイム・有期契約・インターンを含む）",
+          lines: [
+            { label: "取得する情報", value: "氏名・連絡先・生年月日・住所・銀行口座・マイナンバー（特定個人情報）・社会保険関係情報・人事評価・勤怠記録・業務上のログ等" },
+            { label: "利用目的", value: "人事労務管理（採用・配置・評価・給与・賞与・退職等）／給与計算・源泉徴収その他の税務処理及び社会保険・労働保険の手続（特定個人情報を含む。第4項参照）／労働時間の客観的な把握及び健康管理・安全配慮義務の履行／情報セキュリティ管理のためのログ取得・監視（不正アクセス・情報漏えい・マルウェア感染等の検知及び対応。取得範囲は第8項及び社内規程による。）／緊急連絡・福利厚生・その他雇用契約に基づく管理" }
+          ]
+        },
+        {
+          title: "(3) 採用応募者",
+          lines: [
+            { label: "取得する情報", value: "氏名・連絡先・履歴書・職務経歴書・面接記録・選考過程で取得する情報等" },
+            { label: "利用目的", value: "採用選考（応募の受付・選考・連絡・採否の決定）／採用後の入社手続の準備／不採用の場合の一定期間の応募情報の管理（次回以降のご連絡に係るものを含む。本人の同意に基づく場合に限る。）" }
+          ]
+        }
+      ],
+      purposeNote: "注記: 従業員及び採用応募者に対する利用目的の社内向け通知は、本方針をもって行うほか、労働条件通知書・誓約書・採用時の案内により別途明示します。とりわけ従業員の人事労務管理及び情報セキュリティ管理のためのログ取得・監視を利用目的に含むことを、本方針及び「従業員モニタリングに関する通知・同意書」により明示します。",
+      sections: [
+        {
+          title: "3. 第三者提供及び委託",
+          body: [
+            "当社は、次のいずれかに該当する場合を除き、あらかじめご本人の同意を得ないで個人データを第三者に提供しません。"
+          ],
+          list: [
+            "法令に基づく場合",
+            "人の生命、身体又は財産の保護のために必要がある場合であって、ご本人の同意を得ることが困難であるとき。",
+            "公衆衛生の向上又は児童の健全な育成の推進のために特に必要がある場合であって、ご本人の同意を得ることが困難であるとき。",
+            "国の機関等が法令の定める事務を遂行することに協力する必要がある場合であって、ご本人の同意を得ることにより当該事務の遂行に支障を及ぼすおそれがあるとき。"
+          ],
+          bodyAfter: [
+            "当社は、利用目的の達成に必要な範囲内において、個人情報の取扱いの全部又は一部を外部の事業者（業務委託先・クラウドサービス事業者等）に委託することがあります。この場合、当社は、委託先に対し、社内規則「供給者・外部委託管理規程」に基づき、必要かつ適切な監督を行います。",
+            "当社は、個人データを第三者に提供したとき、又は第三者から提供を受けたときは、個人情報保護法第29条及び第30条に基づき、必要な事項を記録し、これを保存します。"
+          ]
+        },
+        {
+          title: "4. クラウドサービスの利用及び外国にある第三者への提供（個人情報保護法第28条）",
+          body: [
+            "当社は、Google Workspace（共有ドライブ）、Google Cloud（GCP／Secret Manager）、GitHub、Bitwarden等のクラウドサービスを利用して個人情報を取り扱います。",
+            "これらのクラウドサービスの利用に伴い、個人データが外国において取り扱われる（越境移転される）場合があります。当社が外国にある第三者に個人データを提供するとき（クラウドサービスを通じて外国においてデータが取り扱われる場合を含みます。）は、個人情報保護法第28条に基づき、あらかじめご本人の同意を得る方法、又は当該第三者が同法に定める基準に適合する体制を整備していることを確認する方法その他法令に定める方法により、適正に取り扱います。",
+            "当社は、越境移転を行う場合、ご本人の求めに応じ、移転先の所在する国の名称、当該国の個人情報の保護に関する制度及び移転先が講ずる措置に関する情報を、法令の定めるところにより提供します。",
+            "※特定個人情報（マイナンバー）については、番号法に基づき、外国にある第三者への提供は行いません。"
+          ]
+        },
+        {
+          title: "5. 安全管理措置",
+          body: [
+            "当社は、取り扱う個人情報の漏えい、滅失又は毀損の防止その他の安全管理のため、次の措置を講じます（詳細は社内規則「個人情報・特定個人情報取扱規程」及び「情報セキュリティ管理規程」によります。）。"
+          ],
+          list: [
+            "組織的・人的安全管理措置: 個人情報保護管理者（ISMS管理責任者）を置き、取扱状況を把握・点検します。従業員に対し、秘密保持義務及び関係法令の遵守について教育を行います。",
+            "アクセス制御: ゼロトラストの考え方に基づき、多要素認証（MFA）、デバイス姿勢の検証及び最小権限の原則により、個人データへのアクセスを制御します。特定個人情報は、事務取扱担当者のみがアクセスできるよう権限を設定します。",
+            "暗号化: 業務端末はディスク暗号化（FileVault）を有効にし、通信はTLS等により暗号化します。クラウド上の保管データは保管時暗号化を有効にします。",
+            "ログ及び検知: 個人データへのアクセスは、業務に関連する最小限のログ（私的コンテンツを取得しないもの）の対象とし、記録・監視します。",
+            "廃棄: 不要となった個人データは、復元不可能な方法により廃棄します。"
+          ]
+        },
+        {
+          title: "6. 保有個人データの開示等の請求",
+          body: [
+            "ご本人又はその代理人（法定代理人及びご本人が委任した代理人をいいます。）は、当社に対し、当該ご本人が識別される保有個人データについて、利用目的の通知、開示、内容の訂正・追加・削除、利用の停止・消去、第三者提供の停止を請求することができます。",
+            "当社は、当社所定の方法により、ご本人であること又は代理人であることを確認できる書類を添えて請求を受け付けます。",
+            "当社は、これらの請求を受け付けた日から原則として30日以内に、対応の内容を決定し、ご本人に通知します。やむを得ない事情により当該期間内に対応できないときは、その理由及び対応の見込みを通知します。",
+            "当社は、開示の請求に応じる場合において、実費を勘案して合理的と認められる範囲内で、当社所定の手数料を徴収することがあります。",
+            "法令に定める一定の場合（ご本人又は第三者の権利利益を害するおそれがある場合、当社の業務の適正な実施に著しい支障を及ぼすおそれがある場合、他の法令に違反することとなる場合等）には、その全部又は一部を開示しないことがあります。この場合、その旨を理由とともにご本人に通知します。"
+          ]
+        },
+        {
+          title: "7. 漏えい等が発生した場合の対応",
+          body: [
+            "当社は、個人データの漏えい、滅失、毀損その他の安全の確保に係る事態が発生した場合において、個人情報保護法第26条に定める一定の事態に該当するときは、個人情報保護委員会に対し速やかに（速報）及び所定の期間内（確報）に報告するとともに、ご本人に対して当該事態の状況に応じて速やかに通知します。ご本人への通知が困難な場合は、ご本人の権利利益を保護するために必要な代替措置を講じます。特定個人情報に係る漏えい等については、番号法及び個人情報保護委員会規則に基づき、別途必要な報告及び通知を行います。"
+          ]
+        },
+        {
+          title: "8. ログの取得・監視に関する取扱い（従業員向け）",
+          body: [
+            "当社は、情報セキュリティ管理・労務管理・労働時間の客観的把握のため、業務に用いる端末及びクラウドサービスにおいて、業務に関連するログ（認証・プロセス実行・通信メタデータ・社内データへのアクセス・ソフトウェア構成・勤怠／利用時間）を取得し、監視します。当社は、私的なコンテンツ（個人のブラウジング内容・個人アカウントの内容・キーストローク）を取得しません。",
+            "ログの取得・監視の目的・範囲・責任者・閲覧条件・保存期間は、社内規則「ログ取得・モニタリング規程」及び「従業員モニタリングに関する通知・同意書」に定めるところによります。"
+          ]
+        }
+      ],
+      inquiryTitle: "9. お問い合わせ窓口",
+      inquiryLead: "保有個人データの開示等の請求、個人情報の取扱いに関する苦情・ご相談は、次の窓口で受け付けます。",
+      inquiryTable: [
+        { label: "窓口", value: "Cor.株式会社 個人情報保護管理者（ISMS管理責任者 寺田 凪沙）" },
+        { label: "連絡方法", value: "お問い合わせフォームよりご連絡ください。" }
+      ],
+      inquiryLinkLabel: "お問い合わせフォーム",
+      revisionTitle: "10. 本方針の改定",
+      revisionBody: [
+        "当社は、法令の改正、事業内容の変更その他の事情により、本方針を改定することがあります。改定した場合は、改定後の内容を当社ウェブサイト等において公表します。重要な変更を行う場合は、適切な方法により周知します。"
+      ],
+      securityLinkPrefix: "当社の情報セキュリティ体制については、",
+      securityLinkText: "セキュリティ",
+      securityLinkSuffix: "のページもあわせてご覧ください。",
+      footer: "版数：第0.1版（案）／基準日：2026年6月13日／作成：Cor.株式会社／所管：個人情報保護管理者（ISMS管理責任者 寺田 凪沙）",
+      footerNote: "※本方針は、社内規則「個人情報・特定個人情報取扱規程」を対外公表用に要約・対応づけたものであり、両者の内容が異なる場合は法令及び同規程の趣旨に従って解釈します。"
     },
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
@@ -1799,32 +1890,123 @@ const translations = {
     },
     privacy: {
       title: "Privacy Policy",
-      lastUpdate: "Last update: May 13, 2024",
-      intro: "At Cor.inc, we prioritize your privacy and are committed to protecting it. This privacy policy details our approach to collecting, using, and protecting personal information when you use our services, including web analytics tools, Flutter apps, and machine learning solutions. We recommend reviewing this policy to understand our commitment.",
-      section1: {
-        title: "1. Information We Collect",
-        description: "When you use our services, we may collect various types of personal information, including:",
-        items: [
-          "Information you provide: This may include your name, email address, contact details, and other relevant data when you create an account or use specific features of our services.",
-          "Usage data: We collect data about your use of our services, including your IP address, browser type, device information, pages visited, and interactions with our services.",
-          "Cookies and similar technologies: Our services use cookies and similar technologies to enhance user experience and understand usage patterns."
-        ]
-      },
-      section2: {
-        title: "2. How We Use Your Information",
-        description: "We may use your personal information for the following purposes:",
-        items: [
-          "Service provision and improvement: We use your data to provide personalized experiences and enhance the functionality of our services.",
-          "Communication: Your email address and contact information may be used to send updates, newsletters, and promotional materials. You have the option to opt out of these communications.",
-          "Analytics: We analyze aggregated and anonymized data to better understand user behavior and improve our services."
-        ]
-      },
-      contact: {
-        title: "Contact Us",
-        description: "If you have any questions or concerns about our privacy policy, please contact us through our",
-        linkText: "contact form",
-        suffix: "."
-      }
+      lastUpdate: "Effective date: June 13, 2026 (Version 0.1, Draft)",
+      note: "The Japanese version is the authoritative text. This English translation is provided for convenience.",
+      intro: "Cor. Inc. (hereinafter referred to as \"the Company\") recognizes the importance of the personal information it handles and, in accordance with the Act on the Protection of Personal Information (hereinafter the \"APPI\") and other relevant laws and regulations and guidelines, as well as the information security management system based on ISO/IEC 27001:2022 (JIS Q 27001:2023), handles the personal information of customers, employees, job applicants, and all other individuals appropriately. The Company protects personal information in accordance with the following policy.",
+      businessTitle: "1. Business Information",
+      businessTable: [
+        { label: "Business name", value: "Cor. Inc." },
+        { label: "Location", value: "Fukuoka Prefecture (Head Office)" },
+        { label: "Representative", value: "Representative Director Kosuke Terada" },
+        { label: "Business activities", value: "Planning, requirements definition, development, and operation of AI solutions, and the accounting and financial operations incidental thereto" },
+        { label: "Personal Information Protection Manager", value: "ISMS Management Officer Nagisa Terada" },
+        { label: "Inquiries", value: "Through the contact point set forth in Section 9." }
+      ],
+      purposeTitle: "2. Personal Information We Collect and Purposes of Use",
+      purposeLead: "When collecting personal information, the Company specifies the purpose of use as far as possible and collects such information by lawful and fair means. Except where the prior consent of the individual has been obtained, the Company does not handle personal information beyond the scope necessary to achieve the specified purpose of use. The types of personal information handled by the Company and the purposes of use are as follows.",
+      purposeGroups: [
+        {
+          title: "(1) Customers (including business partners and prospects)",
+          lines: [
+            { label: "Information collected", value: "Name, company name, department, job title, email address, telephone number, information relating to transactions, and the like" },
+            { label: "Purpose of use", value: "Responding to inquiries and requests / concluding and performing contracts, and providing the development, operation, and maintenance of AI solutions / billing, payment, and other accounting and financial processing / communications and notifications regarding services / management of transactions and contracts and the performance of obligations under laws and regulations" }
+          ]
+        },
+        {
+          title: "(2) Employees (including officers, part-time, fixed-term, and interns)",
+          lines: [
+            { label: "Information collected", value: "Name, contact details, date of birth, address, bank account, My Number (Specific Personal Information), social insurance-related information, personnel evaluations, attendance records, work-related logs, and the like" },
+            { label: "Purpose of use", value: "Personnel and labor management (recruitment, placement, evaluation, salary, bonuses, retirement, etc.) / payroll calculation, withholding tax and other tax processing, and procedures for social insurance and labor insurance (including Specific Personal Information; see Section 4) / objective ascertainment of working hours and fulfillment of health management and the duty of care for safety / log collection and monitoring for information security management (detection of and response to unauthorized access, information leakage, malware infection, etc.; the scope of collection is governed by Section 8 and internal regulations) / emergency contact, employee benefits, and other management based on the employment contract" }
+          ]
+        },
+        {
+          title: "(3) Job Applicants",
+          lines: [
+            { label: "Information collected", value: "Name, contact details, resume, curriculum vitae, interview records, information collected during the selection process, and the like" },
+            { label: "Purpose of use", value: "Recruitment selection (receipt of applications, selection, communication, and decisions on acceptance or rejection) / preparation of post-hire onboarding procedures / management of application information for a certain period in the case of rejection (including matters relating to future contact; limited to cases based on the consent of the individual)" }
+          ]
+        }
+      ],
+      purposeNote: "Note: In addition to being provided by this Policy, internal notification of the purposes of use to employees and job applicants is separately stated through the notice of working conditions, written pledges, and guidance provided at the time of hiring. In particular, the Company states, through this Policy and the \"Notice and Consent Form Regarding Employee Monitoring,\" that the purposes of use include log collection and monitoring for the personnel and labor management and information security management of employees.",
+      sections: [
+        {
+          title: "3. Provision to Third Parties and Outsourcing",
+          body: [
+            "Except where any of the following applies, the Company does not provide personal data to third parties without obtaining the prior consent of the individual."
+          ],
+          list: [
+            "Where based on laws and regulations.",
+            "Where it is necessary for the protection of the life, body, or property of an individual and it is difficult to obtain the consent of the individual.",
+            "Where it is particularly necessary for improving public health or promoting the sound upbringing of children and it is difficult to obtain the consent of the individual.",
+            "Where it is necessary to cooperate with a state organ or the like in carrying out affairs prescribed by laws and regulations, and obtaining the consent of the individual is likely to impede the performance of such affairs."
+          ],
+          bodyAfter: [
+            "Within the scope necessary to achieve the purpose of use, the Company may outsource all or part of the handling of personal information to external businesses (outsourcing contractors, cloud service providers, etc.). In such cases, the Company exercises necessary and appropriate supervision over the outsourcing contractor in accordance with the internal rule \"Supplier and Outsourcing Management Regulations.\"",
+            "When the Company has provided personal data to a third party or has received personal data from a third party, the Company records and retains the necessary matters in accordance with Articles 29 and 30 of the APPI."
+          ]
+        },
+        {
+          title: "4. Use of Cloud Services and Provision to Third Parties Located Overseas (Article 28 of the APPI)",
+          body: [
+            "The Company handles personal information using cloud services such as Google Workspace (shared drives), Google Cloud (GCP / Secret Manager), GitHub, and Bitwarden.",
+            "In connection with the use of these cloud services, personal data may be handled in foreign countries (cross-border transfer). When the Company provides personal data to a third party located overseas (including cases where data is handled overseas through cloud services), the Company handles such data appropriately in accordance with Article 28 of the APPI, by means such as obtaining the prior consent of the individual, or by confirming that the relevant third party has established a system conforming to the standards prescribed by said Act, or by other means prescribed by laws and regulations.",
+            "When carrying out a cross-border transfer, the Company provides, upon the request of the individual and as prescribed by laws and regulations, information regarding the name of the country in which the transferee is located, the systems for the protection of personal information in that country, and the measures taken by the transferee.",
+            "* With respect to Specific Personal Information (My Number), the Company does not provide it to third parties located overseas, in accordance with the My Number Act."
+          ]
+        },
+        {
+          title: "5. Security Control Measures",
+          body: [
+            "In order to prevent the leakage, loss, or damage of the personal information it handles and to otherwise ensure security control, the Company implements the following measures (details are governed by the internal rules \"Personal Information and Specific Personal Information Handling Regulations\" and \"Information Security Management Regulations\")."
+          ],
+          list: [
+            "Organizational and human security control measures: The Company appoints a Personal Information Protection Manager (ISMS Management Officer) to ascertain and inspect the status of handling. The Company provides education to employees regarding their confidentiality obligations and compliance with relevant laws and regulations.",
+            "Access control: Based on the zero-trust approach, the Company controls access to personal data through multi-factor authentication (MFA), device posture verification, and the principle of least privilege. For Specific Personal Information, access privileges are configured so that only the personnel in charge of the relevant affairs can access it.",
+            "Encryption: Disk encryption (FileVault) is enabled on business devices, and communications are encrypted using TLS or the like. Encryption at rest is enabled for data stored in the cloud.",
+            "Logging and detection: Access to personal data is subject to minimal logs relevant to business operations (which do not collect private content), and is recorded and monitored.",
+            "Disposal: Personal data that is no longer needed is disposed of by a method that renders it irrecoverable."
+          ]
+        },
+        {
+          title: "6. Requests for Disclosure of Retained Personal Data",
+          body: [
+            "An individual or their agent (meaning a statutory agent or an agent appointed by the individual) may request the Company, with respect to the retained personal data by which that individual is identified, to provide notification of the purpose of use, to disclose, to correct, add to, or delete the content, to suspend or erase the use, or to suspend provision to third parties.",
+            "The Company accepts such requests by the method prescribed by the Company, accompanied by documents that can confirm the identity of the individual or the agent.",
+            "The Company decides the content of its response and notifies the individual, in principle, within 30 days from the date on which it accepted such a request. If, due to unavoidable circumstances, it cannot respond within that period, the Company notifies the individual of the reason and the expected timing of its response.",
+            "When complying with a request for disclosure, the Company may collect a fee prescribed by the Company within a range deemed reasonable in light of the actual costs.",
+            "In certain cases prescribed by laws and regulations (where there is a risk of harming the rights or interests of the individual or a third party, where there is a risk of significantly impeding the proper execution of the Company's business, where it would result in a violation of other laws and regulations, etc.), the Company may decline to disclose all or part of the data. In such cases, the Company notifies the individual to that effect together with the reason."
+          ]
+        },
+        {
+          title: "7. Response in the Event of a Data Breach",
+          body: [
+            "In the event that a situation involving the leakage, loss, or damage of personal data, or otherwise relating to the assurance of security, occurs, and where it falls under a certain situation prescribed in Article 26 of the APPI, the Company promptly reports to the Personal Information Protection Commission (preliminary report) and reports within the prescribed period (final report), and also notifies the individual promptly in accordance with the circumstances of the situation. Where notification to the individual is difficult, the Company takes the necessary alternative measures to protect the rights and interests of the individual. With respect to leakage or the like relating to Specific Personal Information, the Company separately makes the necessary reports and notifications in accordance with the My Number Act and the rules of the Personal Information Protection Commission."
+          ]
+        },
+        {
+          title: "8. Handling of Log Collection and Monitoring (For Employees)",
+          body: [
+            "For the purposes of information security management, labor management, and the objective ascertainment of working hours, the Company collects and monitors business-related logs (authentication, process execution, communication metadata, access to internal data, software configuration, and attendance/usage time) on the devices and cloud services used for business. The Company does not collect private content (the content of personal browsing, the content of personal accounts, or keystrokes).",
+            "The purposes, scope, persons responsible, viewing conditions, and retention periods for log collection and monitoring are governed by the internal rules \"Log Collection and Monitoring Regulations\" and the \"Notice and Consent Form Regarding Employee Monitoring.\""
+          ]
+        }
+      ],
+      inquiryTitle: "9. Contact Point for Inquiries",
+      inquiryLead: "Requests for the disclosure of retained personal data and complaints or consultations regarding the handling of personal information are accepted at the following contact point.",
+      inquiryTable: [
+        { label: "Contact point", value: "Cor. Inc. Personal Information Protection Manager (ISMS Management Officer Nagisa Terada)" },
+        { label: "How to contact", value: "Please contact us via the inquiry form." }
+      ],
+      inquiryLinkLabel: "inquiry form",
+      revisionTitle: "10. Revision of This Policy",
+      revisionBody: [
+        "The Company may revise this Policy due to amendments to laws and regulations, changes in business activities, or other circumstances. When revised, the Company will publish the revised content on the Company's website or by other means. When making important changes, the Company will make them known by appropriate means."
+      ],
+      securityLinkPrefix: "For our information security framework, see also our ",
+      securityLinkText: "Security",
+      securityLinkSuffix: " page.",
+      footer: "Version 0.1 (Draft) / Effective date: June 13, 2026 / Prepared by: Cor. Inc. / Responsible: Personal Information Protection Manager (ISMS Management Officer, Nagisa Terada)",
+      footerNote: "* This Policy is a summary and mapping of the internal rule \"Personal Information and Specific Personal Information Handling Regulations\" for the purpose of external publication. Where the content of the two differs, it shall be interpreted in accordance with laws and regulations and the intent of said regulations."
     },
     security: {
       title: "Security",
@@ -2734,33 +2916,124 @@ const translations = {
       security: { title: "安全 | Cor.inc", description: "关于 Cor. 股份公司的信息安全、面向 ISMS 认证的体制建设，以及基于本地优先与机密度分级的 AI 开发环境。" }
     },
     privacy: {
-      title: "隐私政策",
-      lastUpdate: "最后更新：2024年5月13日",
-      intro: "Cor.inc将客户隐私放在首位，致力于保护客户隐私。本隐私政策详细说明了我们在您使用我们的服务（包括网络分析工具、Flutter应用程序、机器学习解决方案等）时收集、使用和保护个人信息的做法。我们建议您查看本政策以了解我们的承诺。",
-      section1: {
-        title: "1. 我们收集的信息",
-        description: "当您使用我们的服务时，我们可能会收集以下各种类型的个人信息：",
-        items: [
-          "您提供的信息：这可能包括您在创建账户或使用我们服务的特定功能时提供的姓名、电子邮件地址、联系方式和其他相关数据。",
-          "使用数据：我们收集与您使用我们服务相关的数据，包括您的IP地址、浏览器类型、设备信息、访问的页面以及与我们服务的交互。",
-          "Cookie和类似技术：为了改善用户体验和了解使用模式，我们的服务使用Cookie和类似技术。"
-        ]
-      },
-      section2: {
-        title: "2. 我们如何使用您的信息",
-        description: "我们可能将您的个人信息用于以下目的：",
-        items: [
-          "服务提供和改进：我们使用您的数据来提供个性化体验并改进我们服务的功能。",
-          "沟通：您的电子邮件地址和联系信息可能用于发送更新、新闻通讯和促销材料。您可以选择退出这些通信。",
-          "分析：为了更好地了解用户行为并改进我们的服务，我们分析汇总和匿名化的数据。"
-        ]
-      },
-        contact: {
-        title: "联系我们",
-        description: "如果您对我们的隐私政策有任何疑问或疑虑，请通过我们的",
-        linkText: "联系表单",
-        suffix: "与我们联系。"
-      }
+      title: "个人信息保护方针（隐私政策）",
+      lastUpdate: "基准日：2026年6月13日（第0.1版·草案）",
+      note: "日语版本为正式文本，本中文译文仅供参考。",
+      intro: "Cor.股份有限公司（以下简称“本公司”）充分认识到本公司所处理的个人信息的重要性，依据《个人信息保护法》（以下简称“个人信息保护法”）及其他相关法令、指南，以及基于ISO/IEC 27001:2022（JIS Q 27001:2023）的信息安全管理体系，妥善处理客户、员工、应聘者及其他各位的个人信息。本公司依据以下方针保护个人信息。",
+      businessTitle: "1. 企业信息",
+      businessTable: [
+        { label: "企业名称", value: "Cor.股份有限公司" },
+        { label: "所在地", value: "福冈县（总公司）" },
+        { label: "代表人", value: "代表董事 寺田 康佑" },
+        { label: "业务内容", value: "AI解决方案的策划、需求定义、开发、运维，以及与之相关的会计、财务业务" },
+        { label: "个人信息保护管理者", value: "ISMS管理责任人 寺田 凪沙" },
+        { label: "咨询窗口", value: "依照第9项所规定的窗口。" }
+      ],
+      purposeTitle: "2. 收集的个人信息及使用目的",
+      purposeLead: "本公司在收集个人信息时，将尽可能明确其使用目的，并以合法、公正的方式进行收集。除事先取得本人同意的情形外，本公司不会在超出实现既定使用目的所必需的范围内处理个人信息。本公司所处理的个人信息种类及使用目的如下。",
+      purposeGroups: [
+        {
+          title: "(1) 客户（含交易对象、潜在客户）",
+          lines: [
+            { label: "收集的信息", value: "姓名、公司名称、部门、职务、电子邮箱地址、电话号码、与交易相关的信息等" },
+            { label: "使用目的", value: "对咨询、委托的回应／合同的签订与履行，AI解决方案的开发、运维与维护的提供／请款、付款及其他会计、财务处理／有关服务的联络与通知／交易与合同的管理及法令义务的履行" }
+          ]
+        },
+        {
+          title: "(2) 员工（含董事、兼职、定期合同、实习生）",
+          lines: [
+            { label: "收集的信息", value: "姓名、联系方式、出生年月日、住址、银行账户、我的编号（特定个人信息）、社会保险相关信息、人事评价、考勤记录、业务日志等" },
+            { label: "使用目的", value: "人事劳务管理（招聘、配置、评价、薪资、奖金、离职等）／薪资计算、源泉征收及其他税务处理，以及社会保险、劳动保险的手续办理（含特定个人信息，参见第4项）／劳动时间的客观掌握及健康管理、安全照顾义务的履行／为信息安全管理而进行的日志收集与监控（对非法访问、信息泄露、恶意软件感染等的检测与应对。收集范围依照第8项及公司内部规程。）／紧急联络、福利待遇及其他基于雇佣合同的管理" }
+          ]
+        },
+        {
+          title: "(3) 应聘者",
+          lines: [
+            { label: "收集的信息", value: "姓名、联系方式、简历、工作经历书、面试记录、在选拔过程中收集的信息等" },
+            { label: "使用目的", value: "招聘选拔（应聘的受理、选拔、联络、录用与否的决定）／录用后入职手续的准备／未录用情形下在一定期间内对应聘信息的管理（含与今后联络相关的部分，仅限于基于本人同意的情形。）" }
+          ]
+        }
+      ],
+      purposeNote: "注记：针对员工及应聘者的使用目的的公司内部告知，除以本方针进行外，另通过劳动条件通知书、承诺书、录用时的指引予以单独明示。特别是，本公司通过本方针及《关于员工监控的通知与同意书》明示：员工的人事劳务管理及为信息安全管理而进行的日志收集与监控亦包含于使用目的之中。",
+      sections: [
+        {
+          title: "3. 向第三方提供及委托",
+          body: [
+            "除符合下列任一情形外，本公司不会在未事先取得本人同意的情况下向第三方提供个人数据。"
+          ],
+          list: [
+            "基于法令规定的情形",
+            "为保护人的生命、身体或财产之必要，且难以取得本人同意的情形。",
+            "为提升公共卫生或促进儿童健全成长而特别必要，且难以取得本人同意的情形。",
+            "为协助国家机关等执行法令所规定的事务之必要，且取得本人同意有可能妨碍该事务执行的情形。"
+          ],
+          bodyAfter: [
+            "本公司可能在实现使用目的所必需的范围内，将个人信息处理的全部或一部分委托给外部业者（业务委托方、云服务业者等）。在此情形下，本公司将依据公司内部规则《供应商·外部委托管理规程》，对委托方进行必要且适当的监督。",
+            "本公司在向第三方提供个人数据，或自第三方接受提供时，依据个人信息保护法第29条及第30条，记录并保存必要事项。"
+          ]
+        },
+        {
+          title: "4. 云服务的利用及向境外第三方的提供（个人信息保护法第28条）",
+          body: [
+            "本公司利用Google Workspace（共享云盘）、Google Cloud（GCP／Secret Manager）、GitHub、Bitwarden等云服务来处理个人信息。",
+            "伴随这些云服务的利用，个人数据可能会在境外被处理（跨境转移）。当本公司向境外第三方提供个人数据时（含通过云服务在境外处理数据的情形），将依据个人信息保护法第28条，以事先取得本人同意的方法，或确认该第三方已建立符合该法所定标准之体制的方法，或其他法令所规定的方法，予以妥善处理。",
+            "本公司在进行跨境转移时，将应本人的请求，依据法令规定，提供转移目的地所在国家的名称、该国关于个人信息保护的制度，以及转移目的地所采取的措施等相关信息。",
+            "※关于特定个人信息（我的编号），依据我的编号法(My Number Act)，不会向境外第三方提供。"
+          ]
+        },
+        {
+          title: "5. 安全管理措施",
+          body: [
+            "本公司为防止所处理个人信息的泄露、灭失或毁损及其他安全管理之目的，采取下列措施（详情依照公司内部规则《个人信息·特定个人信息处理规程》及《信息安全管理规程》）。"
+          ],
+          list: [
+            "组织性·人员性安全管理措施：设置个人信息保护管理者（ISMS管理责任人），掌握并检查处理状况。对员工就保密义务及相关法令的遵守进行教育。",
+            "访问控制：基于零信任理念，通过多因素认证（MFA）、设备姿态验证及最小权限原则，对个人数据的访问进行控制。对特定个人信息，设置权限使仅事务处理负责人可以访问。",
+            "加密：业务终端启用磁盘加密（FileVault），通信通过TLS等进行加密。云端保存的数据启用存储时加密。",
+            "日志及检测：对个人数据的访问，纳入与业务相关的最小限度日志（不收集私人内容）的对象，进行记录与监控。",
+            "废弃：对不再需要的个人数据，采用不可复原的方法予以废弃。"
+          ]
+        },
+        {
+          title: "6. 保有个人数据的披露等请求",
+          body: [
+            "本人或其代理人（指法定代理人及本人委托的代理人）可就识别该本人的保有个人数据，向本公司请求使用目的的通知、披露、内容的订正·追加·删除、使用的停止·消除、停止向第三方提供。",
+            "本公司以本公司指定的方法，受理附有可确认本人身份或代理人身份之文件的请求。",
+            "本公司原则上自受理这些请求之日起30日内，决定应对内容并通知本人。因不得已的事由无法在该期间内应对时，将通知其理由及应对的预期。",
+            "本公司在响应披露请求时，可在斟酌实际费用并被认为合理的范围内，收取本公司指定的手续费。",
+            "在法令所规定的一定情形（有可能损害本人或第三方的权利利益的情形、有可能对本公司业务的适当实施造成显著妨碍的情形、将构成违反其他法令的情形等）下，可能不披露其全部或一部分。在此情形下，将连同理由一并通知本人。"
+          ]
+        },
+        {
+          title: "7. 发生泄露等情形时的应对",
+          body: [
+            "本公司在发生个人数据的泄露、灭失、毁损或其他与安全保障相关的事态，且符合个人信息保护法第26条所规定的一定事态时，将向个人信息保护委员会迅速地（速报）并在规定期间内（确报）进行报告，同时根据该事态的状况迅速地向本人通知。在难以向本人通知的情形下，将采取为保护本人权利利益所必需的替代措施。关于特定个人信息的泄露等，将依据我的编号法(My Number Act)及个人信息保护委员会规则，另行进行必要的报告及通知。"
+          ]
+        },
+        {
+          title: "8. 关于日志收集·监控的处理（面向员工）",
+          body: [
+            "本公司为信息安全管理、劳务管理、劳动时间的客观掌握之目的，在用于业务的终端及云服务中，收集并监控与业务相关的日志（认证、进程执行、通信元数据、对公司内部数据的访问、软件配置、考勤／使用时间）。本公司不收集私人内容（个人的浏览内容、个人账户的内容、按键记录）。",
+            "日志收集·监控的目的、范围、责任人、查阅条件、保存期间，依照公司内部规则《日志收集·监控规程》及《关于员工监控的通知与同意书》的规定。"
+          ]
+        }
+      ],
+      inquiryTitle: "9. 咨询窗口",
+      inquiryLead: "关于保有个人数据的披露等请求、个人信息处理的投诉与咨询，由以下窗口受理。",
+      inquiryTable: [
+        { label: "窗口", value: "Cor.股份有限公司 个人信息保护管理者（ISMS管理责任人 寺田 凪沙）" },
+        { label: "联系方式", value: "请通过咨询表单与我们联系。" }
+      ],
+      inquiryLinkLabel: "咨询表单",
+      revisionTitle: "10. 本方针的修订",
+      revisionBody: [
+        "本公司可能因法令的修订、业务内容的变更或其他事由对本方针进行修订。修订时，将在本公司网站等处公布修订后的内容。进行重大变更时，将以适当的方法予以周知。"
+      ],
+      securityLinkPrefix: "关于本公司的信息安全体系，另请参阅",
+      securityLinkText: "安全",
+      securityLinkSuffix: "页面。",
+      footer: "版本：第0.1版（草案）／基准日：2026年6月13日／编制：Cor.股份有限公司／主管：个人信息保护管理者（ISMS管理责任人 寺田 凪沙）",
+      footerNote: "※本方针系将公司内部规则《个人信息·特定个人信息处理规程》为对外公布之用而进行的摘要与对应整理，若两者内容存在差异，则依照法令及该规程的宗旨进行解释。"
     },
     security: {
       title: "安全",
@@ -3670,33 +3943,124 @@ const translations = {
       security: { title: "보안 | Cor.inc", description: "Cor. 주식회사의 정보 보안, ISMS 인증 취득을 위한 체제, 그리고 로컬 퍼스트와 기밀도 등급에 기반한 AI 개발 환경에 대하여." }
     },
     privacy: {
-      title: "개인정보처리방침",
-      lastUpdate: "최종 업데이트: 2024년 5월 13일",
-      intro: "Cor.inc는 고객의 개인정보를 최우선으로 하여 보호에 최선을 다하고 있습니다. 본 개인정보처리방침에서는 웹 분석 도구, Flutter 앱, 머신러닝 솔루션 등 저희 서비스를 이용하실 때 개인정보의 수집, 사용, 보호에 대한 저희의 접근 방식에 대해 자세히 설명합니다. 저희의 노력을 이해하시기 위해 본 정책을 검토해 주시기를 권장합니다.",
-      section1: {
-        title: "1. 저희가 수집하는 정보",
-        description: "저희 서비스를 이용하실 때 다음과 같은 다양한 유형의 개인정보를 수집할 수 있습니다:",
-        items: [
-          "고객이 제공하는 정보: 계정을 생성하거나 저희 서비스의 특정 기능을 이용할 때 제공하는 성명, 이메일 주소, 연락처, 기타 관련 데이터가 포함될 수 있습니다.",
-          "이용 데이터: 고객의 IP 주소, 브라우저 유형, 기기 정보, 방문한 페이지, 저희 서비스와의 상호작용을 포함한 서비스 이용 관련 데이터를 수집합니다.",
-          "쿠키 및 유사 기술: 사용자 경험을 향상시키고 이용 패턴을 파악하기 위해 저희 서비스에서는 쿠키 및 유사한 기술을 사용합니다."
-        ]
-      },
-      section2: {
-        title: "2. 고객 정보 사용 방법",
-        description: "고객의 개인정보를 다음과 같은 목적으로 이용할 수 있습니다:",
-        items: [
-          "서비스 제공 및 개선: 개인화된 경험을 제공하고 저희 서비스의 기능을 향상시키기 위해 고객 데이터를 사용합니다.",
-          "커뮤니케이션: 고객의 이메일 주소 및 연락처 정보는 업데이트, 뉴스레터, 홍보 자료 발송에 사용될 수 있습니다. 이러한 통신을 거부할 수 있는 옵션이 있습니다.",
-          "분석: 사용자 행동을 더 잘 이해하고 저희 서비스를 개선하기 위해 집계 및 익명화된 데이터를 분석합니다."
-        ]
-      },
-      contact: {
-        title: "문의하기",
-        description: "저희 개인정보처리방침에 대한 질문이나 궁금한 점이 있으시면",
-        linkText: "문의 양식",
-        suffix: "을 통해 연락해 주세요."
-      }
+      title: "개인정보 보호방침(개인정보처리방침)",
+      lastUpdate: "기준일: 2026년 6월 13일 (제0.1판·초안)",
+      note: "일본어판이 정본입니다. 본 한국어 번역은 참고용입니다.",
+      intro: "Cor. 주식회사(이하 「당사」라 합니다.)는 당사가 취급하는 개인정보의 중요성을 인식하고, 개인정보 보호에 관한 법률(이하 「개인정보보호법」이라 합니다.) 및 그 밖의 관계 법령, 가이드라인 및 ISO/IEC 27001:2022(JIS Q 27001:2023)에 기반한 정보보안 관리체계에 따라 고객·종업원·채용 지원자 및 그 밖의 여러분의 개인정보를 적정하게 취급합니다. 당사는 다음의 방침에 기반하여 개인정보를 보호합니다.",
+      businessTitle: "1. 사업자 정보",
+      businessTable: [
+        { label: "사업자명", value: "Cor. 주식회사" },
+        { label: "소재지", value: "후쿠오카현(본사)" },
+        { label: "대표자", value: "대표이사 데라다 코스케" },
+        { label: "사업 내용", value: "AI 솔루션의 기획·요건정의·개발·운용 및 이에 부수하는 경리·재무 업무" },
+        { label: "개인정보보호관리자", value: "ISMS 관리책임자 데라다 나기사" },
+        { label: "문의 창구", value: "제9항에서 정하는 창구에 의합니다." }
+      ],
+      purposeTitle: "2. 수집하는 개인정보와 이용 목적",
+      purposeLead: "당사는 개인정보를 수집함에 있어 그 이용 목적을 가능한 한 특정하고, 적법하고 공정한 수단으로 수집합니다. 당사는 사전에 본인의 동의를 얻은 경우를 제외하고, 특정한 이용 목적의 달성에 필요한 범위를 넘어 개인정보를 취급하지 않습니다. 당사가 취급하는 개인정보의 종류 및 이용 목적은 다음과 같습니다.",
+      purposeGroups: [
+        {
+          title: "(1) 고객(거래처·잠재 고객 포함)",
+          lines: [
+            { label: "수집하는 정보", value: "성명·회사명·부서·직책·이메일 주소·전화번호·거래에 관한 정보 등" },
+            { label: "이용 목적", value: "문의·의뢰에 대한 대응／계약의 체결·이행, AI 솔루션의 개발·운용·보수 제공／청구·지급 및 그 밖의 경리·재무 처리／서비스에 관한 연락·안내／거래·계약의 관리 및 법령상 의무의 이행" }
+          ]
+        },
+        {
+          title: "(2) 종업원(임원·파트타임·기간제 계약·인턴 포함)",
+          lines: [
+            { label: "수집하는 정보", value: "성명·연락처·생년월일·주소·은행계좌·마이넘버（특정개인정보）·사회보험 관계 정보·인사평가·근태 기록·업무상 로그 등" },
+            { label: "이용 목적", value: "인사노무관리(채용·배치·평가·급여·상여·퇴직 등)／급여 계산·원천징수 및 그 밖의 세무 처리 및 사회보험·노동보험 절차(특정개인정보 포함. 제4항 참조)／근로시간의 객관적 파악 및 건강관리·안전배려 의무의 이행／정보보안 관리를 위한 로그 수집·감시(부정 접근·정보 누출·악성코드 감염 등의 탐지 및 대응. 수집 범위는 제8항 및 사내 규정에 의함.)／긴급 연락·복리후생·그 밖에 고용계약에 기반한 관리" }
+          ]
+        },
+        {
+          title: "(3) 채용 지원자",
+          lines: [
+            { label: "수집하는 정보", value: "성명·연락처·이력서·경력기술서·면접 기록·전형 과정에서 수집하는 정보 등" },
+            { label: "이용 목적", value: "채용 전형(지원 접수·전형·연락·채용 여부 결정)／채용 후 입사 절차의 준비／불채용의 경우 일정 기간의 지원 정보 관리(다음 회 이후의 연락에 관한 것을 포함. 본인의 동의에 기반한 경우에 한함.)" }
+          ]
+        }
+      ],
+      purposeNote: "주기: 종업원 및 채용 지원자에 대한 이용 목적의 사내 통지는 본 방침으로써 행하는 외에, 근로조건통지서·서약서·채용 시 안내에 의하여 별도로 명시합니다. 특히 종업원의 인사노무관리 및 정보보안 관리를 위한 로그 수집·감시를 이용 목적에 포함한다는 점을 본 방침 및 「종업원 모니터링에 관한 통지·동의서」에 의하여 명시합니다.",
+      sections: [
+        {
+          title: "3. 제3자 제공 및 위탁",
+          body: [
+            "당사는 다음 중 어느 하나에 해당하는 경우를 제외하고, 사전에 본인의 동의를 얻지 아니하고 개인데이터를 제3자에게 제공하지 않습니다."
+          ],
+          list: [
+            "법령에 기반한 경우",
+            "사람의 생명, 신체 또는 재산의 보호를 위하여 필요가 있는 경우로서, 본인의 동의를 얻기 곤란한 때.",
+            "공중위생의 향상 또는 아동의 건전한 육성의 추진을 위하여 특히 필요가 있는 경우로서, 본인의 동의를 얻기 곤란한 때.",
+            "국가기관 등이 법령에서 정하는 사무를 수행하는 데 협력할 필요가 있는 경우로서, 본인의 동의를 얻음으로써 해당 사무의 수행에 지장을 미칠 우려가 있는 때."
+          ],
+          bodyAfter: [
+            "당사는 이용 목적의 달성에 필요한 범위 내에서, 개인정보 취급의 전부 또는 일부를 외부 사업자(업무위탁처·클라우드 서비스 사업자 등)에게 위탁하는 경우가 있습니다. 이 경우 당사는 위탁처에 대하여 사내 규칙 「공급자·외부위탁 관리규정」에 기반하여 필요하고 적절한 감독을 행합니다.",
+            "당사는 개인데이터를 제3자에게 제공한 때, 또는 제3자로부터 제공을 받은 때에는, 개인정보보호법 제29조 및 제30조에 기반하여 필요한 사항을 기록하고 이를 보존합니다."
+          ]
+        },
+        {
+          title: "4. 클라우드 서비스의 이용 및 외국에 있는 제3자에 대한 제공(개인정보보호법 제28조)",
+          body: [
+            "당사는 Google Workspace(공유 드라이브), Google Cloud(GCP／Secret Manager), GitHub, Bitwarden 등의 클라우드 서비스를 이용하여 개인정보를 취급합니다.",
+            "이러한 클라우드 서비스의 이용에 따라 개인데이터가 외국에서 취급되는(국경을 넘어 이전되는) 경우가 있습니다. 당사가 외국에 있는 제3자에게 개인데이터를 제공하는 때(클라우드 서비스를 통하여 외국에서 데이터가 취급되는 경우를 포함합니다.)에는, 개인정보보호법 제28조에 기반하여, 사전에 본인의 동의를 얻는 방법, 또는 해당 제3자가 동법에서 정하는 기준에 적합한 체제를 정비하고 있음을 확인하는 방법 그 밖에 법령에서 정하는 방법에 의하여 적정하게 취급합니다.",
+            "당사는 국경 간 이전을 행하는 경우, 본인의 요구에 따라, 이전처가 소재하는 국가의 명칭, 해당 국가의 개인정보 보호에 관한 제도 및 이전처가 강구하는 조치에 관한 정보를, 법령에서 정하는 바에 따라 제공합니다.",
+            "※특정개인정보（마이넘버）에 대해서는, 마이넘버법(My Number Act)에 기반하여, 외국에 있는 제3자에 대한 제공은 행하지 않습니다."
+          ]
+        },
+        {
+          title: "5. 안전관리 조치",
+          body: [
+            "당사는 취급하는 개인정보의 누출, 멸실 또는 훼손의 방지 그 밖의 안전관리를 위하여, 다음의 조치를 강구합니다(상세 사항은 사내 규칙 「개인정보·특정개인정보 취급규정」 및 「정보보안 관리규정」에 의합니다.)."
+          ],
+          list: [
+            "조직적·인적 안전관리 조치: 개인정보보호관리자(ISMS 관리책임자)를 두고, 취급 상황을 파악·점검합니다. 종업원에 대하여, 비밀유지 의무 및 관계 법령의 준수에 관하여 교육을 행합니다.",
+            "접근 제어: 제로 트러스트의 사고방식에 기반하여, 다요소 인증(MFA), 디바이스 상태 검증 및 최소 권한의 원칙에 의하여, 개인데이터에 대한 접근을 제어합니다. 특정개인정보는 사무 취급 담당자만이 접근할 수 있도록 권한을 설정합니다.",
+            "암호화: 업무 단말은 디스크 암호화(FileVault)를 활성화하고, 통신은 TLS 등에 의하여 암호화합니다. 클라우드상의 보관 데이터는 보관 시 암호화를 활성화합니다.",
+            "로그 및 탐지: 개인데이터에 대한 접근은 업무에 관련한 최소한의 로그(사적 콘텐츠를 수집하지 않는 것)의 대상으로 하고, 기록·감시합니다.",
+            "폐기: 불필요하게 된 개인데이터는 복원 불가능한 방법에 의하여 폐기합니다."
+          ]
+        },
+        {
+          title: "6. 보유 개인데이터의 공개 등의 청구",
+          body: [
+            "본인 또는 그 대리인(법정대리인 및 본인이 위임한 대리인을 말합니다.)은, 당사에 대하여, 해당 본인이 식별되는 보유 개인데이터에 관하여, 이용 목적의 통지, 공개, 내용의 정정·추가·삭제, 이용의 정지·소거, 제3자 제공의 정지를 청구할 수 있습니다.",
+            "당사는 당사 소정의 방법에 의하여, 본인임 또는 대리인임을 확인할 수 있는 서류를 첨부하여 청구를 접수합니다.",
+            "당사는 이러한 청구를 접수한 날부터 원칙적으로 30일 이내에, 대응 내용을 결정하고, 본인에게 통지합니다. 부득이한 사정에 의하여 해당 기간 내에 대응할 수 없는 때에는, 그 이유 및 대응 전망을 통지합니다.",
+            "당사는 공개 청구에 응하는 경우에 있어서, 실비를 감안하여 합리적이라고 인정되는 범위 내에서, 당사 소정의 수수료를 징수하는 경우가 있습니다.",
+            "법령에서 정하는 일정한 경우(본인 또는 제3자의 권리 이익을 해칠 우려가 있는 경우, 당사 업무의 적정한 실시에 현저한 지장을 미칠 우려가 있는 경우, 다른 법령에 위반하게 되는 경우 등)에는, 그 전부 또는 일부를 공개하지 않는 경우가 있습니다. 이 경우 그 취지를 이유와 함께 본인에게 통지합니다."
+          ]
+        },
+        {
+          title: "7. 누출 등이 발생한 경우의 대응",
+          body: [
+            "당사는 개인데이터의 누출, 멸실, 훼손 그 밖의 안전 확보에 관한 사태가 발생한 경우에 있어서, 개인정보보호법 제26조에서 정하는 일정한 사태에 해당하는 때에는, 개인정보보호위원회에 대하여 신속하게(속보) 및 소정의 기간 내(확보)에 보고함과 동시에, 본인에 대하여 해당 사태의 상황에 따라 신속하게 통지합니다. 본인에 대한 통지가 곤란한 경우에는, 본인의 권리 이익을 보호하기 위하여 필요한 대체 조치를 강구합니다. 특정개인정보에 관한 누출 등에 대해서는, 마이넘버법(My Number Act) 및 개인정보보호위원회 규칙에 기반하여, 별도로 필요한 보고 및 통지를 행합니다."
+          ]
+        },
+        {
+          title: "8. 로그의 수집·감시에 관한 취급(종업원용)",
+          body: [
+            "당사는 정보보안 관리·노무 관리·근로시간의 객관적 파악을 위하여, 업무에 사용하는 단말 및 클라우드 서비스에서, 업무에 관련한 로그(인증·프로세스 실행·통신 메타데이터·사내 데이터에 대한 접근·소프트웨어 구성·근태／이용 시간)를 수집하고, 감시합니다. 당사는 사적인 콘텐츠(개인의 브라우징 내용·개인 계정의 내용·키 입력)를 수집하지 않습니다.",
+            "로그의 수집·감시의 목적·범위·책임자·열람 조건·보존 기간은, 사내 규칙 「로그 수집·모니터링 규정」 및 「종업원 모니터링에 관한 통지·동의서」에서 정하는 바에 의합니다."
+          ]
+        }
+      ],
+      inquiryTitle: "9. 문의 창구",
+      inquiryLead: "보유 개인데이터의 공개 등의 청구, 개인정보의 취급에 관한 불만·상담은, 다음의 창구에서 접수합니다.",
+      inquiryTable: [
+        { label: "창구", value: "Cor. 주식회사 개인정보보호관리자(ISMS 관리책임자 데라다 나기사)" },
+        { label: "연락 방법", value: "문의 양식을 통해 연락해 주시기 바랍니다." }
+      ],
+      inquiryLinkLabel: "문의 양식",
+      revisionTitle: "10. 본 방침의 개정",
+      revisionBody: [
+        "당사는 법령의 개정, 사업 내용의 변경 그 밖의 사정에 의하여, 본 방침을 개정하는 경우가 있습니다. 개정한 경우에는, 개정 후의 내용을 당사 웹사이트 등에서 공표합니다. 중요한 변경을 행하는 경우에는, 적절한 방법에 의하여 주지합니다."
+      ],
+      securityLinkPrefix: "당사의 정보보안 체계에 대해서는 ",
+      securityLinkText: "보안",
+      securityLinkSuffix: " 페이지도 함께 참조해 주십시오.",
+      footer: "버전: 제0.1판(초안) / 기준일: 2026년 6월 13일 / 작성: Cor. 주식회사 / 소관: 개인정보보호관리자(ISMS 관리책임자 데라다 나기사)",
+      footerNote: "※본 방침은 사내 규칙 「개인정보·특정개인정보 취급규정」을 대외 공표용으로 요약·대응시킨 것이며, 양자의 내용이 다른 경우에는 법령 및 동 규정의 취지에 따라 해석합니다."
     },
     security: {
       title: "보안",
@@ -4606,33 +4970,124 @@ const translations = {
       security: { title: "Seguridad | Cor.inc", description: "Sobre la seguridad de la información de Cor. Inc., su hoja de ruta hacia la ISMS y un entorno de desarrollo de IA local-first con niveles de confidencialidad." }
     },
     privacy: {
-      title: "Política de privacidad",
-      lastUpdate: "Última actualización: 13 de mayo de 2024",
-      intro: "En Cor.inc, priorizamos su privacidad y nos comprometemos a protegerla. Esta política de privacidad detalla nuestro enfoque para recopilar, usar y proteger información personal cuando utiliza nuestros servicios, incluyendo herramientas de análisis web, aplicaciones Flutter y soluciones de aprendizaje automático. Recomendamos revisar esta política para entender nuestro compromiso.",
-      section1: {
-        title: "1. Información que recopilamos",
-        description: "Cuando utiliza nuestros servicios, podemos recopilar varios tipos de información personal, incluyendo:",
-        items: [
-          "Información que usted proporciona: Esto puede incluir su nombre, dirección de correo electrónico, información de contacto y otros datos relevantes cuando crea una cuenta o utiliza funciones específicas de nuestros servicios.",
-          "Datos de uso: Recopilamos datos relacionados con su uso de nuestros servicios, incluyendo su dirección IP, tipo de navegador, información del dispositivo, páginas visitadas e interacciones con nuestros servicios.",
-          "Cookies y tecnologías similares: Para mejorar la experiencia del usuario y entender los patrones de uso, nuestros servicios utilizan cookies y tecnologías similares."
-        ]
-      },
-      section2: {
-        title: "2. Cómo utilizamos su información",
-        description: "Podemos utilizar su información personal para los siguientes propósitos:",
-        items: [
-          "Provisión y mejora de servicios: Utilizamos sus datos para proporcionar experiencias personalizadas y mejorar las funciones de nuestros servicios.",
-          "Comunicación: Su dirección de correo electrónico e información de contacto pueden utilizarse para enviar actualizaciones, boletines y materiales promocionales. Tiene la opción de optar por no recibir estas comunicaciones.",
-          "Análisis: Para entender mejor el comportamiento del usuario y mejorar nuestros servicios, analizamos datos agregados y anonimizados."
-        ]
-      },
-        contact: {
-        title: "Contáctanos",
-        description: "Si tiene preguntas o inquietudes sobre nuestra política de privacidad, póngase en contacto con nosotros a través de nuestro",
-        linkText: "formulario de contacto",
-        suffix: "."
-      }
+      title: "Política de Protección de Datos Personales (Política de Privacidad)",
+      lastUpdate: "Fecha de referencia: 13 de junio de 2026 (Versión 0.1, Borrador)",
+      note: "La versión en japonés es el texto auténtico. Esta traducción al español se ofrece únicamente a título informativo.",
+      intro: "Cor. Inc. (en adelante, «la Empresa») reconoce la importancia de la información personal que trata y gestiona adecuadamente la información personal de clientes, empleados, candidatos a empleo y demás personas, de conformidad con la Ley de Protección de Información Personal (en adelante, la «Ley de Protección de Información Personal»), demás leyes y reglamentos pertinentes, directrices y el sistema de gestión de la seguridad de la información basado en la norma ISO/IEC 27001:2022 (JIS Q 27001:2023). La Empresa protege la información personal con arreglo a la siguiente política.",
+      businessTitle: "1. Información de la empresa",
+      businessTable: [
+        { label: "Nombre de la empresa", value: "Cor. Inc." },
+        { label: "Ubicación", value: "Prefectura de Fukuoka (sede central)" },
+        { label: "Representante", value: "Director Representante Kosuke Terada" },
+        { label: "Actividad empresarial", value: "Planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como las tareas contables y financieras asociadas." },
+        { label: "Responsable de Protección de Información Personal", value: "Responsable de Gestión del ISMS Nagisa Terada" },
+        { label: "Consultas", value: "A través del punto de contacto establecido en el apartado 9." }
+      ],
+      purposeTitle: "2. Información personal recopilada y finalidad de su uso",
+      purposeLead: "Al recopilar información personal, la Empresa especifica en la medida de lo posible la finalidad de su uso y la obtiene por medios lícitos y leales. Salvo que se haya obtenido previamente el consentimiento del interesado, la Empresa no trata la información personal más allá del alcance necesario para alcanzar la finalidad especificada. Los tipos de información personal que trata la Empresa y la finalidad de su uso son los siguientes.",
+      purposeGroups: [
+        {
+          title: "(1) Clientes (incluidos socios comerciales y clientes potenciales)",
+          lines: [
+            { label: "Información recopilada", value: "Nombre, razón social, departamento, cargo, dirección de correo electrónico, número de teléfono, información relativa a las transacciones, etc." },
+            { label: "Finalidad del uso", value: "Atención de consultas y solicitudes / celebración y ejecución de contratos, prestación del desarrollo, operación y mantenimiento de soluciones de IA / facturación, pago y demás procesos contables y financieros / comunicaciones e información relativas a los servicios / gestión de transacciones y contratos y cumplimiento de las obligaciones legales." }
+          ]
+        },
+        {
+          title: "(2) Empleados (incluidos directivos, personal a tiempo parcial, contratados por tiempo determinado y becarios)",
+          lines: [
+            { label: "Información recopilada", value: "Nombre, datos de contacto, fecha de nacimiento, domicilio, cuenta bancaria, My Number (Información Personal Específica), información relativa a la seguridad social, evaluación de desempeño, registros de asistencia, registros (logs) laborales, etc." },
+            { label: "Finalidad del uso", value: "Gestión de recursos humanos y relaciones laborales (contratación, asignación, evaluación, salarios, primas, jubilación, etc.) / cálculo de nóminas, retención en origen y demás procesos fiscales, así como los trámites de seguridad social y seguro laboral (incluida la Información Personal Específica; véase el apartado 4) / registro objetivo de la jornada laboral y cumplimiento de los deberes de gestión de la salud y de protección de la seguridad / obtención y supervisión de registros (logs) para la gestión de la seguridad de la información (detección y respuesta ante accesos no autorizados, fugas de información, infecciones por malware, etc.; el alcance de la recopilación se rige por el apartado 8 y por las normas internas) / contactos de emergencia, prestaciones sociales y demás aspectos de gestión derivados del contrato de trabajo." }
+          ]
+        },
+        {
+          title: "(3) Candidatos a empleo",
+          lines: [
+            { label: "Información recopilada", value: "Nombre, datos de contacto, currículum, historial profesional, registros de entrevistas, información obtenida durante el proceso de selección, etc." },
+            { label: "Finalidad del uso", value: "Proceso de selección (recepción de candidaturas, selección, comunicación y decisión de contratación o no contratación) / preparación de los trámites de incorporación tras la contratación / gestión de la información de candidatura durante un periodo determinado en caso de no contratación (incluida la relativa a futuras comunicaciones; únicamente cuando se base en el consentimiento del interesado)." }
+          ]
+        }
+      ],
+      purposeNote: "Nota: La notificación interna a los empleados y candidatos a empleo sobre la finalidad del uso se realiza mediante la presente política, así como, por separado, mediante la notificación de las condiciones laborales, el documento de compromiso y la información facilitada en el momento de la contratación. En particular, mediante la presente política y el «Aviso y Consentimiento sobre la Monitorización de Empleados» se hace constar expresamente que entre las finalidades del uso se incluye la obtención y supervisión de registros (logs) para la gestión de recursos humanos y relaciones laborales y para la gestión de la seguridad de la información de los empleados.",
+      sections: [
+        {
+          title: "3. Cesión a terceros y encargo de tratamiento",
+          body: [
+            "Salvo que concurra alguno de los siguientes supuestos, la Empresa no cederá datos personales a terceros sin obtener previamente el consentimiento del interesado."
+          ],
+          list: [
+            "Cuando así lo exija la ley.",
+            "Cuando sea necesario para proteger la vida, la integridad física o el patrimonio de una persona y resulte difícil obtener el consentimiento del interesado.",
+            "Cuando sea especialmente necesario para mejorar la salud pública o para promover el desarrollo saludable de los menores y resulte difícil obtener el consentimiento del interesado.",
+            "Cuando sea necesario cooperar con un organismo del Estado o similar en la ejecución de las funciones establecidas por la ley y la obtención del consentimiento del interesado pueda obstaculizar dicha ejecución."
+          ],
+          bodyAfter: [
+            "La Empresa podrá encargar la totalidad o una parte del tratamiento de la información personal a empresas externas (subcontratistas, proveedores de servicios en la nube, etc.) dentro del alcance necesario para alcanzar la finalidad del uso. En tal caso, la Empresa ejercerá la supervisión necesaria y adecuada sobre el encargado de conformidad con la norma interna «Reglamento de Gestión de Proveedores y Encargos Externos».",
+            "Cuando la Empresa ceda datos personales a un tercero, o los reciba de un tercero, registrará y conservará la información necesaria de conformidad con los artículos 29 y 30 de la Ley de Protección de Información Personal."
+          ]
+        },
+        {
+          title: "4. Uso de servicios en la nube y cesión a terceros situados en el extranjero (artículo 28 de la Ley de Protección de Información Personal)",
+          body: [
+            "La Empresa trata información personal utilizando servicios en la nube como Google Workspace (unidades compartidas), Google Cloud (GCP/Secret Manager), GitHub, Bitwarden, entre otros.",
+            "Con el uso de estos servicios en la nube, los datos personales pueden tratarse en el extranjero (transferencia transfronteriza). Cuando la Empresa ceda datos personales a un tercero situado en el extranjero (incluido el supuesto en que los datos se traten en el extranjero a través de servicios en la nube), los tratará adecuadamente de conformidad con el artículo 28 de la Ley de Protección de Información Personal, ya sea obteniendo previamente el consentimiento del interesado, comprobando que dicho tercero ha implantado un sistema conforme a los criterios establecidos en dicha ley, o por cualquier otro medio previsto por la ley.",
+            "Cuando la Empresa lleve a cabo una transferencia transfronteriza, facilitará al interesado, a petición de este y conforme a lo dispuesto por la ley, el nombre del país en que se encuentra el destinatario de la transferencia, información sobre el régimen de protección de la información personal de dicho país y sobre las medidas adoptadas por el destinatario.",
+            "* Respecto de la Información Personal Específica (My Number), no se realizará cesión alguna a terceros situados en el extranjero, de conformidad con la Ley My Number."
+          ]
+        },
+        {
+          title: "5. Medidas de gestión de la seguridad",
+          body: [
+            "Con el fin de prevenir la fuga, pérdida o deterioro de la información personal que trata, así como para garantizar otras medidas de gestión de la seguridad, la Empresa adopta las siguientes medidas (los detalles se rigen por las normas internas «Reglamento de Tratamiento de Información Personal e Información Personal Específica» y «Reglamento de Gestión de la Seguridad de la Información»)."
+          ],
+          list: [
+            "Medidas de gestión de la seguridad de carácter organizativo y humano: Se designa un Responsable de Protección de Información Personal (Responsable de Gestión del ISMS) que conoce y supervisa la situación del tratamiento. Se imparte formación a los empleados sobre el deber de confidencialidad y el cumplimiento de las leyes y reglamentos pertinentes.",
+            "Control de acceso: Conforme al enfoque de confianza cero (zero trust), el acceso a los datos personales se controla mediante autenticación multifactor (MFA), verificación del estado de los dispositivos y el principio de mínimo privilegio. Respecto de la Información Personal Específica, los permisos se configuran de modo que únicamente puedan acceder a ella las personas encargadas de su tratamiento.",
+            "Cifrado: Los terminales de trabajo tienen habilitado el cifrado de disco (FileVault) y las comunicaciones se cifran mediante TLS u otros medios. Los datos almacenados en la nube tienen habilitado el cifrado en reposo.",
+            "Registros (logs) y detección: El acceso a los datos personales es objeto de registros mínimos relacionados con la actividad laboral (que no captan contenido privado), que se conservan y supervisan.",
+            "Eliminación: Los datos personales que dejan de ser necesarios se eliminan mediante un método que impide su recuperación."
+          ]
+        },
+        {
+          title: "6. Solicitud de divulgación, entre otras, de los datos personales en posesión de la Empresa",
+          body: [
+            "El interesado o su representante (entendiéndose por tal el representante legal y el representante apoderado por el interesado) podrá solicitar a la Empresa, respecto de los datos personales en su posesión que identifiquen a dicho interesado, la notificación de la finalidad del uso, la divulgación, la rectificación, adición o supresión de su contenido, la suspensión del uso o el borrado, y la suspensión de la cesión a terceros.",
+            "La Empresa tramitará la solicitud conforme al método que tiene establecido, acompañada de los documentos que permitan verificar la identidad del interesado o de su representante.",
+            "La Empresa decidirá el contenido de la respuesta y lo notificará al interesado, en principio, dentro de los 30 días siguientes a la fecha de recepción de la solicitud. Cuando, por circunstancias inevitables, no pueda responder dentro de dicho plazo, notificará el motivo y la previsión de respuesta.",
+            "Cuando la Empresa atienda una solicitud de divulgación, podrá cobrar la tarifa que tiene establecida, dentro de un alcance que se considere razonable teniendo en cuenta los costes reales.",
+            "En determinados supuestos previstos por la ley (cuando exista riesgo de perjudicar los derechos e intereses del interesado o de un tercero, cuando exista riesgo de obstaculizar gravemente la adecuada ejecución de las actividades de la Empresa, cuando ello suponga infringir otras leyes, etc.), la Empresa podrá no divulgar la totalidad o una parte. En tal caso, lo notificará al interesado junto con el motivo correspondiente."
+          ]
+        },
+        {
+          title: "7. Actuación en caso de producirse una fuga u otro incidente",
+          body: [
+            "Cuando se produzca una fuga, pérdida, deterioro u otro incidente relativo a la seguridad de los datos personales y dicho incidente corresponda a alguno de los supuestos previstos en el artículo 26 de la Ley de Protección de Información Personal, la Empresa informará a la Comisión de Protección de Información Personal sin demora (informe preliminar) y dentro del plazo establecido (informe definitivo), y notificará al interesado sin demora en función de la situación de dicho incidente. Cuando la notificación al interesado resulte difícil, la Empresa adoptará las medidas alternativas necesarias para proteger los derechos e intereses del interesado. Respecto de las fugas u otros incidentes relativos a la Información Personal Específica, la Empresa realizará por separado los informes y notificaciones necesarios de conformidad con la Ley My Number y con el reglamento de la Comisión de Protección de Información Personal."
+          ]
+        },
+        {
+          title: "8. Tratamiento relativo a la obtención y supervisión de registros (logs) (para empleados)",
+          body: [
+            "Con el fin de gestionar la seguridad de la información, gestionar las relaciones laborales y registrar objetivamente la jornada laboral, la Empresa obtiene y supervisa, en los terminales y servicios en la nube utilizados para el trabajo, los registros (logs) relacionados con la actividad laboral (autenticación, ejecución de procesos, metadatos de comunicación, accesos a datos internos, configuración de software, asistencia/tiempo de uso). La Empresa no obtiene contenido privado (contenido de navegación personal, contenido de cuentas personales, pulsaciones de teclas).",
+            "La finalidad, el alcance, el responsable, las condiciones de consulta y el periodo de conservación de la obtención y supervisión de registros (logs) se rigen por lo establecido en las normas internas «Reglamento de Obtención de Registros y Monitorización» y «Aviso y Consentimiento sobre la Monitorización de Empleados»."
+          ]
+        }
+      ],
+      inquiryTitle: "9. Punto de contacto para consultas",
+      inquiryLead: "Las solicitudes de divulgación, entre otras, de los datos personales en posesión de la Empresa, así como las reclamaciones y consultas relativas al tratamiento de la información personal, se atienden en el siguiente punto de contacto.",
+      inquiryTable: [
+        { label: "Punto de contacto", value: "Cor. Inc. Responsable de Protección de Información Personal (Responsable de Gestión del ISMS Nagisa Terada)" },
+        { label: "Forma de contacto", value: "Póngase en contacto con nosotros a través del formulario de contacto." }
+      ],
+      inquiryLinkLabel: "formulario de contacto",
+      revisionTitle: "10. Modificación de la presente política",
+      revisionBody: [
+        "La Empresa podrá modificar la presente política por motivos como reformas legales, cambios en su actividad empresarial u otras circunstancias. En caso de modificación, publicará el contenido modificado en el sitio web de la Empresa u otros medios. Cuando realice cambios importantes, los dará a conocer por un medio adecuado."
+      ],
+      securityLinkPrefix: "Para conocer nuestro marco de seguridad de la información, consulte también nuestra página de ",
+      securityLinkText: "Seguridad",
+      securityLinkSuffix: ".",
+      footer: "Versión: 0.1 (Borrador) / Fecha de referencia: 13 de junio de 2026 / Elaborado por: Cor. Inc. / Responsable: Responsable de Protección de Información Personal (Responsable de Gestión del ISMS, Nagisa Terada)",
+      footerNote: "* La presente política es un resumen, con fines de publicación externa, de la norma interna «Reglamento de Tratamiento de Información Personal e Información Personal Específica», correspondiéndose ambos documentos; en caso de discrepancia entre ellos, se interpretará conforme a las leyes y reglamentos y al espíritu de dicha norma."
     },
     security: {
       title: "Seguridad",
