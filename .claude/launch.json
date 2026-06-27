@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "corsweb-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview"],
+      "port": 4321
+    },
+    {
+      "name": "corsweb-inspect",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview", "--", "--port", "4329"],
+      "port": 4329
+    },
+    {
+      "name": "yomimono-ui-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8799", "--directory", "/tmp/yomimono-preview"],
+      "port": 8799
+    }
+  ]
+}

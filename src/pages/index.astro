@@ -8,6 +8,7 @@ import ServicesReframed from '../components/home/ServicesReframed.astro';
 import SecurityTrust from '../components/home/SecurityTrust.astro';
 import KyousouPhilosophy from '../components/home/KyousouPhilosophy.astro';
 import HomeBlog from '../components/home/HomeBlog.astro';
+import Faq from '../components/products/Faq.astro';
 import FinalCta from '../components/home/FinalCta.astro';
 import Layout from '../layouts/Layout.astro';
 import { getCurrentLocale, getTranslations } from '../utils/i18n';
@@ -30,5 +31,6 @@ const t = getTranslations(currentLocale);
   <SecurityTrust />
   <KyousouPhilosophy />
   <HomeBlog />
+  <Faq />
   <FinalCta />
 </Layout>
