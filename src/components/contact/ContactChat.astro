@@ -12,11 +12,12 @@
 // 環境変数:
 //   PUBLIC_TURNSTILE_SITEKEY  Cloudflare Turnstile のサイトキー（任意）。
 //                             未設定なら Turnstile ウィジェットは描画しない（開発時）。
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 const c = t.contactChat;
+const privacyHref = getLocalizedUrl('/privacy', currentLocale);
 
 // import.meta.env.DEV は SSG ビルド時に静的に解決される（dev=true / build=false）。
 const isDev = import.meta.env.DEV;
@@ -182,6 +183,27 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
         {turnstileSiteKey && (
           <div id="handoff-turnstile" data-sitekey={turnstileSiteKey}></div>
         )}
+
+        <!-- 利用目的 + プライバシーポリシー同意 -->
+        <div class="flex flex-col gap-3 rounded-md bg-primary-100/60 px-4 py-4 dark:bg-primary-900/40">
+          <p class="text-sm text-primary-950/70 dark:text-primary-200/70">{c.consent.purpose}</p>
+          <p class="text-sm text-primary-950/70 dark:text-primary-200/70">
+            {c.consent.linkBefore}<a
+              href={privacyHref}
+              class="font-medium text-primary-700 underline underline-offset-2 hover:text-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-300 dark:hover:text-primary-100"
+            >{c.consent.linkText}</a>{c.consent.linkAfter}
+          </p>
+          <div class="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="handoff-consent"
+              name="privacyConsent"
+              required
+              class="mt-0.5 h-6 w-6 shrink-0 rounded border-primary-900/40 text-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/40"
+            />
+            <label for="handoff-consent" class="text-sm text-primary-950 dark:text-primary-200">{c.consent.checkboxLabel}</label>
+          </div>
+        </div>
 
         <button
           type="submit"
@@ -425,6 +447,14 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
 
       if (!name || !email || !message) {
         showStatus(strings.form.required, false);
+        return;
+      }
+
+      // プライバシーポリシー同意チェック（未同意なら送信ブロック）。
+      var consentBox = document.getElementById('handoff-consent');
+      if (!consentBox || !consentBox.checked) {
+        showStatus(strings.consent.validationMessage, false);
+        if (consentBox && typeof consentBox.focus === 'function') consentBox.focus();
         return;
       }
 

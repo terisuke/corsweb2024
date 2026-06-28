@@ -87,6 +87,14 @@ const translations = {
         reset: "リセット"
       }
     },
+    contactConsent: {
+      purpose: "ご入力いただいた情報は、お問い合わせへの回答およびご連絡のためにのみ利用いたします。",
+      linkBefore: "個人情報の取扱いについては",
+      linkText: "プライバシーポリシー",
+      linkAfter: "をご確認ください。",
+      checkboxLabel: "プライバシーポリシーに同意のうえ送信します",
+      validationMessage: "送信するにはプライバシーポリシーへの同意が必要です。"
+    },
     contactChat: {
       heading: "AI アシスタントに相談する",
       intro: "ご相談内容をチャットでお聞かせください。AI が内容を整理し、担当者へのお取り次ぎをサポートします。",
@@ -100,6 +108,14 @@ const translations = {
       assistantLabel: "AI アシスタント",
       chatError: "通信に失敗しました。お手数ですが、もう一度お試しください。",
       readyNotice: "ありがとうございます。下記のフォームにご連絡先をご記入のうえ送信してください。",
+      consent: {
+        purpose: "ご入力いただいた情報は、お問い合わせへの回答およびご連絡のためにのみ利用いたします。",
+        linkBefore: "個人情報の取扱いについては",
+        linkText: "プライバシーポリシー",
+        linkAfter: "をご確認ください。",
+        checkboxLabel: "プライバシーポリシーに同意のうえ送信します",
+        validationMessage: "送信するにはプライバシーポリシーへの同意が必要です。"
+      },
       form: {
         title: "ご連絡先の入力",
         name: "お名前",
@@ -1583,6 +1599,14 @@ const translations = {
         reset: "Reset"
       }
     },
+    contactConsent: {
+      purpose: "The information you provide will be used solely to respond to your inquiry and to contact you.",
+      linkBefore: "For details on how we handle personal information, please review our ",
+      linkText: "Privacy Policy",
+      linkAfter: ".",
+      checkboxLabel: "I agree to the Privacy Policy and submit this form.",
+      validationMessage: "Please agree to the Privacy Policy before submitting."
+    },
     contactChat: {
       heading: "Chat with our AI assistant",
       intro: "Tell us about your inquiry in the chat. Our AI will help organise the details and connect you with the right person.",
@@ -1596,6 +1620,14 @@ const translations = {
       assistantLabel: "AI assistant",
       chatError: "Something went wrong. Please try sending your message again.",
       readyNotice: "Thank you! Please fill in your contact details below and submit.",
+      consent: {
+        purpose: "The information you provide will be used solely to respond to your inquiry and to contact you.",
+        linkBefore: "For details on how we handle personal information, please review our ",
+        linkText: "Privacy Policy",
+        linkAfter: ".",
+        checkboxLabel: "I agree to the Privacy Policy and submit this form.",
+        validationMessage: "Please agree to the Privacy Policy before submitting."
+      },
       form: {
         title: "Your contact details",
         name: "Name",
@@ -2610,6 +2642,14 @@ const translations = {
         reset: "重置"
       }
     },
+    contactConsent: {
+      purpose: "您填写的信息仅用于回复您的咨询以及与您联系。",
+      linkBefore: "有关个人信息的处理，请查阅",
+      linkText: "隐私政策",
+      linkAfter: "。",
+      checkboxLabel: "我已同意隐私政策并提交。",
+      validationMessage: "提交前请先同意隐私政策。"
+    },
     contactChat: {
       heading: "与 AI 助手沟通",
       intro: "请在聊天中告诉我们您的咨询内容。AI 将帮助整理信息，并为您对接相应的负责人。",
@@ -2623,6 +2663,14 @@ const translations = {
       assistantLabel: "AI 助手",
       chatError: "通信失败，请重新发送您的消息。",
       readyNotice: "谢谢！请在下方填写您的联系方式并提交。",
+      consent: {
+        purpose: "您填写的信息仅用于回复您的咨询以及与您联系。",
+        linkBefore: "有关个人信息的处理，请查阅",
+        linkText: "隐私政策",
+        linkAfter: "。",
+        checkboxLabel: "我已同意隐私政策并提交。",
+        validationMessage: "提交前请先同意隐私政策。"
+      },
       form: {
         title: "填写联系方式",
         name: "姓名",
@@ -3637,6 +3685,14 @@ const translations = {
         reset: "초기화"
       }
     },
+    contactConsent: {
+      purpose: "입력하신 정보는 문의에 대한 답변 및 연락을 위해서만 이용됩니다.",
+      linkBefore: "개인정보의 취급에 대해서는 ",
+      linkText: "개인정보처리방침",
+      linkAfter: "을 확인해 주세요.",
+      checkboxLabel: "개인정보처리방침에 동의하고 전송합니다.",
+      validationMessage: "전송하려면 개인정보처리방침에 동의해야 합니다."
+    },
     contactChat: {
       heading: "AI 어시스턴트와 상담하기",
       intro: "채팅으로 문의 내용을 알려주세요. AI가 내용을 정리하고 담당자에게 연결해 드립니다.",
@@ -3650,6 +3706,14 @@ const translations = {
       assistantLabel: "AI 어시스턴트",
       chatError: "통신에 실패했습니다. 메시지를 다시 보내 주세요.",
       readyNotice: "감사합니다. 아래 양식에 연락처를 입력하신 후 전송해 주세요.",
+      consent: {
+        purpose: "입력하신 정보는 문의에 대한 답변 및 연락을 위해서만 이용됩니다.",
+        linkBefore: "개인정보의 취급에 대해서는 ",
+        linkText: "개인정보처리방침",
+        linkAfter: "을 확인해 주세요.",
+        checkboxLabel: "개인정보처리방침에 동의하고 전송합니다.",
+        validationMessage: "전송하려면 개인정보처리방침에 동의해야 합니다."
+      },
       form: {
         title: "연락처 입력",
         name: "이름",
@@ -4664,6 +4728,14 @@ const translations = {
         reset: "Restablecer"
       }
     },
+    contactConsent: {
+      purpose: "La información que facilites se utilizará únicamente para responder a tu consulta y para ponernos en contacto contigo.",
+      linkBefore: "Para más información sobre el tratamiento de datos personales, consulta nuestra ",
+      linkText: "Política de Privacidad",
+      linkAfter: ".",
+      checkboxLabel: "Acepto la Política de Privacidad y envío este formulario.",
+      validationMessage: "Acepta la Política de Privacidad antes de enviar."
+    },
     contactChat: {
       heading: "Habla con nuestro asistente de IA",
       intro: "Cuéntanos tu consulta en el chat. Nuestra IA te ayudará a organizar los detalles y te pondrá en contacto con la persona adecuada.",
@@ -4677,6 +4749,14 @@ const translations = {
       assistantLabel: "Asistente de IA",
       chatError: "Algo salió mal. Por favor, intenta enviar tu mensaje de nuevo.",
       readyNotice: "¡Gracias! Rellena tus datos de contacto a continuación y envía el formulario.",
+      consent: {
+        purpose: "La información que facilites se utilizará únicamente para responder a tu consulta y para ponernos en contacto contigo.",
+        linkBefore: "Para más información sobre el tratamiento de datos personales, consulta nuestra ",
+        linkText: "Política de Privacidad",
+        linkAfter: ".",
+        checkboxLabel: "Acepto la Política de Privacidad y envío este formulario.",
+        validationMessage: "Acepta la Política de Privacidad antes de enviar."
+      },
       form: {
         title: "Tus datos de contacto",
         name: "Nombre",
