@@ -994,7 +994,7 @@ const translations = {
       statusTitle: "体制整備",
       status: {
         legal: "2026年6月より、顧問弁護士と連携し、契約、個人情報、AI利用、情報セキュリティ運用に関する法務レビュー体制を整備しています。",
-        isms: "Cor.株式会社は、2026年12月のISO/IEC 27001認証取得を目標に、ISMS（情報セキュリティマネジメントシステム）の運用整備を進めています。"
+        isms: "Cor.株式会社は、ISO/IEC 27001認証の取得を目標に、ISMS（情報セキュリティマネジメントシステム）の運用整備を進めています。"
       },
       aiTitle: "AI利用方針",
       aiDescription: "Cor.はAIツールの業務利用を積極的に活用します。一方で、顧客機密、個人情報、ソースコード、学習データ等を扱う場合は、学習利用されない契約・設定のAIツール、会社アカウント、または承認済み環境を用います。AIの出力は人が検証し、権利・正確性・安全性を確認したうえで利用します。",
@@ -1002,7 +1002,7 @@ const translations = {
       tableHead: { area: "領域", effort: "取り組み", state: "状態" },
       table: [
         { area: "法務レビュー", effort: "顧問弁護士と連携し、契約・個人情報・AI利用・ISMS運用を確認", state: "2026年6月より整備" },
-        { area: "ISMS", effort: "ISO/IEC 27001認証取得を目標に、リスク管理・教育・規程・監査体制を整備", state: "2026年12月取得目標" },
+        { area: "ISMS", effort: "ISO/IEC 27001認証取得を目標に、リスク管理・教育・規程・監査体制を整備", state: "整備中" },
         { area: "端末管理", effort: "会社支給Mac、端末暗号化、MDM、必要な設定配布", state: "段階導入" },
         { area: "AI利用", effort: "機密度に応じ、承認AIツール・会社アカウント・学習非利用設定を適用", state: "運用整備中" },
         { area: "ローカルLLM", effort: "機密情報を外部へ不要に出さないAI活用を支援", state: "案件に応じて適用" },
@@ -2021,7 +2021,7 @@ const translations = {
       statusTitle: "Building Our Framework",
       status: {
         legal: "Since June 2026, in collaboration with our retained legal counsel, we have been building a legal review framework covering contracts, personal information, AI use, and information security operations.",
-        isms: "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification in December 2026."
+        isms: "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification."
       },
       aiTitle: "AI Usage Policy",
       aiDescription: "Cor. actively leverages AI tools for our work. At the same time, when handling customer confidential data, personal information, source code, training data, and the like, we use AI tools under contracts and configurations that prevent training use, company accounts, or approved environments. AI outputs are verified by people and used only after confirming rights, accuracy, and safety.",
@@ -2029,7 +2029,7 @@ const translations = {
       tableHead: { area: "Area", effort: "Initiative", state: "Status" },
       table: [
         { area: "Legal Review", effort: "In collaboration with retained legal counsel, reviewing contracts, personal information, AI use, and ISMS operations", state: "Building since June 2026" },
-        { area: "ISMS", effort: "Targeting ISO/IEC 27001 certification, building risk management, training, policies, and audit framework", state: "Targeting certification in December 2026" },
+        { area: "ISMS", effort: "Targeting ISO/IEC 27001 certification, building risk management, training, policies, and audit framework", state: "In progress" },
         { area: "Device Management", effort: "Company-issued Macs, device encryption, MDM, and distribution of necessary configurations", state: "Phased rollout" },
         { area: "AI Use", effort: "Applying approved AI tools, company accounts, and no-training settings according to sensitivity", state: "Operational readiness in progress" },
         { area: "Local LLM", effort: "Supporting AI use that avoids unnecessarily exposing confidential information externally", state: "Applied per engagement" },
@@ -3048,7 +3048,7 @@ const translations = {
       statusTitle: "体制建设",
       status: {
         legal: "自 2026 年 6 月起，我们与顾问律师合作，建立关于合同、个人信息、AI 使用及信息安全运营的法务审查体制。",
-        isms: "Cor. 股份公司正以 2026 年 12 月取得 ISO/IEC 27001 认证为目标，推进 ISMS（信息安全管理体系）的运营建设。"
+        isms: "Cor. 股份公司正以取得 ISO/IEC 27001 认证为目标，推进 ISMS（信息安全管理体系）的运营建设。"
       },
       aiTitle: "AI 使用方针",
       aiDescription: "Cor. 积极将 AI 工具用于业务。同时，在处理客户机密、个人信息、源代码、训练数据等时，使用不会被用于训练的合同与设置的 AI 工具、公司账户或经批准的环境。AI 的输出由人进行验证，在确认权利、准确性与安全性后方才使用。",
@@ -3056,7 +3056,7 @@ const translations = {
       tableHead: { area: "领域", effort: "举措", state: "状态" },
       table: [
         { area: "法务审查", effort: "与顾问律师合作，审查合同、个人信息、AI 使用及 ISMS 运营", state: "自 2026 年 6 月起建设" },
-        { area: "ISMS", effort: "以取得 ISO/IEC 27001 认证为目标，建设风险管理、培训、规程与审计体制", state: "目标 2026 年 12 月取得" },
+        { area: "ISMS", effort: "以取得 ISO/IEC 27001 认证为目标，建设风险管理、培训、规程与审计体制", state: "建设中" },
         { area: "设备管理", effort: "公司配发 Mac、设备加密、MDM 及必要设置的分发", state: "分阶段导入" },
         { area: "AI 使用", effort: "根据机密度适用经批准的 AI 工具、公司账户及不用于训练的设置", state: "运营建设中" },
         { area: "本地 LLM", effort: "支持避免将机密信息不必要地外泄的 AI 应用", state: "视项目适用" },
@@ -4075,7 +4075,7 @@ const translations = {
       statusTitle: "체제 정비",
       status: {
         legal: "2026년 6월부터 고문 변호사와 연계하여 계약, 개인정보, AI 이용, 정보 보안 운영에 관한 법무 검토 체제를 정비하고 있습니다.",
-        isms: "Cor. 주식회사는 2026년 12월 ISO/IEC 27001 인증 취득을 목표로 ISMS(정보 보안 관리 체계)의 운영 정비를 추진하고 있습니다."
+        isms: "Cor. 주식회사는 ISO/IEC 27001 인증 취득을 목표로 ISMS(정보 보안 관리 체계)의 운영 정비를 추진하고 있습니다."
       },
       aiTitle: "AI 이용 방침",
       aiDescription: "Cor.는 AI 도구의 업무 활용을 적극적으로 추진합니다. 한편, 고객 기밀, 개인정보, 소스 코드, 학습 데이터 등을 다루는 경우에는 학습에 이용되지 않는 계약·설정의 AI 도구, 회사 계정, 또는 승인된 환경을 사용합니다. AI의 출력은 사람이 검증하여 권리·정확성·안전성을 확인한 후에 이용합니다.",
@@ -4083,7 +4083,7 @@ const translations = {
       tableHead: { area: "영역", effort: "추진 과제", state: "상태" },
       table: [
         { area: "법무 검토", effort: "고문 변호사와 연계하여 계약·개인정보·AI 이용·ISMS 운영을 확인", state: "2026년 6월부터 정비" },
-        { area: "ISMS", effort: "ISO/IEC 27001 인증 취득을 목표로 리스크 관리·교육·규정·감사 체제 정비", state: "2026년 12월 취득 목표" },
+        { area: "ISMS", effort: "ISO/IEC 27001 인증 취득을 목표로 리스크 관리·교육·규정·감사 체제 정비", state: "정비 중" },
         { area: "단말 관리", effort: "회사 지급 Mac, 단말 암호화, MDM, 필요한 설정 배포", state: "단계적 도입" },
         { area: "AI 이용", effort: "기밀도에 따라 승인된 AI 도구·회사 계정·학습 비이용 설정을 적용", state: "운영 정비 중" },
         { area: "로컬 LLM", effort: "기밀 정보를 외부로 불필요하게 내보내지 않는 AI 활용을 지원", state: "프로젝트에 따라 적용" },
@@ -5102,7 +5102,7 @@ const translations = {
       statusTitle: "Desarrollo del marco",
       status: {
         legal: "Desde junio de 2026, en colaboración con nuestro asesor legal, estamos desarrollando un marco de revisión legal que abarca contratos, información personal, uso de IA y operación de la seguridad de la información.",
-        isms: "Cor. Inc. avanza en la preparación operativa de su ISMS (Sistema de Gestión de Seguridad de la Información), con el objetivo de obtener la certificación ISO/IEC 27001 en diciembre de 2026."
+        isms: "Cor. Inc. avanza en la preparación operativa de su ISMS (Sistema de Gestión de Seguridad de la Información), con el objetivo de obtener la certificación ISO/IEC 27001."
       },
       aiTitle: "Política de uso de IA",
       aiDescription: "Cor. aprovecha activamente las herramientas de IA para su trabajo. Al mismo tiempo, al manejar datos confidenciales de clientes, información personal, código fuente, datos de entrenamiento y similares, utilizamos herramientas de IA con contratos y configuraciones que impiden su uso para entrenamiento, cuentas de empresa o entornos aprobados. Los resultados de la IA son verificados por personas y se utilizan solo tras confirmar derechos, exactitud y seguridad.",
@@ -5110,7 +5110,7 @@ const translations = {
       tableHead: { area: "Área", effort: "Iniciativa", state: "Estado" },
       table: [
         { area: "Revisión legal", effort: "En colaboración con el asesor legal, revisión de contratos, información personal, uso de IA y operación de ISMS", state: "En desarrollo desde junio de 2026" },
-        { area: "ISMS", effort: "Con el objetivo de la certificación ISO/IEC 27001, desarrollo de gestión de riesgos, formación, políticas y marco de auditoría", state: "Objetivo de certificación en diciembre de 2026" },
+        { area: "ISMS", effort: "Con el objetivo de la certificación ISO/IEC 27001, desarrollo de gestión de riesgos, formación, políticas y marco de auditoría", state: "En desarrollo" },
         { area: "Gestión de dispositivos", effort: "Macs proporcionados por la empresa, cifrado de dispositivos, MDM y distribución de las configuraciones necesarias", state: "Implementación por fases" },
         { area: "Uso de IA", effort: "Aplicación de herramientas de IA aprobadas, cuentas de empresa y configuraciones sin uso para entrenamiento según la confidencialidad", state: "Preparación operativa en curso" },
         { area: "LLM local", effort: "Apoyo al uso de IA que evita exponer innecesariamente información confidencial al exterior", state: "Aplicado según el proyecto" },
