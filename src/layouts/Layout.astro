@@ -30,7 +30,21 @@ const basePath =
   currentLocale === 'ja'
     ? Astro.url.pathname
     : Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
-const ogImage = new URL('/logo.png', Astro.site);
+// 通常ページは path から個別 OG 画像（/og/page/<slug>.svg）を選ぶ。未対応の path は logo.png にフォールバック。
+// slug は src/pages/og/page/[...slug].svg.ts の OG_PAGES と一致させること。
+const OG_PAGE_SLUGS: Record<string, string> = {
+  '/': 'home',
+  '/about': 'about',
+  '/works': 'works',
+  '/security': 'security',
+  '/contact': 'contact',
+  '/privacy': 'privacy',
+};
+const ogBaseKey = basePath.replace(/\/+$/, '') || '/';
+const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey];
+const ogImage = ogPageSlug
+  ? new URL(`/og/page/${ogPageSlug}.svg`, Astro.site)
+  : new URL('/logo.png', Astro.site);
 ---
 
 <!doctype html>
