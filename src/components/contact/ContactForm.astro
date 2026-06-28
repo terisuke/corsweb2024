@@ -1,8 +1,10 @@
 ---
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+const consent = t.contactConsent;
+const privacyHref = getLocalizedUrl('/privacy', currentLocale);
 ---
 
 <section class="py-16 sm:py-20">
@@ -82,6 +84,39 @@ const t = getTranslations(currentLocale);
             placeholder={t.contact.form.fields.message}
             required></textarea>
         </div>
+        <!-- 利用目的 + プライバシーポリシー同意 -->
+        <div class="flex flex-col gap-3 rounded-md bg-primary-50/60 px-4 py-4 ring-1 ring-primary-900/15 dark:bg-primary-950/40 dark:ring-primary-200/15">
+          <p class="text-sm text-primary-950/70 dark:text-primary-200/70">
+            {consent.purpose}
+          </p>
+          <p class="text-sm text-primary-950/70 dark:text-primary-200/70">
+            {consent.linkBefore}<a
+              href={privacyHref}
+              class="font-medium text-primary-700 underline underline-offset-2 hover:text-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-300 dark:hover:text-primary-100"
+            >{consent.linkText}</a>{consent.linkAfter}
+          </p>
+          <div class="flex items-start gap-3">
+            <input
+              type="checkbox"
+              name="privacyConsent"
+              id="privacy-consent"
+              required
+              class="mt-0.5 h-6 w-6 shrink-0 rounded border-primary-900/40 text-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/40"
+            />
+            <label for="privacy-consent" class="text-sm text-primary-950 dark:text-primary-200">
+              {consent.checkboxLabel}
+            </label>
+          </div>
+          <p
+            id="consent-error"
+            class="hidden text-sm font-medium text-red-700 dark:text-red-400"
+            role="alert"
+            aria-live="assertive"
+          >
+            {consent.validationMessage}
+          </p>
+        </div>
+
         <!-- Submit and Reset buttons -->
         <div class="flex flex-wrap items-center gap-4">
           <button
@@ -110,7 +145,59 @@ const t = getTranslations(currentLocale);
 </section>
 <!-- Replace the variables below. -->
 <script is:inline>
+  // 同意チェックボックスが未チェックなら送信をブロックする。
+  // reCAPTCHA の data-callback (onSubmit) は reCAPTCHA チャレンジ成功後に呼ばれるため、
+  //   (1) 送信ボタンの click を capture フェーズで監視し、未同意なら reCAPTCHA を発火させない
+  //   (2) onSubmit でも安全網として再チェック
+  // の二段構えにする。reCAPTCHA が解決し かつ 同意済みのときのみ form.submit() に到達する。
+  (function () {
+    function isConsented() {
+      var cb = document.getElementById("privacy-consent");
+      return !!(cb && cb.checked);
+    }
+
+    function showConsentError(show) {
+      var err = document.getElementById("consent-error");
+      if (err) err.classList.toggle("hidden", !show);
+    }
+
+    var submitBtn = document.querySelector('#contactForm button[type="submit"]');
+    if (submitBtn) {
+      // capture フェーズで reCAPTCHA より先に割り込む。未同意なら停止。
+      submitBtn.addEventListener(
+        "click",
+        function (e) {
+          if (!isConsented()) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            showConsentError(true);
+            var cb = document.getElementById("privacy-consent");
+            if (cb && typeof cb.focus === "function") cb.focus();
+          } else {
+            showConsentError(false);
+          }
+        },
+        true
+      );
+    }
+
+    // 同意したらエラー表示を消す。
+    var consentBox = document.getElementById("privacy-consent");
+    if (consentBox) {
+      consentBox.addEventListener("change", function () {
+        if (consentBox.checked) showConsentError(false);
+      });
+    }
+  })();
+
+  // reCAPTCHA コールバック。同意済みのときのみ送信する（安全網）。
   function onSubmit(token) {
+    var cb = document.getElementById("privacy-consent");
+    if (!cb || !cb.checked) {
+      var err = document.getElementById("consent-error");
+      if (err) err.classList.remove("hidden");
+      return;
+    }
     document.getElementById("contactForm").submit();
   }
 </script>
