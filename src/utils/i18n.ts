@@ -531,7 +531,7 @@ const translations = {
     },
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
-      title: "あなたの課題を<br />一緒に形にする。",
+      title: "想像していなかった選択肢まで、<br />一緒に。",
       subtitle: "業務の無駄・使いにくいシステム・<br class='sm:hidden' />やりたいけど進まないこと——<br class='sm:hidden' />Cor.が伴走します。",
       primaryCta: "AIで見積もりを試す（30秒・登録不要）",
       secondaryCta: "無料で相談する",
@@ -1049,7 +1049,7 @@ const translations = {
     homeBlog: {"eyebrow":"Insights","title":"The \"how\" of AI, in articles.","description":"AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.","cta":"See all articles"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
-      title: "Let's give your challenge<br />a real shape, together.",
+      title: "Together, to choices <br />you hadn't imagined.",
       subtitle: "Wasted busywork, hard-to-use systems,<br class='sm:hidden' />the things you want to do but can't move forward——<br class='sm:hidden' />Cor. walks alongside you.",
       primaryCta: "Try an AI estimate (30 sec, no sign-up)",
       secondaryCta: "Get a free consultation",
@@ -2092,7 +2092,7 @@ const translations = {
     homeBlog: {"eyebrow":"读物","title":"AI 的「推进方式」，用文章讲清楚。","description":"AI 导入、机密数据的安全运用、报价的思路等，汇总了现场可用的视角。","cta":"查看全部文章"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
-      title: "把你的课题，<br />一起变成现实。",
+      title: "意想不到的选项，<br />携手并进。",
       subtitle: "业务中的浪费、不好用的系统、<br class='sm:hidden' />想做却推进不下去的事——<br class='sm:hidden' />Cor. 与你同行。",
       primaryCta: "用 AI 试算报价（30 秒・无需注册）",
       secondaryCta: "免费咨询",
@@ -3135,7 +3135,7 @@ const translations = {
     homeBlog: {"eyebrow":"읽을거리","title":"AI의 ‘진행 방법’을, 글로.","description":"AI 도입, 기밀 데이터의 안전한 활용, 견적에 대한 사고방식 등 현장에서 바로 쓸 수 있는 관점을 정리했습니다.","cta":"블로그 전체 보기"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
-      title: "당신의 과제를<br />함께 형상화합니다.",
+      title: "상상하지 못했던 선택지까지, <br />함께。",
       subtitle: "업무의 낭비・쓰기 불편한 시스템・<br class='sm:hidden' />하고 싶지만 진행되지 않는 일——<br class='sm:hidden' />Cor.가 함께 달립니다.",
       primaryCta: "AI로 견적을 체험하기 (30초・가입 불필요)",
       secondaryCta: "무료로 상담하기",
@@ -4178,7 +4178,7 @@ const translations = {
     homeBlog: {"eyebrow":"Lecturas","title":"El «cómo» de la IA, en artículos.","description":"Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.","cta":"Ver todos los artículos"},
     homeHero: {
       kicker: "COR. INC. — AI × CO-CREATION",
-      title: "Damos forma a tu desafío,<br />juntos.",
+      title: "Juntos, hacia opciones <br />que ni imaginabas。",
       subtitle: "Procesos con desperdicios, sistemas difíciles de usar,<br class='sm:hidden' />proyectos que quieres iniciar pero no avanzan——<br class='sm:hidden' />Cor. te acompaña en el camino.",
       primaryCta: "Prueba un presupuesto con IA (30 s · sin registro)",
       secondaryCta: "Consulta gratis",
