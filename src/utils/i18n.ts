@@ -536,7 +536,7 @@ const translations = {
       primaryCta: "AIで見積もりを試す（30秒・登録不要）",
       secondaryCta: "無料で相談する",
       philosophyCta: "「きょうそう」の思想を読む",
-      trustBadges: ["AI駆動開発 4〜5倍（内部実測）", "ローカルLLM・情報を外に出さない", "ISMS取得に向け整備中", "福岡発・全国対応"]
+      trustBadges: ["AI駆動開発 4〜5倍（内部実測）", "ローカルLLM・情報を外に出さない", "セキュリティ体制構築", "福岡発・全国対応"]
     },
     homeChallenges: {
       eyebrow: "01 / あなたの課題",
@@ -575,7 +575,7 @@ const translations = {
       title: "自称ではなく、実装で語る。",
       description: "AI SaaS、AIアンケート、基幹DB移行、多言語AI受付、建築AI。領域も立ち上げ方も異なる実績が、Cor.の実装力を裏付けます。",
       stats: [
-        { label: "OSS実装", value: "182,368行", note: "Engineer Cafe Navigator" },
+        { label: "豊富なOSS開発実績", value: "182,368行", note: "Engineer Cafe Navigator" },
         { label: "主要OSS貢献", value: "87.7%", note: "git実測コミット比率" },
         { label: "AI駆動開発", value: "4〜5倍", note: "内部実測" },
         { label: "実績領域", value: "5系統", note: "AI/DB/OSS/建築/自社" }
@@ -1054,7 +1054,7 @@ const translations = {
       primaryCta: "Try an AI estimate (30 sec, no sign-up)",
       secondaryCta: "Get a free consultation",
       philosophyCta: "Read about our \"Kyousou\" philosophy",
-      trustBadges: ["AI-driven development, 4–5× (internal measurement)", "Local LLM — your data stays in", "Working toward ISMS readiness", "Born in Fukuoka, serving all of Japan"]
+      trustBadges: ["AI-driven development, 4–5× (internal measurement)", "Local LLM — your data stays in", "Secure Infrastructure", "Born in Fukuoka, serving all of Japan"]
     },
     homeChallenges: {
       eyebrow: "01 / Your Challenges",
@@ -1093,7 +1093,7 @@ const translations = {
       title: "We let our work speak, not our claims.",
       description: "AI SaaS, AI surveys, core-DB migration, multilingual AI reception, architectural AI. A track record that spans different domains and different starting points backs up Cor.'s ability to deliver.",
       stats: [
-        { label: "OSS implementation", value: "182,368 lines", note: "Engineer Cafe Navigator" },
+        { label: "Extensive OSS Contributions", value: "182,368 lines", note: "Engineer Cafe Navigator" },
         { label: "Lead OSS contribution", value: "87.7%", note: "Commit share, measured via git" },
         { label: "AI-driven development", value: "4–5×", note: "Internal measurement" },
         { label: "Domains delivered", value: "5 areas", note: "AI / DB / OSS / Architecture / In-house" }
@@ -2097,7 +2097,7 @@ const translations = {
       primaryCta: "用 AI 试算报价（30 秒・无需注册）",
       secondaryCta: "免费咨询",
       philosophyCta: "阅读「きょうそう」的理念",
-      trustBadges: ["AI 驱动开发 4～5 倍（内部实测）", "本地 LLM・信息不外泄", "ISMS 认证建设中", "源自福冈・服务全国"]
+      trustBadges: ["AI 驱动开发 4～5 倍（内部实测）", "本地 LLM・信息不外泄", "构建安全体系", "源自福冈・服务全国"]
     },
     homeChallenges: {
       eyebrow: "01 / 你的课题",
@@ -2136,7 +2136,7 @@ const translations = {
       title: "不靠自称，用实装说话。",
       description: "AI SaaS、AI 问卷、核心数据库迁移、多语言 AI 接待、建筑 AI。领域与起步方式各异的实绩，印证着 Cor. 的实装能力。",
       stats: [
-        { label: "OSS 实装", value: "182,368 行", note: "Engineer Cafe Navigator" },
+        { label: "丰富的OSS开发成果", value: "182,368 行", note: "Engineer Cafe Navigator" },
         { label: "主要 OSS 贡献", value: "87.7%", note: "git 实测提交比率" },
         { label: "AI 驱动开发", value: "4～5 倍", note: "内部实测" },
         { label: "实绩领域", value: "5 大类", note: "AI/DB/OSS/建筑/自研" }
@@ -3140,7 +3140,7 @@ const translations = {
       primaryCta: "AI로 견적을 체험하기 (30초・가입 불필요)",
       secondaryCta: "무료로 상담하기",
       philosophyCta: "「きょうそう」의 사상을 읽기",
-      trustBadges: ["AI 주도 개발 4~5배 (내부 실측)", "로컬 LLM・정보를 외부로 내보내지 않음", "ISMS 취득을 목표로 정비 중", "후쿠오카발・전국 대응"]
+      trustBadges: ["AI 주도 개발 4~5배 (내부 실측)", "로컬 LLM・정보를 외부로 내보내지 않음", "보안 체계 구축", "후쿠오카발・전국 대응"]
     },
     homeChallenges: {
       eyebrow: "01 / 당신의 과제",
@@ -3179,7 +3179,7 @@ const translations = {
       title: "자칭이 아니라, 구현으로 말합니다.",
       description: "AI SaaS, AI 설문, 기간 DB 이전, 다국어 AI 접수, 건축 AI. 영역도 시작 방식도 다른 실적이 Cor.의 구현력을 뒷받침합니다.",
       stats: [
-        { label: "OSS 구현", value: "182,368행", note: "Engineer Cafe Navigator" },
+        { label: "풍부한 OSS 개발 실적", value: "182,368행", note: "Engineer Cafe Navigator" },
         { label: "주요 OSS 기여", value: "87.7%", note: "git 실측 커밋 비율" },
         { label: "AI 주도 개발", value: "4~5배", note: "내부 실측" },
         { label: "실적 영역", value: "5계통", note: "AI/DB/OSS/건축/자사" }
@@ -4183,7 +4183,7 @@ const translations = {
       primaryCta: "Prueba un presupuesto con IA (30 s · sin registro)",
       secondaryCta: "Consulta gratis",
       philosophyCta: "Lee la filosofía de «Kyousou»",
-      trustBadges: ["Desarrollo asistido por IA 4–5× (medición interna)", "LLM local · tu información no sale al exterior", "ISMS en preparación", "Desde Fukuoka · cobertura nacional"]
+      trustBadges: ["Desarrollo asistido por IA 4–5× (medición interna)", "LLM local · tu información no sale al exterior", "Infraestructura Segura", "Desde Fukuoka · cobertura nacional"]
     },
     homeChallenges: {
       eyebrow: "01 / Tu desafío",
@@ -4222,7 +4222,7 @@ const translations = {
       title: "No lo decimos: lo demostramos con implementación.",
       description: "IA SaaS, encuestas con IA, migración de bases de datos centrales, recepción con IA multilingüe, IA para arquitectura. Proyectos con dominios y orígenes distintos que respaldan la capacidad de implementación de Cor.",
       stats: [
-        { label: "Implementación OSS", value: "182.368 líneas", note: "Engineer Cafe Navigator" },
+        { label: "Amplia Experiencia en OSS", value: "182.368 líneas", note: "Engineer Cafe Navigator" },
         { label: "Contribución principal a OSS", value: "87,7 %", note: "Proporción de commits medida en git" },
         { label: "Desarrollo asistido por IA", value: "4–5×", note: "Medición interna" },
         { label: "Dominios de proyectos", value: "5 líneas", note: "IA/BD/OSS/Arquitectura/Propios" }
