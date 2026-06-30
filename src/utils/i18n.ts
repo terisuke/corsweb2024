@@ -986,15 +986,17 @@ const translations = {
     works: {
       title: "実装で語る、Cor.の実績。",
       intro: "領域も立ち上げ方も異なる実装実績を掲載しています。自称ではなく、コード・運用・数字で示します。",
-      note: "※ 寄与率は git 実測のコミット比率です。NDA・機密案件はクライアント名・製品名を伏せ、内容を抽象化して掲載しています。",
+      note: "※ 寄与率は git 実測のコミット比率です。機密案件はクライアント名・製品名を伏せ、内容を抽象化して掲載しています。",
+      moreLabel: "さらに実績を見る",
+      moreHref: "/blog",
+      ndaNote: "※NDAのため一部内容を抽象化しています。",
       items: [
-        { name: "Engineer Cafe Navigator", tag: "OSS / 実名公開", description: "多言語音声AI受付のオープンソース。182,368行・8名貢献、自社寄与率87.7%（git実測）。" },
-        { name: "Grift", tag: "自社プロダクト", description: "GitHub実績と市場相場から、説明できる参考見積もりを生成する自社AI見積・評価基盤。", link: "https://griftai.org" },
-        { name: "cor-jp.com", tag: "自社制作", description: "このコーポレートサイト。Astro・5言語・AI翻訳・高速表示を自社で実装。" },
-        { name: "マルチモーダル生成AI SaaS", tag: "受託 / 匿名", description: "画像・音声・テキストを扱う生成AI SaaSの本番開発（クライアント名は非公開）。" },
-        { name: "アンケート基盤の刷新", tag: "受託 / 匿名", description: "引き継ぎ後のアンケート基盤を刷新・本番化。エージェント基盤移行、テスト・CI/CD整備まで対応。" },
-        { name: "レガシー基幹システムのクラウド移行", tag: "受託 / NDA", description: "教育系の基幹データベースをクラウドへ移行（詳細はNDAのため抽象化）。" },
-        { name: "建築図面・間取り生成AI", tag: "受託 / NDA", description: "建築図面や間取りを扱うAI群を0→1で高速実装（建築系・NDAのため抽象化）。" }
+        { name: "Grift", tag: "自社プロダクト", description: "GitHub実績と市場相場から、説明できる参考見積もりを生成する自社AI見積・評価基盤。", href: "https://griftai.org" },
+        { name: "Engineer Cafe Navigator", tag: "OSS / 公開実績", description: "多言語音声AI受付のオープンソース。182,368行・8名貢献、自社寄与率87.7%（git実測）。", href: null },
+        { name: "マルチモーダル生成AI SaaS", tag: "AI受託開発", description: "画像・音声・テキストを扱う生成AI SaaSの本番開発（クライアント名は非公開）。", href: null },
+        { name: "アンケート基盤の刷新", tag: "AI受託開発", description: "引き継ぎ後のアンケート基盤を刷新・本番化。エージェント基盤移行、テスト・CI/CD整備まで対応。", href: null },
+        { name: "レガシー基幹システムのクラウド移行", tag: "セキュアAI開発", description: "教育系の基幹データベースをクラウドへ移行（詳細はNDAのため抽象化）。", href: null, nda: true },
+        { name: "建築図面・間取り生成AI", tag: "セキュアAI開発", description: "建築図面や間取りを扱うAI群を0→1で高速実装（建築系・NDAのため抽象化）。", href: null, nda: true }
       ]
     },
     security: {
