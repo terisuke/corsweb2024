@@ -132,7 +132,7 @@ const articleJsonLd = {
     image: {
       '@type': 'ImageObject',
       url: new URL(ogImageUrl, Astro.site).toString(),
-      ...(data.heroImage && { caption: data.heroImage.alt }),
+      ...(!data.ogImage && data.heroImage && { caption: data.heroImage.alt }),
     },
   }),
 }
