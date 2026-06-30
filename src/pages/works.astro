@@ -23,34 +23,72 @@ const t = getJaTranslations();
       {t.works.note}
     </p>
 
-    <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        t.works.items.map((item) => (
-          <li class="flex flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+        t.works.items.map((item) => {
+          const isNda = 'nda' in item && item.nda;
+          const tag = (
             <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
               {item.tag}
             </span>
-            <h2 class="text-lg font-medium tracking-tight">
-              {'link' in item && item.link ? (
-                <a
-                  class="underline-offset-4 hover:underline"
-                  href={item.link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {item.name}
-                </a>
-              ) : (
-                item.name
+          );
+          const body = (
+            <>
+              <div class="flex items-center gap-2">
+                {tag}
+                {!item.href && (
+                  <span class="inline-flex w-fit rounded-full bg-primary-950/10 px-3 py-1 text-xs font-medium text-primary-950/50 dark:bg-primary-200/10 dark:text-primary-200/50">
+                    準備中
+                  </span>
+                )}
+              </div>
+              <h2 class="text-lg font-medium tracking-tight">{item.name}</h2>
+              <p class="text-base text-primary-950/70 dark:text-primary-200/70">
+                {item.description}
+              </p>
+              {isNda && (
+                <p class="mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
+                  {t.works.ndaNote}
+                </p>
               )}
-            </h2>
-            <p class="text-base text-primary-950/70 dark:text-primary-200/70">
-              {item.description}
-            </p>
-          </li>
-        ))
+            </>
+          );
+
+          return item.href ? (
+            <li>
+              <a
+                class="group relative flex h-full cursor-pointer flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:bg-primary-400/10 dark:focus-visible:ring-offset-primary-950"
+                href={item.href}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span
+                  aria-hidden="true"
+                  class="absolute right-5 top-5 text-primary-950/40 opacity-0 transition group-hover:opacity-100 dark:text-primary-200/40"
+                >
+                  ↗
+                </span>
+                {body}
+              </a>
+            </li>
+          ) : (
+            <li class="flex h-full flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+              {body}
+            </li>
+          );
+        })
       }
     </ul>
+
+    <div class="mt-10 text-center">
+      <a
+        class="inline-flex items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+        href={t.works.moreHref}
+      >
+        {t.works.moreLabel}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
 
   </div>
 
