@@ -12,6 +12,8 @@ interface Props {
   // この URL に実在する言語版だけを hreflang に出す（既定は全5言語）。
   // ja のみのページ（/works, /industries/*）は ['ja'] を渡す。
   availableLocales?: readonly Locale[];
+  // ページ固有の OG 画像（絶対URL or サイト基準パス）。未指定なら path から自動選択。
+  ogImage?: string;
 }
 
 const OG_LOCALES: Record<Locale, string> = {
@@ -23,7 +25,7 @@ const OG_LOCALES: Record<Locale, string> = {
 };
 const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
 
-const { description, title, availableLocales = ALL_LOCALES } = Astro.props;
+const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 // 現在のパスからロケール接頭辞を外した ja 基準パス（hreflang の各ロケールURL生成に使う）
 const basePath =
@@ -42,9 +44,12 @@ const OG_PAGE_SLUGS: Record<string, string> = {
 };
 const ogBaseKey = basePath.replace(/\/+$/, '') || '/';
 const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey];
-const ogImage = ogPageSlug
-  ? new URL(`/og/page/${ogPageSlug}.svg`, Astro.site)
-  : new URL('/logo.png', Astro.site);
+// ページ固有 OG 画像（ogImage prop）があれば最優先。なければ path 別 → logo.png。
+const ogImage = ogImageProp
+  ? new URL(ogImageProp, Astro.site)
+  : ogPageSlug
+    ? new URL(`/og/page/${ogPageSlug}.svg`, Astro.site)
+    : new URL('/logo.png', Astro.site);
 ---
 
 <!doctype html>
