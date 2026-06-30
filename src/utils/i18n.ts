@@ -74,11 +74,11 @@ const translations = {
           consultationType: "相談内容",
           consultationTypePlaceholder: "相談内容を選択してください",
           consultationOptions: [
-            "Grift / AI見積もりについて",
-            "AI受託開発・システム開発について",
-            "AI顧問・AI研修について",
-            "ローカルLLM・機密データAI活用について",
-            "共創パートナー・採用について",
+            "機密データAI活用診断",
+            "Grift Team Beta",
+            "ローカルLLM / セキュアAI",
+            "AI受託開発 / AI導入支援",
+            "AI研修 / 講師依頼",
             "その他"
           ],
           message: "メッセージ"
@@ -620,6 +620,15 @@ const translations = {
       primary: "AIで見積もりを試す",
       secondary: "相談する"
     },
+    serviceCtas: {
+      heading: "目的に合わせて、ご相談ください。",
+      items: [
+        "機密データAI活用診断を相談する",
+        "Grift Team Betaについて聞く",
+        "ローカルLLM / AI基盤PoCを相談する",
+        "AI受託開発について相談する"
+      ]
+    },
     homeIndustries: {
       eyebrow: "Industry / 業種別",
       title: "業種によって、止まる理由は違います。",
@@ -1131,6 +1140,15 @@ const translations = {
       primary: "Try an AI estimate",
       secondary: "Get in touch"
     },
+    serviceCtas: {
+      heading: "Reach out based on what you need.",
+      items: [
+        "Ask about a confidential-data AI assessment",
+        "Ask about Grift Team Beta",
+        "Discuss a local LLM / AI platform PoC",
+        "Ask about AI contract development"
+      ]
+    },
     homeIndustries: {
       eyebrow: "Industry",
       title: "Every industry gets stuck for different reasons.",
@@ -1588,11 +1606,11 @@ const translations = {
           consultationType: "Consultation Type",
           consultationTypePlaceholder: "Please select consultation type",
           consultationOptions: [
-            "Grift / AI estimate",
-            "AI contract & system development",
-            "AI advisory & training",
-            "Local LLM & confidential-data AI",
-            "Co-creation partner & hiring",
+            "Confidential-data AI assessment",
+            "Grift Team Beta",
+            "Local LLM / secure AI",
+            "AI contract development / adoption support",
+            "AI training / speaker request",
             "Other"
           ],
           message: "Message"
@@ -2183,6 +2201,15 @@ const translations = {
       primary: "用 AI 试算报价",
       secondary: "咨询"
     },
+    serviceCtas: {
+      heading: "请按您的需求咨询。",
+      items: [
+        "咨询机密数据AI应用诊断",
+        "了解 Grift Team Beta",
+        "咨询本地LLM / AI平台PoC",
+        "咨询AI受托开发"
+      ]
+    },
     homeIndustries: {
       eyebrow: "Industry / 分行业",
       title: "不同行业，卡住的理由各不相同。",
@@ -2631,11 +2658,11 @@ const translations = {
           consultationType: "咨询内容",
           consultationTypePlaceholder: "请选择咨询内容",
           consultationOptions: [
-            "Grift / AI报价咨询",
-            "AI受托开发・系统开发",
-            "AI顾问・AI培训",
-            "本地LLM・机密数据AI应用",
-            "共创伙伴・招聘",
+            "机密数据AI应用诊断",
+            "Grift Team Beta",
+            "本地LLM / 安全AI",
+            "AI受托开发 / AI导入支援",
+            "AI培训 / 讲师邀请",
             "其他"
           ],
           message: "消息"
@@ -3217,6 +3244,15 @@ const translations = {
       primary: "AI로 견적 체험하기",
       secondary: "상담하기"
     },
+    serviceCtas: {
+      heading: "목적에 맞게 상담해 주세요.",
+      items: [
+        "기밀 데이터 AI 활용 진단 상담하기",
+        "Grift Team Beta에 대해 문의하기",
+        "로컬 LLM / AI 인프라 PoC 상담하기",
+        "AI 수탁 개발에 대해 상담하기"
+      ]
+    },
     homeIndustries: {
       eyebrow: "Industry / 업종별",
       title: "업종에 따라, 멈추는 이유는 다릅니다.",
@@ -3674,11 +3710,11 @@ const translations = {
           consultationType: "상담 내용",
           consultationTypePlaceholder: "상담 내용을 선택해 주세요",
           consultationOptions: [
-            "Grift / AI 견적 문의",
-            "AI 수탁 개발・시스템 개발",
-            "AI 고문・AI 연수",
-            "로컬 LLM・기밀 데이터 AI 활용",
-            "공동창조 파트너・채용",
+            "기밀 데이터 AI 활용 진단",
+            "Grift Team Beta",
+            "로컬 LLM / 보안 AI",
+            "AI 수탁 개발 / AI 도입 지원",
+            "AI 연수 / 강사 의뢰",
             "기타"
           ],
           message: "메시지"
@@ -4260,6 +4296,15 @@ const translations = {
       primary: "Prueba un presupuesto con IA",
       secondary: "Consulta"
     },
+    serviceCtas: {
+      heading: "Consúltanos según lo que necesites.",
+      items: [
+        "Consultar sobre el diagnóstico de IA con datos confidenciales",
+        "Preguntar sobre Grift Team Beta",
+        "Consultar sobre un PoC de LLM local / plataforma de IA",
+        "Consultar sobre desarrollo por contrato con IA"
+      ]
+    },
     homeIndustries: {
       eyebrow: "Industry / Por sector",
       title: "Cada sector se detiene por motivos distintos.",
@@ -4717,11 +4762,11 @@ const translations = {
           consultationType: "Tipo de consulta",
           consultationTypePlaceholder: "Seleccione el tipo de consulta",
           consultationOptions: [
-            "Grift / Estimación con IA",
-            "Desarrollo de sistemas y por contrato con IA",
-            "Asesoría y formación en IA",
-            "LLM local y IA con datos confidenciales",
-            "Socio de co-creación y contratación",
+            "Diagnóstico de uso de IA con datos confidenciales",
+            "Grift Team Beta",
+            "LLM local / IA segura",
+            "Desarrollo por contrato con IA / soporte de adopción",
+            "Formación en IA / solicitud de ponente",
             "Otros"
           ],
           message: "Mensaje"
