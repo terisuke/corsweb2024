@@ -23,6 +23,8 @@ type Props = {
 const { entry } = Astro.props as Props
 const { Content } = await entry.render()
 const data = entry.data
+// OG画像: ogImage 優先、なければ heroImage。og:image と JSON-LD image で共用。
+const ogImageUrl = data.ogImage ?? data.heroImage?.url
 
 // CTA 出し分け（ctaType > category）。link は /contact（tech-culture のみ /about + /contact）。
 type CtaKey =
@@ -126,11 +128,11 @@ const articleJsonLd = {
   url: fullUrl,
   articleSection: data.category,
   about: data.tags.map((tag) => ({ '@type': 'Thing', name: tag })),
-  ...(data.heroImage && {
+  ...(ogImageUrl && {
     image: {
       '@type': 'ImageObject',
-      url: new URL(data.heroImage.url, Astro.site).toString(),
-      caption: data.heroImage.alt,
+      url: new URL(ogImageUrl, Astro.site).toString(),
+      ...(data.heroImage && { caption: data.heroImage.alt }),
     },
   }),
 }
@@ -140,7 +142,10 @@ const articleJsonLd = {
   title={`${data.title} | Cor.inc`}
   description={data.description}
   availableLocales={['ja']}
-  ogImage={data.ogImage ?? data.heroImage?.url}
+  ogImage={ogImageUrl}
+  ogType="article"
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={data.updatedAt?.toISOString()}
 >
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
     <!-- Breadcrumb -->
