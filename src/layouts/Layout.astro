@@ -12,6 +12,13 @@ interface Props {
   // この URL に実在する言語版だけを hreflang に出す（既定は全5言語）。
   // ja のみのページ（/works, /industries/*）は ['ja'] を渡す。
   availableLocales?: readonly Locale[];
+  // ページ固有の OG 画像（絶対URL or サイト基準パス）。未指定なら path から自動選択。
+  ogImage?: string;
+  // OGP 種別。記事ページは 'article'。既定 'website'。
+  ogType?: string;
+  // 記事の公開/更新時刻（ISO文字列）。article:published_time / modified_time に出力。
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
 const OG_LOCALES: Record<Locale, string> = {
@@ -23,7 +30,7 @@ const OG_LOCALES: Record<Locale, string> = {
 };
 const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
 
-const { description, title, availableLocales = ALL_LOCALES } = Astro.props;
+const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp, ogType = 'website', publishedTime, modifiedTime } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 // 現在のパスからロケール接頭辞を外した ja 基準パス（hreflang の各ロケールURL生成に使う）
 const basePath =
@@ -42,9 +49,12 @@ const OG_PAGE_SLUGS: Record<string, string> = {
 };
 const ogBaseKey = basePath.replace(/\/+$/, '') || '/';
 const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey];
-const ogImage = ogPageSlug
-  ? new URL(`/og/page/${ogPageSlug}.svg`, Astro.site)
-  : new URL('/logo.png', Astro.site);
+// ページ固有 OG 画像（ogImage prop）があれば最優先。なければ path 別 → logo.png。
+const ogImage = ogImageProp
+  ? new URL(ogImageProp, Astro.site)
+  : ogPageSlug
+    ? new URL(`/og/page/${ogPageSlug}.svg`, Astro.site)
+    : new URL('/logo.png', Astro.site);
 ---
 
 <!doctype html>
@@ -77,7 +87,9 @@ const ogImage = ogPageSlug
     <link rel="alternate" href={new URL(basePath, Astro.site)} hreflang="x-default" />
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
