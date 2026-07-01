@@ -193,9 +193,11 @@ const translations = {
       cta: "ホームに戻る"
     },
     aboutPage: {
-      title: '「きょうそう」を追い続ける。',
-      lead: 'Cor.は、誰とでも無理に分かり合う会社ではありません。自分の価値観を持つ人同士が、違いを隠さず、互いの成長を求め、AIと技術で現場の課題を形にする会社です。',
-      kyousouTitle: '「きょうそう」とは。',
+      kicker: 'Cor.株式会社について',
+      title: '技術の前に、課題と向き合う。',
+      lead: 'Cor.株式会社は、機密データAI・ローカルLLM・Griftを軸に、課題の整理から設計・実装・運用まで一気通貫で伴走する福岡発のAI実装会社です。「やりたいけれど進まない」現場のリアルな声に寄り添い、AIを目的化せず、実務の課題解決という手段としてテクノロジーを提供します。',
+      kyousouTitle: '単に要望を形にするだけではなく、必要なら前提から一緒に見直します。',
+      kyousouLead: 'AIやシステムは、現場で運用されて初めて価値を生みます。だからこそ私たちは、言われたものをそのまま作るだけの御用聞きではありません。お客様とフラットな関係で課題に向き合い、システム化が最善でなければ「まだ作らない方がいい」と正直にご提案します。本質的な課題解決を共に創り上げる「きょうそう」の姿勢を大切にしています。',
       kyousou: [
         { word: '共創', usage: '顧客、AI、パートナーと一緒に作る' },
         { word: '協奏', usage: '人・AI・専門性が役割を持って響き合う' },
@@ -204,19 +206,23 @@ const translations = {
         { word: '狂騒', usage: '結果として市場に生む熱量' },
       ],
       kyousouAxis: '「きょうそう」とは、違いを成果に変える実装態度である。',
+      whyFocusTitle: '実務上の「進まない壁」を越えるために。',
+      whyFocusBody: '外部AIに出しにくい機密情報や、属人化して見えにくい見積もりの根拠。現場には、汎用的なクラウドAIだけでは解決できない壁が存在します。この実務上の不安やブラックボックスを解消するため、私たちはデータの扱い方から設計するセキュアAI基盤と、見積根拠を会社資産にする「Grift」に注力しています。',
       mvvTitle: 'Mission / Vision / Values',
-      mission: '「きょうそう」を通じて、作り手と事業の可能性を解放する。',
-      vision: '価値観の違いが、分断ではなく、より良い実装を生む社会をつくる。',
+      mission: '課題の言語化から、運用の実装まで。',
+      vision: '技術に振り回されず、人が本質的な価値に向き合える世界。',
       values: [
-        { title: '迎合しない共創', description: '相手に合わせるだけの関係は作らない。率直に問い、必要なら反論し、より良い答えを探す。' },
-        { title: '実証で語る', description: '思想だけでは終わらせない。コード、プロダクト、運用、数字で示す。' },
-        { title: '自由と責任を両立する', description: '人の力を縛らず、守るべき情報は守る。快適さと信頼を同時に設計する。' },
-        { title: '違いを磨き合う', description: '認知特性、専門性、価値観の違いを、妥協ではなく成果へ変える。' },
-        { title: '作り手の実力を解放する', description: 'AIを、人を置き換える道具ではなく、人が本来の力を出すための拡張として使う。' },
+        { title: '誠実な伴走', description: '言われた通りではなく、必要なら前提から見直す。' },
+        { title: '実装での証明', description: '言葉で整理し、実際に動くもので語る。' },
+        { title: '運用の設計', description: '作るだけでなく、実務で使える形まで見届ける。' },
+        { title: '自由と責任', description: '技術の自由な探求と、顧客情報を守る責任を両立する。' },
+        { title: '違いの昇華', description: '多様な視点や摩擦を恐れず、確かな成果へと変える。' },
       ],
-      founderTitle: '代表ストーリー',
-      founderLead: 'Cor.の「きょうそう」は、代表 寺田康佑の経験から生まれています。',
+      founderTitle: '言葉だけでは届かないものを、技術でどう補助するか。',
+      founderLead: '代表の音楽家としての原体験は、「言葉だけでは届かないもの」への強い問題意識でした。その後、営業や開発の現場を経て気づいたのは、複雑な業務課題を解決するには、まず言語化と整理が必要であるということ。そして、整理したものを実装・運用まで落とし込むことこそが私たちの役割です。この思想が、見積根拠を可視化する「Grift」や、実務に寄り添うローカルLLM、AI受託開発という現在の事業へと自然につながっています。',
       founderPlaceholder: '代表ストーリーの詳細は準備中です。',
+      teamTitle: '課題整理から運用まで、一気通貫で支えるプロフェッショナル。',
+      teamBody: '課題の言語化、セキュアなAI基盤の設計・実装、そして運用体制の構築まで。それぞれの専門性を持つメンバーが、エンジニアリングに詳しくないお客様の不安にもフラットに向き合い、ワンストップで伴走します。',
       founderYoutubeTitle: '代表の発信',
       founderYoutubeDescription: 'テクノロジーとビジネス戦略に関する動画コンテンツを配信。AI活用事例やプロダクト開発の舞台裏を公開しています。',
       founderYoutubeMessages: {
@@ -403,7 +409,7 @@ const translations = {
         ogTitle: "業務の「進まない」を、共に実装で越える。｜Cor.株式会社",
         ogDescription: "機密データAI・ローカルLLM・Griftを軸に、課題整理から設計・実装・運用まで伴走する福岡発のAI実装会社。AIやシステムの要件が固まっていない段階から相談できます。",
       },
-      about: { title: "About | Cor.inc", description: "Cor.株式会社が追い続ける「きょうそう」。共創・協奏・競争・狂想を通じて、作り手と事業の可能性を解放します。" },
+      about: { title: "About | Cor.inc", description: "Cor.株式会社は機密データAI・ローカルLLM・Griftを軸に、課題の整理から設計・実装・運用まで一気通貫で伴走する福岡発のAI実装会社です。「きょうそう」の姿勢と実装力について。" },
       contact: { title: "Contact · Cor.inc", description: "Contact our team to learn more about how we can help you." },
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
@@ -1741,9 +1747,11 @@ const translations = {
       cta: "Go back home"
     },
     aboutPage: {
+      kicker: 'About Cor.Inc.',
       title: 'Chasing "Kyousou."',
       lead: "Cor. is not a company where everyone is forced to get along. It is a company where people who hold their own values come together, don't hide their differences, seek each other's growth, and use AI and technology to give shape to real challenges on the ground.",
       kyousouTitle: 'What "Kyousou" means.',
+      kyousouLead: "AI and systems create value only when they are used on the ground. That is why we are not simply order-takers who build whatever we are told. We face the challenge alongside our customers as equals, and when systematization is not the best path, we honestly suggest that it may be better not to build yet. We value the spirit of \"Kyousou\" — co-creating essential problem-solving together.",
       kyousou: [
         { word: 'Co-creation', usage: 'Building together with customers, AI, and partners' },
         { word: 'Ensemble', usage: 'People, AI, and expertise each play a role and resonate' },
@@ -1752,6 +1760,8 @@ const translations = {
         { word: 'Fervor', usage: 'The energy generated in the market as a result' },
       ],
       kyousouAxis: '"Kyousou" is the implementation mindset that turns differences into outcomes.',
+      whyFocusTitle: 'To go beyond the walls that stall real work.',
+      whyFocusBody: 'Confidential information that is hard to send to external AI, and the invisible assumptions behind estimates that rely on individuals. Real workplaces have walls that generic cloud AI alone cannot solve. To clear this uncertainty and black-boxing, we focus on secure AI infrastructure designed starting from how data is handled, and on Grift, which turns the rationale behind estimates into a company asset.',
       mvvTitle: 'Mission / Vision / Values',
       mission: 'Through "Kyousou," unlock the potential of makers and their businesses.',
       vision: 'Build a society where differences in values lead not to division, but to better implementation.',
@@ -1765,6 +1775,8 @@ const translations = {
       founderTitle: "Founder's Story",
       founderLead: "Cor.'s \"Kyousou\" grew out of the experience of our founder, Kosuke Terada.",
       founderPlaceholder: "The details of the founder's story are being prepared.",
+      teamTitle: 'Meet our team',
+      teamBody: 'From articulating challenges to designing and implementing secure AI infrastructure, to building operational frameworks. Members with distinct expertise engage honestly with the concerns of customers who are not familiar with engineering, supporting them end-to-end.',
       founderYoutubeTitle: "From the Founder",
       founderYoutubeDescription: "Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.",
       founderYoutubeMessages: {
@@ -2807,9 +2819,11 @@ const translations = {
       cta: "返回首页"
     },
     aboutPage: {
+      kicker: '关于 Cor. 股份公司',
       title: '持续追寻「きょうそう」。',
       lead: 'Cor. 并不是一家强求所有人彼此理解的公司。而是让拥有各自价值观的人聚到一起，不掩饰差异，追求彼此的成长，用 AI 与技术把现场的课题变成现实的公司。',
       kyousouTitle: '何谓「きょうそう」。',
+      kyousouLead: 'AI 与系统只有在现场被运用，才会产生价值。因此我们不是只按吩咐制作的接单者。我们与客户以平等的关系面对课题，当系统化并非最佳选择时，会坦诚建议“先不做比较好”。我们重视共同创造本质课题解决的「きょうそう」姿态。',
       kyousou: [
         { word: '共创', usage: '与客户、AI、伙伴共同创造' },
         { word: '协奏', usage: '人、AI、专业各司其职、彼此共鸣' },
@@ -2818,6 +2832,8 @@ const translations = {
         { word: '狂躁', usage: '作为结果在市场中产生的热度' },
       ],
       kyousouAxis: '所谓「きょうそう」，是把差异转化为成果的落地态度。',
+      whyFocusTitle: '为了跨越阻碍实际工作的墙。',
+      whyFocusBody: '难以交给外部 AI 的机密信息，以及因个人化而看不见的报价依据。现场存在着仅靠通用云端 AI 无法解决的墙。为了消除这种实务上的不安与黑箱化，我们专注于从数据处理方式开始设计的安控 AI 基础，以及将报价依据变为公司资产的「Grift」。',
       mvvTitle: 'Mission / Vision / Values',
       mission: '通过「きょうそう」，释放作者与事业的可能性。',
       vision: '营造一个让价值观的差异不导向分裂、而催生更好实现的社会。',
@@ -2831,6 +2847,8 @@ const translations = {
       founderTitle: '代表的故事',
       founderLead: 'Cor. 的「きょうそう」源自代表寺田康佑的经历。',
       founderPlaceholder: '代表故事的详细内容正在准备中。',
+      teamTitle: '认识我们的团队',
+      teamBody: '从课题的语言化，到安全的 AI 基础的设计与实现，再到运营体制的构建。拥有各自专业的成员，坦诚面对不熟悉工程的客户的不安，一站式地提供伴走支持。',
       founderYoutubeTitle: '代表的分享',
       founderYoutubeDescription: '我们提供技术和商业战略相关的视频内容。分享AI应用案例和产品开发的幕后故事。',
       founderYoutubeMessages: {
@@ -3873,9 +3891,11 @@ const translations = {
       cta: "홈으로 돌아가기"
     },
     aboutPage: {
+      kicker: 'Cor. 주식회사에 대하여',
       title: '「きょうそう」를 끊임없이 추구합니다.',
       lead: 'Cor.는 누구와도 억지로 이해해야 하는 회사가 아닙니다. 각자의 가치관을 지닌 사람들이 차이를 숨기지 않고, 서로의 성장을 추구하며, AI와 기술로 현장의 과제를 형상화하는 회사입니다.',
       kyousouTitle: '「きょうそう」란.',
+      kyousouLead: 'AI와 시스템은 현장에서 운용될 때 비로소 가치를 만듭니다. 그렇기에 우리는 단순히 지시받은 대로 만드는 주문 접수자가 아닙니다. 고객과 평등한 관계로 과제에 마주하며, 시스템화가 최선이 아닐 때는 “아직 만들지 않는 편이 좋다”고 솔직히 제안합니다. 본질적인 과제 해결을 함께 만들어가는 「きょうそう」의 자세를 소중히 여깁니다.',
       kyousou: [
         { word: '共創', usage: '고객, AI, 파트너와 함께 만든다' },
         { word: '協奏', usage: '사람・AI・전문성이 각자의 역할을 가지고 울려 퍼진다' },
@@ -3884,6 +3904,8 @@ const translations = {
         { word: '狂騒', usage: '결과로서 시장에 만들어내는 열량' },
       ],
       kyousouAxis: '「きょうそう」란, 차이를 성과로 바꾸는 구현 태도입니다.',
+      whyFocusTitle: '실무의 ‘멈춰선 벽’을 넘기 위해.',
+      whyFocusBody: '외부 AI에 맡기기 어려운 기밀 정보, 그리고 개인에게 의존해 보이지 않는 견적의 근거. 현장에는 범용 클라우드 AI만으로는 풀 수 없는 벽이 존재합니다. 이러한 실무상의 불안과 블랙박스를 해소하기 위해, 우리는 데이터 취급 방식부터 설계하는 시큐어 AI 기반과, 견적 근거를 회사 자산으로 만드는 「Grift」에 집중하고 있습니다.',
       mvvTitle: 'Mission / Vision / Values',
       mission: '「きょうそう」를 통해 만드는 사람과 사업의 가능성을 해방한다.',
       vision: '가치관의 차이가 분단이 아니라 더 나은 구현을 낳는 사회를 만든다.',
@@ -3897,6 +3919,8 @@ const translations = {
       founderTitle: '대표 스토리',
       founderLead: 'Cor.의 「きょうそう」는 대표 데라다 코스케의 경험에서 비롯되었습니다.',
       founderPlaceholder: '대표 스토리의 상세 내용은 준비 중입니다.',
+      teamTitle: '우리 팀을 소개합니다',
+      teamBody: '과제의 언어화, 시큐어한 AI 기반의 설계·구현, 그리고 운영 체제의 구축까지. 각자의 전문성을 가진 멤버가 엔지니어링에 익숙하지 않은 고객의 불안에도 평등하게 맞서며, 원스톱으로 동행합니다.',
       founderYoutubeTitle: '대표의 발신',
       founderYoutubeDescription: '테크놀로지와 비즈니스 전략에 관한 동영상 콘텐츠를 배송합니다. AI 활용 사례와 제품 개발의 무대 뒤를 공개하고 있습니다.',
       founderYoutubeMessages: {
@@ -4939,9 +4963,11 @@ const translations = {
       cta: "Volver al inicio"
     },
     aboutPage: {
+      kicker: 'Sobre Cor.Inc.',
       title: 'Persiguiendo el «Kyousou».',
       lead: 'Cor. no es una empresa donde todos deban entenderse a la fuerza. Es una empresa donde personas con sus propios valores se reúnen, no ocultan sus diferencias, buscan el crecimiento mutuo y dan forma con IA y tecnología a los desafíos del terreno.',
       kyousouTitle: 'Qué es el «Kyousou».',
+      kyousouLead: 'La IA y los sistemas solo generan valor cuando se usan en el terreno. Por eso no somos simples tomadores de pedidos que construimos lo que nos dicen. Encaramos los desafíos junto a nuestros clientes en pie de igualdad, y cuando la sistematización no es el mejor camino, sugerimos con honestidad que puede ser mejor no construir todavía. Valoramos el espíritu del «Kyousou»: co-crear juntos la resolución esencial de los problemas.',
       kyousou: [
         { word: 'Co-creación', usage: 'Crear junto a clientes, IA y socios' },
         { word: 'Concertación', usage: 'Personas, IA y especialidad con un rol propio que resuenan' },
@@ -4950,6 +4976,8 @@ const translations = {
         { word: 'Bullicio', usage: 'La energía que generamos en el mercado como resultado' },
       ],
       kyousouAxis: 'El «Kyousou» es la actitud de implementación que convierte las diferencias en resultados.',
+      whyFocusTitle: 'Para superar los muros que estancan el trabajo real.',
+      whyFocusBody: 'Información confidencial difícil de enviar a una IA externa, y los supuestos invisibles detrás de presupuestos que dependen de individuos. Los lugares de trabajo reales tienen muros que la IA en la nube genérica por sí sola no puede resolver. Para despejar esta incertidumbre y esa caja negra, nos enfocamos en una infraestructura de IA segura diseñada desde cómo se tratan los datos, y en Grift, que convierte el fundamento de los presupuestos en un activo de la empresa.',
       mvvTitle: 'Mission / Vision / Values',
       mission: 'A través del «Kyousou», liberar el potencial de quienes crean y de sus negocios.',
       vision: 'Construir una sociedad donde las diferencias de valores no lleven a la división, sino a una mejor implementación.',
@@ -4963,6 +4991,8 @@ const translations = {
       founderTitle: 'Historia del fundador',
       founderLead: 'El «Kyousou» de Cor. nació de la experiencia de nuestro fundador, Kosuke Terada.',
       founderPlaceholder: 'Los detalles de la historia del fundador están en preparación.',
+      teamTitle: 'Conoce a nuestro equipo',
+      teamBody: 'Desde la articulación de desafíos hasta el diseño e implementación de infraestructura de IA segura y la construcción de marcos operativos. Miembros con experiencia distinta se enfrentan con honestidad a las inquietudes de clientes que no están familiarizados con la ingeniería, acompañándolos de principio a fin.',
       founderYoutubeTitle: 'Del fundador',
       founderYoutubeDescription: 'Distribuimos contenido de video sobre tecnología y estrategia empresarial. Publicamos casos de uso de IA y detrás de escena del desarrollo de productos.',
       founderYoutubeMessages: {
