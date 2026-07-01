@@ -48,7 +48,7 @@ const t = getJaTranslations();
               </p>
               {isNda && (
                 <p class="mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
-                  {t.works.ndaNote}
+                  {('note' in item && item.note) || t.works.ndaNote}
                 </p>
               )}
             </>
