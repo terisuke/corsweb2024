@@ -33,14 +33,11 @@ const t = getTranslations(currentLocale);
         }
       </div>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.statusTitle}</h2>
-      <ul class="list-inside list-disc space-y-4 text-base leading-[1.8]">
-        <li>{t.security.status.legal}</li>
-        <li>{t.security.status.isms}</li>
-      </ul>
-
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.aiTitle}</h2>
       <p class="mb-4 text-base leading-[1.8]">{t.security.aiDescription}</p>
+
+      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.governanceTitle}</h2>
+      <p class="mb-4 text-base leading-[1.8]">{t.security.governanceDescription}</p>
 
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.tableTitle}</h2>
       <div class="overflow-x-auto">
@@ -67,6 +64,7 @@ const t = getTranslations(currentLocale);
       </div>
 
       <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.privacyTitle}</h2>
+      <p class="mb-2 text-sm text-primary-950/50 dark:text-primary-200/50">{t.security.privacyLead}</p>
       <p class="mb-4 text-base leading-[1.8]">
         {t.security.privacyDescription}<span class="font-medium"><a href={getLocalizedUrl('/privacy', currentLocale)}>{t.security.privacyLinkText}</a></span>{t.security.privacySuffix}
       </p>
@@ -75,6 +73,10 @@ const t = getTranslations(currentLocale);
 
   <NextStep
     heading={t.nextStep.security.heading}
-    ctas={[{ label: t.nextStep.security.ctaLabel, href: getLocalizedUrl('/contact', currentLocale), primary: true }]}
+    ctas={[
+      { label: t.security.ctas.primary, href: getLocalizedUrl('/contact', currentLocale), primary: true },
+      { label: t.security.ctas.secondary, href: getLocalizedUrl('/contact', currentLocale) },
+      { label: t.security.ctas.tertiary, href: getLocalizedUrl('/privacy', currentLocale) }
+    ]}
   />
 </Layout>
