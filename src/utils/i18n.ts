@@ -3,7 +3,7 @@ export type Locale = 'ja' | 'en' | 'zh' | 'ko' | 'es';
 const translations = {
   ja: {
     homeBlog: {"eyebrow":"読みもの","title":"AIの「進め方」を、記事で。","description":"AI導入・機密データの安全な活用・見積もりの考え方など、現場で使える視点をまとめています。","cta":"ブログをすべて見る"},
-    nav: { home: "ホーム", about: "Cor.について", products: "Products&Insights", blog: "ブログ", contact: "お問い合わせ", security: "セキュリティ", works: "実績・事例", grift: "Grift" },
+    nav: { home: "ホーム", about: "Cor.株式会社について", products: "Products&Insights", blog: "ブログ", contact: "お問い合わせ", security: "セキュリティ", works: "実績・事例", grift: "Grift" },
     hero: {
       title: "言葉を超えて、想いを届ける。",
       subtitle: "かつてトランペットで伝えた感動を、今はコードで。元音楽家が追求する「誤解のないコミュニケーション」の実現。",
@@ -18,11 +18,11 @@ const translations = {
       ]
     },
     about: {
-      title: "About",
+      title: "Cor.株式会社について",
       description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。",
       cta: "More details",
       heading: {
-        title: "About",
+        title: "Cor.株式会社について",
         description: "Cor.inc は「競争ではなく共創を通じて未来を切り拓き、幸福な社会を実現する。」をミッションに掲げ、AIソリューションの企画・要件定義・開発・運用、及び付随する経理・財務業務を行っています。「競争」よりも「共創」を重視し、スタートアップの強みである「スピード感」を活かし、創造性と革新性に満ちたサービスを提供しています。"
       }
     },
@@ -136,7 +136,7 @@ const translations = {
       legal: "Legal",
       links: {
         home: "ホーム",
-        about: "Cor.について",
+        about: "Cor.株式会社について",
         products: "サービス・読みもの",
         contact: "お問い合わせ",
         privacy: "プライバシー",
@@ -1535,7 +1535,7 @@ const translations = {
         { name: "Grift", description: "Our in-house AI tool that generates explainable reference estimates from GitHub track records and market rates." }
       ]
     },
-    nav: { home: "Home", about: "About", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security", works: "Works", grift: "Grift" },
+    nav: { home: "Home", about: "About Cor.Inc.", products: "Products&Insights", blog: "Blog", contact: "Contact", security: "Security", works: "Works", grift: "Grift" },
     hero: {
       title: "Beyond Words, Delivering Feelings.",
       subtitle: "Once expressed through trumpet, now through code. A former musician's pursuit of 'communication beyond words.'",
@@ -1550,11 +1550,11 @@ const translations = {
       ]
     },
     about: {
-      title: "About",
+      title: "About Cor.Inc.",
       description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
       cta: "More details",
       heading: {
-        title: "About",
+        title: "About Cor.Inc.",
         description: "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
       }
     },
@@ -1668,7 +1668,7 @@ const translations = {
       legal: "Legal",
       links: {
         home: "Home",
-        about: "About",
+        about: "About Cor.Inc.",
         products: "Products&Insights",
         contact: "Contact",
         privacy: "Privacy",
@@ -2587,7 +2587,7 @@ const translations = {
         { name: "建筑图纸・户型生成 AI", tag: "受托 / NDA", description: "把处理建筑图纸与户型的 AI 群从 0→1 快速实装（建筑类・因 NDA 抽象化处理）。" }
       ]
     },
-    nav: { home: "首页", about: "关于我们", products: "产品&洞察", blog: "博客", contact: "联系我们", security: "安全", works: "Works", grift: "Grift" },
+    nav: { home: "首页", about: "关于Cor.株式会社", products: "产品&洞察", blog: "博客", contact: "联系我们", security: "安全", works: "Works", grift: "Grift" },
     hero: {
       title: "比任何人都更快，超越地平线。",
       subtitle: "通过AI打破语言和文化壁垒，实现人们真正相互理解的社会。",
@@ -2602,11 +2602,11 @@ const translations = {
       ]
     },
     about: {
-      title: "关于我们",
+      title: "关于Cor.株式会社",
       description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。",
       cta: "更多详情",
       heading: {
-        title: "关于我们",
+        title: "关于Cor.株式会社",
         description: "Cor.inc以\"通过竞争而非共创开拓未来，实现幸福社会\"为使命，从事AI解决方案的规划、需求定义、开发与运营，以及相关的会计、财务业务。重视\"共创\"而非\"竞争\"，发挥初创企业的\"速度感\"优势，提供充满创造性和创新性的服务。"
       }
     },
@@ -2720,7 +2720,7 @@ const translations = {
       legal: "法律",
       links: {
         home: "首页",
-        about: "关于我们",
+        about: "关于Cor.株式会社",
         products: "产品&洞察",
         contact: "联系我们",
         privacy: "隐私",
@@ -3639,7 +3639,7 @@ const translations = {
         { name: "Grift", description: "GitHub 실적과 시장 시세에서 설명 가능한 참고 견적을 생성하는 자사 AI 도구입니다." }
       ]
     },
-    nav: { home: "홈", about: "회사소개", products: "제품&인사이트", blog: "블로그", contact: "문의", security: "보안", works: "Works", grift: "Grift" },
+    nav: { home: "홈", about: "Cor.주식회사에 대하여", products: "제품&인사이트", blog: "블로그", contact: "문의", security: "보안", works: "Works", grift: "Grift" },
     hero: {
       title: "누구보다 빠르게, 지평선 너머로.",
       subtitle: "AI로 언어와 문화의 벽을 넘어 사람들이 진정으로 이해하는 사회를 실현합니다.",
@@ -3654,11 +3654,11 @@ const translations = {
       ]
     },
     about: {
-      title: "회사소개",
+      title: "Cor.주식회사에 대하여",
       description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다.",
       cta: "자세히 보기",
       heading: {
-        title: "회사소개",
+        title: "Cor.주식회사에 대하여",
         description: "Cor.inc는 '경쟁이 아닌 공동창조를 통해 미래를 개척하고, 행복한 사회를 실현한다'는 미션을 내걸고, AI 솔루션의 기획·요건 정의·개발·운영 및 부수되는 경리·재무 업무를 하고 있습니다. '경쟁'보다 '공동창조'를 중시하며, 스타트업의 강점인 '속도감'을 살려 창조성과 혁신성이 넘치는 서비스를 제공하고 있습니다."
       }
     },
@@ -3772,7 +3772,7 @@ const translations = {
       legal: "법적",
       links: {
         home: "홈",
-        about: "회사소개",
+        about: "Cor.주식회사에 대하여",
         products: "제품&인사이트",
         contact: "문의",
         privacy: "개인정보처리방침",
@@ -4691,7 +4691,7 @@ const translations = {
         { name: "Grift", description: "Nuestra herramienta de IA propia que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado." }
       ]
     },
-    nav: { home: "Inicio", about: "Acerca de", products: "Productos&Insights", blog: "Blog", contact: "Contacto", security: "Seguridad", works: "Works", grift: "Grift" },
+    nav: { home: "Inicio", about: "Sobre Cor.Inc.", products: "Productos&Insights", blog: "Blog", contact: "Contacto", security: "Seguridad", works: "Works", grift: "Grift" },
     hero: {
       title: "Más rápido que cualquiera, más allá del horizonte.",
       subtitle: "Superando las barreras del idioma y la cultura con IA para crear una sociedad donde las personas se entiendan verdaderamente.",
@@ -4706,11 +4706,11 @@ const translations = {
       ]
     },
     about: {
-      title: "Acerca de",
+      title: "Sobre Cor.Inc.",
       description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
       cta: "Más detalles",
       heading: {
-        title: "Acerca de",
+        title: "Sobre Cor.Inc.",
         description: "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación."
       }
     },
@@ -4824,7 +4824,7 @@ const translations = {
       legal: "Legal",
       links: {
         home: "Inicio",
-        about: "Acerca de",
+        about: "Sobre Cor.Inc.",
         products: "Productos&Insights",
         contact: "Contacto",
         privacy: "Privacidad",
