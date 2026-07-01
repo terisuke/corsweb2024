@@ -48,7 +48,7 @@ const t = getJaTranslations();
               </p>
               {isNda && (
                 <p class="mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
-                  {t.works.ndaNote}
+                  {('note' in item && item.note) || t.works.ndaNote}
                 </p>
               )}
             </>
@@ -95,6 +95,6 @@ const t = getJaTranslations();
   <NextStep
     heading="気になる実績がありましたか？"
     lead="あなたの課題も、一緒に考えさせてください。"
-    ctas={[{ label: '課題から相談する', href: '/contact', primary: true }]}
+    ctas={[{ label: 'AI開発・導入を相談する', href: '/contact', primary: true }]}
   />
 </Layout>
