@@ -572,13 +572,13 @@ const translations = {
     },
     proof: {
       eyebrow: "03 / 実証",
-      title: "自称ではなく、実装で語る。",
-      description: "AI SaaS、AIアンケート、基幹DB移行、多言語AI受付、建築AI。領域も立ち上げ方も異なる実績が、Cor.の実装力を裏付けます。",
+      title: "AIを使う前に、扱う情報を設計する。",
+      description: "契約書、議事録、見積書、顧客情報、社内ナレッジ。Cor.株式会社は、外部AIにそのまま渡しにくい情報を、入力境界・権限・ログ・人間承認まで含めて設計し、業務で動くAIシステムとして実装します。",
       stats: [
-        { label: "豊富なOSS開発実績", value: "182,368行", note: "Engineer Cafe Navigator" },
-        { label: "主要OSS貢献", value: "87.7%", note: "git実測コミット比率" },
-        { label: "AI駆動開発", value: "4〜5倍", note: "内部実測" },
-        { label: "実績領域", value: "5系統", note: "AI/DB/OSS/建築/自社" }
+        { label: "中核事業", value: "3領域", note: "Grift・ローカルLLM・AI受託" },
+        { label: "AI運用設計", value: "4設計", note: "入力境界・権限・ログ・人間承認" },
+        { label: "入口診断", value: "10万〜30万円", note: "機密データAI活用診断" },
+        { label: "PoC構築", value: "3ヶ月300万円〜", note: "ローカルLLM・AI基盤PoC" }
       ],
       cta: "実績を見る"
     },
@@ -1101,13 +1101,13 @@ const translations = {
     },
     proof: {
       eyebrow: "03 / Proof",
-      title: "We let our work speak, not our claims.",
-      description: "AI SaaS, AI surveys, core-DB migration, multilingual AI reception, architectural AI. A track record that spans different domains and different starting points backs up Cor.'s ability to deliver.",
+      title: "Designing Information Architecture Before Using AI.",
+      description: "Contracts, minutes, estimates, customer data, and internal knowledge. Cor.Inc. designs secure processing for sensitive information—including input boundaries, permissions, logs, and human approval—implementing robust AI systems that actually work for your business.",
       stats: [
-        { label: "Extensive OSS Contributions", value: "182,368 lines", note: "Engineer Cafe Navigator" },
-        { label: "Lead OSS contribution", value: "87.7%", note: "Commit share, measured via git" },
-        { label: "AI-driven development", value: "4–5×", note: "Internal measurement" },
-        { label: "Domains delivered", value: "5 areas", note: "AI / DB / OSS / Architecture / In-house" }
+        { label: "Core Businesses", value: "3 Areas", note: "Grift / Local LLM / Custom AI" },
+        { label: "AI Operations", value: "4 Designs", note: "Boundaries / Permissions / Logs / Approvals" },
+        { label: "Initial Assessment", value: "¥100k - ¥300k", note: "Confidential Data AI Assessment" },
+        { label: "PoC Development", value: "From 3 Mos / ¥3M", note: "Local LLM & AI Infrastructure PoC" }
       ],
       cta: "See our work"
     },
@@ -2153,13 +2153,13 @@ const translations = {
     },
     proof: {
       eyebrow: "03 / 实证",
-      title: "不靠自称，用实装说话。",
-      description: "AI SaaS、AI 问卷、核心数据库迁移、多语言 AI 接待、建筑 AI。领域与起步方式各异的实绩，印证着 Cor. 的实装能力。",
+      title: "在使用AI之前，先设计信息的架构。",
+      description: "合同、会议纪要、报价单、客户信息、内部知识库。Cor.株式会社针对难以直接传递给外部AI的敏感信息，进行包含输入边界、权限、日志和人工审批在内的全方位设计，为您打造真正赋能业务的AI系统。",
       stats: [
-        { label: "丰富的OSS开发成果", value: "182,368 行", note: "Engineer Cafe Navigator" },
-        { label: "主要 OSS 贡献", value: "87.7%", note: "git 实测提交比率" },
-        { label: "AI 驱动开发", value: "4～5 倍", note: "内部实测" },
-        { label: "实绩领域", value: "5 大类", note: "AI/DB/OSS/建筑/自研" }
+        { label: "核心业务", value: "3大领域", note: "Grift / 本地LLM / AI定制开发" },
+        { label: "AI运维设计", value: "4项设计", note: "输入边界 / 权限 / 日志 / 人工审批" },
+        { label: "入局诊断", value: "10万〜30万日元", note: "机密数据AI应用诊断" },
+        { label: "PoC构建", value: "3个月300万日元起", note: "本地LLM / AI基础设施PoC" }
       ],
       cta: "查看实绩"
     },
@@ -3205,13 +3205,13 @@ const translations = {
     },
     proof: {
       eyebrow: "03 / 실증",
-      title: "자칭이 아니라, 구현으로 말합니다.",
-      description: "AI SaaS, AI 설문, 기간 DB 이전, 다국어 AI 접수, 건축 AI. 영역도 시작 방식도 다른 실적이 Cor.의 구현력을 뒷받침합니다.",
+      title: "AI를 쓰기 전에, 다룰 정보부터 설계한다.",
+      description: "계약서, 회의록, 견적서, 고객 정보, 사내 지식. Cor.주식회사는 외부 AI에 그대로 넘기기 어려운 정보를 입력 경계·권한·로그·휴먼 승인까지 포함하여 설계하고, 실제 업무에서 작동하는 AI 시스템으로 구현합니다.",
       stats: [
-        { label: "풍부한 OSS 개발 실적", value: "182,368행", note: "Engineer Cafe Navigator" },
-        { label: "주요 OSS 기여", value: "87.7%", note: "git 실측 커밋 비율" },
-        { label: "AI 주도 개발", value: "4~5배", note: "내부 실측" },
-        { label: "실적 영역", value: "5계통", note: "AI/DB/OSS/건축/자사" }
+        { label: "핵심 사업", value: "3대 영역", note: "Grift / 로컬 LLM / AI 수탁 개발" },
+        { label: "AI 운영 설계", value: "4대 설계", note: "입력 경계 / 권한 / 로그 / 휴먼 승인" },
+        { label: "초기 진단", value: "10만~30만엔", note: "기밀 데이터 AI 활용 진단" },
+        { label: "PoC 구축", value: "3개월 300만엔~", note: "로컬 LLM / AI 기반 PoC" }
       ],
       cta: "실적 보기"
     },
@@ -4257,13 +4257,13 @@ const translations = {
     },
     proof: {
       eyebrow: "03 / Evidencia",
-      title: "No lo decimos: lo demostramos con implementación.",
-      description: "IA SaaS, encuestas con IA, migración de bases de datos centrales, recepción con IA multilingüe, IA para arquitectura. Proyectos con dominios y orígenes distintos que respaldan la capacidad de implementación de Cor.",
+      title: "Diseñar la Arquitectura de la Información Antes de Usar IA.",
+      description: "Contratos, minutas, presupuestos, datos de clientes y conocimiento interno. Cor.Inc. diseña el procesamiento seguro de información confidencial —incluyendo límites de entrada, permisos, registros y aprobación humana— implementando sistemas de IA robustos que realmente funcionan para su negocio.",
       stats: [
-        { label: "Amplia Experiencia en OSS", value: "182.368 líneas", note: "Engineer Cafe Navigator" },
-        { label: "Contribución principal a OSS", value: "87,7 %", note: "Proporción de commits medida en git" },
-        { label: "Desarrollo asistido por IA", value: "4–5×", note: "Medición interna" },
-        { label: "Dominios de proyectos", value: "5 líneas", note: "IA/BD/OSS/Arquitectura/Propios" }
+        { label: "Negocios Centrales", value: "3 Áreas", note: "Grift / LLM Local / IA a Medida" },
+        { label: "Diseño de Operaciones IA", value: "4 Diseños", note: "Límites / Permisos / Registros / Aprobaciones" },
+        { label: "Evaluación Inicial", value: "100k - 300k yenes", note: "Evaluación de IA para Datos Confidenciales" },
+        { label: "Desarrollo de PoC", value: "Desde 3 meses / ¥3M", note: "PoC de LLM Local e Infraestructura de IA" }
       ],
       cta: "Ver nuestros proyectos"
     },
