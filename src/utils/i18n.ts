@@ -408,7 +408,7 @@ const translations = {
       products: { title: "Products&Insights · Cor.inc", description: "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions." },
       "404": { title: "Not found · Cor.inc", description: "Page not found. Please check the URL in the address bar and try again." },
       privacy: { title: "個人情報保護方針 | Cor.inc", description: "Cor.株式会社の個人情報保護方針（プライバシーポリシー）。取得する個人情報と利用目的、第三者提供・委託、安全管理措置、開示等の請求、お問い合わせ窓口について。" },
-      security: { title: "セキュリティ | Cor.inc", description: "Cor.株式会社の情報セキュリティ、ISMS取得に向けた体制、ローカルファーストと機密度ティアによるAI開発環境について。" },
+      security: { title: "セキュリティ方針 | Cor.inc", description: "機密データAI・ローカルLLMを扱うパートナーとしての、Cor.株式会社のセキュリティ方針。入力データと権限の設計、人間承認プロセス、保存・削除の整理、ISO/IEC 27001取得を目標としたISMS運用整備について。" },
       works: { title: "実績 | Cor.inc", description: "Cor.株式会社の実績紹介。AI受託開発、基幹DB移行、多言語AI受付、建築AI、自社プロダクトGriftなど、領域の異なる実装実績を順次公開します。" },
       industryMedical: { title: "医療・ヘルスケア向けAI伴走 | Cor.inc", description: "医療現場の課題——院内データ活用、患者対応、情報セキュリティ、AI活用方針、見積もりの整理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。" },
       industryShigyo: { title: "士業向けAI伴走 | Cor.inc", description: "士業の課題——契約書精査、申請・登記、期日管理、補助金申請——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。" },
@@ -1017,36 +1017,44 @@ const translations = {
       ]
     },
     security: {
-      title: "セキュリティ",
-      tagline: "自由に作る。責任を持って守る。",
-      lead: "Cor.株式会社は、AI開発におけるスピードと、お客様の大切な情報を守る責任を両立させるため、情報セキュリティ体制の整備を進めています。開発者が高い生産性を発揮できるローカルファーストな環境を保ちながら、機密度に応じたアクセス制御、承認AIツール、最小限のセキュリティログ、インシデント対応体制を組み合わせて運用します。",
+      title: "セキュリティ方針",
+      tagline: "開発者の自由と、顧客情報を守る責任を両立するために。",
+      lead: "機密データやローカルLLMを扱うAI実装パートナーとして、Cor.株式会社は実務上の見えない不安に誠実に向き合います。事前の課題整理と適切なツールの使い分けにより、運用時に確認すべき責任範囲を明確にし、お客様が業務で運用する際の不安を減らす体制を目指して、技術・組織の両面から対策を行っています。",
       pillarsTitle: "3つの柱",
       pillars: [
-        { title: "ローカルファースト", description: "高スペックな会社支給Macを活用し、開発者が快適にローカル開発できる環境を基本とします。端末暗号化、MDM、アカウント管理、必要なセキュリティ設定を組み合わせ、開発速度と情報管理の両立を目指します。" },
-        { title: "最小限のセキュリティログと検知・対応", description: "予防的にすべてを禁止するのではなく、業務に必要な範囲でセキュリティ上の可視化を行い、問題発生時にすばやく検知・対応できる体制を整えます。取得対象は業務関連のセキュリティテレメトリに限定し、私的な内容を過度に取得しない方針です。" },
-        { title: "機密度ティア", description: "扱う情報の機密度に応じて、会社アカウント、承認済みAIツール、アクセス制御、必要時の隔離環境を使い分けます。非機密の検証ではスピードを重視し、顧客機密・個人情報・ソースコードなどを扱う場合は、より厳格な取扱いを適用します。" }
+        { title: "入力データとアクセス権限の設計", description: "AIに渡すべきでないデータを整理し、適切な権限を持つ担当者のみがアクセスできる環境を設計します。" },
+        { title: "透明性のあるログと人間承認のプロセス", description: "「誰が・いつ・何をしたか」の操作ログを取得し、AIの出力結果を人間が最終承認する運用フローを組み込みます。" },
+        { title: "保存期間・削除手順・運用責任の整理", description: "保存期間や削除手順を定め、運用時に確認すべき責任範囲を明確にします。" }
       ],
-      statusTitle: "体制整備",
+      aiTitle: "業務におけるAI利用の方針",
+      aiDescription: "クラウドAIとローカルLLMを、情報の機密度に応じて使い分けます。外部AIを利用する場合も、利用規約、データ保存設定、学習利用の有無、アクセス権限を確認し、扱う情報に応じた利用範囲を設計します。",
+      statusTitle: "情報セキュリティ管理体制の強化",
       status: {
         legal: "2026年6月より、顧問弁護士と連携し、契約、個人情報、AI利用、情報セキュリティ運用に関する法務レビュー体制を整備しています。",
-        isms: "Cor.株式会社は、ISO/IEC 27001認証の取得を目標に、ISMS（情報セキュリティマネジメントシステム）の運用整備を進めています。"
+        isms: "弊社では、情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO/IEC 27001」認証の取得を目標に掲げ、現在社内におけるISMS運用の整備を推進しております。継続的な体制強化を通じて、お客様の情報を守る責任を果たします。"
       },
-      aiTitle: "AI利用方針",
-      aiDescription: "Cor.はAIツールの業務利用を積極的に活用します。一方で、顧客機密、個人情報、ソースコード、学習データ等を扱う場合は、学習利用されない契約・設定のAIツール、会社アカウント、または承認済み環境を用います。AIの出力は人が検証し、権利・正確性・安全性を確認したうえで利用します。",
+      governanceTitle: "情報セキュリティ管理体制の強化",
+      governanceDescription: "弊社では、情報セキュリティマネジメントシステム（ISMS）の国際規格である「ISO/IEC 27001」認証の取得を目標に掲げ、現在社内におけるISMS運用の整備を推進しております。継続的な体制強化を通じて、お客様の情報を守る責任を果たします。",
       tableTitle: "取り組み一覧",
       tableHead: { area: "領域", effort: "取り組み", state: "状態" },
       table: [
         { area: "法務レビュー", effort: "顧問弁護士と連携し、契約・個人情報・AI利用・ISMS運用を確認", state: "2026年6月より整備" },
         { area: "ISMS", effort: "ISO/IEC 27001認証取得を目標に、リスク管理・教育・規程・監査体制を整備", state: "整備中" },
         { area: "端末管理", effort: "会社支給Mac、端末暗号化、MDM、必要な設定配布", state: "段階導入" },
-        { area: "AI利用", effort: "機密度に応じ、承認AIツール・会社アカウント・学習非利用設定を適用", state: "運用整備中" },
+        { area: "AI利用", effort: "機密度に応じ、承認AIツール・会社アカウント・学習対象外設定を確認", state: "運用整備中" },
         { area: "ローカルLLM", effort: "機密情報を外部へ不要に出さないAI活用を支援", state: "案件に応じて適用" },
         { area: "インシデント対応", effort: "報告ライン、初動対応、再発防止を規程化", state: "ISMS運用内で整備" }
       ],
       privacyTitle: "プライバシーについて",
+      privacyLead: "※個人情報およびお客様のデータの取り扱いに関する法的な詳細規約につきましては、プライバシーポリシーをご確認ください。",
       privacyDescription: "個人情報の取り扱いについては、",
       privacyLinkText: "プライバシーポリシー",
-      privacySuffix: "をご覧ください。"
+      privacySuffix: "をご覧ください。",
+      ctas: {
+        primary: "AI導入前の情報管理を相談する",
+        secondary: "機密データAI診断を相談する",
+        tertiary: "プライバシーポリシーを見る"
+      }
     },
     nextStep: {
       about: {
@@ -2103,7 +2111,15 @@ const translations = {
       privacyTitle: "About Privacy",
       privacyDescription: "For how we handle personal information, please see our ",
       privacyLinkText: "Privacy Policy",
-      privacySuffix: "."
+      privacySuffix: ".",
+      privacyLead: "* For legal details on how we handle personal information and customer data, please see our Privacy Policy.",
+      governanceTitle: "Building Our Framework",
+      governanceDescription: "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification.",
+      ctas: {
+        primary: "Get a free consultation",
+        secondary: "Talk to us",
+        tertiary: "Privacy Policy"
+      }
     },
     nextStep: {
       about: {
@@ -3160,7 +3176,15 @@ const translations = {
       privacyTitle: "关于隐私",
       privacyDescription: "关于个人信息的处理，请参阅我们的",
       privacyLinkText: "隐私政策",
-      privacySuffix: "。"
+      privacySuffix: "。",
+      privacyLead: "※关于个人信息及客户数据处理的法律详细条款，请参阅隐私政策。",
+      governanceTitle: "体制建设",
+      governanceDescription: "Cor. 股份公司正以取得 ISO/IEC 27001 认证为目标，推进 ISMS（信息安全管理体系）的运营建设。",
+      ctas: {
+        primary: "免费咨询",
+        secondary: "联系我们",
+        tertiary: "隐私政策"
+      }
     },
     nextStep: {
       about: {
@@ -4217,7 +4241,15 @@ const translations = {
       privacyTitle: "개인정보에 대하여",
       privacyDescription: "개인정보의 취급에 대해서는 ",
       privacyLinkText: "개인정보처리방침",
-      privacySuffix: "을 참조해 주세요."
+      privacySuffix: "을 참조해 주세요.",
+      privacyLead: "※개인정보 및 고객 데이터 취급에 관한 법적 세부 규정은 개인정보처리방침을 참조해 주세요.",
+      governanceTitle: "체제 정비",
+      governanceDescription: "Cor. 주식회사는 ISO/IEC 27001 인증 취득을 목표로 ISMS(정보 보안 관리 체계)의 운영 정비를 추진하고 있습니다.",
+      ctas: {
+        primary: "무료로 상담하기",
+        secondary: "문의하기",
+        tertiary: "개인정보처리방침"
+      }
     },
     nextStep: {
       about: {
@@ -5274,7 +5306,15 @@ const translations = {
       privacyTitle: "Sobre la privacidad",
       privacyDescription: "Para saber cómo tratamos la información personal, consulta nuestra ",
       privacyLinkText: "Política de privacidad",
-      privacySuffix: "."
+      privacySuffix: ".",
+      privacyLead: "* Para los detalles legales sobre el tratamiento de la información personal y los datos de clientes, consulta nuestra Política de privacidad.",
+      governanceTitle: "Desarrollo del marco",
+      governanceDescription: "Cor. Inc. avanza en la preparación operativa de su ISMS (Sistema de Gestión de Seguridad de la Información), con el objetivo de obtener la certificación ISO/IEC 27001.",
+      ctas: {
+        primary: "Consulta gratuita",
+        secondary: "Contáctanos",
+        tertiary: "Política de privacidad"
+      }
     },
     nextStep: {
       about: {
