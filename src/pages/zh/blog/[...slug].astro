@@ -64,24 +64,30 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
   <article class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
     <!-- Breadcrumb -->
     <nav class="mb-8" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-2 text-sm text-stone-600 dark:text-stone-400">
-        <li><a href="/zh" class="hover:text-blue-600 dark:hover:text-blue-400">首页</a></li>
-        <li class="before:content-['/'] before:mx-2"><a href="/zh/blog" class="hover:text-blue-600 dark:hover:text-blue-400">博客</a></li>
-        <li class="before:content-['/'] before:mx-2"><span class="text-stone-900 dark:text-stone-100">{post.data.title}</span></li>
+      <ol class="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-stone-600 dark:text-stone-400">
+        <li class="shrink-0"><a href="/zh" class="hover:text-blue-600 dark:hover:text-blue-400">首页</a></li>
+        <li class="flex shrink-0 items-center gap-2">
+          <span aria-hidden="true" class="text-stone-400 dark:text-stone-500">/</span>
+          <a href="/zh/blog" class="hover:text-blue-600 dark:hover:text-blue-400">博客</a>
+        </li>
+        <li class="hidden min-w-0 flex-1 items-center gap-2 sm:flex">
+          <span aria-hidden="true" class="shrink-0 text-stone-400 dark:text-stone-500">/</span>
+          <span class="truncate text-stone-900 dark:text-stone-100">{post.data.title}</span>
+        </li>
       </ol>
     </nav>
 
     <!-- Header -->
     <header class="mb-8">
-      <div class="mb-4 flex items-center gap-4 text-sm">
+      <div class="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <CategoryBadge category={post.data.category} />
-        <time datetime={post.data.pubDate.toISOString()} class="text-stone-500 dark:text-stone-400">{formattedPubDate}</time>
-        <span class="text-stone-500 dark:text-stone-400">{readingTime} 分钟阅读</span>
+        <time datetime={post.data.pubDate.toISOString()} class="shrink-0 text-stone-500 dark:text-stone-400">{formattedPubDate}</time>
+        <span class="shrink-0 text-stone-500 dark:text-stone-400">{readingTime} 分钟阅读</span>
       </div>
-      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">{post.data.title}</h1>
-      <p class="mb-6 text-lg text-stone-600 dark:text-stone-300">{post.data.description}</p>
-      <div class="flex items-center justify-between border-b border-stone-200 pb-6 dark:border-stone-700">
-        <div class="text-sm font-medium text-stone-900 dark:text-stone-100">{post.data.author}</div>
+      <h1 class="mb-4 max-w-3xl text-balance text-3xl font-bold leading-tight text-stone-900 dark:text-stone-100 sm:text-4xl">{post.data.title}</h1>
+      <p class="mb-6 max-w-3xl text-pretty text-lg leading-8 text-stone-600 dark:text-stone-300">{post.data.description}</p>
+      <div class="flex flex-col gap-4 border-b border-stone-200 pb-6 dark:border-stone-700 sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0 text-sm font-medium text-stone-900 dark:text-stone-100">{post.data.author}</div>
         <ShareButtons title={post.data.title} url={fullUrl} />
       </div>
     </header>
@@ -124,12 +130,12 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       {prevPost && (
         <a
           href={`/zh/blog/${prevPost.slug.replace('zh/', '')}`}
-          class="group flex flex-col rounded-lg border border-stone-200 p-4 transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400"
+          class="group flex min-w-0 flex-col rounded-lg border border-stone-200 p-4 transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400"
         >
           <span class="mb-1 text-sm text-stone-500 dark:text-stone-400">
             ← 上一篇
           </span>
-          <span class="font-medium text-stone-900 group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400">
+          <span class="block truncate text-sm font-medium text-stone-900 group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400 sm:text-base" title={prevPost.data.title}>
             {prevPost.data.title}
           </span>
         </a>
@@ -138,12 +144,12 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       {nextPost && (
         <a
           href={`/zh/blog/${nextPost.slug.replace('zh/', '')}`}
-          class={`group flex flex-col rounded-lg border border-stone-200 p-4 text-right transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400 ${!prevPost ? 'sm:col-start-2' : ''}`}
+          class={`group flex min-w-0 flex-col rounded-lg border border-stone-200 p-4 transition-colors hover:border-blue-600 dark:border-stone-700 dark:hover:border-blue-400 sm:text-right ${!prevPost ? 'sm:col-start-2' : ''}`}
         >
           <span class="mb-1 text-sm text-stone-500 dark:text-stone-400">
             下一篇 →
           </span>
-          <span class="font-medium text-stone-900 group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400">
+          <span class="block truncate text-sm font-medium text-stone-900 group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400 sm:text-base" title={nextPost.data.title}>
             {nextPost.data.title}
           </span>
         </a>
@@ -161,7 +167,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     {relatedPosts.length > 0 && (
       <div class="mt-12 border-t border-stone-200 pt-8 dark:border-stone-700">
         <h2 class="mb-6 text-2xl font-bold text-stone-900 dark:text-stone-100">相关文章</h2>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-8 md:grid-cols-3">
           {relatedPosts.map(relPost => (
             <PostCard post={relPost} />
           ))}

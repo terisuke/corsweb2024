@@ -4,19 +4,12 @@ import ContactChat from '../components/contact/ContactChat.astro';
 import ContactForm from '../components/contact/ContactForm.astro';
 import ContactInfo from '../components/contact/ContactInfo.astro';
 import Heading from '../components/contact/Heading.astro';
-import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
 import { CONTACT_CHAT_ENABLED } from '../config/contact';
-import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
+import { getCurrentLocale, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
-
-// /works は ja のみ存在。ja は実績ページへ、非ja は 404 回避のため同言語の相談ページへ誘導する。
-const nextStepHref =
-  currentLocale === 'ja'
-    ? getLocalizedUrl('/works', currentLocale)
-    : getLocalizedUrl('/contact', currentLocale);
 ---
 
 {!CONTACT_CHAT_ENABLED && (
@@ -39,10 +32,4 @@ const nextStepHref =
       </>
     )
   }
-
-  <NextStep
-    heading={t.nextStep.contact.heading}
-    lead={t.nextStep.contact.lead}
-    ctas={[{ label: t.nextStep.contact.ctaLabel, href: nextStepHref, primary: true }]}
-  />
 </Layout>

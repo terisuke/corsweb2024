@@ -12,37 +12,37 @@ const t = getTranslations(locale);
   title={t.meta.security.title}
 >
   <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <div class="sm:pb-20 flex flex-col gap-4 pb-16 text-center">
-      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{t.security.title}</h1>
-      <p class="text-base italic text-primary-950/70 dark:text-primary-200/70">{t.security.tagline}</p>
+    <div class="flex flex-col gap-4 pb-16 text-start sm:pb-20">
+      <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{t.security.title}</h1>
+      <p class="type-copy text-base italic text-primary-950/70 dark:text-primary-200/70">{t.security.tagline}</p>
     </div>
-    <div>
+    <div class="type-copy text-base leading-[1.8]">
       <p class="mb-4">
         {t.security.lead}
       </p>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.pillarsTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.pillarsTitle}</h2>
       <div class="flex flex-col gap-8">
         {
           Array.isArray(t.security?.pillars) && t.security.pillars.map((pillar) => (
             <div>
-              <h3 class="mb-2 text-lg font-medium">{pillar.title}</h3>
+              <h3 class="type-heading mb-2 text-lg font-medium">{pillar.title}</h3>
               <p>{pillar.description}</p>
             </div>
           ))
         }
       </div>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.statusTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.statusTitle}</h2>
       <ul class="list-inside list-disc space-y-4">
         <li>{t.security.status.legal}</li>
         <li>{t.security.status.isms}</li>
       </ul>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.aiTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.aiTitle}</h2>
       <p class="mb-4">{t.security.aiDescription}</p>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.tableTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.tableTitle}</h2>
       <div class="overflow-x-auto">
         <table class="w-full border-collapse text-left text-sm sm:text-base">
           <thead>
@@ -66,7 +66,7 @@ const t = getTranslations(locale);
         </table>
       </div>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.privacyTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.privacyTitle}</h2>
       <p class="mb-4">
         {t.security.privacyDescription}<span class="font-medium"><a href={getLocalizedUrl('/privacy', locale)}>{t.security.privacyLinkText}</a></span>{t.security.privacySuffix}
       </p>

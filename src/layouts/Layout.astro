@@ -220,20 +220,43 @@ const ogImage = ogImageProp
         -moz-osx-font-smoothing: grayscale;
       }
 
-      /* 日本語の改行を読みやすく: 見出しは文節単位で折り(auto-phrase, 非対応ブラウザは従来動作)、
-         行を均等割り(balance)。本文は孤立行(widow)を回避(pretty)。 */
-      h1, h2, h3, p, li, dd, figcaption {
+      /* CJK/多言語の改行制御をLayout間で揃える。 */
+      h1, h2, h3,
+      .type-heading {
         word-break: auto-phrase;
-      }
-      h1, h2, h3 {
+        overflow-wrap: anywhere;
+        line-break: strict;
         text-wrap: balance;
       }
-      p {
+      p, li, dd, figcaption,
+      .type-copy {
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
         text-wrap: pretty;
       }
-      /* ブランド語「きょうそう」は語の途中で折らない（見出し・本文共通）。 */
-      .nowrap {
+      .type-action {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      /* ブランド語「きょうそう」など、語の途中で折らない範囲に使う。 */
+      .nowrap,
+      .type-keep {
         white-space: nowrap;
+      }
+      .line-clamp-2,
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .line-clamp-2 {
+        -webkit-line-clamp: 2;
+      }
+      .line-clamp-3 {
+        -webkit-line-clamp: 3;
       }
 
       /* Inter font with optional display - won't block render */

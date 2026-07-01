@@ -14,10 +14,10 @@ const t = getTranslations(currentLocale);
         >
           {t.homeIndustries.eyebrow}
         </p>
-        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+        <h2 class="text-balance text-3xl font-medium tracking-tight sm:text-4xl">
           {t.homeIndustries.title}
         </h2>
-        <p class="text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+        <p class="text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70">
           {t.homeIndustries.description}
         </p>
       </div>
@@ -47,9 +47,10 @@ const t = getTranslations(currentLocale);
                     {row.link && row.linkLabel ? (
                       <a
                         href={getLocalizedUrl(row.link, currentLocale)}
-                        class="inline-flex items-center gap-1 font-medium text-[#2d4a6b] underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b] dark:text-[#7ba3cc]"
+                        class="inline-flex items-center gap-1.5 font-medium text-[#2d4a6b] underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b] dark:text-[#7ba3cc]"
                       >
                         {row.linkLabel}
+                        <span aria-hidden="true">→</span>
                       </a>
                     ) : (
                       <span class="text-primary-950/40 dark:text-primary-200/40">—</span>

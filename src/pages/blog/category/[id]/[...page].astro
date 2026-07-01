@@ -59,10 +59,10 @@ const isAllActive = !id || !BLOG_CATEGORIES.find(cat => cat.id === id);
   <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-12 text-center">
-      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+      <h1 class="mb-4 text-balance text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
         {categoryLabel}
       </h1>
-      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+      <p class="mx-auto max-w-2xl text-pretty text-lg text-stone-600 dark:text-stone-300">
         {pageDescription}
       </p>
       
@@ -112,7 +112,7 @@ const isAllActive = !id || !BLOG_CATEGORIES.find(cat => cat.id === id);
 
     <!-- ページネーション -->
     {page.lastPage > 1 && (
-      <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+      <nav class="mt-12 flex flex-wrap items-center justify-center gap-2" aria-label="Pagination">
         {page.url.prev ? (
           <a
             href={`${base}blog/category/${id}${page.url.prev}`}
@@ -161,4 +161,4 @@ const isAllActive = !id || !BLOG_CATEGORIES.find(cat => cat.id === id);
       </nav>
     )}
   </div>
-</Layout> 
+</Layout>

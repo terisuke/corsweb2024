@@ -544,17 +544,17 @@ const translations = {
     },
     homeHero: {
       kicker: "想像の先まで、共に実装する。",
-      title: "業務の「進まない」を、<br />共に実装で越える。",
+      title: "<span class='nowrap'>「進まない」業務を</span><br /><span class='nowrap'>共に実装で越える。</span>",
       subtitle: "Cor.株式会社は、機密データAI・ローカルLLM・Griftを軸に、<br class='sm:hidden' />課題の整理から設計・実装・運用まで一気通貫で伴走します。<br />御用聞きではなく、必要なら「まだ作らない」選択肢も提案します。",
       support: "機密データAI・ローカルLLM・Griftを軸に、課題の整理から設計・実装・運用まで一気通貫で伴走する、福岡発のAI実装会社です。",
-      primaryCta: "AIで見積もりを試す（30秒・登録不要）",
+      primaryCta: "AI見積もりを試す（30秒）",
       secondaryCta: "無料で相談する",
       philosophyCta: "「きょうそう」の思想を読む",
       trustBadges: ["AI駆動開発 4〜5倍（内部実測）", "ローカルLLM・情報を外に出さない", "セキュリティ体制構築", "福岡発・全国対応"]
     },
     homeChallenges: {
       eyebrow: "01 / あなたの課題",
-      title: "「やりたいのに進まない」業務の壁、一緒に整理しませんか？",
+      title: "進まない業務の壁を、一緒に整理します。",
       items: [
         { title: "老朽化した基幹システムをクラウド化したい", description: "今使っているデータの整理から、クラウド上への移行・運用設計まで一緒に進めます。" },
         { title: "多言語対応のAI受付・チャットを導入したい", description: "音声対応や社内資料で学習したAI、自動で動くAIの仕組みを使って、施設・自治体向けの案内体験を設計します。" },
@@ -629,7 +629,7 @@ const translations = {
       cta: "代表ストーリーを読む"
     },
     finalCta: {
-      title: "業務の「進まない」を、共に実装で越える。",
+      title: "進まない業務を、実装で越える。",
       description: "課題の整理からAIの実装・運用まで、福岡発のAI実装パートナーが一気通貫で伴走します。",
       primary: "AIで見積もりを試す",
       secondary: "まず課題を相談する"
@@ -654,31 +654,31 @@ const translations = {
           industry: "医療",
           theme: "院内データの整理、患者対応、情報セキュリティ、AI活用方針",
           link: "/industries/medical",
-          linkLabel: "医療関連の方はこちら →"
+          linkLabel: "医療向けページ"
         },
         {
           industry: "士業",
           theme: "契約書精査、申請・登記、期日管理、補助金申請",
           link: "/industries/shigyo",
-          linkLabel: "士業関連の方はこちら →"
+          linkLabel: "士業向けページ"
         },
         {
           industry: "建設",
           theme: "労務管理、設計変更、安全確認、ノウハウ継承",
           link: "/industries/construction",
-          linkLabel: "建設関連の方はこちら →"
+          linkLabel: "建設向けページ"
         },
         {
           industry: "製造",
           theme: "目視検査、ノウハウ継承、設備保全、在庫管理",
           link: "/industries/manufacturing",
-          linkLabel: "製造関連の方はこちら →"
+          linkLabel: "製造向けページ"
         },
         {
           industry: "教育",
           theme: "テスト作業、保護者連絡、調査報告、ICT名簿管理",
           link: "/industries/education",
-          linkLabel: "教育関連の方はこちら →"
+          linkLabel: "教育向けページ"
         }
       ]
     },
@@ -745,7 +745,7 @@ const translations = {
       cta: {
         title: "まずは、30秒で参考見積もりを試してみませんか？",
         description: "Griftは、過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
-        primary: "GriftでAI見積もりを試す（30秒・登録不要）",
+        primary: "Griftで試す（30秒）",
         secondary: "無料で相談する",
         note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
       }
@@ -808,7 +808,7 @@ const translations = {
       cta: {
         title: "まずは、30秒で参考見積もりを試してみませんか？",
         description: "Griftは、過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
-        primary: "Griftで30秒、AI見積もりを試す",
+        primary: "Griftで試す（30秒）",
         secondary: "無料で相談する",
         note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
       }
@@ -876,7 +876,7 @@ const translations = {
       cta: {
         title: "まずは、30秒で参考見積もりを試してみませんか？",
         description: "Griftは、過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
-        primary: "Griftで30秒、AI見積もりを試す",
+        primary: "Griftで試す（30秒）",
         secondary: "無料で相談する",
         note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
       }
@@ -939,7 +939,7 @@ const translations = {
       cta: {
         title: "まずは、30秒で参考見積もりを試してみませんか？",
         description: "Griftは、過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
-        primary: "Griftで30秒、AI見積もりを試す",
+        primary: "Griftで試す（30秒）",
         secondary: "無料で相談する",
         note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
       }
@@ -1002,7 +1002,7 @@ const translations = {
       cta: {
         title: "まずは、30秒で参考見積もりを試してみませんか？",
         description: "Griftは、過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
-        primary: "Griftで30秒、AI見積もりを試す",
+        primary: "Griftで試す（30秒）",
         secondary: "無料で相談する",
         note: "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
       }
@@ -1083,10 +1083,10 @@ const translations = {
     homeBlog: {"eyebrow":"Insights","title":"The \"how\" of AI, in articles.","description":"AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.","cta":"See all articles"},
     homeHero: {
       kicker: "Building with you, beyond what you imagined.",
-      title: "Turn \"stuck\" work into <br />things we build together.",
+      title: "<span class='nowrap'>Turn stuck work</span><br />into what we build together.",
       subtitle: "Built around confidential-data AI, local LLMs, and Grift,<br class='sm:hidden' />Cor. Inc. walks with you end to end — from framing the problem to design, build, and operations.<br />We don't just take orders: when it's right, we'll even propose <em>not</em> building yet.",
       support: "A Fukuoka-born AI implementation company that walks with you end to end — from framing the problem to design, build, and operations — built around confidential-data AI, local LLMs, and Grift.",
-      primaryCta: "Try an AI estimate (30 sec, no sign-up)",
+      primaryCta: "Try AI estimate (30 sec)",
       secondaryCta: "Get a free consultation",
       philosophyCta: "Read about our \"Kyousou\" philosophy",
       trustBadges: ["AI-driven development, 4–5× (internal measurement)", "Local LLM — your data stays in", "Secure Infrastructure", "Born in Fukuoka, serving all of Japan"]
@@ -1133,7 +1133,7 @@ const translations = {
         { label: "Initial Assessment", value: "¥100k - ¥300k", note: "Confidential Data AI Assessment" },
         { label: "PoC Development", value: "From 3 Mos / ¥3M", note: "Local LLM & AI Infrastructure PoC" }
       ],
-      cta: "See our work"
+      cta: "Discuss an AI platform PoC"
     },
     securityTrust: {
       title: "Build freely. Protect responsibly.",
@@ -1183,31 +1183,31 @@ const translations = {
           industry: "Healthcare",
           theme: "Organizing clinical data, patient response, information security, AI strategy",
           link: "/industries/medical",
-          linkLabel: "For healthcare →"
+          linkLabel: "Healthcare page"
         },
         {
           industry: "Professional services",
           theme: "Contract review, applications & registration, deadline management, subsidy applications",
           link: "/industries/shigyo",
-          linkLabel: "For professional services →"
+          linkLabel: "Professional services page"
         },
         {
           industry: "Construction",
           theme: "Labor management, design changes, safety checks, passing on know-how",
           link: "/industries/construction",
-          linkLabel: "For construction →"
+          linkLabel: "Construction page"
         },
         {
           industry: "Manufacturing",
           theme: "Visual inspection, passing on know-how, equipment maintenance, inventory management",
           link: "/industries/manufacturing",
-          linkLabel: "For manufacturing →"
+          linkLabel: "Manufacturing page"
         },
         {
           industry: "Education",
           theme: "Test workload, parent communication, surveys & reports, ICT roster management",
           link: "/industries/education",
-          linkLabel: "For education →"
+          linkLabel: "Education page"
         }
       ]
     },
@@ -1274,7 +1274,7 @@ const translations = {
       cta: {
         title: "Why not start with a 30-second reference estimate?",
         description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-        primary: "Try an AI estimate with Grift (30 sec, no sign-up)",
+        primary: "Try Grift in 30 seconds",
         secondary: "Get a free consultation",
         note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
       }
@@ -1337,7 +1337,7 @@ const translations = {
       cta: {
         title: "Why not start with a 30-second reference estimate?",
         description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-        primary: "Try an AI estimate with Grift in 30 seconds",
+        primary: "Try Grift in 30 seconds",
         secondary: "Get a free consultation",
         note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
       }
@@ -1405,7 +1405,7 @@ const translations = {
       cta: {
         title: "Why not start with a 30-second reference estimate?",
         description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-        primary: "Try an AI estimate with Grift in 30 seconds",
+        primary: "Try Grift in 30 seconds",
         secondary: "Get a free consultation",
         note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
       }
@@ -1468,7 +1468,7 @@ const translations = {
       cta: {
         title: "Why not start with a 30-second reference estimate?",
         description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-        primary: "Try an AI estimate with Grift in 30 seconds",
+        primary: "Try Grift in 30 seconds",
         secondary: "Get a free consultation",
         note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
       }
@@ -1531,7 +1531,7 @@ const translations = {
       cta: {
         title: "Why not start with a 30-second reference estimate?",
         description: "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-        primary: "Try an AI estimate with Grift in 30 seconds",
+        primary: "Try Grift in 30 seconds",
         secondary: "Get a free consultation",
         note: "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
       }
@@ -1617,8 +1617,8 @@ const translations = {
       description1: "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
       description2: "If you do not receive a reply within the above period, there may be a transmission problem. We apologize for the inconvenience, but please contact us again.",
       heading: {
-        title: "Contact Us",
-        description: "For questions, consultations, quote requests, and more, please feel free to contact us."
+        title: "Tell us what is stuck.",
+        description: "No fixed requirements needed. Share the issue, constraints, or idea; we reply within 3 business days."
       },
       form: {
         title: "Feel free to contact us!",
@@ -2155,10 +2155,10 @@ const translations = {
     homeBlog: {"eyebrow":"读物","title":"AI 的「推进方式」，用文章讲清楚。","description":"AI 导入、机密数据的安全运用、报价的思路等，汇总了现场可用的视角。","cta":"查看全部文章"},
     homeHero: {
       kicker: "超越想象，与你共同实现。",
-      title: "让业务中「推进不下去」的难题，<br />与你共同实现、一同跨越。",
+      title: "<span class='nowrap'>让停滞的业务</span><br /><span class='nowrap'>一起实现突破。</span>",
       subtitle: "Cor.株式会社以机密数据AI、本地LLM与Grift为核心，<br class='sm:hidden' />从梳理课题到设计、实现、运维，全程一体化陪伴。<br />我们不做被动接单，必要时也会提出「暂不开发」的选择。",
       support: "以机密数据AI、本地LLM与Grift为核心，从梳理课题到设计、实现、运维全程一体化陪伴，源自福冈的AI实现公司。",
-      primaryCta: "用 AI 试算报价（30 秒・无需注册）",
+      primaryCta: "AI 试算报价（30 秒）",
       secondaryCta: "免费咨询",
       philosophyCta: "阅读「きょうそう」的理念",
       trustBadges: ["AI 驱动开发 4～5 倍（内部实测）", "本地 LLM・信息不外泄", "构建安全体系", "源自福冈・服务全国"]
@@ -2205,7 +2205,7 @@ const translations = {
         { label: "入局诊断", value: "10万〜30万日元", note: "机密数据AI应用诊断" },
         { label: "PoC构建", value: "3个月300万日元起", note: "本地LLM / AI基础设施PoC" }
       ],
-      cta: "查看实绩"
+      cta: "咨询 AI 基础设施 PoC"
     },
     services2026: {
       title: "在事业现场，落地实装 AI（代替人去思考、行动的技术）。",
@@ -2264,31 +2264,31 @@ const translations = {
           industry: "医疗",
           theme: "院内数据整理、患者对应、信息安全、AI 应用方针",
           link: "/industries/medical",
-          linkLabel: "医疗相关请点这里 →"
+          linkLabel: "医疗页面"
         },
         {
           industry: "士业",
           theme: "合同精查、申请・登记、期限管理、补助金申请",
           link: "/industries/shigyo",
-          linkLabel: "士业相关请点这里 →"
+          linkLabel: "士业页面"
         },
         {
           industry: "建设",
           theme: "劳务管理、设计变更、安全确认、经验传承",
           link: "/industries/construction",
-          linkLabel: "建设相关请点这里 →"
+          linkLabel: "建设页面"
         },
         {
           industry: "制造",
           theme: "目视检查、经验传承、设备保全、库存管理",
           link: "/industries/manufacturing",
-          linkLabel: "制造相关请点这里 →"
+          linkLabel: "制造页面"
         },
         {
           industry: "教育",
           theme: "考试作业、家长联络、调查报告、ICT 名册管理",
           link: "/industries/education",
-          linkLabel: "教育相关请点这里 →"
+          linkLabel: "教育页面"
         }
       ]
     },
@@ -2355,7 +2355,7 @@ const translations = {
       cta: {
         title: "先花 30 秒，试算一份参考报价吧？",
         description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-        primary: "用 Grift 试算 AI 报价（30 秒・无需注册）",
+        primary: "用 Grift 试算（30 秒）",
         secondary: "免费咨询",
         note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
       }
@@ -2418,7 +2418,7 @@ const translations = {
       cta: {
         title: "先花 30 秒，试算一份参考报价吧？",
         description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-        primary: "用 Grift 花 30 秒试算 AI 报价",
+        primary: "用 Grift 试算（30 秒）",
         secondary: "免费咨询",
         note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
       }
@@ -2486,7 +2486,7 @@ const translations = {
       cta: {
         title: "先花 30 秒，试算一份参考报价吧？",
         description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-        primary: "用 Grift 花 30 秒试算 AI 报价",
+        primary: "用 Grift 试算（30 秒）",
         secondary: "免费咨询",
         note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
       }
@@ -2549,7 +2549,7 @@ const translations = {
       cta: {
         title: "先花 30 秒，试算一份参考报价吧？",
         description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-        primary: "用 Grift 花 30 秒试算 AI 报价",
+        primary: "用 Grift 试算（30 秒）",
         secondary: "免费咨询",
         note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
       }
@@ -2612,7 +2612,7 @@ const translations = {
       cta: {
         title: "先花 30 秒，试算一份参考报价吧？",
         description: "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-        primary: "用 Grift 花 30 秒试算 AI 报价",
+        primary: "用 Grift 试算（30 秒）",
         secondary: "免费咨询",
         note: "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
       }
@@ -2689,8 +2689,8 @@ const translations = {
       description1: "确认咨询内容后，我们将在3个工作日内由负责人联系您。请稍等片刻。",
       description2: "如上述期间内未收到回复，可能存在发送故障。麻烦您再次联系我们。",
       heading: {
-        title: "联系我们",
-        description: "如有疑问、咨询、估价请求等，请随时联系我们。"
+        title: "请告诉我们卡住的地方。",
+        description: "不需要已经整理好的需求。请告诉我们课题、限制或想法，我们将在 3 个工作日内回复。"
       },
       form: {
         title: "请随时咨询！",
@@ -3227,10 +3227,10 @@ const translations = {
     homeBlog: {"eyebrow":"읽을거리","title":"AI의 ‘진행 방법’을, 글로.","description":"AI 도입, 기밀 데이터의 안전한 활용, 견적에 대한 사고방식 등 현장에서 바로 쓸 수 있는 관점을 정리했습니다.","cta":"블로그 전체 보기"},
     homeHero: {
       kicker: "상상 그 너머까지, 함께 구현합니다.",
-      title: "업무의 「진행되지 않음」을, <br />함께 구현으로 넘어섭니다.",
+      title: "<span class='nowrap'>멈춘 업무를</span><br /><span class='nowrap'>함께 구현으로 넘습니다.</span>",
       subtitle: "Cor.주식회사는 기밀 데이터 AI・로컬 LLM・Grift를 축으로,<br class='sm:hidden' />과제 정리부터 설계・구현・운용까지 하나로 이어 동반합니다.<br />단순한 주문 대응이 아니라, 필요하다면 「아직 만들지 않는」 선택지도 제안합니다.",
       support: "기밀 데이터 AI・로컬 LLM・Grift를 축으로, 과제 정리부터 설계・구현・운용까지 하나로 이어 동반하는, 후쿠오카발 AI 구현 회사입니다.",
-      primaryCta: "AI로 견적을 체험하기 (30초・가입 불필요)",
+      primaryCta: "AI 견적 체험하기 (30초)",
       secondaryCta: "무료로 상담하기",
       philosophyCta: "「きょうそう」의 사상을 읽기",
       trustBadges: ["AI 주도 개발 4~5배 (내부 실측)", "로컬 LLM・정보를 외부로 내보내지 않음", "보안 체계 구축", "후쿠오카발・전국 대응"]
@@ -3277,7 +3277,7 @@ const translations = {
         { label: "초기 진단", value: "10만~30만엔", note: "기밀 데이터 AI 활용 진단" },
         { label: "PoC 구축", value: "3개월 300만엔~", note: "로컬 LLM / AI 기반 PoC" }
       ],
-      cta: "실적 보기"
+      cta: "AI 기반 PoC 상담하기"
     },
     securityTrust: {
       title: "자유롭게 만들고, 책임지고 지킵니다.",
@@ -3327,31 +3327,31 @@ const translations = {
           industry: "의료",
           theme: "원내 데이터 정리, 환자 대응, 정보 보안, AI 활용 방침",
           link: "/industries/medical",
-          linkLabel: "의료 관련 분이라면 이쪽 →"
+          linkLabel: "의료 페이지"
         },
         {
           industry: "전문직(士業)",
           theme: "계약서 정밀 검토, 신청・등기, 기일 관리, 보조금 신청",
           link: "/industries/shigyo",
-          linkLabel: "전문직 관련 분이라면 이쪽 →"
+          linkLabel: "전문직 페이지"
         },
         {
           industry: "건설",
           theme: "노무 관리, 설계 변경, 안전 확인, 노하우 계승",
           link: "/industries/construction",
-          linkLabel: "건설 관련 분이라면 이쪽 →"
+          linkLabel: "건설 페이지"
         },
         {
           industry: "제조",
           theme: "육안 검사, 노하우 계승, 설비 보전, 재고 관리",
           link: "/industries/manufacturing",
-          linkLabel: "제조 관련 분이라면 이쪽 →"
+          linkLabel: "제조 페이지"
         },
         {
           industry: "교육",
           theme: "시험 업무, 학부모 연락, 조사 보고, ICT 명부 관리",
           link: "/industries/education",
-          linkLabel: "교육 관련 분이라면 이쪽 →"
+          linkLabel: "교육 페이지"
         }
       ]
     },
@@ -3418,7 +3418,7 @@ const translations = {
       cta: {
         title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
         description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
-        primary: "Grift로 AI 견적 체험하기 (30초・가입 불필요)",
+        primary: "Grift로 견적 체험 (30초)",
         secondary: "무료로 상담하기",
         note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
       }
@@ -3481,7 +3481,7 @@ const translations = {
       cta: {
         title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
         description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
-        primary: "Grift로 30초, AI 견적 체험하기",
+        primary: "Grift로 견적 체험 (30초)",
         secondary: "무료로 상담하기",
         note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
       }
@@ -3549,7 +3549,7 @@ const translations = {
       cta: {
         title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
         description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
-        primary: "Grift로 30초, AI 견적 체험하기",
+        primary: "Grift로 견적 체험 (30초)",
         secondary: "무료로 상담하기",
         note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
       }
@@ -3612,7 +3612,7 @@ const translations = {
       cta: {
         title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
         description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
-        primary: "Grift로 30초, AI 견적 체험하기",
+        primary: "Grift로 견적 체험 (30초)",
         secondary: "무료로 상담하기",
         note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
       }
@@ -3675,7 +3675,7 @@ const translations = {
       cta: {
         title: "우선 30초 만에 참고 견적을 체험해 보지 않으시겠어요?",
         description: "Grift는 과거 개발 실적과 시장 시세를 바탕으로 참고가 되는 비용・납기・유사 사례를 제시합니다. 상담 전 정리에도 활용해 주세요.",
-        primary: "Grift로 30초, AI 견적 체험하기",
+        primary: "Grift로 견적 체험 (30초)",
         secondary: "무료로 상담하기",
         note: "Grift의 결과는 상담 전 참고 견적입니다. 정식 금액・납기는 요건 확인 후에 확정됩니다."
       }
@@ -3761,8 +3761,8 @@ const translations = {
       description1: "문의 내용을 확인한 후, 3 영업일 이내에 담당자가 연락드리겠습니다. 잠시만 기다려 주세요.",
       description2: "위 기간 내에 답변이 없는 경우, 전송 문제의 가능성이 있습니다. 번거로우시겠지만 다시 연락해 주시기 바랍니다.",
       heading: {
-        title: "문의",
-        description: "질문이나 상담, 견적 요청 등 언제든지 문의해 주세요."
+        title: "막힌 부분을 알려 주세요.",
+        description: "정리된 요구사항이 없어도 괜찮습니다. 과제와 제약, 아이디어를 보내 주시면 3영업일 안에 답변드리겠습니다."
       },
       form: {
         title: "언제든지 문의하세요!",
@@ -4120,7 +4120,7 @@ const translations = {
       security: { title: "보안 | Cor.inc", description: "Cor. 주식회사의 정보 보안, ISMS 인증 취득을 위한 체제, 그리고 로컬 퍼스트와 기밀도 등급에 기반한 AI 개발 환경에 대하여." }
     },
     privacy: {
-      title: "개인정보 보호방침(개인정보처리방침)",
+      title: "개인정보처리방침",
       lastUpdate: "기준일: 2026년 6월 13일 (제0.1판·초안)",
       note: "일본어판이 정본입니다. 본 한국어 번역은 참고용입니다.",
       intro: "Cor. 주식회사(이하 「당사」라 합니다.)는 당사가 취급하는 개인정보의 중요성을 인식하고, 개인정보 보호에 관한 법률(이하 「개인정보보호법」이라 합니다.) 및 그 밖의 관계 법령, 가이드라인 및 ISO/IEC 27001:2022(JIS Q 27001:2023)에 기반한 정보보안 관리체계에 따라 고객·종업원·채용 지원자 및 그 밖의 여러분의 개인정보를 적정하게 취급합니다. 당사는 다음의 방침에 기반하여 개인정보를 보호합니다.",
@@ -4299,10 +4299,10 @@ const translations = {
     homeBlog: {"eyebrow":"Lecturas","title":"El «cómo» de la IA, en artículos.","description":"Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.","cta":"Ver todos los artículos"},
     homeHero: {
       kicker: "Más allá de lo imaginado, lo construimos contigo.",
-      title: "Convertimos lo que «no avanza» <br />en algo que construimos juntos.",
+      title: "Convertimos lo estancado<br />en avances construidos juntos.",
       subtitle: "Cor. Inc. se apoya en IA para datos confidenciales, LLM locales y Grift,<br class='sm:hidden' />y te acompaña de principio a fin: desde ordenar el problema hasta el diseño, la implementación y la operación.<br />No solo recibimos encargos: cuando conviene, también proponemos «aún no construirlo».",
       support: "Una empresa de implementación de IA nacida en Fukuoka que te acompaña de principio a fin —desde ordenar el problema hasta el diseño, la implementación y la operación— apoyada en IA para datos confidenciales, LLM locales y Grift.",
-      primaryCta: "Prueba un presupuesto con IA (30 s · sin registro)",
+      primaryCta: "Presupuesto IA (30 s)",
       secondaryCta: "Consulta gratis",
       philosophyCta: "Lee la filosofía de «Kyousou»",
       trustBadges: ["Desarrollo asistido por IA 4–5× (medición interna)", "LLM local · tu información no sale al exterior", "Infraestructura Segura", "Desde Fukuoka · cobertura nacional"]
@@ -4349,7 +4349,7 @@ const translations = {
         { label: "Evaluación Inicial", value: "100k - 300k yenes", note: "Evaluación de IA para Datos Confidenciales" },
         { label: "Desarrollo de PoC", value: "Desde 3 meses / ¥3M", note: "PoC de LLM Local e Infraestructura de IA" }
       ],
-      cta: "Ver nuestros proyectos"
+      cta: "Consultar un PoC de plataforma IA"
     },
     securityTrust: {
       title: "Crear con libertad. Proteger con responsabilidad.",
@@ -4399,31 +4399,31 @@ const translations = {
           industry: "Medicina",
           theme: "Orden de los datos internos, atención al paciente, seguridad de la información, estrategia de uso de IA",
           link: "/industries/medical",
-          linkLabel: "Si eres del sector médico, por aquí →"
+          linkLabel: "Página de sanidad"
         },
         {
           industry: "Profesiones colegiadas",
           theme: "Revisión de contratos, trámites y registros, control de plazos, solicitud de subvenciones",
           link: "/industries/shigyo",
-          linkLabel: "Si eres profesional colegiado, por aquí →"
+          linkLabel: "Página profesional"
         },
         {
           industry: "Construcción",
           theme: "Gestión laboral, cambios de diseño, comprobaciones de seguridad, transmisión del know-how",
           link: "/industries/construction",
-          linkLabel: "Si eres del sector de la construcción, por aquí →"
+          linkLabel: "Página de construcción"
         },
         {
           industry: "Industria",
           theme: "Inspección visual, transmisión del know-how, mantenimiento de equipos, gestión de inventario",
           link: "/industries/manufacturing",
-          linkLabel: "Si eres del sector industrial, por aquí →"
+          linkLabel: "Página industrial"
         },
         {
           industry: "Educación",
           theme: "Tareas de evaluación, comunicación con familias, informes, gestión de listas en herramientas TIC",
           link: "/industries/education",
-          linkLabel: "Si eres del sector educativo, por aquí →"
+          linkLabel: "Página de educación"
         }
       ]
     },
@@ -4490,7 +4490,7 @@ const translations = {
       cta: {
         title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
         description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-        primary: "Prueba un presupuesto con IA en Grift (30 s · sin registro)",
+        primary: "Probar Grift (30 s)",
         secondary: "Consulta gratis",
         note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
       }
@@ -4553,7 +4553,7 @@ const translations = {
       cta: {
         title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
         description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        primary: "Probar Grift (30 s)",
         secondary: "Consulta gratis",
         note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
       }
@@ -4621,7 +4621,7 @@ const translations = {
       cta: {
         title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
         description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        primary: "Probar Grift (30 s)",
         secondary: "Consulta gratis",
         note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
       }
@@ -4684,7 +4684,7 @@ const translations = {
       cta: {
         title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
         description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        primary: "Probar Grift (30 s)",
         secondary: "Consulta gratis",
         note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
       }
@@ -4747,7 +4747,7 @@ const translations = {
       cta: {
         title: "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
         description: "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-        primary: "Prueba un presupuesto con IA en 30 s con Grift",
+        primary: "Probar Grift (30 s)",
         secondary: "Consulta gratis",
         note: "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
       }
@@ -4833,8 +4833,8 @@ const translations = {
       description1: "Después de confirmar el contenido de la consulta, nos pondremos en contacto con usted dentro de 3 días hábiles. Por favor, espere un momento.",
       description2: "Si no recibe respuesta dentro del período anterior, es posible que haya un problema de envío. Le pedimos que se ponga en contacto con nosotros nuevamente.",
       heading: {
-        title: "Contacto",
-        description: "Para preguntas, consultas, solicitudes de presupuesto, etc., no dude en contactarnos."
+        title: "Cuéntanos dónde se atasca.",
+        description: "No necesitas requisitos cerrados. Comparte el problema, las restricciones o la idea; respondemos en 3 días hábiles."
       },
       form: {
         title: "¡Consulte con confianza!",

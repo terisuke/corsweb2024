@@ -42,10 +42,10 @@ const categories = [
   <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-12 text-center">
-      <h1 class="mb-4 text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
+      <h1 class="mb-4 text-balance text-4xl font-bold text-stone-900 dark:text-stone-100 sm:text-5xl">
         博客
       </h1>
-      <p class="mx-auto max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+      <p class="mx-auto max-w-2xl text-pretty text-lg text-stone-600 dark:text-stone-300">
         {pageDescription}
       </p>
 
@@ -86,7 +86,7 @@ const categories = [
 
     <!-- Blog Posts Grid -->
     {page.data.length > 0 ? (
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {page.data.map(post => (
           <PostCard post={post} />
         ))}
@@ -101,7 +101,7 @@ const categories = [
 
     <!-- Pagination Controls -->
     {page.total > page.size && (
-      <div class="mt-12 flex justify-center gap-2">
+      <div class="mt-12 flex flex-wrap items-center justify-center gap-2">
         {page.url.prev && (
           <a
             href={page.url.prev}

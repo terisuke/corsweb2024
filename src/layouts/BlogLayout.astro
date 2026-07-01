@@ -307,6 +307,45 @@ const websiteJsonLd = {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
+
+      /* CJK/多言語の改行制御を通常Layoutと揃える。 */
+      h1, h2, h3,
+      .type-heading {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      p, li, dd, figcaption,
+      .type-copy {
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
+      }
+      .type-action {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      /* ブランド語「きょうそう」など、語の途中で折らない範囲に使う。 */
+      .nowrap,
+      .type-keep {
+        white-space: nowrap;
+      }
+      .line-clamp-2,
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .line-clamp-2 {
+        -webkit-line-clamp: 2;
+      }
+      .line-clamp-3 {
+        -webkit-line-clamp: 3;
+      }
       
       @font-face {
         font-family: 'Inter';
@@ -333,6 +372,24 @@ const websiteJsonLd = {
       [x-cloak] { display: none !important; }
       
       /* Blog specific styles */
+      .prose :where(h1, h2, h3) {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+
+      .prose :where(p, li, dd, figcaption) {
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
+      }
+
+      .prose :where(a) {
+        overflow-wrap: anywhere;
+      }
+
       .prose pre {
         background-color: #282a36;
         border-radius: 0.5rem;
@@ -416,14 +473,16 @@ const websiteJsonLd = {
       
       .remark-link-card-plus__card {
         display: flex;
+        flex-direction: column;
         text-decoration: none;
         color: inherit;
-        min-height: 120px;
+        min-height: 0;
       }
       
       .remark-link-card-plus__main {
         padding: 1rem;
         flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -431,8 +490,8 @@ const websiteJsonLd = {
       
       .remark-link-card-plus__thumbnail {
         flex-shrink: 0;
-        width: 120px;
-        height: 120px;
+        width: 100%;
+        height: 10rem;
         overflow: hidden;
       }
       
@@ -449,6 +508,7 @@ const websiteJsonLd = {
       
       .remark-link-card-plus__content {
         margin-bottom: 0.75rem;
+        min-width: 0;
       }
       
       .remark-link-card-plus__title {
@@ -457,6 +517,10 @@ const websiteJsonLd = {
         margin-bottom: 0.5rem;
         font-size: 1rem;
         line-height: 1.5;
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
       }
       
       .dark .remark-link-card-plus__title {
@@ -467,6 +531,10 @@ const websiteJsonLd = {
         color: #57534e;
         font-size: 0.875rem;
         line-height: 1.4;
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -480,7 +548,9 @@ const websiteJsonLd = {
       .remark-link-card-plus__meta {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        min-width: 0;
       }
       
       .remark-link-card-plus__favicon {
@@ -493,10 +563,26 @@ const websiteJsonLd = {
         color: #78716c;
         font-size: 0.75rem;
         font-weight: 500;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       
       .dark .remark-link-card-plus__url {
         color: #a8a29e;
+      }
+
+      @media (min-width: 640px) {
+        .remark-link-card-plus__card {
+          flex-direction: row;
+          min-height: 120px;
+        }
+
+        .remark-link-card-plus__thumbnail {
+          width: 120px;
+          height: 120px;
+        }
       }
     </style>
 

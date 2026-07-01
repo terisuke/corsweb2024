@@ -14,12 +14,22 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
   title={t.meta.privacy.title}
 >
   <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <div class="flex flex-col gap-4 pb-16 text-center sm:pb-20">
-      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{p.title}</h1>
-      <p class="text-base text-primary-950/70 dark:text-primary-200/70">{p.lastUpdate}</p>
+    <div class="flex flex-col gap-4 pb-16 text-start sm:pb-20">
+      <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">
+        {currentLocale === 'ja' ? (
+          <>
+            個人情報保護方針
+            <span class="type-keep inline-block">（プライバシー</span>
+            <span class="type-keep inline-block">ポリシー）</span>
+          </>
+        ) : (
+          p.title
+        )}
+      </h1>
+      <p class="type-copy text-base text-primary-950/70 dark:text-primary-200/70">{p.lastUpdate}</p>
     </div>
 
-    <div class="text-base leading-[1.8]">
+    <div class="type-copy text-base leading-[1.8]">
       {
         p.note && (
           <p class="mb-6 rounded-md border border-primary-900/15 bg-primary-900/[0.03] px-4 py-3 text-sm dark:border-primary-300/15 dark:bg-primary-300/[0.04]">
@@ -30,7 +40,7 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
 
       <p class="mb-4">{p.intro}</p>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.businessTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.businessTitle}</h2>
       <div class="overflow-x-auto">
         <table class="w-full max-w-full border-collapse text-left text-sm sm:text-base">
           <tbody>
@@ -46,13 +56,13 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
         </table>
       </div>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.purposeTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.purposeTitle}</h2>
       <p class="mb-6">{p.purposeLead}</p>
       <div class="flex flex-col gap-8">
         {
           Array.isArray(p.purposeGroups) && p.purposeGroups.map((group) => (
             <div>
-              <h3 class="mb-3 text-lg font-medium">{group.title}</h3>
+              <h3 class="type-heading mb-3 text-lg font-medium">{group.title}</h3>
               <dl class="flex flex-col gap-2">
                 {group.lines.map((line) => (
                   <div>
@@ -70,7 +80,7 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
       {
         Array.isArray(p.sections) && p.sections.map((section) => (
           <section>
-            <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{section.title}</h2>
+            <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{section.title}</h2>
             {Array.isArray(section.body) && section.body.map((para) => <p class="mb-4">{para}</p>)}
             {Array.isArray(section.list) && (
               <ul class="mb-4 list-inside list-disc space-y-3">
@@ -84,7 +94,7 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
         ))
       }
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.inquiryTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.inquiryTitle}</h2>
       <p class="mb-6">{p.inquiryLead}</p>
       <div class="overflow-x-auto">
         <table class="w-full max-w-full border-collapse text-left text-sm sm:text-base">
@@ -109,7 +119,7 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
         </table>
       </div>
 
-      <h2 class="mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.revisionTitle}</h2>
+      <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{p.revisionTitle}</h2>
       {Array.isArray(p.revisionBody) && p.revisionBody.map((para) => <p class="mb-4">{para}</p>)}
 
       <p class="mb-4 mt-8">
