@@ -22,6 +22,8 @@ const t = getTranslations(currentLocale);
 <Layout
   description={t.meta.home.description}
   title={t.meta.home.title}
+  ogTitle={t.meta.home.ogTitle || t.meta.home.title}
+  ogDescription={t.meta.home.ogDescription || t.meta.home.description}
 >
   <ProblemHero />
   <ChallengeGrid />
