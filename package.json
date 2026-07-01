@@ -7,6 +7,7 @@
     "start": "./node_modules/.bin/astro dev",
     "build": "./node_modules/.bin/astro check && ./node_modules/.bin/astro build",
     "preview": "./node_modules/.bin/astro preview",
+    "preview:ci": "./node_modules/.bin/astro preview --host 127.0.0.1 --port 4322",
     "astro": "./node_modules/.bin/astro",
     "translate": "node scripts/translate-blog.js",
     "translate:all": "node scripts/translate-all-blog.js",
@@ -17,7 +18,9 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:visual-text": "playwright test --config=playwright.visual.config.ts",
+    "verify:visual-text": "npm run build && npm run test:visual-text"
   },
   "dependencies": {
     "@alpinejs/collapse": "3.12.3",

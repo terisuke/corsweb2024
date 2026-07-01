@@ -12,14 +12,14 @@ const t = getJaTranslations();
   availableLocales={['ja']}
 >
   <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
-    <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-10 text-center sm:pb-12">
-      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{t.works.title}</h1>
-      <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+    <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-10 text-start sm:pb-12">
+      <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{t.works.title}</h1>
+      <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">
         {t.works.intro}
       </p>
     </div>
 
-    <p class="mx-auto mb-12 max-w-3xl text-center text-sm text-primary-950/50 dark:text-primary-200/50">
+    <p class="type-copy mx-auto mb-12 max-w-3xl text-start text-sm text-primary-950/50 dark:text-primary-200/50">
       {t.works.note}
     </p>
 
@@ -42,12 +42,12 @@ const t = getJaTranslations();
                   </span>
                 )}
               </div>
-              <h2 class="text-lg font-medium tracking-tight">{item.name}</h2>
-              <p class="text-base text-primary-950/70 dark:text-primary-200/70">
+              <h2 class="type-heading text-lg font-medium tracking-tight">{item.name}</h2>
+              <p class="type-copy text-base text-primary-950/70 dark:text-primary-200/70">
                 {item.description}
               </p>
               {isNda && (
-                <p class="mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
+                <p class="type-copy mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
                   {('note' in item && item.note) || t.works.ndaNote}
                 </p>
               )}
@@ -82,7 +82,7 @@ const t = getJaTranslations();
 
     <div class="mt-10 text-center">
       <a
-        class="inline-flex items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+        class="type-action inline-flex items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
         href={t.works.moreHref}
       >
         {t.works.moreLabel}

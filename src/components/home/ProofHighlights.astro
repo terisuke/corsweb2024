@@ -18,10 +18,10 @@ const cardStep = 0.12;
         >
           {t.proof.eyebrow}
         </p>
-        <h2 class="text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 class="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           {t.proof.title}
         </h2>
-        <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+        <p class="text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70">
           {t.proof.description}
         </p>
       </div>
@@ -45,8 +45,8 @@ const cardStep = 0.12;
         style={`--reveal-delay:${(cardBaseDelay + t.proof.stats.length * cardStep).toFixed(2)}s`}
       >
         <a
-          href={getLocalizedUrl('/works', currentLocale)}
-          class="inline-flex items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
+          href={getLocalizedUrl('/contact', currentLocale)}
+          class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-center text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10 sm:w-auto"
         >
           {t.proof.cta}
         </a>

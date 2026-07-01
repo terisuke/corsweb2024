@@ -23,7 +23,7 @@ const t = getTranslations(currentLocale);
                 x-bind:class="{ 'bg-primary-500/10 dark:bg-primary-400/10': open }"
               >
                 <dt
-                  class="border-b text-lg transition"
+                  class="border-b text-base transition sm:text-lg"
                   x-cloak
                   x-bind:class="{ 'border-transparent': open, 'border-primary-900/10 dark:border-primary-300/10': !open }"
                 >
@@ -36,8 +36,8 @@ const t = getTranslations(currentLocale);
                     x-bind:aria-expanded="open.toString()"
                   >
                     <div class="flex items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
-                      <span class="font-medium">{question.question}</span>
-                      <span class="ml-6 flex h-7 items-center">
+                      <span class="type-action font-medium leading-relaxed">{question.question}</span>
+                      <span class="ml-4 flex h-7 items-center sm:ml-6">
                         <svg
                           class="h-6 w-6 rotate-0 transform text-primary-600 transition duration-200 ease-in-out dark:text-primary-400"
                           x-bind:class="{ '-rotate-180': open, 'rotate-0': !open }"

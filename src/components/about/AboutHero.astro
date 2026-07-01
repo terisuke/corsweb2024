@@ -8,8 +8,8 @@ const t = getTranslations(getCurrentLocale(Astro.url));
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex max-w-3xl flex-col gap-6">
       <p class="text-sm font-medium uppercase tracking-wide text-primary-600 dark:text-primary-400">{t.aboutPage.kicker}</p>
-      <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl" set:html={emphasizeKyousou(t.aboutPage.title)} />
-      <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+      <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl" set:html={emphasizeKyousou(t.aboutPage.title)} />
+      <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">
         {t.aboutPage.lead}
       </p>
     </div>

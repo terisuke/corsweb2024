@@ -35,7 +35,7 @@ const cleanSlug = post.slug.replace(/^[a-z]{2}\/|^[a-z]{2}-[A-Z]{2}\//, '');
 const postUrl = currentLocale === 'ja' ? `/blog/${cleanSlug}` : `/${currentLocale}/blog/${cleanSlug}`;
 ---
 
-<article class="group relative flex h-80 flex-col rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-stone-800">
+<article class="group relative flex h-full min-h-80 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-stone-800">
   <a href={postUrl} class="absolute inset-0 z-10" aria-label={title}>
     <span class="sr-only">{
       currentLocale === 'ja' ? '記事を読む' :
@@ -59,25 +59,25 @@ const postUrl = currentLocale === 'ja' ? `/blog/${cleanSlug}` : `/${currentLocal
   )}
   
   <div class="flex flex-1 flex-col p-6">
-    <div class="mb-3 flex items-center gap-2 text-sm">
+    <div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
       <CategoryBadge category={category} />
-      <time datetime={new Date(pubDate).toISOString()} class="text-stone-500 dark:text-stone-400">
+      <time datetime={new Date(pubDate).toISOString()} class="shrink-0 text-stone-500 dark:text-stone-400">
         {formattedDate}
       </time>
     </div>
     
-    <h3 class="mb-2 line-clamp-2 text-lg font-semibold text-stone-900 transition-colors group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400">
+    <h3 class="mb-2 line-clamp-2 text-balance text-lg font-semibold leading-snug text-stone-900 transition-colors group-hover:text-blue-600 dark:text-stone-100 dark:group-hover:text-blue-400">
       {title}
     </h3>
     
-    <p class="mb-4 line-clamp-3 flex-1 text-sm text-stone-600 dark:text-stone-300">
+    <p class="mb-4 line-clamp-3 flex-1 text-pretty text-sm leading-6 text-stone-600 dark:text-stone-300">
       {description}
     </p>
     
     {tags.length > 0 && (
-      <div class="mt-auto flex flex-wrap gap-1">
+      <div class="mt-auto flex flex-wrap items-center gap-1.5 pt-2">
         {tags.slice(0, 2).map(tag => (
-          <span class="rounded-full bg-stone-100 px-2 py-1 text-xs font-medium text-stone-600 dark:bg-stone-700 dark:text-stone-300">
+          <span class="max-w-full rounded-full bg-stone-100 px-2 py-1 text-xs font-medium text-stone-600 dark:bg-stone-700 dark:text-stone-300">
             #{tag}
           </span>
         ))}

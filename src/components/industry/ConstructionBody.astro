@@ -12,7 +12,7 @@ const griftUrl = 'https://griftai.org';
   <section class="relative isolate flex min-h-[70vh] items-center overflow-hidden py-20 sm:py-28">
     <div class="motion-bg" aria-hidden="true"></div>
     <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-      <div class="flex flex-col items-center gap-8 text-center sm:gap-10">
+      <div class="flex flex-col items-start gap-8 text-left sm:gap-10">
         <p
           class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
           data-reveal
@@ -20,16 +20,16 @@ const griftUrl = 'https://griftai.org';
         >
           {page.hero.eyebrow}
         </p>
-        <div class="flex max-w-4xl flex-col items-center gap-6 sm:gap-8">
+        <div class="flex max-w-4xl flex-col items-start gap-6 sm:gap-8">
           <h1
-            class="text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
+            class="text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
             data-reveal
             style="--reveal-delay:0.1s"
           >
             {page.hero.title}
           </h1>
           <p
-            class="max-w-3xl text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl"
+            class="max-w-3xl text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl"
             data-reveal
             style="--reveal-delay:0.2s"
           >
@@ -50,7 +50,7 @@ const griftUrl = 'https://griftai.org';
           >
             {page.challenges.eyebrow}
           </p>
-          <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 class="text-balance text-3xl font-medium tracking-tight sm:text-4xl">
             {page.challenges.title}
           </h2>
         </div>
@@ -82,13 +82,13 @@ const griftUrl = 'https://griftai.org';
                     </svg>
                   </span>
                   <div class="flex flex-col gap-4">
-                    <h3 class="text-lg font-medium tracking-tight">{item.title}</h3>
+                    <h3 class="text-balance text-lg font-medium tracking-tight">{item.title}</h3>
                     <div class="flex flex-col gap-3">
                       <div>
                         <p class="mb-1 text-sm font-medium text-stone-700 dark:text-stone-300">
                           {page.challenges.labels.reality}
                         </p>
-                        <p class="text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+                        <p class="text-pretty text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
                           {item.reality}
                         </p>
                       </div>
@@ -96,7 +96,7 @@ const griftUrl = 'https://griftai.org';
                         <p class="mb-1 text-sm font-medium text-stone-700 dark:text-stone-300">
                           {page.challenges.labels.risk}
                         </p>
-                        <p class="text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+                        <p class="text-pretty text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
                           {item.risk}
                         </p>
                       </div>
@@ -119,10 +119,10 @@ const griftUrl = 'https://griftai.org';
           <p class="text-sm font-medium uppercase tracking-widest text-[#7ba3cc]">
             {page.support.eyebrow}
           </p>
-          <h2 class="text-3xl font-medium tracking-tight text-white sm:text-4xl">
+          <h2 class="text-balance text-3xl font-medium tracking-tight text-white sm:text-4xl">
             {page.support.title}
           </h2>
-          <p class="text-lg leading-relaxed text-white/80">
+          <p class="text-pretty text-lg leading-relaxed text-white/80">
             {page.support.intro}
           </p>
         </div>
@@ -157,10 +157,10 @@ const griftUrl = 'https://griftai.org';
                     <span class="inline-flex w-fit rounded-full bg-[#2d4a6b] px-3 py-1 text-xs font-medium text-white">
                       {item.service}
                     </span>
-                    <h3 class="text-lg font-medium tracking-tight text-primary-950">
+                    <h3 class="text-balance text-lg font-medium tracking-tight text-primary-950">
                       {item.title}
                     </h3>
-                    <p class="text-base leading-relaxed text-primary-950/70">
+                    <p class="text-pretty text-base leading-relaxed text-primary-950/70">
                       {item.description}
                     </p>
                   </div>
@@ -181,30 +181,30 @@ const griftUrl = 'https://griftai.org';
         data-reveal
       >
         <div class="flex max-w-2xl flex-col gap-4">
-          <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 class="text-balance text-3xl font-medium tracking-tight sm:text-4xl">
             {page.cta.title}
           </h2>
-          <p class="text-lg text-white/80">
+          <p class="text-pretty text-lg leading-relaxed text-white/80">
             {page.cta.description}
           </p>
         </div>
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+        <div class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:justify-center">
           <a
             href={griftUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-transparent bg-white px-8 py-4 text-lg font-semibold text-[#2d4a6b] shadow-sm transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-transparent bg-white px-6 py-4 text-center text-lg font-semibold text-[#2d4a6b] shadow-sm transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto sm:px-8"
           >
             {page.cta.primary}
           </a>
           <a
             href={getLocalizedUrl('/contact', currentLocale)}
-            class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/30 px-5 py-3 text-base font-medium text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-white/30 px-5 py-3 text-center text-base font-medium text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
           >
             {page.cta.secondary}
           </a>
         </div>
-        <p class="max-w-xl text-sm text-white/70">
+        <p class="max-w-xl text-pretty text-sm leading-relaxed text-white/70">
           {page.cta.note}
         </p>
       </div>
