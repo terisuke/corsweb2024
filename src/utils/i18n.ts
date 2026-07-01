@@ -244,32 +244,32 @@ const translations = {
       title: "FAQ",
       questions: [
         {
-          question: "開発プロセスはどのように進められるのですか？プロジェクト完了までの一般的なスケジュールを教えてください。",
-          answer: "開発プロセスでは、エンジニアがオンラインでお客様のご要望をお伺いし、必要なシステムや要件を定義します。また、初回のお打ち合わせから1週間以内に、各商品の価格を算出し、お客様のご了解をいただいた後、価格の作成に入ります。下請け会社を一切持たず、すべての案件を自社で責任を持って作成するため、通常の納期よりも平均で約20％早く商品を作ることができます。また、大型案件の場合は、プロジェクトに共感できるフリーランスのエンジニアをアサインすることで、より早く、より低コストで商品を提供することが可能です。"
+          question: "Cor.株式会社には何を相談できますか？",
+          answer: "機密データを安全に扱うAI基盤、ローカルLLM/セキュアAI、AI受託開発、AI導入支援、自社AI見積支援ツール「Grift」を中心に支援しています。契約書、議事録、見積書、顧客情報、社内ナレッジなど、外部AIにそのまま渡しにくい情報をどう扱うかを整理し、業務で使えるAIシステムとして設計・実装します。"
         },
         {
-          question: "プロジェクト費用はどのように計算されますか？支払いはどのように行われますか？",
-          answer: "価格については、企業様ごとにご要望が異なりますので、初回お打ち合わせ後にお見積もりをお送りさせていただきます。同業種の類似案件と比較し、15％程度コストを抑えてご提案させていただくことが多いです。お支払い方法は、銀行振込やPaypal決済など、様々なお支払い方法に対応しております。初回打ち合わせ時にご希望のお支払い方法をスタッフにお伝えください。"
+          question: "AI導入は、まず何から始めるべきですか？",
+          answer: "最初に決めるべきことは、どのAIモデルを使うかではありません。どの情報をAIに入れてよいか、どの情報は加工・匿名化が必要か、どの情報は社内環境やローカルLLMで扱うべきかを整理します。Cor.株式会社では、入力境界、権限、ログ、人間承認、運用責任を先に設計します。"
         },
         {
-          question: "JavaScriptやTypeScript、Python、Goなどを使うメリットは？",
-          answer: "JavaScriptは1995年にNetscapeで生まれ、ウェブ開発の基盤となる言語です。TypeScriptはそのスーパーセットとして、静的型付けを追加し、大規模プロジェクトでの保守性を向上させます。Pythonは1991年に開発された汎用性の高い言語で、シンプルで読みやすい文法が特徴です。AI・機械学習、データ分析、Web開発まで幅広く対応でき、豊富なライブラリにより開発効率が非常に高いです。Go（Golang）は2009年にGoogleが開発した軽量かつ高速な言語で、シンプルな文法と並行処理（goroutines）が特徴です。クラウドネイティブなアプリケーションやマイクロサービスに適しており、コンパイル速度が速く、メモリ効率が高いため、スケーラブルなサーバー開発に最適です。"
+          question: "クラウドAIとローカルLLMはどう使い分けますか？",
+          answer: "公開情報や一般的な文章作成はクラウドAIが向いている場合があります。一方で、契約書、顧客情報、議事録、見積書、社内ナレッジなど外部に出しにくい情報は、社内環境・承認付きAI・ローカルLLMを検討します。Cor.株式会社は、クラウドAIを否定せず、情報の機密度と業務要件に応じて使い分けます。"
         },
         {
-          question: "FirebaseやSupaBaseなどのBaaSをはじめとしたクラウドサービスを使う利点は？",
-          answer: "BaaS（Backend as a Service）は認証、データベース、ストレージ、プッシュ通知などのバックエンド機能を提供します。FirebaseはGoogleのサービスでリアルタイムデータベースと豊富な機能が特徴です。SupabaseはオープンソースのFirebase代替で、PostgreSQLベースのリアルタイム機能とRESTful APIを提供します。クラウドサービス全般では、初期投資を抑えながら、必要に応じてリソースを拡張できる柔軟性があります。AWS、Google Cloud、Azureなどの主要プロバイダーは、高可用性、自動バックアップ、セキュリティ機能を提供します。グローバルなCDN、負荷分散、監視ツールにより、パフォーマンスと信頼性を向上させ、運用負荷を大幅に軽減できます。開発期間の短縮、運用コストの削減、スケーラビリティの確保が主な利点です。"
+          question: "機密データAI活用診断では何を行いますか？",
+          answer: "既存業務のヒアリング、AI化できる業務の棚卸し、扱うデータの分類、クラウドAIとローカルLLMの切り分け、セキュリティリスクの整理、PoC方針の作成を行います。目安費用は10万〜30万円です。"
         },
         {
-          question: "要件によってどこまでタスクをカスタマイズできますか?また変更が必要な場合はどのように対応しますか?",
-          answer: "プロジェクトごとにお客様のご要望をお伺いし、オーダーメイドで製作するため、カスタマイズ性はほぼ無限です。ただし、納期を早め、致命的なシステムエラーを避けるため、制作途中でのご要望変更は基本お受けしておりません。打ち合わせまでに、お客様のご要望を十分にまとめ、ご対応いただきますようお願い申し上げます。"
+          question: "ローカルLLMやAI基盤PoCはどのくらいの期間・費用ですか？",
+          answer: "目安として、ローカルLLM/AI基盤PoCは3ヶ月300万円〜を想定しています。対象業務の整理、データの扱い方の設計、試験環境の構築、評価指標の設定、PoC後の本番化判断までを含めて進めます。"
         },
         {
-          question: "開発後のメンテナンスやサポートはどのように行われますか?追加費用はありますか?",
-          answer: "弊社は開発が本業のため、大規模なカスタマイズ以外の保守・サポートは行っておりません。開発完了後、弊社が提携している保守・サポート専門の会社をご紹介いたしますので、費用についてはご相談ください。"
+          question: "セキュリティやプライバシーはどう扱いますか？",
+          answer: "AI導入では、入力データ、アクセス権限、ログ保存、人間承認、削除ルール、運用責任の設計が必要です。Cor.株式会社では、どの情報をどこで処理するか、誰が確認するか、ログをどう残すかを整理します。ISO/IEC 27001認証取得を目標に、ISMS運用の整備も進めています。※未取得の認証を取得済みのように表記することはありません。"
         },
         {
-          question: "データのセキュリティとプライバシーはどのように保証されますか?",
-          answer: "データのセキュリティとプライバシーの保証のために、高度な暗号化技術を使用し、FirebaseやSupaBaseなどのBaaSのセキュリティ機能を最大限に活用します。アクセスコントロールについては、企業ごとに専用アカウントを設定し、必要最小限の権限で管理します。また、データ保護ポリシーの厳守と定期的なセキュリティ監査により、お客様のデータの安全を守ります。その結果、開発から提供、保守まで一貫して顧客データを保護する体制を確立しています。"
+          question: "Griftとは何ですか？",
+          answer: "Griftは、受託開発の見積根拠を可視化するAI見積支援ツールです。見積をAIに丸投げするのではなく、過去案件、GitHub実績、類似機能、技術リスク、市場相場などをもとに、人間が責任を持って説明できる見積根拠を増やすことを目指しています。"
         }
       ]
     },
@@ -1776,32 +1776,32 @@ const translations = {
       title: "FAQ",
       questions: [
         {
-          question: "How is the development process carried out? What is the typical schedule until project completion?",
-          answer: "In the development process, our engineers will listen to your requirements online and define the necessary systems and requirements. Within one week of the initial meeting, we will calculate the price for each product, and after your approval, we will proceed with the quotation. Since we do not outsource any work and handle all projects in-house, we can deliver products about 20% faster than the average delivery time. For large projects, we can assign freelance engineers who resonate with the project, enabling faster and more cost-effective delivery."
+          question: "What can we consult Cor.Inc. about?",
+          answer: "We focus on AI infrastructure for secure data handling, Local LLM/Secure AI, custom AI development, AI implementation support, and our proprietary AI estimation tool 'Grift'. We clarify how to handle sensitive information—such as contracts, minutes, estimates, customer data, and internal knowledge—designing and implementing practical AI systems for your business operations."
         },
         {
-          question: "How are project costs calculated? How do payments work?",
-          answer: "Pricing varies depending on the client's requirements, so we will send you a quote after the initial meeting. Compared to similar projects in the same industry, we often offer proposals at about 15% lower cost. Payment methods include bank transfer, Paypal, and more. Please let our staff know your preferred payment method during the initial meeting."
+          question: "What is the first step in introducing AI?",
+          answer: "The first decision is not which AI model to use. It is clarifying which data can be processed, which requires anonymization, and which must be kept in-house or in a local LLM. At Cor.Inc., we design input boundaries, permissions, logs, human approvals, and operational responsibilities first."
         },
         {
-          question: "What are the benefits of using JavaScript, TypeScript, Python, Go, and other languages?",
-          answer: "JavaScript was born in 1995 at Netscape and has become the foundation of web development. TypeScript, as its superset, adds static typing to improve maintainability in large-scale projects. Python is a versatile language developed in 1991, known for its simple and readable syntax. It covers AI/machine learning, data analysis, and web development with rich libraries, making it extremely efficient for development. Go (Golang) is a lightweight and fast language developed by Google in 2009, featuring simple syntax and concurrent processing (goroutines). It's ideal for cloud-native applications and microservices, with fast compilation speed and high memory efficiency, making it optimal for scalable server development."
+          question: "How do you choose between Cloud AI and Local LLM?",
+          answer: "Cloud AI is ideal for public data or general writing. However, for sensitive documents like contracts, customer logs, and internal knowledge, we consider secure in-house environments or Local LLMs. Rather than dismissing Cloud AI, we utilize both based on data confidentiality and requirements."
         },
         {
-          question: "What are the advantages of using BaaS like Firebase and Supabase, and cloud services in general?",
-          answer: "BaaS (Backend as a Service) provides backend functions such as authentication, databases, storage, and push notifications. Firebase is Google's service featuring real-time databases and rich functionality. Supabase is an open-source Firebase alternative offering PostgreSQL-based real-time features and RESTful APIs. Cloud services in general offer flexibility to scale resources as needed while keeping initial investment low. Major providers like AWS, Google Cloud, and Azure provide high availability, automatic backups, and security features. Global CDN, load balancing, and monitoring tools improve performance and reliability while significantly reducing operational overhead. Main benefits include reduced development time, lower operational costs, and ensured scalability."
+          question: "What does the Confidential Data AI Assessment include?",
+          answer: "We conduct workflow interviews, inventory tasks for AI adaptation, classify data, separate cloud vs. local processing, analyze security risks, and draft a PoC strategy. The estimated cost is ¥100k - ¥300k."
         },
         {
-          question: "How much can tasks be customized according to requirements? How do you handle changes if needed?",
-          answer: "We listen to your requirements for each project and create tailor-made solutions, so customization is virtually unlimited. However, to speed up delivery and avoid critical system errors, we generally do not accept changes to requirements during production. Please summarize your requirements thoroughly before the meeting."
+          question: "What is the duration and cost for a Local LLM or AI Infrastructure PoC?",
+          answer: "As a general guideline, a Local LLM/AI Infrastructure PoC takes about 3 months, starting from ¥3M. This includes workflow organization, data management design, test environment setup, evaluation metrics definition, and post-PoC production viability assessment."
         },
         {
-          question: "How is maintenance and support handled after development? Are there any additional costs?",
-          answer: "As our main business is development, we do not provide maintenance or support except for major customizations. After development is complete, we can introduce you to our partner companies specializing in maintenance and support. Please consult us regarding costs."
+          question: "How are security and privacy handled?",
+          answer: "AI implementation requires strict design of input data, access rights, logs, human approvals, and deletion rules. We organize where info is processed, who reviews it, and how logs are stored. We are currently preparing our ISMS operations with the goal of obtaining ISO/IEC 27001 certification. *We never misrepresent an unacquired certification as completed."
         },
         {
-          question: "How do you ensure data security and privacy?",
-          answer: "To ensure data security and privacy, we use advanced encryption technologies and maximize the security features of BaaS like Firebase and SupaBase. For access control, we set up dedicated accounts for each client and manage them with the minimum necessary privileges. We strictly adhere to data protection policies and conduct regular security audits to protect your data throughout development, delivery, and maintenance."
+          question: "What is Grift?",
+          answer: "Grift is an AI estimation support tool that visualizes estimation rationales for custom development. Instead of delegating everything to AI, it aims to enhance verifiable rationales based on past projects, GitHub histories, technical risks, and market benchmarks so that humans can explain quotes responsibly."
         }
       ]
     },
@@ -2828,32 +2828,32 @@ const translations = {
       title: "常见问题",
       questions: [
         {
-          question: "开发流程是怎样的？项目完成前的典型时间表是什么？",
-          answer: "在开发过程中，我们的工程师将在线听取您的需求，并定义必要的系统和需求。在初次会议后一周内，我们将计算每个产品的价格，在您批准后，我们将进行报价。由于我们不外包任何工作，所有项目都在内部处理，我们可以比平均交付时间快约20%交付产品。对于大型项目，我们可以分配与项目产生共鸣的自由职业工程师，实现更快、更具成本效益的交付。"
+          question: "我们可以向Cor.株式会社咨询哪些内容？",
+          answer: "我们主要围绕可安全处理机密数据的AI基础架构、本地LLM/安全AI、AI定制开发、AI导入支援，以及自研AI估算支援工具「Grift」提供服务。我们帮您整理合同、会议纪要、报价单、客户信息和内部知识库等难以直接交给外部AI的数据该如何处理，并设计和实现可用于实际业务的AI系统。"
         },
         {
-          question: "项目成本如何计算？付款方式如何？",
-          answer: "定价根据客户需求而有所不同，因此我们将在初次会议后向您发送报价。与同行业类似项目相比，我们通常以约15%更低的成本提供提案。付款方式包括银行转账、Paypal等。请在初次会议时告知我们的工作人员您首选的付款方式。"
+          question: "导入AI应该先从什么开始？",
+          answer: "首要决定的并不是使用哪种AI模型。而是要理清哪些数据可以直接输入AI、哪些需要加工或匿名化，以及哪些数据应该在内网环境或本地LLM中处理。Cor.株式会社将优先设计输入边界、权限、日志、人工审批和运维责任。"
         },
         {
-          question: "使用JavaScript、TypeScript、Python、Go等语言有什么好处？",
-          answer: "JavaScript于1995年在Netscape诞生，已成为Web开发的基础。TypeScript作为其超集，添加了静态类型，提高了大型项目的可维护性。Python是1991年开发的通用语言，以简单易读的语法著称。它涵盖AI/机器学习、数据分析和Web开发，拥有丰富的库，开发效率极高。Go（Golang）是Google于2009年开发的轻量级、高速语言，具有简单的语法和并发处理（goroutines）。它非常适合云原生应用程序和微服务，编译速度快，内存效率高，是可扩展服务器开发的理想选择。"
+          question: "云端AI和本地LLM如何进行权衡和搭配？",
+          answer: "云端AI适合处理公开信息或撰写日常文案。而对于合同、客户数据、会议纪要、报价单和内部知识库等不易外泄的信息，我们建议考虑内网环境、带审批流的AI或本地LLM。Cor.株式会社并不否定云端AI，而是根据数据的机密程度和业务需求进行合理的组合使用。"
         },
         {
-          question: "使用Firebase、Supabase等BaaS以及云服务有什么优势？",
-          answer: "BaaS（Backend as a Service）提供身份验证、数据库、存储和推送通知等后端功能。Firebase是Google的服务，具有实时数据库和丰富的功能。Supabase是开源的Firebase替代品，提供基于PostgreSQL的实时功能和RESTful API。云服务通常提供灵活性，可以根据需要扩展资源，同时保持较低的初始投资。AWS、Google Cloud和Azure等主要提供商提供高可用性、自动备份和安全功能。全球CDN、负载均衡和监控工具提高了性能和可靠性，同时显著减少了运营开销。主要优势包括缩短开发时间、降低运营成本和确保可扩展性。"
+          question: "机密数据AI应用诊断具体做些什么？",
+          answer: "包括现有业务调研、可AI化业务的梳理、处理数据的分类、云端与本地LLM的切分、安全风险的整理以及PoC方针的制定。参考费用为10万至30万日元。"
         },
         {
-          question: "根据需求可以定制任务到什么程度？如果需要更改，如何处理？",
-          answer: "我们会听取每个项目的需求并创建定制解决方案，因此定制几乎是无限的。但是，为了加快交付并避免关键系统错误，我们通常不接受生产过程中需求的更改。请在会议前充分总结您的需求。"
+          question: "本地LLM或AI基础设施PoC需要多长时间和多少费用？",
+          answer: "作为参考标准，本地LLM/AI基础设施PoC预计需要3个月，费用为300万日元起。包含目标业务梳理、数据处理方式设计、测试环境搭建、评估指标设定以及PoC后的线上化评估。"
         },
         {
-          question: "开发后如何进行维护和支持？是否有额外费用？",
-          answer: "由于我们的主要业务是开发，除了重大定制外，我们不提供维护或支持。开发完成后，我们可以介绍我们专门从事维护和支持的合作伙伴公司。请与我们咨询有关费用的问题。"
+          question: "安全和隐私是如何处理的？",
+          answer: "导入AI必须对输入数据、访问权限、日志保存、人工审批、删除规则和运维责任进行严密设计。我们负责整理信息的处理地点、审核人员以及日志留存方式。我们目前正以取得 ISO/IEC 27001 认证为目标，积极推进ISMS体系的规范与完善。※我们绝不会将尚未取得的认证描述为已取得。"
         },
         {
-          question: "如何确保数据安全和隐私？",
-          answer: "为确保数据安全和隐私，我们使用先进的加密技术，并最大限度地利用Firebase和SupaBase等BaaS的安全功能。对于访问控制，我们为每个客户设置专用账户，并以最低必要权限进行管理。我们严格遵守数据保护政策，并进行定期安全审计，在整个开发、交付和维护过程中保护您的数据。"
+          question: "什么是 Grift？",
+          answer: "Grift 是一款将定制开发估算依据进行可视化的AI估算支援工具。它并不是将估算完全甩给AI，而是基于过往项目、GitHub成果、类似功能、技术风险和市场行情等，旨在增加可以让人员理直气壮进行解释的估算依据。"
         }
       ]
     },
@@ -3880,32 +3880,32 @@ const translations = {
       title: "자주 묻는 질문",
       questions: [
         {
-          question: "개발 프로세스는 어떻게 진행되나요? 프로젝트 완료까지의 일반적인 일정은 어떻게 되나요?",
-          answer: "개발 프로세스에서 우리 엔지니어는 온라인으로 귀하의 요구사항을 듣고 필요한 시스템과 요구사항을 정의합니다. 초기 미팅 후 일주일 내에 각 제품의 가격을 계산하고, 귀하의 승인 후 견적을 진행합니다. 우리는 어떤 작업도 외주하지 않고 모든 프로젝트를 내부에서 처리하므로 평균 납기 시간보다 약 20% 빠르게 제품을 납품할 수 있습니다. 대규모 프로젝트의 경우 프로젝트와 공감하는 프리랜서 엔지니어를 배정하여 더 빠르고 비용 효율적인 납품이 가능합니다."
+          question: "Cor.주식회사에는 어떤 내용을 상담할 수 있나요?",
+          answer: "기밀 데이터를 안전하게 다루는 AI 기반, 로컬 LLM/보안 AI, AI 수탁 개발, AI 도입 지원, 자사 AI 견적 지원 툴 'Grift'를 중심으로 지원하고 있습니다. 계약서, 회의록, 견적서, 고객 정보, 사내 지식 등 외부 AI에 그대로 넘기기 어려운 정보를 어떻게 다룰지 정리하고, 업무에서 활용할 수 있는 AI 시스템으로 설계 및 구현합니다."
         },
         {
-          question: "프로젝트 비용은 어떻게 계산되나요? 결제는 어떻게 이루어지나요?",
-          answer: "가격은 클라이언트의 요구사항에 따라 달라지므로 초기 미팅 후 견적을 보내드립니다. 같은 업계의 유사한 프로젝트와 비교하여 약 15% 낮은 비용으로 제안하는 경우가 많습니다. 결제 방법에는 은행 송금, Paypal 등이 포함됩니다. 초기 미팅 시 직원에게 선호하는 결제 방법을 알려주시기 바랍니다."
+          question: "AI 도입은 먼저 무엇부터 시작해야 하나요?",
+          answer: "처음에 결정해야 할 것은 어떤 AI 모델을 사용할지가 아닙니다. 어떤 정보를 AI에 입력해도 되는지, 어떤 정보는 가공이나 익명화가 필요한지, 어떤 정보는 사내 환경이나 로컬 LLM에서 다루어야 하는지를 정리하는 것입니다. Cor.주식회사에서는 입력 경계, 권한, 로그, 휴먼 승인, 운영 책임을 먼저 설계합니다."
         },
         {
-          question: "JavaScript, TypeScript, Python, Go 등을 사용하는 이점은 무엇인가요?",
-          answer: "JavaScript는 1995년 Netscape에서 탄생하여 웹 개발의 기반이 되었습니다. TypeScript는 그 슈퍼셋으로서 정적 타입을 추가하여 대규모 프로젝트의 유지보수성을 향상시킵니다. Python은 1991년에 개발된 범용 언어로 간단하고 읽기 쉬운 문법이 특징입니다. AI/머신러닝, 데이터 분석, 웹 개발에 광범위하게 사용되며 풍부한 라이브러리로 개발 효율이 매우 높습니다. Go(Golang)는 2009년 Google이 개발한 경량이고 고속인 언어로 간단한 문법과 동시성 처리(goroutines)가 특징입니다. 클라우드 네이티브 애플리케이션이나 마이크로서비스에 적합하며, 컴파일 속도가 빠르고 메모리 효율이 높아 확장 가능한 서버 개발에 이상적입니다."
+          question: "클라우드 AI와 로컬 LLM은 어떻게 구분해서 사용하나요?",
+          answer: "공개 정보나 일반적인 문서 작성은 클라우드 AI가 적합할 수 있습니다. 반면 계약서, 고객 정보, 회의록, 견적서, 사내 지식 등 외부로 반출하기 어려운 정보는 사내 환경·승인 프로세스가 포함된 AI·로컬 LLM을 검토합니다. Cor.주식회사는 클라우드 AI를 부정하지 않으며, 정보의 기밀도와 업무 요구사항에 맞춰 구분하여 활용합니다."
         },
         {
-          question: "Firebase, Supabase 등 BaaS와 클라우드 서비스를 사용하는 이점은 무엇인가요?",
-          answer: "BaaS(Backend as a Service)는 인증, 데이터베이스, 스토리지, 푸시 알림 등의 백엔드 기능을 제공합니다. Firebase는 Google의 서비스로 실시간 데이터베이스와 풍부한 기능을 제공합니다. Supabase는 오픈소스 Firebase 대안으로 PostgreSQL 기반의 실시간 기능과 RESTful API를 제공합니다. 클라우드 서비스는 일반적으로 초기 투자를 낮게 유지하면서 필요에 따라 리소스를 확장할 수 있는 유연성을 제공합니다. AWS, Google Cloud, Azure 등 주요 제공업체는 고가용성, 자동 백업, 보안 기능을 제공합니다. 글로벌 CDN, 로드 밸런싱, 모니터링 도구로 성능과 신뢰성을 향상시키면서 운영 오버헤드를 크게 줄일 수 있습니다. 주요 이점으로는 개발 시간 단축, 운영 비용 절감, 확장성 보장이 있습니다."
+          question: "기밀 데이터 AI 활용 진단에서는 무엇을 진행하나요?",
+          answer: "기존 업무 인터뷰, AI화 가능한 업무 분석, 다루는 데이터의 분류, 클라우드 AI와 로컬 LLM의 분리, 보안 리스크 정리, PoC 방향성 수립을 수행합니다. 기준 비용은 10만~30만 엔입니다."
         },
         {
-          question: "요구사항에 따라 작업을 어느 정도까지 맞춤화할 수 있나요? 변경이 필요한 경우 어떻게 처리하나요?",
-          answer: "각 프로젝트의 요구사항을 듣고 맞춤형 솔루션을 만들기 때문에 맞춤화는 사실상 무제한입니다. 하지만 납품을 빠르게 하고 중요한 시스템 오류를 피하기 위해 일반적으로 생산 중 요구사항 변경은 받지 않습니다. 회의 전에 요구사항을 충분히 정리해 주시기 바랍니다."
+          question: "로컬 LLM 및 AI 기반 PoC는 어느 정도의 기간과 비용이 소요되나요?",
+          answer: "기준으로서 로컬 LLM/AI 기반 PoC는 3개월 300만 엔~을 상정하고 있습니다. 대상 업무 정리, 데이터 처리 방식 설계, 테스트 환경 구축, 평가 지표 설정, PoC 이후의 상용화 판단까지 포함하여 진행됩니다."
         },
         {
-          question: "개발 후 유지보수와 지원은 어떻게 이루어지나요? 추가 비용이 있나요?",
-          answer: "우리의 주요 사업은 개발이므로 주요 맞춤화를 제외하고는 유지보수나 지원을 제공하지 않습니다. 개발 완료 후 유지보수 및 지원을 전문으로 하는 파트너 회사를 소개해 드릴 수 있습니다. 비용에 대해서는 문의해 주시기 바랍니다."
+          question: "보안과 개인정보는 어떻게 다루어지나요?",
+          answer: "AI 도입 시에는 입력 데이터, 접근 권한, 로그 저장, 휴먼 승인, 삭제 규칙, 운영 책임 설계가 필수적입니다. 저희는 어떤 정보를 어디서 처리할지, 누가 확인할지, 로그를 어떻게 남길지 정리합니다. 현재 ISO/IEC 27001 인증 취득을 목표로 ISMS 운영 체계를 정비하고 있습니다. *취득하지 않은 인증을 취득한 것처럼 허위로 표기하지 않습니다."
         },
         {
-          question: "데이터 보안과 프라이버시를 어떻게 보장하나요?",
-          answer: "데이터 보안과 프라이버시를 보장하기 위해 고급 암호화 기술을 사용하고 Firebase와 SupaBase 등 BaaS의 보안 기능을 최대한 활용합니다. 액세스 제어의 경우 각 클라이언트에 대해 전용 계정을 설정하고 최소 필요 권한으로 관리합니다. 우리는 데이터 보호 정책을 엄격히 준수하고 정기적인 보안 감사를 실시하여 개발, 제공, 유지보수 전반에 걸쳐 귀하의 데이터를 보호합니다."
+          question: "Grift란 무엇인가요?",
+          answer: "Grift는 수탁 개발의 견적 근거를 시각화하는 AI 견적 지원 툴입니다. 견적을 AI에 전적으로 맡기는 것이 아니라, 과거 프로젝트, GitHub 실적, 유사 기능, 기술 리스크, 시장 시세 등을 바탕으로 인간이 책임지고 설명할 수 있는 견적 근거를 확보하는 것을 목표로 합니다."
         }
       ]
     },
@@ -4932,32 +4932,32 @@ const translations = {
       title: "Preguntas Frecuentes",
       questions: [
         {
-          question: "¿Cómo se lleva a cabo el proceso de desarrollo? ¿Cuál es el cronograma típico hasta la finalización del proyecto?",
-          answer: "En el proceso de desarrollo, nuestros ingenieros escucharán sus requisitos en línea y definirán los sistemas y requisitos necesarios. Dentro de una semana de la reunión inicial, calcularemos el precio para cada producto, y después de su aprobación, procederemos con la cotización. Como no subcontratamos ningún trabajo y manejamos todos los proyectos internamente, podemos entregar productos aproximadamente 20% más rápido que el tiempo de entrega promedio. Para proyectos grandes, podemos asignar ingenieros freelance que resuenen con el proyecto, permitiendo una entrega más rápida y rentable."
+          question: "¿Qué tipo de consultas podemos realizar a Cor.Inc.?",
+          answer: "Nos enfocamos en infraestructura de IA para el manejo seguro de datos, LLM Local/IA Segura, desarrollo de IA a medida, soporte de implementación de IA y nuestra herramienta propia de soporte de estimación de IA 'Grift'. Evaluamos cómo manejar información confidencial —como contratos, minutas, presupuestos, datos de clientes y conocimiento interno— diseñando e implementando sistemas de IA prácticos para su negocio."
         },
         {
-          question: "¿Cómo se calculan los costos del proyecto? ¿Cómo funcionan los pagos?",
-          answer: "Los precios varían dependiendo de los requisitos del cliente, por lo que le enviaremos una cotización después de la reunión inicial. Comparado con proyectos similares en la misma industria, a menudo ofrecemos propuestas a aproximadamente 15% menor costo. Los métodos de pago incluyen transferencia bancaria, Paypal y más. Por favor, informe a nuestro personal sobre su método de pago preferido durante la reunión inicial."
+          question: "¿Cuál es el primer paso para introducir la IA?",
+          answer: "La primera decisión no es qué modelo de IA usar. Es aclarar qué datos se pueden procesar, cuáles requieren anonimización y cuáles deben mantenerse internamente o en un LLM Local. En Cor.Inc. diseñamos primero los límites de entrada, permisos, registros, aprobaciones humanas y responsabilidades operativas."
         },
         {
-          question: "¿Cuáles son los beneficios de usar JavaScript, TypeScript, Python, Go y otros lenguajes?",
-          answer: "JavaScript nació en 1995 en Netscape y se ha convertido en la base del desarrollo web. TypeScript, como su superconjunto, añade tipado estático para mejorar la mantenibilidad en proyectos a gran escala. Python es un lenguaje de propósito general desarrollado en 1991, conocido por su sintaxis simple y legible. Cubre IA/aprendizaje automático, análisis de datos y desarrollo web con bibliotecas ricas, lo que hace que sea extremadamente eficiente para el desarrollo. Go (Golang) es un lenguaje ligero y de alta velocidad desarrollado por Google en 2009, con sintaxis simple y procesamiento concurrente (goroutines). Es ideal para aplicaciones nativas de la nube y microservicios, con velocidad de compilación rápida y alta eficiencia de memoria, lo que lo hace óptimo para el desarrollo de servidores escalables."
+          question: "¿Cómo elegir entre IA en la nube y un LLM Local?",
+          answer: "La IA en la nube es ideal para datos públicos o redacción general. Sin embargo, para documentos confidenciales como contratos, registros de clientes y conocimiento interno, consideramos entornos internos seguros o LLM Locales. En lugar de descartar la IA en la nube, utilizamos ambas según la confidencialidad y los requisitos del negocio."
         },
         {
-          question: "¿Cuáles son las ventajas de usar BaaS como Firebase y Supabase, y servicios en la nube en general?",
-          answer: "BaaS (Backend as a Service) proporciona funciones backend como autenticación, bases de datos, almacenamiento y notificaciones push. Firebase es el servicio de Google con bases de datos en tiempo real y funcionalidad rica. Supabase es una alternativa de código abierto a Firebase que ofrece funciones en tiempo real basadas en PostgreSQL y APIs RESTful. Los servicios en la nube en general ofrecen flexibilidad para escalar recursos según sea necesario mientras se mantiene baja la inversión inicial. Los principales proveedores como AWS, Google Cloud y Azure proporcionan alta disponibilidad, copias de seguridad automáticas y funciones de seguridad. El CDN global, el equilibrio de carga y las herramientas de monitoreo mejoran el rendimiento y la confiabilidad mientras reducen significativamente la sobrecarga operativa. Los principales beneficios incluyen tiempo de desarrollo reducido, costos operativos más bajos y escalabilidad garantizada."
+          question: "¿Qué incluye la Evaluación de IA para Datos Confidenciales?",
+          answer: "Realizamos entrevistas de flujo de trabajo, inventario de tareas para adaptación de IA, clasificación de datos, separación de procesamiento en la nube frente al local, análisis de riesgos de seguridad y redacción de una estrategia de PoC. El costo estimado es de ¥100k - ¥300k yenes."
         },
         {
-          question: "¿Cuánto se pueden personalizar las tareas según los requisitos? ¿Cómo se manejan los cambios si es necesario?",
-          answer: "Escuchamos los requisitos de cada proyecto y creamos soluciones personalizadas, por lo que la personalización es prácticamente ilimitada. Sin embargo, para acelerar la entrega y evitar errores críticos del sistema, generalmente no aceptamos cambios en los requisitos durante la producción. Por favor, resuma sus requisitos a fondo antes de la reunión."
+          question: "¿Cuál es la duración y el costo de una PoC de LLM Local o Infraestructura de IA?",
+          answer: "Como guía general, una PoC de LLM Local/Infraestructura de IA toma alrededor de 3 meses, desde ¥3M de yenes. Esto incluye la organización del flujo de trabajo, el diseño de la gestión de datos, la configuración del entorno de prueba, la definición de métricas de evaluación y la evaluación de viabilidad de producción post-PoC."
         },
         {
-          question: "¿Cómo se maneja el mantenimiento y el soporte después del desarrollo? ¿Hay costos adicionales?",
-          answer: "Como nuestro negocio principal es el desarrollo, no proporcionamos mantenimiento o soporte excepto para personalizaciones importantes. Después de que se complete el desarrollo, podemos presentarle a nuestras empresas asociadas especializadas en mantenimiento y soporte. Por favor, consúltenos sobre los costos."
+          question: "¿Cómo se manejan la seguridad y la privacidad?",
+          answer: "La implementación de la IA requiere un diseño estricto de los datos de entrada, derechos de acceso, registros, aprobaciones humanas y reglas de eliminación. Organizamos dónde se procesa la información, quién la revisa y cómo se almacenan los registros. Actualmente estamos preparando nuestras operaciones de ISMS con el objetivo de obtener la certificación ISO/IEC 27001. *Nunca representamos una certificación no adquirida como completada."
         },
         {
-          question: "¿Cómo se garantiza la seguridad y privacidad de los datos?",
-          answer: "Para garantizar la seguridad y privacidad de los datos, utilizamos tecnologías de cifrado avanzadas y maximizamos las funciones de seguridad de BaaS como Firebase y SupaBase. Para el control de acceso, configuramos cuentas dedicadas para cada cliente y las administramos con los privilegios mínimos necesarios. Cumplimos estrictamente con las políticas de protección de datos y realizamos auditorías de seguridad periódicas para proteger sus datos durante todo el desarrollo, la entrega y el mantenimiento."
+          question: "¿Qué es Grift?",
+          answer: "Grift es una herramienta de soporte de estimación de IA que visualiza las justificaciones de los presupuestos para desarrollos a medida. En lugar de delegar todo a la IA, su objetivo es mejorar las bases verificables a partir de proyectos pasados, historiales de GitHub, riesgos técnicos y puntos de referencia del mercado para que los humanos puedan explicar los presupuestos de manera responsable."
         }
       ]
     },
