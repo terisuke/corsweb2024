@@ -26,7 +26,7 @@ const t = getJaTranslations();
     <ul class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
         t.works.items.map((item) => {
-          const isNda = 'nda' in item && item.nda;
+          const isExternal = typeof item.href === 'string' && item.href.startsWith('http');
           const tag = (
             <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
               {item.tag}
@@ -38,17 +38,37 @@ const t = getJaTranslations();
                 {tag}
                 {!item.href && (
                   <span class="inline-flex w-fit rounded-full bg-primary-950/10 px-3 py-1 text-xs font-medium text-primary-950/50 dark:bg-primary-200/10 dark:text-primary-200/50">
-                    準備中
+                    {t.works.readyBadge}
                   </span>
                 )}
               </div>
-              <h2 class="text-lg font-medium tracking-tight">{item.name}</h2>
+              <h2 class="text-lg font-medium leading-snug tracking-tight">{item.title}</h2>
               <p class="text-base text-primary-950/70 dark:text-primary-200/70">
-                {item.description}
+                {item.oneLiner}
               </p>
-              {isNda && (
+              <dl class="mt-2 flex flex-col gap-2 text-sm">
+                <div class="flex flex-col gap-0.5">
+                  <dt class="font-medium text-primary-950/80 dark:text-primary-200/80">{t.works.detailLabels.problem}</dt>
+                  <dd class="text-primary-950/60 dark:text-primary-200/60">{item.detail.problem}</dd>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <dt class="font-medium text-primary-950/80 dark:text-primary-200/80">{t.works.detailLabels.build}</dt>
+                  <dd class="text-primary-950/60 dark:text-primary-200/60">{item.detail.build}</dd>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <dt class="font-medium text-primary-950/80 dark:text-primary-200/80">{t.works.detailLabels.ops}</dt>
+                  <dd class="text-primary-950/60 dark:text-primary-200/60">{item.detail.ops}</dd>
+                </div>
+              </dl>
+              {item.ndaNote && (
                 <p class="mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
-                  {t.works.ndaNote}
+                  {item.ndaNote}
+                </p>
+              )}
+              {item.href && (
+                <p class="mt-auto inline-flex items-center gap-1 text-sm font-medium text-primary-700 dark:text-primary-300">
+                  {item.ctaLabel}
+                  <span aria-hidden="true">→</span>
                 </p>
               )}
             </>
@@ -59,8 +79,8 @@ const t = getJaTranslations();
               <a
                 class="group relative flex h-full cursor-pointer flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:bg-primary-400/10 dark:focus-visible:ring-offset-primary-950"
                 href={item.href}
-                rel="noopener noreferrer"
-                target="_blank"
+                rel={isExternal ? 'noopener noreferrer' : undefined}
+                target={isExternal ? '_blank' : undefined}
               >
                 <span
                   aria-hidden="true"
@@ -93,8 +113,8 @@ const t = getJaTranslations();
   </div>
 
   <NextStep
-    heading="気になる実績がありましたか？"
-    lead="あなたの課題も、一緒に考えさせてください。"
-    ctas={[{ label: '課題から相談する', href: '/contact', primary: true }]}
+    heading={t.works.ctaHeading}
+    lead={t.works.ctaLead}
+    ctas={[{ label: t.works.ctaLabel, href: '/contact', primary: true }]}
   />
 </Layout>
