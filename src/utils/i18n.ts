@@ -1065,8 +1065,8 @@ const translations = {
     },
     nextStep: {
       about: {
-        heading: "Cor.のことが少し分かったら、まずは課題を相談してみませんか？",
-        ctaLabel: "まず課題を相談する"
+        heading: "Cor.のことが少し分かったら、実際の仕事を見てみませんか？",
+        ctaLabel: "実績・事例を見る"
       },
       contact: {
         heading: "お問い合わせの前に",

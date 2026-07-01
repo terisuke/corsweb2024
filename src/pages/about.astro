@@ -13,7 +13,11 @@ const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
 // About 下部的 CTA“首先咨询课题”在所有语言中均导向各自的咨询页面。
-const nextStepHref = getLocalizedUrl('/contact', currentLocale);
+// /works は ja のみ存在。ja は実績ページへ、非ja は 404 回避のため同言語の相談ページへ誘導する。
+const nextStepHref =
+  currentLocale === 'ja'
+    ? getLocalizedUrl('/works', currentLocale)
+    : getLocalizedUrl('/contact', currentLocale);
 ---
 
 <Layout
