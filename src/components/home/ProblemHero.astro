@@ -61,6 +61,14 @@ const griftUrl = 'https://griftai.org';
           </ul>
         )
       }
+      {/* ファーストビュー直下の補助文（#175）: 事業内容を一文で補足する控えめなライン。 */}
+      <p
+        class="max-w-3xl text-sm leading-relaxed text-primary-950/60 dark:text-primary-200/60 sm:text-base"
+        data-reveal
+        style="--reveal-delay:0.55s"
+      >
+        {t.homeHero.support}
+      </p>
     </div>
   </div>
   {/* 「↓」スクロールヒント: 下に続きがあると気づかせ離脱を防ぐ。少しスクロールで消える。 */}

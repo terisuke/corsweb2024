@@ -537,9 +537,10 @@ const translations = {
       footerNote: "※本方針は、社内規則「個人情報・特定個人情報取扱規程」を対外公表用に要約・対応づけたものであり、両者の内容が異なる場合は法令及び同規程の趣旨に従って解釈します。"
     },
     homeHero: {
-      kicker: "COR. INC. — AI × CO-CREATION",
-      title: "想像していなかった選択肢まで、<br />一緒に。",
-      subtitle: "業務の無駄・使いにくいシステム・<br class='sm:hidden' />やりたいけど進まないこと——<br class='sm:hidden' />Cor.が伴走します。",
+      kicker: "想像の先まで、共に実装する。",
+      title: "業務の「進まない」を、<br />共に実装で越える。",
+      subtitle: "Cor.株式会社は、機密データAI・ローカルLLM・Griftを軸に、<br class='sm:hidden' />課題の整理から設計・実装・運用まで一気通貫で伴走します。<br />御用聞きではなく、必要なら「まだ作らない」選択肢も提案します。",
+      support: "機密データAI・ローカルLLM・Griftを軸に、課題の整理から設計・実装・運用まで一気通貫で伴走する、福岡発のAI実装会社です。",
       primaryCta: "AIで見積もりを試す（30秒・登録不要）",
       secondaryCta: "無料で相談する",
       philosophyCta: "「きょうそう」の思想を読む",
@@ -1067,9 +1068,10 @@ const translations = {
   en: {
     homeBlog: {"eyebrow":"Insights","title":"The \"how\" of AI, in articles.","description":"AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.","cta":"See all articles"},
     homeHero: {
-      kicker: "COR. INC. — AI × CO-CREATION",
-      title: "Together, to choices <br />you hadn't imagined.",
-      subtitle: "Wasted busywork, hard-to-use systems,<br class='sm:hidden' />the things you want to do but can't move forward——<br class='sm:hidden' />Cor. walks alongside you.",
+      kicker: "Building with you, beyond what you imagined.",
+      title: "Turn \"stuck\" work into <br />things we build together.",
+      subtitle: "Built around confidential-data AI, local LLMs, and Grift,<br class='sm:hidden' />Cor. Inc. walks with you end to end — from framing the problem to design, build, and operations.<br />We don't just take orders: when it's right, we'll even propose <em>not</em> building yet.",
+      support: "A Fukuoka-born AI implementation company that walks with you end to end — from framing the problem to design, build, and operations — built around confidential-data AI, local LLMs, and Grift.",
       primaryCta: "Try an AI estimate (30 sec, no sign-up)",
       secondaryCta: "Get a free consultation",
       philosophyCta: "Read about our \"Kyousou\" philosophy",
@@ -2124,9 +2126,10 @@ const translations = {
   zh: {
     homeBlog: {"eyebrow":"读物","title":"AI 的「推进方式」，用文章讲清楚。","description":"AI 导入、机密数据的安全运用、报价的思路等，汇总了现场可用的视角。","cta":"查看全部文章"},
     homeHero: {
-      kicker: "COR. INC. — AI × CO-CREATION",
-      title: "意想不到的选项，<br />携手并进。",
-      subtitle: "业务中的浪费、不好用的系统、<br class='sm:hidden' />想做却推进不下去的事——<br class='sm:hidden' />Cor. 与你同行。",
+      kicker: "超越想象，与你共同实现。",
+      title: "让业务中「推进不下去」的难题，<br />与你共同实现、一同跨越。",
+      subtitle: "Cor.株式会社以机密数据AI、本地LLM与Grift为核心，<br class='sm:hidden' />从梳理课题到设计、实现、运维，全程一体化陪伴。<br />我们不做被动接单，必要时也会提出「暂不开发」的选择。",
+      support: "以机密数据AI、本地LLM与Grift为核心，从梳理课题到设计、实现、运维全程一体化陪伴，源自福冈的AI实现公司。",
       primaryCta: "用 AI 试算报价（30 秒・无需注册）",
       secondaryCta: "免费咨询",
       philosophyCta: "阅读「きょうそう」的理念",
@@ -3181,9 +3184,10 @@ const translations = {
   ko: {
     homeBlog: {"eyebrow":"읽을거리","title":"AI의 ‘진행 방법’을, 글로.","description":"AI 도입, 기밀 데이터의 안전한 활용, 견적에 대한 사고방식 등 현장에서 바로 쓸 수 있는 관점을 정리했습니다.","cta":"블로그 전체 보기"},
     homeHero: {
-      kicker: "COR. INC. — AI × CO-CREATION",
-      title: "상상하지 못했던 선택지까지, <br />함께。",
-      subtitle: "업무의 낭비・쓰기 불편한 시스템・<br class='sm:hidden' />하고 싶지만 진행되지 않는 일——<br class='sm:hidden' />Cor.가 함께 달립니다.",
+      kicker: "상상 그 너머까지, 함께 구현합니다.",
+      title: "업무의 「진행되지 않음」을, <br />함께 구현으로 넘어섭니다.",
+      subtitle: "Cor.주식회사는 기밀 데이터 AI・로컬 LLM・Grift를 축으로,<br class='sm:hidden' />과제 정리부터 설계・구현・운용까지 하나로 이어 동반합니다.<br />단순한 주문 대응이 아니라, 필요하다면 「아직 만들지 않는」 선택지도 제안합니다.",
+      support: "기밀 데이터 AI・로컬 LLM・Grift를 축으로, 과제 정리부터 설계・구현・운용까지 하나로 이어 동반하는, 후쿠오카발 AI 구현 회사입니다.",
       primaryCta: "AI로 견적을 체험하기 (30초・가입 불필요)",
       secondaryCta: "무료로 상담하기",
       philosophyCta: "「きょうそう」의 사상을 읽기",
@@ -4238,9 +4242,10 @@ const translations = {
   es: {
     homeBlog: {"eyebrow":"Lecturas","title":"El «cómo» de la IA, en artículos.","description":"Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.","cta":"Ver todos los artículos"},
     homeHero: {
-      kicker: "COR. INC. — AI × CO-CREATION",
-      title: "Juntos, hacia opciones <br />que ni imaginabas。",
-      subtitle: "Procesos con desperdicios, sistemas difíciles de usar,<br class='sm:hidden' />proyectos que quieres iniciar pero no avanzan——<br class='sm:hidden' />Cor. te acompaña en el camino.",
+      kicker: "Más allá de lo imaginado, lo construimos contigo.",
+      title: "Convertimos lo que «no avanza» <br />en algo que construimos juntos.",
+      subtitle: "Cor. Inc. se apoya en IA para datos confidenciales, LLM locales y Grift,<br class='sm:hidden' />y te acompaña de principio a fin: desde ordenar el problema hasta el diseño, la implementación y la operación.<br />No solo recibimos encargos: cuando conviene, también proponemos «aún no construirlo».",
+      support: "Una empresa de implementación de IA nacida en Fukuoka que te acompaña de principio a fin —desde ordenar el problema hasta el diseño, la implementación y la operación— apoyada en IA para datos confidenciales, LLM locales y Grift.",
       primaryCta: "Prueba un presupuesto con IA (30 s · sin registro)",
       secondaryCta: "Consulta gratis",
       philosophyCta: "Lee la filosofía de «Kyousou»",
