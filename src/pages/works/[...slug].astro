@@ -47,7 +47,7 @@ const CTA_MAP: Record<CtaKey, Cta[]> = {
     { label: '機密データAI活用診断を相談する', href: '/contact', primary: true },
   ],
   'local-llm': [
-    { label: 'ローカルLLM / AI基盤PoC を相談する', href: '/contact', primary: true },
+    { label: 'ローカルLLM / AI基盤PoC を相⁠談⁠す⁠る', href: '/contact', primary: true },
   ],
   'ai-contract': [
     { label: 'AI受託開発について相談する', href: '/contact', primary: true },
@@ -214,7 +214,7 @@ const articleJsonLd = {
     {relatedCases.length > 0 && (
       <section class="mt-16 border-t border-primary-950/10 pt-12 dark:border-primary-200/10">
         <h2 class="type-heading mb-8 text-2xl font-medium tracking-tight">関連する実績</h2>
-        <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {relatedCases.map((c) => (
             <li>
               <a
@@ -224,7 +224,7 @@ const articleJsonLd = {
                 <h3 class="type-heading text-lg font-medium tracking-tight group-hover:text-primary-950 dark:group-hover:text-primary-100">
                   {c.data.title}
                 </h3>
-                <p class="type-copy text-sm text-primary-950/70 dark:text-primary-200/70">{c.data.summary}</p>
+                <p class="type-copy text-balance text-sm text-primary-950/70 dark:text-primary-200/70">{c.data.summary}</p>
               </a>
             </li>
           ))}
