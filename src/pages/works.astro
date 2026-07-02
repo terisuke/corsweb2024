@@ -59,8 +59,8 @@ const t = getJaTranslations();
               <a
                 class="group relative flex h-full cursor-pointer flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:bg-primary-400/10 dark:focus-visible:ring-offset-primary-950"
                 href={item.href}
-                rel="noopener noreferrer"
-                target="_blank"
+                rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                target={item.href.startsWith('http') ? '_blank' : undefined}
               >
                 <span
                   aria-hidden="true"
