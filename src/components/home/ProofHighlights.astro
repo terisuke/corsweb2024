@@ -29,13 +29,23 @@ const cardStep = 0.12;
         {
           t.proof.stats.map((stat, i) => (
             <div
-              class="flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10"
+              class="relative flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 transition duration-200 has-[a:hover]:-translate-y-1 has-[a:hover]:shadow-lg dark:bg-primary-400/10"
               data-reveal
               style={`--reveal-delay:${(cardBaseDelay + i * cardStep).toFixed(2)}s`}
             >
               <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{stat.label}</dt>
               <dd class="text-4xl font-semibold tracking-tight sm:text-5xl">{stat.value}</dd>
               <dd class="text-sm text-primary-950/70 dark:text-primary-200/70">{stat.note}</dd>
+              {'href' in stat && stat.href && (
+                <dd class="mt-1 text-sm">
+                  <a
+                    href={stat.href}
+                    class="font-medium text-primary-950/80 underline-offset-4 after:absolute after:inset-0 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200/80"
+                  >
+                    詳しく見る<span aria-hidden="true"> →</span>
+                  </a>
+                </dd>
+              )}
             </div>
           ))
         }
