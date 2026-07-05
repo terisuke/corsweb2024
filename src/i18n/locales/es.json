@@ -1,0 +1,1359 @@
+{
+  "404": {
+    "title": "404",
+    "subtitle": "Página no encontrada",
+    "description": "La página que visitaste no existe. Por favor, verifica la URL en la barra de direcciones e inténtalo de nuevo.",
+    "cta": "Volver al inicio"
+  },
+  "homeBlog": {
+    "eyebrow": "Lecturas",
+    "title": "El «cómo» de la IA, en artículos.",
+    "description": "Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.",
+    "cta": "Ver todos los artículos"
+  },
+  "homeHero": {
+    "kicker": "Más allá de lo imaginado, lo construimos contigo.",
+    "title": "Convertimos lo estancado<br />en avances construidos juntos.",
+    "subtitle": "Cor. Inc. se apoya en IA para datos confidenciales, LLM locales y Grift,<br class='sm:hidden' />y te acompaña de principio a fin: desde ordenar el problema hasta el diseño, la implementación y la operación.<br />No solo recibimos encargos: cuando conviene, también proponemos «aún no construirlo».",
+    "support": "Una empresa de implementación de IA nacida en Fukuoka que te acompaña de principio a fin —desde ordenar el problema hasta el diseño, la implementación y la operación— apoyada en IA para datos confidenciales, LLM locales y Grift.",
+    "primaryCta": "Presupuesto IA (30 s)",
+    "secondaryCta": "Consulta gratis",
+    "philosophyCta": "Lee la filosofía de «Kyousou»",
+    "trustBadges": [
+      "Desarrollo asistido por IA 4–5× (medición interna)",
+      "LLM local · tu información no sale al exterior",
+      "Infraestructura Segura",
+      "Desde Fukuoka · cobertura nacional"
+    ]
+  },
+  "homeChallenges": {
+    "eyebrow": "01 / Tu desafío",
+    "title": "Resolvamos juntos desafíos como estos.",
+    "items": [
+      {
+        "title": "Llevar a la nube un sistema central obsoleto",
+        "description": "Desde ordenar los datos que usas hoy hasta la migración a la nube y el diseño operativo, avanzamos contigo."
+      },
+      {
+        "title": "Implementar recepción y chat con IA multilingüe",
+        "description": "Con IA de voz, IA entrenada con documentos internos y mecanismos automatizados, diseñamos una experiencia de atención para instalaciones y administraciones públicas."
+      },
+      {
+        "title": "Llevar a producción un servicio de IA generativa desde cero",
+        "description": "Desde definir qué construir hasta el diseño de la experiencia, la integración entre sistemas, la facturación, las pruebas y publicación automatizadas y la monitorización: lo abordamos de principio a fin."
+      },
+      {
+        "title": "Aprovechar la IA sin que los datos confidenciales salgan al exterior",
+        "description": "Con IA que no expone tu información y herramientas de IA aprobadas, diseñamos según el nivel de confidencialidad de cada dato."
+      },
+      {
+        "title": "Crear una herramienta de IA especializada por sector",
+        "description": "Planos de arquitectura, generación de distribuciones, procesamiento con IA de datos propios del negocio, y más."
+      },
+      {
+        "title": "Internalizar el desarrollo asistido por IA en tu equipo",
+        "description": "Desde definir la estrategia de uso de la IA hasta la formación interna y la organización del flujo de desarrollo, acompañamos a tu equipo de cerca."
+      }
+    ],
+    "cta": "Consulta gratis",
+    "ctaPrimary": "Prueba un presupuesto con IA",
+    "ctaSecondary": "Empieza por una consulta"
+  },
+  "griftBridge": {
+    "eyebrow": "Try Our AI / Grift",
+    "title": "Antes de explicarlo con palabras, ¿por qué no lo pruebas con IA?",
+    "description": "A partir de proyectos de desarrollo anteriores y de las tarifas del mercado, te ofrecemos en 30 segundos un coste, un plazo y casos similares de referencia.",
+    "cta": "Prueba un presupuesto con IA en Grift",
+    "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos.",
+    "mock": {
+      "input": "Quiero automatizar con IA la creación de presupuestos de ventas",
+      "costLabel": "Coste de referencia",
+      "cost": "desde 1,8 M JPY",
+      "durationLabel": "Plazo de referencia",
+      "duration": "desde 4 semanas",
+      "similarLabel": "Casos similares",
+      "similar": "5",
+      "similarNote": "Según proyectos internos"
+    }
+  },
+  "proof": {
+    "eyebrow": "03 / Evidencia",
+    "title": "Diseñar la Arquitectura de la Información Antes de Usar IA.",
+    "description": "Contratos, minutas, presupuestos, datos de clientes y conocimiento interno. Cor.Inc. diseña el procesamiento seguro de información confidencial —incluyendo límites de entrada, permisos, registros y aprobación humana— implementando sistemas de IA robustos que realmente funcionan para su negocio.",
+    "stats": [
+      {
+        "label": "Negocios Centrales",
+        "value": "3 Áreas",
+        "note": "Grift / LLM Local / IA a Medida"
+      },
+      {
+        "label": "Diseño de Operaciones IA",
+        "value": "4 Diseños",
+        "note": "Límites / Permisos / Registros / Aprobaciones"
+      },
+      {
+        "label": "Evaluación Inicial",
+        "value": "100k - 300k yenes",
+        "note": "Evaluación de IA para Datos Confidenciales"
+      },
+      {
+        "label": "Desarrollo de PoC",
+        "value": "Desde 3 meses / ¥3M",
+        "note": "PoC de LLM Local e Infraestructura de IA"
+      }
+    ],
+    "cta": "Consultar un PoC de plataforma IA"
+  },
+  "securityTrust": {
+    "title": "Crear con libertad. Proteger con responsabilidad.",
+    "description": "Para conciliar la comodidad del desarrollador con la responsabilidad de proteger la información de nuestros clientes, Cor. organiza su operación en torno a un enfoque local-first, un registro de seguridad mínimo y niveles de confidencialidad.",
+    "items": [
+      "Revisión de contratos, IA, información personal y operación de ISMS en colaboración con nuestro asesor legal",
+      "Preparación operativa del ISMS con el objetivo de obtener la certificación ISO/IEC 27001",
+      "Uso selectivo de IA aprobada, cuentas de empresa y entornos aislados según el nivel de confidencialidad",
+      "Macs proporcionados por la empresa, cifrado, MDM y controles ligeros de detección y respuesta"
+    ],
+    "cta": "Ver nuestra política de seguridad"
+  },
+  "kyousou": {
+    "title": "Cor. persigue sin descanso el «Kyousou».",
+    "description": "Ni complacencia ni mera confrontación: aportar los valores de cada uno, pulir las diferencias entre todos y dar forma con IA a los desafíos del terreno. Eso es lo que Cor. entiende por «Kyousou» (un término propio que combina co-creación, concertación, competencia, fantasía audaz y bullicio: crear juntos, pulirnos mutuamente y resonar en sintonía).",
+    "items": [
+      {
+        "word": "Co-creación",
+        "meaning": "Crear valor juntos",
+        "cor": "Crear junto a clientes, socios y la IA"
+      },
+      {
+        "word": "Concertación",
+        "meaning": "Fortalezas distintas que resuenan",
+        "cor": "Personas, IA, especialidad y territorio con un rol propio"
+      },
+      {
+        "word": "Competencia",
+        "meaning": "Pulirnos mutuamente",
+        "cor": "Rechazar la complacencia y crecer con franqueza"
+      },
+      {
+        "word": "Fantasía audaz",
+        "meaning": "Una idea que aún no tiene forma",
+        "cor": "No quedarse en el sueño, sino convertirlo en producto"
+      },
+      {
+        "word": "Bullicio",
+        "meaning": "Energía y rumor del mercado",
+        "cor": "No algo que perseguir, sino un resultado que generamos"
+      }
+    ],
+    "cta": "Lee la historia de nuestro fundador"
+  },
+  "finalCta": {
+    "title": "Empecemos el «Kyousou» desde tu desafío.",
+    "description": "Prueba un presupuesto de referencia con Grift, o consúltanos partiendo de un desafío que aún no logras poner en palabras.",
+    "primary": "Prueba un presupuesto con IA",
+    "secondary": "Consulta"
+  },
+  "serviceCtas": {
+    "heading": "Consúltanos según lo que necesites.",
+    "items": [
+      "Consultar sobre el diagnóstico de IA con datos confidenciales",
+      "Preguntar sobre Grift Team Beta",
+      "Consultar sobre un PoC de LLM local / plataforma de IA",
+      "Consultar sobre desarrollo por contrato con IA"
+    ]
+  },
+  "homeIndustries": {
+    "eyebrow": "Industry / Por sector",
+    "title": "Cada sector se detiene por motivos distintos.",
+    "description": "Nos acercamos a los desafíos del terreno y pensamos juntos, desde el orden hasta la forma de avanzar.",
+    "tableHead": {
+      "industry": "Sector",
+      "theme": "Temas frecuentes",
+      "detail": ""
+    },
+    "rows": [
+      {
+        "industry": "Medicina",
+        "theme": "Orden de los datos internos, atención al paciente, seguridad de la información, estrategia de uso de IA",
+        "link": "/industries/medical",
+        "linkLabel": "Página de sanidad"
+      },
+      {
+        "industry": "Profesiones colegiadas",
+        "theme": "Revisión de contratos, trámites y registros, control de plazos, solicitud de subvenciones",
+        "link": "/industries/shigyo",
+        "linkLabel": "Página profesional"
+      },
+      {
+        "industry": "Construcción",
+        "theme": "Gestión laboral, cambios de diseño, comprobaciones de seguridad, transmisión del know-how",
+        "link": "/industries/construction",
+        "linkLabel": "Página de construcción"
+      },
+      {
+        "industry": "Industria",
+        "theme": "Inspección visual, transmisión del know-how, mantenimiento de equipos, gestión de inventario",
+        "link": "/industries/manufacturing",
+        "linkLabel": "Página industrial"
+      },
+      {
+        "industry": "Educación",
+        "theme": "Tareas de evaluación, comunicación con familias, informes, gestión de listas en herramientas TIC",
+        "link": "/industries/education",
+        "linkLabel": "Página de educación"
+      }
+    ]
+  },
+  "industryMedical": {
+    "hero": {
+      "eyebrow": "Medical & Healthcare",
+      "title": "En el ámbito sanitario, ¿no tienes también estos «atascos»?",
+      "subtitle": "Orden de los datos internos, atención al paciente, manejo de la información——cada terreno se detiene por motivos distintos. Cor. ordena los requisitos contigo y te acompaña en el siguiente paso."
+    },
+    "challenges": {
+      "eyebrow": "01 / Desafíos frecuentes",
+      "title": "Los «motivos de atasco» que más se oyen en el ámbito sanitario.",
+      "items": [
+        {
+          "title": "Gestión de revisiones y devoluciones de la facturación sanitaria",
+          "description": "Errores en la facturación mensual o incoherencias entre diagnóstico y tratamiento provocan revisiones y devoluciones por parte de la entidad evaluadora. El personal administrativo dedica un esfuerzo enorme a revisar y corregir cada caso a la vista."
+        },
+        {
+          "title": "Carga de registro en la historia clínica electrónica",
+          "description": "Registrar la consulta lleva varios minutos por paciente y, en jornadas con más de 100 consultas externas, la documentación se alarga hasta la madrugada. Es un punto de impacto directo de la reforma laboral médica (el «problema 2024»)."
+        },
+        {
+          "title": "Adecuación a la reforma laboral médica (registro de guardias y traspaso de tareas)",
+          "description": "Para cumplir con el límite de horas extra del personal médico vigente desde abril de 2024, hace falta gestionar las solicitudes de guardia, el registro del traspaso de tareas y los acuerdos laborales, pero se exige cumplirlo sin un flujo operativo definido."
+        },
+        {
+          "title": "Ineficiencia en la gestión de citas y cancelaciones de consulta externa",
+          "description": "Con reservas mayoritariamente telefónicas se producen muchas cancelaciones sin aviso. Al no poder cubrir los huecos en tiempo real, se pierden ingresos asistenciales."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / El acompañamiento de Cor.",
+      "title": "Así es como te ayudamos.",
+      "intro": "Para cada desafío avanzamos juntos combinando los servicios de Cor. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+      "items": [
+        {
+          "challenge": "Orden de datos · renovación de sistemas",
+          "service": "Desarrollo a medida con IA",
+          "description": "Desde ordenar los datos hasta la migración a la nube y la integración de sistemas internos, avanzamos juntos desde la definición de requisitos hasta la implementación y la operación."
+        },
+        {
+          "challenge": "Consultas y atención informativa",
+          "service": "Desarrollo a medida con IA",
+          "description": "Te ayudamos a diseñar una experiencia de atención con IA de voz, IA entrenada con documentos internos y mecanismos automatizados. Aprovechamos el conocimiento adquirido al implementar recepción con IA multilingüe."
+        },
+        {
+          "challenge": "Seguridad de la información · datos confidenciales",
+          "service": "LLM local · IA segura",
+          "description": "Pensamos contigo un entorno de IA que no expone tu información y un diseño de selección y operación de herramientas según el nivel de confidencialidad."
+        },
+        {
+          "challenge": "Estrategia de uso de IA · internalización",
+          "service": "Asesoría y formación en IA",
+          "description": "Acompañamos al equipo interno en la estrategia de uso de IA, la selección de herramientas, su adopción operativa y la forma de internalizarla."
+        },
+        {
+          "challenge": "Presupuestos y preparación de la justificación interna",
+          "service": "Grift",
+          "description": "Obtén primero un presupuesto de referencia como base para tu solicitud de aprobación o tu presupuesto. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+      "primary": "Probar Grift (30 s)",
+      "secondary": "Consulta gratis",
+      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+    }
+  },
+  "industryShigyo": {
+    "hero": {
+      "eyebrow": "Professional Services",
+      "title": "En las profesiones colegiadas, ¿no inviertes demasiado «tiempo y energía mental»?",
+      "subtitle": "Revisión de contratos, reformas legales constantes, doble carga de datos en los trámites administrativos y un control de plazos que no admite retrasos. Cor. te ayuda a cambiar, juntos, esos días de incesante trabajo manual y presión que acompañan a la labor experta que de verdad aporta valor."
+    },
+    "challenges": {
+      "eyebrow": "01 / Desafíos frecuentes",
+      "title": "Los «motivos de atasco» que más se oyen en las profesiones colegiadas.",
+      "items": [
+        {
+          "title": "La carga crónica de revisar y corregir cláusulas de contratos y documentos legales",
+          "description": "Revisar palabra por palabra los contratos que llegan de los clientes a la vista. Como cualquier descuido se convierte de inmediato en un riesgo, exige una concentración extrema y mucho tiempo, y prolonga la revisión hasta la madrugada."
+        },
+        {
+          "title": "La ineficiencia de los cambios de formato y la doble entrada en trámites y registros",
+          "description": "Copiar y transcribir a mano los datos confiados por el cliente para adaptarlos a las peculiares interfaces de los sistemas administrativos y de registro. En temporada alta, se consume un esfuerzo enorme en la introducción de datos y en la doble verificación a la vista."
+        },
+        {
+          "title": "La presión de «no poder cometer ningún error» con plazos legales, prescripciones y vencimientos",
+          "description": "Tareas de control en las que un solo día de retraso puede causar un daño grave: solicitudes de patente, declaraciones fiscales, plazos procesales. Dependen del calendario y de comprobaciones cruzadas a la vista, y generan cada mañana una fuerte presión psicológica."
+        },
+        {
+          "title": "La verificación de requisitos de subvenciones y la enorme redacción de documentos",
+          "description": "Leer las bases de las convocatorias, que cambian con frecuencia, y construir a mano el relato del «plan de negocio» y demás contenidos del formulario. Un largo trabajo de escritorio para lograr la concesión que supone una gran carga."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / El acompañamiento de Cor.",
+      "title": "Así te acompañamos.",
+      "intro": "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+      "items": [
+        {
+          "title": "Avanzamos contigo en el cribado inicial de cláusulas estándar y rutinarias",
+          "service": "LLM local · IA segura",
+          "description": "A partir de tus propias plantillas y criterios de revisión, apoyamos la creación de un sistema que detecta con rapidez cláusulas de riesgo y condiciones especiales. Te ayudamos a aligerar la carga de esa primera revisión a la vista."
+        },
+        {
+          "title": "Ordenamos la integración de datos entre sistemas y la transcripción automática",
+          "service": "Desarrollo a medida con IA",
+          "description": "Apoyamos la automatización de transcripciones, como el volcado de los datos del cliente a los formatos de solicitud. Construimos contigo un flujo que evita errores de entrada y reduce el tiempo dedicado a la verificación."
+        },
+        {
+          "title": "Te llevamos hacia una gestión más tranquila con alertas y recordatorios automáticos",
+          "service": "Desarrollo a medida con IA",
+          "description": "Proponemos un mecanismo, conectado a tu calendario y tu gestión de tareas, que evita pasar por alto plazos importantes. Organizamos contigo varias barreras de protección que no dependen solo del ojo humano, buscando reducir la carga psicológica."
+        },
+        {
+          "title": "Apoyamos la eficiencia en la estructura de documentos y planes de negocio",
+          "service": "Asesoría y formación en IA",
+          "description": "Apoyamos la creación rápida del esqueleto y la estructura de los documentos teniendo en cuenta el cotejo de requisitos y las tendencias de concesión anteriores. Te ayudamos a reducir el tiempo de redactar desde cero y a concentrarte en el pulido propio del experto."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+      "primary": "Probar Grift (30 s)",
+      "secondary": "Consulta gratis",
+      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+    }
+  },
+  "industryConstruction": {
+    "hero": {
+      "eyebrow": "Construction",
+      "title": "En la obra, ¿la «organización» sigue atascada en papel y fax?",
+      "subtitle": "Gestión laboral, cambios de diseño, comprobaciones de seguridad, transmisión del know-how——cuando la organización del terreno queda atada al papel y al fax, la propia ejecución de la obra se detiene. Cor. te acompaña en el siguiente paso, adaptándose a los desafíos del terreno."
+    },
+    "challenges": {
+      "eyebrow": "01 / Desafíos frecuentes",
+      "title": "Los «motivos de atasco» que más se oyen en la obra.",
+      "labels": {
+        "reality": "La realidad del terreno",
+        "risk": "Si se deja pasar"
+      },
+      "items": [
+        {
+          "title": "El límite de la gestión laboral y del mantenimiento del cronograma ante el tope de horas extra (el «problema 2024»)",
+          "reality": "Aunque desde abril de 2024 la normativa fija límites estrictos a las horas extra, la carga estructural del terreno —encargos de plazo corto, retrasos por el clima— no ha cambiado.",
+          "risk": "Los técnicos de gestión de obra se ven obligados a procesarlo todo llevándose trabajo a casa, lo que se traduce directamente en riesgo de fuga de personal exhausto y de retrasos en los plazos."
+        },
+        {
+          "title": "El desajuste en tiempo real entre planos, datos BIM y la obra ante los frecuentes cambios de diseño",
+          "reality": "Cada vez que cambia el diseño, los planos y los datos BIM más recientes no llegan con rapidez a operarios y empresas colaboradoras, con el riesgo de errores de ejecución basados en información desfasada.",
+          "risk": "Se producen «rehaceres» (volver a ejecutar) de millones a decenas de millones de yenes, que no solo presionan los costes, sino que también provocan grandes retrasos en los plazos."
+        },
+        {
+          "title": "La rutina vacía de la comprobación de seguridad diaria (actividad KY) y la falta de formación para una plantilla cada vez más internacional",
+          "reality": "La actividad diaria de previsión de riesgos (KY) tiende a volverse rutinaria y los documentos a quedar copiados sin más. Además, ante el aumento de trabajadores extranjeros, las normas de seguridad japonesas no siempre se transmiten con precisión hasta su contexto.",
+          "risk": "Aumenta el riesgo de accidentes laborales graves, lo que puede provocar la paralización de la obra o la pérdida de la confianza social de la empresa."
+        },
+        {
+          "title": "La ruptura de las técnicas y el know-how propios por el envejecimiento y la jubilación de los operarios veteranos",
+          "reality": "Con una gran proporción de operarios veteranos de más de 50 años, la técnica no está documentada ni convertida en manual, y su transmisión a los jóvenes sigue dependiendo del «míralo y apréndelo» personal.",
+          "risk": "Se pierden los oficios que la empresa puede abordar y sus fortalezas propias, lo que deriva en una menor competitividad para captar encargos en el futuro y en la desaparición de la propia técnica."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / El acompañamiento de Cor.",
+      "title": "Así te acompañamos.",
+      "intro": "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+      "items": [
+        {
+          "title": "Simulación de procesos y visualización de los registros de actividad",
+          "service": "Desarrollo a medida con IA",
+          "description": "Avanzamos juntos en mecanismos para una operación de obra con margen: reordenar cronogramas complejos o detectar de forma suave los cuellos de botella a partir de los registros de actividad de cada obra."
+        },
+        {
+          "title": "Extracción automática de cambios y sugerencia inmediata a los implicados",
+          "service": "Desarrollo a medida con IA",
+          "description": "Comparando los datos actualizados de planos y especificaciones, la IA resume y extrae de forma clara los puntos clave modificados. Te ayudamos a construir un entorno que los transmite y comparte con seguridad entre los implicados. Aprovechamos el conocimiento adquirido en el procesamiento de planos."
+        },
+        {
+          "title": "Sugerencia de riesgos según la situación y traducción multilingüe de alta precisión",
+          "service": "Desarrollo a medida con IA",
+          "description": "La IA propone pistas concretas de previsión de riesgos según el oficio y el clima del día, o realiza una traducción multilingüe de alta precisión que capta los matices del manual de seguridad: así acompañamos la construcción de equipos seguros en el terreno."
+        },
+        {
+          "title": "Estructuración del know-how del terreno y entorno de asistencia técnica",
+          "service": "LLM local · IA segura",
+          "description": "Ordenamos los vídeos de trabajo de los veteranos, los registros de obra anteriores y los historiales de incidencias en un formato fácil de aprender para la IA. Apoyamos la creación de un sistema del que los jóvenes puedan extraer el saber de la organización cuando surjan dudas en la obra."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+      "primary": "Probar Grift (30 s)",
+      "secondary": "Consulta gratis",
+      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+    }
+  },
+  "industryManufacturing": {
+    "hero": {
+      "eyebrow": "Manufacturing",
+      "title": "En la fábrica, ¿el «saber y la organización» dependen de las personas?",
+      "subtitle": "Los criterios de inspección, la técnica del operario, el mantenimiento de los equipos, la lectura del inventario——cuando el saber del terreno se concentra en las personas, los motivos de atasco se multiplican. Cor. te acompaña en el siguiente paso, adaptándose a los desafíos del terreno."
+    },
+    "challenges": {
+      "eyebrow": "01 / Desafíos frecuentes",
+      "title": "Los «motivos de atasco» que más se oyen en la fábrica.",
+      "items": [
+        {
+          "title": "El riesgo de defectos por la dependencia personal en la inspección visual y la «variabilidad de los criterios de calidad» entre inspectores",
+          "description": "La realidad de que la valoración de arañazos o rebabas depende de la percepción individual y resulta difícil unificar en un manual"
+        },
+        {
+          "title": "La ruptura del «know-how de fabricación y la maestría artesanal» y el retraso en la formación de los jóvenes por el envejecimiento y la jubilación de los operarios expertos",
+          "description": "Una estructura en la que destrezas intuitivas como la soldadura o el mecanizado no se documentan y no queda tiempo para la formación en el puesto"
+        },
+        {
+          "title": "La «parada de línea» por averías imprevistas de los equipos y los enormes costes de reparación del mantenimiento correctivo",
+          "description": "El riesgo de operar reparando solo tras la avería y no captar las señales previas, como leves ruidos o vibraciones de la máquina"
+        },
+        {
+          "title": "La dificultad de leer el «inventario adecuado» atrapados entre el exceso de stock y el riesgo de rotura",
+          "description": "El conflicto entre el área comercial y la de gestión ante la subida de materiales y los retrasos de aprovisionamiento, y la dependencia personal en la previsión de la demanda"
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / El acompañamiento de Cor.",
+      "title": "Así te acompañamos.",
+      "intro": "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+      "items": [
+        {
+          "title": "Te ayudamos a ordenar los criterios de inspección visual en un formato útil para el terreno",
+          "service": "Desarrollo a medida con IA",
+          "description": "Ordenamos los criterios de inspección y las imágenes de muestra para avanzar juntos en un mecanismo que reduzca la variabilidad de las valoraciones. Partiendo de que la decisión final la toma una persona, buscamos aligerar la carga del cribado inicial."
+        },
+        {
+          "title": "Documentación del know-how de fabricación y entorno del que los jóvenes puedan extraerlo",
+          "service": "LLM local · IA segura",
+          "description": "Ordenamos los registros de trabajo y los procedimientos de los operarios expertos en un formato fácil de aprender para la IA. Sin que la información sensible del terreno salga al exterior, apoyamos la construcción de un sistema del que los jóvenes puedan extraer el saber de la organización cuando surjan dudas."
+        },
+        {
+          "title": "Estudio de un mecanismo que capte señales previas a partir de los datos de los equipos",
+          "service": "Desarrollo a medida con IA",
+          "description": "Avanzamos juntos en un mecanismo que permita advertir pronto los indicios de anomalía a partir de los datos disponibles en el terreno, como ruidos, vibraciones o registros de actividad. Apoyamos de forma gradual la transición del mantenimiento correctivo al preventivo."
+        },
+        {
+          "title": "Sacar la lectura del inventario y la demanda de la dependencia personal",
+          "service": "Asesoría y formación en IA",
+          "description": "Ordenamos la información del área comercial, de gestión y del terreno y acompañamos la creación de un estado en el que se puedan compartir los criterios de un inventario adecuado. Pensamos contigo desde el ordenamiento de las premisas de la previsión de demanda hasta la forma de seleccionar y adoptar las herramientas."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+      "primary": "Probar Grift (30 s)",
+      "secondary": "Consulta gratis",
+      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+    }
+  },
+  "industryEducation": {
+    "hero": {
+      "eyebrow": "Education",
+      "title": "En la educación, ¿alcanza el «tiempo del profesorado»?",
+      "subtitle": "Crear y corregir exámenes, comunicarse con las familias, elaborar informes, registrar listas en herramientas TIC——el tiempo que debería dedicarse a la verdadera educación se lo lleva fácilmente el trabajo administrativo y de datos. Cor. te acompaña en el siguiente paso, adaptándose a los desafíos del terreno."
+    },
+    "challenges": {
+      "eyebrow": "01 / Desafíos frecuentes",
+      "title": "Los «motivos de atasco» que más se oyen en la educación.",
+      "items": [
+        {
+          "title": "La maratón sin descanso de los periodos en que se concentran la «creación de exámenes, la corrección y el procesamiento de notas»",
+          "description": "En época de exámenes, desde crear las pruebas hasta corregirlas y elaborar los boletines se concentra en poco tiempo, lo que tiende a comprimir el tiempo que se querría dedicar a preparar las clases y a hablar con el alumnado."
+        },
+        {
+          "title": "La atención analógica a las familias y la normalización de la atención fuera de horario",
+          "description": "Los canales de comunicación se dispersan entre teléfono, circulares y chat, y la revisión y respuesta continúan por la tarde y los fines de semana——hay centros donde esa carga tiende a volverse habitual."
+        },
+        {
+          "title": "La recopilación de datos y la elaboración de los «numerosos informes y encuestas» que se entregan al ministerio y a las juntas de educación",
+          "description": "El trabajo de reunir los datos del terreno y completar los documentos conforme a los formatos absorbe periódicamente el esfuerzo del profesorado."
+        },
+        {
+          "title": "Los errores de registro manual de cuentas en distintas herramientas TIC con los «datos de las listas de alumnado» tras el nuevo curso y los cambios de clase",
+          "description": "Es necesario introducir y transcribir a mano las listas en varias herramientas TIC, lo que facilita omisiones y errores de entrada——la carga tiende a ser especialmente alta al inicio del curso."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / El acompañamiento de Cor.",
+      "title": "Así te acompañamos.",
+      "intro": "Para cada desafío avanzamos juntos combinando desarrollo a medida con IA, asesoría en IA, LLM local y Grift. Más que afirmaciones tajantes, valoramos un acompañamiento adaptado a los desafíos del terreno.",
+      "items": [
+        {
+          "title": "Revisar juntos la carga de trabajo de la época de exámenes, empezando por ordenarla",
+          "service": "Desarrollo a medida con IA",
+          "description": "Te ayudamos a crear un mecanismo —partiendo de que una persona hace la comprobación final— para el borrador de las pruebas, la ayuda a la corrección o el cálculo de los datos de notas."
+        },
+        {
+          "title": "Ordenar la dispersión de la comunicación con las familias en un flujo más claro",
+          "service": "Desarrollo a medida con IA",
+          "description": "Avanzamos juntos en el diseño de un flujo que alivie la carga de la atención fuera de horario, como la organización de los canales de comunicación o los borradores de respuesta."
+        },
+        {
+          "title": "Crear un sistema que apoye el cálculo y el borrador de encuestas e informes",
+          "service": "LLM local · IA segura",
+          "description": "Sin que la información del alumnado salga al exterior, te ayudamos a estudiar un entorno que facilite el cálculo de los datos y la creación del esqueleto de los informes."
+        },
+        {
+          "title": "Sacar del trabajo manual la integración de las listas con las herramientas TIC",
+          "service": "Desarrollo a medida con IA",
+          "description": "Organizamos contigo la automatización y la integración de la transcripción de listas y el registro de cuentas, avanzando en la dirección de reducir errores y omisiones de entrada. Aprovechamos el conocimiento adquirido en la migración de datos del ámbito educativo."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
+      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
+      "primary": "Probar Grift (30 s)",
+      "secondary": "Consulta gratis",
+      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+    }
+  },
+  "works": {
+    "title": "Hablamos con implementación: los proyectos de Cor.",
+    "intro": "Mostramos proyectos de implementación con dominios y orígenes distintos. No lo decimos: lo demostramos con código, operación y cifras.",
+    "note": "* La proporción de contribución es la proporción de commits medida en git. En proyectos bajo NDA o confidenciales ocultamos el nombre del cliente y del producto y publicamos el contenido de forma abstracta.",
+    "items": [
+      {
+        "name": "Engineer Cafe Navigator",
+        "tag": "OSS / Público",
+        "description": "Recepción con IA de voz multilingüe de código abierto. 182.368 líneas, 8 colaboradores, 87,7 % de contribución propia (medición en git)."
+      },
+      {
+        "name": "Grift",
+        "tag": "Producto propio",
+        "description": "Plataforma propia de presupuestos y evaluación con IA que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado.",
+        "link": "https://griftai.org"
+      },
+      {
+        "name": "cor-jp.com",
+        "tag": "Producción propia",
+        "description": "Este sitio corporativo. Astro, 5 idiomas, traducción con IA y visualización rápida, implementado por nosotros mismos."
+      },
+      {
+        "name": "SaaS de IA generativa multimodal",
+        "tag": "A medida / Anónimo",
+        "description": "Desarrollo en producción de un SaaS de IA generativa que maneja imagen, voz y texto (nombre del cliente no divulgado)."
+      },
+      {
+        "name": "Renovación de una plataforma de encuestas",
+        "tag": "A medida / Anónimo",
+        "description": "Renovación y puesta en producción de una plataforma de encuestas heredada. Cubrimos la migración a una plataforma de agentes y la preparación de pruebas y CI/CD."
+      },
+      {
+        "name": "Migración a la nube de un sistema central heredado",
+        "tag": "A medida / NDA",
+        "description": "Migración a la nube de una base de datos central del ámbito educativo (detalles abstraídos por NDA)."
+      },
+      {
+        "name": "IA de planos de arquitectura y generación de distribuciones",
+        "tag": "A medida / NDA",
+        "description": "Implementación rápida de 0 a 1 de un conjunto de IA que maneja planos y distribuciones de arquitectura (ámbito de arquitectura, abstraído por NDA)."
+      }
+    ]
+  },
+  "services2026": {
+    "title": "Llevamos la IA —tecnología que piensa y actúa en lugar de las personas— al día a día de tu negocio, contigo.",
+    "items": [
+      {
+        "name": "Desarrollo a medida con IA",
+        "description": "Te acompañamos para construir sistemas en producción con IA generativa, RAG, agentes y procesamiento de imagen/voz, desde la definición de requisitos hasta la operación."
+      },
+      {
+        "name": "Asesoría y formación en IA",
+        "description": "Caminamos junto a tus equipos de dirección, desarrollo y operación en la estrategia de IA, la elección de herramientas, su adopción en el trabajo diario y el desarrollo de capacidades internas."
+      },
+      {
+        "name": "LLM local · IA segura",
+        "description": "Diseñamos contigo una operación de IA acorde al nivel de confidencialidad de tus datos, sin sacar fuera información sensible cuando no es necesario."
+      },
+      {
+        "name": "Grift",
+        "description": "Nuestra herramienta de IA propia que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado."
+      }
+    ]
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Sobre Cor.Inc.",
+    "products": "Productos&Insights",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "security": "Seguridad",
+    "works": "Works",
+    "grift": "Grift"
+  },
+  "hero": {
+    "title": "Más rápido que cualquiera, más allá del horizonte.",
+    "subtitle": "Superando las barreras del idioma y la cultura con IA para crear una sociedad donde las personas se entiendan verdaderamente.",
+    "cta": "Ver nuestro trabajo y productos"
+  },
+  "services": {
+    "title": "Servicios",
+    "items": [
+      {
+        "step": "01",
+        "name": "Consultoría IT y Análisis de Datos",
+        "description": "Servicio de apoyo DX que visualiza el estado actual mediante scraping basado en Python y análisis BI, acompañando desde la planificación estratégica hasta la implementación."
+      },
+      {
+        "step": "02",
+        "name": "Desarrollo de Aplicaciones Web y Móviles",
+        "description": "Provisión integral de aplicaciones B2B/B2C de alta velocidad y UX rica utilizando frameworks más recientes como Flutter y React."
+      },
+      {
+        "step": "03",
+        "name": "Desarrollo de Soluciones IA",
+        "description": "Desarrollo de aplicaciones inteligentes y herramientas de automatización optimizadas para los desafíos del cliente utilizando IA generativa/LLM, reconocimiento de imágenes y procesamiento de voz."
+      }
+    ]
+  },
+  "about": {
+    "title": "Sobre Cor.Inc.",
+    "description": "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
+    "cta": "Más detalles",
+    "heading": {
+      "title": "Sobre Cor.Inc.",
+      "description": "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación."
+    }
+  },
+  "mission": {
+    "title": "Nuestra misión",
+    "subtitle": "Lo que una vez perseguí con la trompeta - comunicación más allá de las palabras - ahora a través de la tecnología.",
+    "paragraphs": [
+      "Nuestro fundador tiene TEA y conoce el dolor de 'no ser comprendido'.",
+      "Por eso nos tomamos en serio la realización de una comunicación sin malentendidos.",
+      "A través de intercambios de tarjetas de presentación, sitios web y conversaciones mediadas por IA. Pequeños momentos de 'ah, lo entendieron' en la vida cotidiana.",
+      "Cuando se acumulan, todos pueden transmitir adecuadamente y ser comprendidos por su valor.",
+      "Usamos la tecnología para eliminar las 'barreras del lenguaje' entre las personas, creando un mundo donde todos puedan brillar como ellos mismos."
+    ],
+    "stats": [
+      {
+        "name": "Desde la fundación",
+        "value": "2 años"
+      },
+      {
+        "name": "Idiomas disponibles",
+        "value": "10"
+      },
+      {
+        "name": "Proyectos",
+        "value": "15"
+      },
+      {
+        "name": "Servicios ofrecidos",
+        "value": "Desarrollo de Apps & Estrategia IT/IA"
+      }
+    ]
+  },
+  "founderStory": {
+    "title": "Historia del Fundador",
+    "subtitle": "¿Por qué un ex músico dirige un negocio no relacionado con la música?",
+    "paragraphs": [
+      "Desde pequeño, era 'el niño que no sabía leer el ambiente'. Con ASD, siempre he sentido un muro entre yo y los demás.",
+      "En mi segundo año de secundaria, tocando un solo de trompeta en un auditorio lleno de 2,000 personas, experimenté por primera vez la emoción de 'comunicación más allá de las palabras'. Toda la conciencia del lugar se concentró en mí, y mi alma tembló con una sensación de unidad que no necesitaba palabras.",
+      "Pero en la industria musical, nunca volví a sentir esa emoción. Conexiones, jerarquía, leer entre líneas. La expresión se degradó a mero 'trabajo', y enfermé.",
+      "Durante la pandemia, dejé la música y trabajé en ventas en Recruit. Allí, enfrenté 'las limitaciones de las herramientas existentes' y 'la frustración de que las palabras no llegaran a la gente'.",
+      "Luego descubrí la tecnología. El código no traiciona. La IA no se vuelve emocional. Y sobre todo, pude presenciar cómo lo que creé resolvió los problemas de alguien y enriqueció sus vidas.",
+      "Esa emoción de la secundaria, ahora en la vida cotidiana. En intercambios de tarjetas de presentación, en sitios web, a través de comunicación mediada por IA. Acumulando pequeños momentos de 'ah, llegó'.",
+      "Ese es el origen de Cor.inc."
+    ]
+  },
+  "contact": {
+    "title": "¡Consulte con confianza!",
+    "description1": "Después de confirmar el contenido de la consulta, nos pondremos en contacto con usted dentro de 3 días hábiles. Por favor, espere un momento.",
+    "description2": "Si no recibe respuesta dentro del período anterior, es posible que haya un problema de envío. Le pedimos que se ponga en contacto con nosotros nuevamente.",
+    "heading": {
+      "title": "Cuéntanos dónde se atasca.",
+      "description": "No necesitas requisitos cerrados. Comparte el problema, las restricciones o la idea; respondemos en 3 días hábiles."
+    },
+    "form": {
+      "title": "¡Consulte con confianza!",
+      "description1": "Después de confirmar el contenido de la consulta, nos pondremos en contacto con usted dentro de 3 días hábiles. Por favor, espere un momento.",
+      "description2": "Si no recibe respuesta dentro del período anterior, es posible que haya un problema de envío. Le pedimos que se ponga en contacto con nosotros nuevamente.",
+      "fields": {
+        "name": "Nombre",
+        "email": "Dirección de correo electrónico",
+        "consultationType": "Tipo de consulta",
+        "consultationTypePlaceholder": "Seleccione el tipo de consulta",
+        "consultationOptions": [
+          "Diagnóstico de uso de IA con datos confidenciales",
+          "Grift Team Beta",
+          "LLM local / IA segura",
+          "Desarrollo por contrato con IA / soporte de adopción",
+          "Formación en IA / solicitud de ponente",
+          "Otros"
+        ],
+        "message": "Mensaje"
+      },
+      "submit": "Enviar",
+      "reset": "Restablecer"
+    }
+  },
+  "contactConsent": {
+    "purpose": "La información que facilites se utilizará únicamente para responder a tu consulta y para ponernos en contacto contigo.",
+    "linkBefore": "Para más información sobre el tratamiento de datos personales, consulta nuestra ",
+    "linkText": "Política de Privacidad",
+    "linkAfter": ".",
+    "checkboxLabel": "Acepto la Política de Privacidad y envío este formulario.",
+    "validationMessage": "Acepta la Política de Privacidad antes de enviar."
+  },
+  "contactChat": {
+    "heading": "Habla con nuestro asistente de IA",
+    "intro": "Cuéntanos tu consulta en el chat. Nuestra IA te ayudará a organizar los detalles y te pondrá en contacto con la persona adecuada.",
+    "piiNotice": "Por favor, no introduzcas datos personales como tu nombre o tus datos de contacto en el chat. Te pediremos tus datos de contacto solo en el formulario final.",
+    "greeting": "¡Hola! Soy el asistente de IA de Cor.inc. ¿En qué podemos ayudarte? Describe tu consulta con total libertad.",
+    "placeholder": "Escribe un mensaje…",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "thinking": "Consultando con nuestro equipo…",
+    "youLabel": "Tú",
+    "assistantLabel": "Asistente de IA",
+    "chatError": "Algo salió mal. Por favor, intenta enviar tu mensaje de nuevo.",
+    "readyNotice": "¡Gracias! Rellena tus datos de contacto a continuación y envía el formulario.",
+    "consent": {
+      "purpose": "La información que facilites se utilizará únicamente para responder a tu consulta y para ponernos en contacto contigo.",
+      "linkBefore": "Para más información sobre el tratamiento de datos personales, consulta nuestra ",
+      "linkText": "Política de Privacidad",
+      "linkAfter": ".",
+      "checkboxLabel": "Acepto la Política de Privacidad y envío este formulario.",
+      "validationMessage": "Acepta la Política de Privacidad antes de enviar."
+    },
+    "form": {
+      "title": "Tus datos de contacto",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "company": "Empresa (opcional)",
+      "message": "Tu mensaje",
+      "submit": "Enviar esta consulta",
+      "submitting": "Enviando…",
+      "required": "Este campo es obligatorio"
+    },
+    "success": "Gracias. Hemos recibido tu consulta y te responderemos en un plazo de 3 días laborables.",
+    "submitError": "El envío ha fallado. Espera un momento e inténtalo de nuevo."
+  },
+  "footer": {
+    "title": "Pie de página",
+    "social": "Social",
+    "company": "Empresa",
+    "legal": "Legal",
+    "links": {
+      "home": "Inicio",
+      "about": "Sobre Cor.Inc.",
+      "products": "Productos&Insights",
+      "contact": "Contacto",
+      "privacy": "Privacidad",
+      "security": "Seguridad",
+      "legal": "Aviso Legal"
+    },
+    "description": "Cor.inc tiene como misión 'Abrir el futuro a través de la co-creación en lugar de la competencia, y realizar una sociedad feliz', y se dedica a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la 'co-creación' más que la 'competencia', y aprovechamos la 'sensación de velocidad' que es una fortaleza de las startups para proporcionar servicios llenos de creatividad e innovación.",
+    "copyright": "Cor.inc"
+  },
+  "features": {
+    "title": "Características",
+    "items": [
+      {
+        "id": "uniqueness-1",
+        "name": "Integración de tecnologías digitales",
+        "description": "Formulamos estrategias de TI basadas en información recopilada con Python, desarrollamos aplicaciones web MVP para realizar marketing de prueba... Podemos cubrir proyectos que abarcan múltiples tecnologías y procesos como este con una sola empresa."
+      },
+      {
+        "id": "uniqueness-2",
+        "name": "Servicio integral",
+        "description": "Nos encargamos de todo desde la planificación hasta el desarrollo, lanzamiento de prueba y inicio de prestación de servicios. Como el mismo equipo se encarga, es menos probable que haya discrepancias en la comprensión, y proporcionamos desarrollo más rápido y de menor costo."
+      },
+      {
+        "id": "uniqueness-3",
+        "name": "Desarrollo centrado en el cliente",
+        "description": "Lo que más valoramos en nuestro desarrollo es la \"resolución del cliente\". A través de retroalimentación detallada, marketing de prueba y hitos, identificamos lo que el cliente realmente necesita y construimos una relación que puede ser un socio comercial Win-Win."
+      },
+      {
+        "id": "uniqueness-4",
+        "name": "Experiencia 「ultra rápida e inteligente」",
+        "description": "Capturamos agudamente nuevas tendencias y conocimientos. Reflejamos rápidamente soluciones beneficiosas en nuestras propuestas, proporcionando experiencias nuevas nunca antes vistas."
+      },
+      {
+        "id": "uniqueness-5",
+        "name": "Creación de nuevos valores",
+        "description": "Sin estar limitados por conceptos tradicionales, nos enfrentamos seriamente a nuevas perspectivas e ideas. Aprovechamos al máximo el \"sentido de velocidad\" característico de las startups para dar voz a valores recién nacidos a través de la tecnología."
+      },
+      {
+        "id": "uniqueness-6",
+        "name": "Resolución de desafíos sociales desde una perspectiva única",
+        "description": "La pasión por el progreso humano no se detiene. Utilizamos la tecnología para llenar brechas, promover comunicación significativa y abordar activamente la resolución de problemas sociales que acompañan al progreso."
+      }
+    ]
+  },
+  "header": {
+    "mobileMenuDescription": "Cor.inc tiene como misión \"pionear el futuro a través de la co-creación en lugar de la competencia, realizando una sociedad feliz\". Nos dedicamos a la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como a las operaciones de contabilidad y finanzas asociadas. Valoramos la \"co-creación\" sobre la \"competencia\" y aprovechamos la fortaleza de las startups de \"sentido de velocidad\" para proporcionar servicios llenos de creatividad e innovación."
+  },
+  "aboutPage": {
+    "kicker": "Sobre Cor.Inc.",
+    "title": "Persiguiendo el «Kyousou».",
+    "lead": "Cor. no es una empresa donde todos deban entenderse a la fuerza. Es una empresa donde personas con sus propios valores se reúnen, no ocultan sus diferencias, buscan el crecimiento mutuo y dan forma con IA y tecnología a los desafíos del terreno.",
+    "kyousouTitle": "Qué es el «Kyousou».",
+    "kyousouLead": "La IA y los sistemas solo generan valor cuando se usan en el terreno. Por eso no somos simples tomadores de pedidos que construimos lo que nos dicen. Encaramos los desafíos junto a nuestros clientes en pie de igualdad, y cuando la sistematización no es el mejor camino, sugerimos con honestidad que puede ser mejor no construir todavía. Valoramos el espíritu del «Kyousou»: co-crear juntos la resolución esencial de los problemas.",
+    "kyousou": [
+      {
+        "word": "Co-creación",
+        "usage": "Crear junto a clientes, IA y socios"
+      },
+      {
+        "word": "Concertación",
+        "usage": "Personas, IA y especialidad con un rol propio que resuenan"
+      },
+      {
+        "word": "Competencia",
+        "usage": "Rechazar la complacencia y pulirnos mutuamente"
+      },
+      {
+        "word": "Fantasía audaz",
+        "usage": "No temer a las ideas que aún no tienen forma"
+      },
+      {
+        "word": "Bullicio",
+        "usage": "La energía que generamos en el mercado como resultado"
+      }
+    ],
+    "kyousouAxis": "El «Kyousou» es la actitud de implementación que convierte las diferencias en resultados.",
+    "whyFocusTitle": "Para superar los muros que estancan el trabajo real.",
+    "whyFocusBody": "Información confidencial difícil de enviar a una IA externa, y los supuestos invisibles detrás de presupuestos que dependen de individuos. Los lugares de trabajo reales tienen muros que la IA en la nube genérica por sí sola no puede resolver. Para despejar esta incertidumbre y esa caja negra, nos enfocamos en una infraestructura de IA segura diseñada desde cómo se tratan los datos, y en Grift, que convierte el fundamento de los presupuestos en un activo de la empresa.",
+    "mvvTitle": "Mission / Vision / Values",
+    "mission": "A través del «Kyousou», liberar el potencial de quienes crean y de sus negocios.",
+    "vision": "Construir una sociedad donde las diferencias de valores no lleven a la división, sino a una mejor implementación.",
+    "values": [
+      {
+        "title": "Co-creación sin complacencia",
+        "description": "No construimos relaciones basadas solo en seguir la corriente. Preguntamos con franqueza, refutamos cuando hace falta y buscamos una mejor respuesta."
+      },
+      {
+        "title": "Hablar con evidencia",
+        "description": "No nos quedamos solo en las ideas. Lo mostramos con código, productos, operación y cifras."
+      },
+      {
+        "title": "Conciliar libertad y responsabilidad",
+        "description": "No atamos la capacidad de las personas y protegemos la información que debe protegerse. Diseñamos comodidad y confianza al mismo tiempo."
+      },
+      {
+        "title": "Pulir nuestras diferencias entre todos",
+        "description": "Convertimos las diferencias de rasgos cognitivos, especialidad y valores en resultados, no en concesiones."
+      },
+      {
+        "title": "Liberar la verdadera capacidad de quienes crean",
+        "description": "Usamos la IA no como una herramienta para reemplazar a las personas, sino como una extensión para que den lo mejor de sí."
+      }
+    ],
+    "founderTitle": "Historia del fundador",
+    "founderLead": "El «Kyousou» de Cor. nació de la experiencia de nuestro fundador, Kosuke Terada.",
+    "founderPlaceholder": "Los detalles de la historia del fundador están en preparación.",
+    "teamTitle": "Conoce a nuestro equipo",
+    "teamBody": "Desde la articulación de desafíos hasta el diseño e implementación de infraestructura de IA segura y la construcción de marcos operativos. Miembros con experiencia distinta se enfrentan con honestidad a las inquietudes de clientes que no están familiarizados con la ingeniería, acompañándolos de principio a fin.",
+    "founderYoutubeTitle": "Del fundador",
+    "founderYoutubeDescription": "Distribuimos contenido de video sobre tecnología y estrategia empresarial. Publicamos casos de uso de IA y detrás de escena del desarrollo de productos.",
+    "founderYoutubeMessages": {
+      "apiNotConfigured": "YouTube API no está configurado",
+      "watchDirectly": "Por favor, vea directamente en el canal de YouTube",
+      "loading": "Cargando video...",
+      "noVideosFound": "No se encontraron videos",
+      "loadFailed": "Error al cargar el video",
+      "playbackError": "Error en la reproducción del video",
+      "channelNotFound": "Canal no encontrado",
+      "videosNotFound": "No se encontraron videos"
+    }
+  },
+  "values": {
+    "title": "Nuestros Valores"
+  },
+  "team": {
+    "title": "Conoce a nuestro equipo"
+  },
+  "linkTypes": {
+    "LitLink": "LitLink",
+    "X": "X",
+    "Zenn": "Zenn",
+    "Homepage": "Página web"
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "questions": [
+      {
+        "question": "¿Qué tipo de consultas podemos realizar a Cor.Inc.?",
+        "answer": "Nos enfocamos en infraestructura de IA para el manejo seguro de datos, LLM Local/IA Segura, desarrollo de IA a medida, soporte de implementación de IA y nuestra herramienta propia de soporte de estimación de IA 'Grift'. Evaluamos cómo manejar información confidencial —como contratos, minutas, presupuestos, datos de clientes y conocimiento interno— diseñando e implementando sistemas de IA prácticos para su negocio."
+      },
+      {
+        "question": "¿Cuál es el primer paso para introducir la IA?",
+        "answer": "La primera decisión no es qué modelo de IA usar. Es aclarar qué datos se pueden procesar, cuáles requieren anonimización y cuáles deben mantenerse internamente o en un LLM Local. En Cor.Inc. diseñamos primero los límites de entrada, permisos, registros, aprobaciones humanas y responsabilidades operativas."
+      },
+      {
+        "question": "¿Cómo elegir entre IA en la nube y un LLM Local?",
+        "answer": "La IA en la nube es ideal para datos públicos o redacción general. Sin embargo, para documentos confidenciales como contratos, registros de clientes y conocimiento interno, consideramos entornos internos seguros o LLM Locales. En lugar de descartar la IA en la nube, utilizamos ambas según la confidencialidad y los requisitos del negocio."
+      },
+      {
+        "question": "¿Qué incluye la Evaluación de IA para Datos Confidenciales?",
+        "answer": "Realizamos entrevistas de flujo de trabajo, inventario de tareas para adaptación de IA, clasificación de datos, separación de procesamiento en la nube frente al local, análisis de riesgos de seguridad y redacción de una estrategia de PoC. El costo estimado es de ¥100k - ¥300k yenes."
+      },
+      {
+        "question": "¿Cuál es la duración y el costo de una PoC de LLM Local o Infraestructura de IA?",
+        "answer": "Como guía general, una PoC de LLM Local/Infraestructura de IA toma alrededor de 3 meses, desde ¥3M de yenes. Esto incluye la organización del flujo de trabajo, el diseño de la gestión de datos, la configuración del entorno de prueba, la definición de métricas de evaluación y la evaluación de viabilidad de producción post-PoC."
+      },
+      {
+        "question": "¿Cómo se manejan la seguridad y la privacidad?",
+        "answer": "La implementación de la IA requiere un diseño estricto de los datos de entrada, derechos de acceso, registros, aprobaciones humanas y reglas de eliminación. Organizamos dónde se procesa la información, quién la revisa y cómo se almacenan los registros. Actualmente estamos preparando nuestras operaciones de ISMS con el objetivo de obtener la certificación ISO/IEC 27001. *Nunca representamos una certificación no adquirida como completada."
+      },
+      {
+        "question": "¿Qué es Grift?",
+        "answer": "Grift es una herramienta de soporte de estimación de IA que visualiza las justificaciones de los presupuestos para desarrollos a medida. En lugar de delegar todo a la IA, su objetivo es mejorar las bases verificables a partir de proyectos pasados, historiales de GitHub, riesgos técnicos y puntos de referencia del mercado para que los humanos puedan explicar los presupuestos de manera responsable."
+      }
+    ]
+  },
+  "calendar": {
+    "title": "Agenda del CEO",
+    "description": "Esta es la agenda pública del CEO. Si desea programar una reunión, consulte los horarios disponibles y contáctenos.",
+    "ariaLabel": "Calendario de agenda del CEO",
+    "note": "* Para solicitudes de reunión, contáctenos a través del formulario de contacto a continuación."
+  },
+  "testimonials": {
+    "title": "Experiencia Técnica",
+    "items": [
+      {
+        "name": "JavaScript/TypeScript",
+        "description": "Desarrollo Frontend & Backend",
+        "image": "/assets/jsts.avif",
+        "message": "JavaScript nació en 1995 en Netscape y se ha convertido en la base del desarrollo web. TypeScript, como su superconjunto, añade tipado estático para mejorar la mantenibilidad en proyectos a gran escala. Se usa en combinación con Node.js y React para comunicación en tiempo real y construcción de UI. Con procesamiento asíncrono y un ecosistema rico, es ideal para el desarrollo rápido e interactivo de aplicaciones."
+      },
+      {
+        "name": "Python",
+        "description": "IA & Aprendizaje Automático",
+        "image": "/assets/python.avif",
+        "message": "Python es un lenguaje de programación de propósito general desarrollado en 1991. Su característica es una sintaxis simple y legible, ampliamente utilizado en aprendizaje automático, desarrollo de IA y análisis de datos. Al aprovechar bibliotecas como TensorFlow y PyTorch, se pueden construir modelos de IA complejos rápidamente, y es ampliamente apoyado desde principiantes hasta usuarios avanzados."
+      },
+      {
+        "name": "Go",
+        "description": "Backend & Sistemas de Alto Rendimiento",
+        "image": "/assets/go.avif",
+        "message": "Go (Golang) es un lenguaje de programación ligero y de alta velocidad desarrollado por Google en 2009. Su característica es una sintaxis simple y procesamiento concurrente (goroutines), adecuado para aplicaciones nativas de la nube y microservicios. Tiene una velocidad de compilación rápida y alta eficiencia de memoria, lo que lo hace ideal para el desarrollo de servidores escalables."
+      }
+    ]
+  },
+  "cta": {
+    "title": "¿Necesita información más detallada?",
+    "description": "No dude en contactarnos. Si necesita información más detallada o tiene preguntas específicas, nuestro equipo le ayudará."
+  },
+  "products": {
+    "heading": {
+      "title": "Productos e Insights",
+      "description": "Información detallada sobre nuestros productos, servicios e insights técnicos."
+    }
+  },
+  "homeCta": {
+    "title": "Contáctanos",
+    "description": "No dude en contactarnos para cualquier pregunta, consulta o solicitud de cotización.",
+    "button": "Contáctanos"
+  },
+  "contactInfo": {
+    "address": {
+      "label": "Dirección postal",
+      "value": "810-0001 Prefectura de Fukuoka, Ciudad de Fukuoka\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
+    },
+    "phone": {
+      "label": "Número de teléfono",
+      "value": "070-8561-1659"
+    },
+    "chat": {
+      "label": "Correo electrónico",
+      "value": "Chatea con AI Cloudia"
+    }
+  },
+  "valuesData": [
+    [
+      {
+        "ref": "01",
+        "name": "Primero actuar",
+        "description": "Cualquiera puede solo pensar. Acepta que la respuesta correcta será juzgada por las personas futuras, y una vez decidido, actúa rápidamente hacia el mejor resultado."
+      },
+      {
+        "ref": "02",
+        "name": "Siempre auto-reflexionar",
+        "description": "La forma de la felicidad está constantemente cambiando. Para perseguir la verdadera felicidad, debemos siempre preguntarnos \"¿Es esto lo mejor?\" y continuar moviéndonos sin detener nuestro pensamiento."
+      },
+      {
+        "ref": "03",
+        "name": "Hacer felices tanto a otros como a uno mismo",
+        "description": "Solo las personas felices pueden hacer felices a otros. Siempre piensa en acciones que creen situaciones ganar-ganar tanto para ti como para otros sin sacrificar nada."
+      }
+    ],
+    [
+      {
+        "ref": "04",
+        "name": "Expresar intenciones claramente",
+        "description": "Las acciones indecisas son desperdiciadas y no benefician a nadie. Toma decisiones firmes por ti mismo y comprométete completamente con todo."
+      },
+      {
+        "ref": "05",
+        "name": "Servicios flexibles",
+        "description": "Ayuda a tantos interesados como sea posible a ser felices. Para este propósito, deliberadamente evitamos servicios estandarizados y construimos servicios óptimos adaptados a tareas individuales. (Ejemplo) Personalizar instantáneamente tarjetas de presentación WebAR y chatbots de IA según los requisitos del cliente"
+      },
+      {
+        "ref": "06",
+        "name": "Forjar tu propio destino",
+        "description": "Independientemente del éxito o fracaso, tus propias acciones son tu responsabilidad. Los resultados y la reflexión son el resultado de tus propias acciones, acéptalo con una sonrisa."
+      }
+    ]
+  ],
+  "teamData": [
+    {
+      "name": "Kousuke Terada",
+      "image": "/assets/k-terada.avif",
+      "job": "CEO",
+      "description": "Graduado de universidad de música → Ventas en fabricante de instrumentos → Ventas corporativas en mega-venture → Transición a IT. Aprovechando este trasfondo único para desafiar \"tender puentes entre tecnología y lenguaje\".",
+      "comingSoon": false,
+      "link": "https://cor-jp.com/about"
+    },
+    {
+      "name": "Cloudia Sorano",
+      "image": "/assets/cloudia.avif",
+      "job": "Embajadora de IA",
+      "description": "IA interna que comparte temas técnicos en dialecto de Fukuoka. Actualmente desafiando 51 semanas consecutivas de Lightning Talks en Zenn y X.",
+      "comingSoon": false,
+      "link": "https://x.com/Cloudia_Cor",
+      "zennLink": "https://zenn.dev/cloudia"
+    },
+    {
+      "name": "Nagisa Terada",
+      "image": "/assets/nagi.avif",
+      "job": "Personal",
+      "description": "Después de graduarse de la escuela de belleza, trabajó en un salón durante 7 años. Transición a IT después de aprender programación. Esforzándose diariamente para convertir desafíos en posibilidades.",
+      "comingSoon": false,
+      "link": "https://digital-studio-c5abe.web.app/"
+    }
+  ],
+  "meta": {
+    "404": {
+      "title": "No encontrado · Cor.inc",
+      "description": "Página no encontrada. Por favor, verifica la URL en la barra de direcciones e inténtalo de nuevo."
+    },
+    "industryMedical": {
+      "title": "Acompañamiento con IA para sanidad | Cor.inc",
+      "description": "Los desafíos del ámbito sanitario——uso de datos internos, atención al paciente, seguridad de la información, estrategia de IA, orden de presupuestos——Cor. avanza contigo. Te acompañamos con desarrollo a medida con IA, asesoría en IA, LLM local y Grift."
+    },
+    "industryShigyo": {
+      "title": "Acompañamiento con IA para servicios profesionales | Cor.inc",
+      "description": "Los desafíos de los servicios profesionales——revisión de contratos, trámites y registros, gestión de plazos, solicitud de subvenciones——Cor. avanza contigo. Te acompañamos con desarrollo a medida con IA, asesoría en IA, LLM local y Grift."
+    },
+    "industryConstruction": {
+      "title": "Acompañamiento con IA para construcción | Cor.inc",
+      "description": "Los desafíos de las obras——gestión laboral, cambios de diseño, verificación de seguridad, transmisión del saber hacer——Cor. avanza contigo. Te acompañamos con desarrollo a medida con IA, asesoría en IA, LLM local y Grift."
+    },
+    "industryManufacturing": {
+      "title": "Acompañamiento con IA para manufactura | Cor.inc",
+      "description": "Los desafíos de la fábrica——inspección visual, transmisión del saber hacer, mantenimiento de equipos, gestión de inventario——Cor. avanza contigo. Te acompañamos con desarrollo a medida con IA, asesoría en IA, LLM local y Grift."
+    },
+    "industryEducation": {
+      "title": "Acompañamiento con IA para educación | Cor.inc",
+      "description": "Los desafíos del ámbito educativo——tareas de exámenes, comunicación con familias, informes y encuestas, gestión de listas con TIC——Cor. avanza contigo. Te acompañamos con desarrollo a medida con IA, asesoría en IA, LLM local y Grift."
+    },
+    "home": {
+      "title": "Cor.Inc. | Implementación de IA Práctica, LLM Local y Grift",
+      "description": "Cor.Inc. construye sistemas de IA operativos y adaptados a su negocio, basándose en IA para datos confidenciales, LLM Locales y Grift, e integrando diseños clave como límites de entrada, permisos, registros y aprobación humana.",
+      "ogTitle": "Cor.Inc. | Implementación de IA Práctica, LLM Local y Grift",
+      "ogDescription": "Cor.Inc. construye sistemas de IA operativos y adaptados a su negocio, basándose en IA para datos confidenciales, LLM Locales y Grift, e integrando diseños clave como límites de entrada, permisos, registros y aprobación humana."
+    },
+    "about": {
+      "title": "Acerca de · Cor.inc",
+      "description": "Conoce más sobre nuestra historia, valores, misión y más. Somos un grupo de personas que comparten los mismos valores."
+    },
+    "contact": {
+      "title": "Contacto · Cor.inc",
+      "description": "Contacta con nuestro equipo para aprender más sobre cómo podemos ayudarte."
+    },
+    "products": {
+      "title": "Productos&Insights · Cor.inc",
+      "description": "Explora nuestra página de productos e insights que muestra nuestras soluciones IT innovadoras y alcance mediático. Esta página ofrece información detallada sobre nuestro portafolio de productos, servicios de desarrollo e insights estratégicos. Descubre nuestras soluciones tecnológicas de vanguardia, lee sobre nuestros enfoques innovadores y aprende cómo podemos ayudar a transformar tu presencia digital. Ideal para empresas que buscan servicios IT integrales y soluciones de productos."
+    },
+    "privacy": {
+      "title": "Política de privacidad · Cor.inc",
+      "description": "Política de privacidad de Cor.: la información personal que recopilamos y sus finalidades, la comunicación a terceros y los encargados, las transferencias internacionales, las medidas de seguridad, las solicitudes de acceso y nuestro punto de contacto."
+    },
+    "security": {
+      "title": "Seguridad | Cor.inc",
+      "description": "Sobre la seguridad de la información de Cor. Inc., su hoja de ruta hacia la ISMS y un entorno de desarrollo de IA local-first con niveles de confidencialidad."
+    }
+  },
+  "privacy": {
+    "title": "Política de Protección de Datos Personales (Política de Privacidad)",
+    "lastUpdate": "Fecha de referencia: 13 de junio de 2026 (Versión 0.1, Borrador)",
+    "note": "La versión en japonés es el texto auténtico. Esta traducción al español se ofrece únicamente a título informativo.",
+    "intro": "Cor. Inc. (en adelante, «la Empresa») reconoce la importancia de la información personal que trata y gestiona adecuadamente la información personal de clientes, empleados, candidatos a empleo y demás personas, de conformidad con la Ley de Protección de Información Personal (en adelante, la «Ley de Protección de Información Personal»), demás leyes y reglamentos pertinentes, directrices y el sistema de gestión de la seguridad de la información basado en la norma ISO/IEC 27001:2022 (JIS Q 27001:2023). La Empresa protege la información personal con arreglo a la siguiente política.",
+    "businessTitle": "1. Información de la empresa",
+    "businessTable": [
+      {
+        "label": "Nombre de la empresa",
+        "value": "Cor. Inc."
+      },
+      {
+        "label": "Ubicación",
+        "value": "Prefectura de Fukuoka (sede central)"
+      },
+      {
+        "label": "Representante",
+        "value": "Director Representante Kosuke Terada"
+      },
+      {
+        "label": "Actividad empresarial",
+        "value": "Planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como las tareas contables y financieras asociadas."
+      },
+      {
+        "label": "Responsable de Protección de Información Personal",
+        "value": "Responsable de Gestión del ISMS Nagisa Terada"
+      },
+      {
+        "label": "Consultas",
+        "value": "A través del punto de contacto establecido en el apartado 9."
+      }
+    ],
+    "purposeTitle": "2. Información personal recopilada y finalidad de su uso",
+    "purposeLead": "Al recopilar información personal, la Empresa especifica en la medida de lo posible la finalidad de su uso y la obtiene por medios lícitos y leales. Salvo que se haya obtenido previamente el consentimiento del interesado, la Empresa no trata la información personal más allá del alcance necesario para alcanzar la finalidad especificada. Los tipos de información personal que trata la Empresa y la finalidad de su uso son los siguientes.",
+    "purposeGroups": [
+      {
+        "title": "(1) Clientes (incluidos socios comerciales y clientes potenciales)",
+        "lines": [
+          {
+            "label": "Información recopilada",
+            "value": "Nombre, razón social, departamento, cargo, dirección de correo electrónico, número de teléfono, información relativa a las transacciones, etc."
+          },
+          {
+            "label": "Finalidad del uso",
+            "value": "Atención de consultas y solicitudes / celebración y ejecución de contratos, prestación del desarrollo, operación y mantenimiento de soluciones de IA / facturación, pago y demás procesos contables y financieros / comunicaciones e información relativas a los servicios / gestión de transacciones y contratos y cumplimiento de las obligaciones legales."
+          }
+        ]
+      },
+      {
+        "title": "(2) Empleados (incluidos directivos, personal a tiempo parcial, contratados por tiempo determinado y becarios)",
+        "lines": [
+          {
+            "label": "Información recopilada",
+            "value": "Nombre, datos de contacto, fecha de nacimiento, domicilio, cuenta bancaria, My Number (Información Personal Específica), información relativa a la seguridad social, evaluación de desempeño, registros de asistencia, registros (logs) laborales, etc."
+          },
+          {
+            "label": "Finalidad del uso",
+            "value": "Gestión de recursos humanos y relaciones laborales (contratación, asignación, evaluación, salarios, primas, jubilación, etc.) / cálculo de nóminas, retención en origen y demás procesos fiscales, así como los trámites de seguridad social y seguro laboral (incluida la Información Personal Específica; véase el apartado 4) / registro objetivo de la jornada laboral y cumplimiento de los deberes de gestión de la salud y de protección de la seguridad / obtención y supervisión de registros (logs) para la gestión de la seguridad de la información (detección y respuesta ante accesos no autorizados, fugas de información, infecciones por malware, etc.; el alcance de la recopilación se rige por el apartado 8 y por las normas internas) / contactos de emergencia, prestaciones sociales y demás aspectos de gestión derivados del contrato de trabajo."
+          }
+        ]
+      },
+      {
+        "title": "(3) Candidatos a empleo",
+        "lines": [
+          {
+            "label": "Información recopilada",
+            "value": "Nombre, datos de contacto, currículum, historial profesional, registros de entrevistas, información obtenida durante el proceso de selección, etc."
+          },
+          {
+            "label": "Finalidad del uso",
+            "value": "Proceso de selección (recepción de candidaturas, selección, comunicación y decisión de contratación o no contratación) / preparación de los trámites de incorporación tras la contratación / gestión de la información de candidatura durante un periodo determinado en caso de no contratación (incluida la relativa a futuras comunicaciones; únicamente cuando se base en el consentimiento del interesado)."
+          }
+        ]
+      }
+    ],
+    "purposeNote": "Nota: La notificación interna a los empleados y candidatos a empleo sobre la finalidad del uso se realiza mediante la presente política, así como, por separado, mediante la notificación de las condiciones laborales, el documento de compromiso y la información facilitada en el momento de la contratación. En particular, mediante la presente política y el «Aviso y Consentimiento sobre la Monitorización de Empleados» se hace constar expresamente que entre las finalidades del uso se incluye la obtención y supervisión de registros (logs) para la gestión de recursos humanos y relaciones laborales y para la gestión de la seguridad de la información de los empleados.",
+    "sections": [
+      {
+        "title": "3. Cesión a terceros y encargo de tratamiento",
+        "body": [
+          "Salvo que concurra alguno de los siguientes supuestos, la Empresa no cederá datos personales a terceros sin obtener previamente el consentimiento del interesado."
+        ],
+        "list": [
+          "Cuando así lo exija la ley.",
+          "Cuando sea necesario para proteger la vida, la integridad física o el patrimonio de una persona y resulte difícil obtener el consentimiento del interesado.",
+          "Cuando sea especialmente necesario para mejorar la salud pública o para promover el desarrollo saludable de los menores y resulte difícil obtener el consentimiento del interesado.",
+          "Cuando sea necesario cooperar con un organismo del Estado o similar en la ejecución de las funciones establecidas por la ley y la obtención del consentimiento del interesado pueda obstaculizar dicha ejecución."
+        ],
+        "bodyAfter": [
+          "La Empresa podrá encargar la totalidad o una parte del tratamiento de la información personal a empresas externas (subcontratistas, proveedores de servicios en la nube, etc.) dentro del alcance necesario para alcanzar la finalidad del uso. En tal caso, la Empresa ejercerá la supervisión necesaria y adecuada sobre el encargado de conformidad con la norma interna «Reglamento de Gestión de Proveedores y Encargos Externos».",
+          "Cuando la Empresa ceda datos personales a un tercero, o los reciba de un tercero, registrará y conservará la información necesaria de conformidad con los artículos 29 y 30 de la Ley de Protección de Información Personal."
+        ]
+      },
+      {
+        "title": "4. Uso de servicios en la nube y cesión a terceros situados en el extranjero (artículo 28 de la Ley de Protección de Información Personal)",
+        "body": [
+          "La Empresa trata información personal utilizando servicios en la nube como Google Workspace (unidades compartidas), Google Cloud (GCP/Secret Manager), GitHub, Bitwarden, entre otros.",
+          "Con el uso de estos servicios en la nube, los datos personales pueden tratarse en el extranjero (transferencia transfronteriza). Cuando la Empresa ceda datos personales a un tercero situado en el extranjero (incluido el supuesto en que los datos se traten en el extranjero a través de servicios en la nube), los tratará adecuadamente de conformidad con el artículo 28 de la Ley de Protección de Información Personal, ya sea obteniendo previamente el consentimiento del interesado, comprobando que dicho tercero ha implantado un sistema conforme a los criterios establecidos en dicha ley, o por cualquier otro medio previsto por la ley.",
+          "Cuando la Empresa lleve a cabo una transferencia transfronteriza, facilitará al interesado, a petición de este y conforme a lo dispuesto por la ley, el nombre del país en que se encuentra el destinatario de la transferencia, información sobre el régimen de protección de la información personal de dicho país y sobre las medidas adoptadas por el destinatario.",
+          "* Respecto de la Información Personal Específica (My Number), no se realizará cesión alguna a terceros situados en el extranjero, de conformidad con la Ley My Number."
+        ]
+      },
+      {
+        "title": "5. Medidas de gestión de la seguridad",
+        "body": [
+          "Con el fin de prevenir la fuga, pérdida o deterioro de la información personal que trata, así como para garantizar otras medidas de gestión de la seguridad, la Empresa adopta las siguientes medidas (los detalles se rigen por las normas internas «Reglamento de Tratamiento de Información Personal e Información Personal Específica» y «Reglamento de Gestión de la Seguridad de la Información»)."
+        ],
+        "list": [
+          "Medidas de gestión de la seguridad de carácter organizativo y humano: Se designa un Responsable de Protección de Información Personal (Responsable de Gestión del ISMS) que conoce y supervisa la situación del tratamiento. Se imparte formación a los empleados sobre el deber de confidencialidad y el cumplimiento de las leyes y reglamentos pertinentes.",
+          "Control de acceso: Conforme al enfoque de confianza cero (zero trust), el acceso a los datos personales se controla mediante autenticación multifactor (MFA), verificación del estado de los dispositivos y el principio de mínimo privilegio. Respecto de la Información Personal Específica, los permisos se configuran de modo que únicamente puedan acceder a ella las personas encargadas de su tratamiento.",
+          "Cifrado: Los terminales de trabajo tienen habilitado el cifrado de disco (FileVault) y las comunicaciones se cifran mediante TLS u otros medios. Los datos almacenados en la nube tienen habilitado el cifrado en reposo.",
+          "Registros (logs) y detección: El acceso a los datos personales es objeto de registros mínimos relacionados con la actividad laboral (que no captan contenido privado), que se conservan y supervisan.",
+          "Eliminación: Los datos personales que dejan de ser necesarios se eliminan mediante un método que impide su recuperación."
+        ]
+      },
+      {
+        "title": "6. Solicitud de divulgación, entre otras, de los datos personales en posesión de la Empresa",
+        "body": [
+          "El interesado o su representante (entendiéndose por tal el representante legal y el representante apoderado por el interesado) podrá solicitar a la Empresa, respecto de los datos personales en su posesión que identifiquen a dicho interesado, la notificación de la finalidad del uso, la divulgación, la rectificación, adición o supresión de su contenido, la suspensión del uso o el borrado, y la suspensión de la cesión a terceros.",
+          "La Empresa tramitará la solicitud conforme al método que tiene establecido, acompañada de los documentos que permitan verificar la identidad del interesado o de su representante.",
+          "La Empresa decidirá el contenido de la respuesta y lo notificará al interesado, en principio, dentro de los 30 días siguientes a la fecha de recepción de la solicitud. Cuando, por circunstancias inevitables, no pueda responder dentro de dicho plazo, notificará el motivo y la previsión de respuesta.",
+          "Cuando la Empresa atienda una solicitud de divulgación, podrá cobrar la tarifa que tiene establecida, dentro de un alcance que se considere razonable teniendo en cuenta los costes reales.",
+          "En determinados supuestos previstos por la ley (cuando exista riesgo de perjudicar los derechos e intereses del interesado o de un tercero, cuando exista riesgo de obstaculizar gravemente la adecuada ejecución de las actividades de la Empresa, cuando ello suponga infringir otras leyes, etc.), la Empresa podrá no divulgar la totalidad o una parte. En tal caso, lo notificará al interesado junto con el motivo correspondiente."
+        ]
+      },
+      {
+        "title": "7. Actuación en caso de producirse una fuga u otro incidente",
+        "body": [
+          "Cuando se produzca una fuga, pérdida, deterioro u otro incidente relativo a la seguridad de los datos personales y dicho incidente corresponda a alguno de los supuestos previstos en el artículo 26 de la Ley de Protección de Información Personal, la Empresa informará a la Comisión de Protección de Información Personal sin demora (informe preliminar) y dentro del plazo establecido (informe definitivo), y notificará al interesado sin demora en función de la situación de dicho incidente. Cuando la notificación al interesado resulte difícil, la Empresa adoptará las medidas alternativas necesarias para proteger los derechos e intereses del interesado. Respecto de las fugas u otros incidentes relativos a la Información Personal Específica, la Empresa realizará por separado los informes y notificaciones necesarios de conformidad con la Ley My Number y con el reglamento de la Comisión de Protección de Información Personal."
+        ]
+      },
+      {
+        "title": "8. Tratamiento relativo a la obtención y supervisión de registros (logs) (para empleados)",
+        "body": [
+          "Con el fin de gestionar la seguridad de la información, gestionar las relaciones laborales y registrar objetivamente la jornada laboral, la Empresa obtiene y supervisa, en los terminales y servicios en la nube utilizados para el trabajo, los registros (logs) relacionados con la actividad laboral (autenticación, ejecución de procesos, metadatos de comunicación, accesos a datos internos, configuración de software, asistencia/tiempo de uso). La Empresa no obtiene contenido privado (contenido de navegación personal, contenido de cuentas personales, pulsaciones de teclas).",
+          "La finalidad, el alcance, el responsable, las condiciones de consulta y el periodo de conservación de la obtención y supervisión de registros (logs) se rigen por lo establecido en las normas internas «Reglamento de Obtención de Registros y Monitorización» y «Aviso y Consentimiento sobre la Monitorización de Empleados»."
+        ]
+      }
+    ],
+    "inquiryTitle": "9. Punto de contacto para consultas",
+    "inquiryLead": "Las solicitudes de divulgación, entre otras, de los datos personales en posesión de la Empresa, así como las reclamaciones y consultas relativas al tratamiento de la información personal, se atienden en el siguiente punto de contacto.",
+    "inquiryTable": [
+      {
+        "label": "Punto de contacto",
+        "value": "Cor. Inc. Responsable de Protección de Información Personal (Responsable de Gestión del ISMS Nagisa Terada)"
+      },
+      {
+        "label": "Forma de contacto",
+        "value": "Póngase en contacto con nosotros a través del formulario de contacto."
+      }
+    ],
+    "inquiryLinkLabel": "formulario de contacto",
+    "revisionTitle": "10. Modificación de la presente política",
+    "revisionBody": [
+      "La Empresa podrá modificar la presente política por motivos como reformas legales, cambios en su actividad empresarial u otras circunstancias. En caso de modificación, publicará el contenido modificado en el sitio web de la Empresa u otros medios. Cuando realice cambios importantes, los dará a conocer por un medio adecuado."
+    ],
+    "securityLinkPrefix": "Para conocer nuestro marco de seguridad de la información, consulte también nuestra página de ",
+    "securityLinkText": "Seguridad",
+    "securityLinkSuffix": ".",
+    "footer": "Versión: 0.1 (Borrador) / Fecha de referencia: 13 de junio de 2026 / Elaborado por: Cor. Inc. / Responsable: Responsable de Protección de Información Personal (Responsable de Gestión del ISMS, Nagisa Terada)",
+    "footerNote": "* La presente política es un resumen, con fines de publicación externa, de la norma interna «Reglamento de Tratamiento de Información Personal e Información Personal Específica», correspondiéndose ambos documentos; en caso de discrepancia entre ellos, se interpretará conforme a las leyes y reglamentos y al espíritu de dicha norma."
+  },
+  "security": {
+    "title": "Seguridad",
+    "tagline": "Crea con libertad. Protege con responsabilidad.",
+    "lead": "Cor. Inc. está desarrollando su programa de seguridad de la información para equilibrar la velocidad del desarrollo de IA con la responsabilidad de proteger la valiosa información de nuestros clientes. Manteniendo un entorno local-first en el que los desarrolladores pueden ser muy productivos, operamos con una combinación de controles de acceso según la confidencialidad, herramientas de IA aprobadas, un registro de seguridad mínimo y un marco de respuesta a incidentes.",
+    "pillarsTitle": "Tres pilares",
+    "pillars": [
+      {
+        "title": "Local-First",
+        "description": "Usamos Macs de alta especificación proporcionados por la empresa como base para que los desarrolladores puedan trabajar cómodamente en un entorno de desarrollo local. Combinando cifrado de dispositivos, MDM, gestión de cuentas y las configuraciones de seguridad necesarias, buscamos equilibrar la velocidad de desarrollo con la gestión de la información."
+      },
+      {
+        "title": "Registro de seguridad mínimo, detección y respuesta",
+        "description": "En lugar de prohibirlo todo de forma preventiva, mantenemos visibilidad de seguridad en la medida necesaria para nuestro trabajo y construimos un marco que permite detectar y responder con rapidez cuando surgen problemas. Los datos que recopilamos se limitan a la telemetría de seguridad relacionada con el trabajo, y nuestra política es no recopilar contenido privado de forma excesiva."
+      },
+      {
+        "title": "Niveles de confidencialidad",
+        "description": "Según la confidencialidad de la información tratada, utilizamos de forma selectiva cuentas de empresa, herramientas de IA aprobadas, controles de acceso y entornos aislados cuando es necesario. Para la verificación no confidencial priorizamos la velocidad, mientras que aplicamos un tratamiento más estricto al manejar datos confidenciales de clientes, información personal, código fuente y similares."
+      }
+    ],
+    "statusTitle": "Desarrollo del marco",
+    "status": {
+      "legal": "Desde junio de 2026, en colaboración con nuestro asesor legal, estamos desarrollando un marco de revisión legal que abarca contratos, información personal, uso de IA y operación de la seguridad de la información.",
+      "isms": "Cor. Inc. avanza en la preparación operativa de su ISMS (Sistema de Gestión de Seguridad de la Información), con el objetivo de obtener la certificación ISO/IEC 27001."
+    },
+    "aiTitle": "Política de uso de IA",
+    "aiDescription": "Cor. aprovecha activamente las herramientas de IA para su trabajo. Al mismo tiempo, al manejar datos confidenciales de clientes, información personal, código fuente, datos de entrenamiento y similares, utilizamos herramientas de IA con contratos y configuraciones que impiden su uso para entrenamiento, cuentas de empresa o entornos aprobados. Los resultados de la IA son verificados por personas y se utilizan solo tras confirmar derechos, exactitud y seguridad.",
+    "tableTitle": "Iniciativas",
+    "tableHead": {
+      "area": "Área",
+      "effort": "Iniciativa",
+      "state": "Estado"
+    },
+    "table": [
+      {
+        "area": "Revisión legal",
+        "effort": "En colaboración con el asesor legal, revisión de contratos, información personal, uso de IA y operación de ISMS",
+        "state": "En desarrollo desde junio de 2026"
+      },
+      {
+        "area": "ISMS",
+        "effort": "Con el objetivo de la certificación ISO/IEC 27001, desarrollo de gestión de riesgos, formación, políticas y marco de auditoría",
+        "state": "En desarrollo"
+      },
+      {
+        "area": "Gestión de dispositivos",
+        "effort": "Macs proporcionados por la empresa, cifrado de dispositivos, MDM y distribución de las configuraciones necesarias",
+        "state": "Implementación por fases"
+      },
+      {
+        "area": "Uso de IA",
+        "effort": "Aplicación de herramientas de IA aprobadas, cuentas de empresa y configuraciones sin uso para entrenamiento según la confidencialidad",
+        "state": "Preparación operativa en curso"
+      },
+      {
+        "area": "LLM local",
+        "effort": "Apoyo al uso de IA que evita exponer innecesariamente información confidencial al exterior",
+        "state": "Aplicado según el proyecto"
+      },
+      {
+        "area": "Respuesta a incidentes",
+        "effort": "Codificación en políticas de las líneas de notificación, la respuesta inicial y la prevención de recurrencias",
+        "state": "En desarrollo dentro de la operación de ISMS"
+      }
+    ],
+    "privacyTitle": "Sobre la privacidad",
+    "privacyDescription": "Para saber cómo tratamos la información personal, consulta nuestra ",
+    "privacyLinkText": "Política de privacidad",
+    "privacySuffix": ".",
+    "privacyLead": "* Para los detalles legales sobre el tratamiento de la información personal y los datos de clientes, consulta nuestra Política de privacidad.",
+    "governanceTitle": "Desarrollo del marco",
+    "governanceDescription": "Cor. Inc. avanza en la preparación operativa de su ISMS (Sistema de Gestión de Seguridad de la Información), con el objetivo de obtener la certificación ISO/IEC 27001.",
+    "ctas": {
+      "primary": "Consulta gratuita",
+      "secondary": "Contáctanos",
+      "tertiary": "Política de privacidad"
+    }
+  },
+  "nextStep": {
+    "about": {
+      "heading": "Ahora que conoces un poco a Cor., ¿hablamos de tu proyecto?",
+      "ctaLabel": "Contáctanos"
+    },
+    "contact": {
+      "heading": "Antes de escribirnos",
+      "lead": "Cuéntanos lo que tienes en mente; estaremos encantados de ayudarte.",
+      "ctaLabel": "Ponte en contacto"
+    },
+    "security": {
+      "heading": "Si sientes que puedes confiarnos tu proyecto, ¿por qué no empezamos con una conversación?",
+      "ctaLabel": "Solicita una consulta gratuita"
+    }
+  }
+}
