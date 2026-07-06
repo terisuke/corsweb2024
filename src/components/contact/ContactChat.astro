@@ -1,5 +1,7 @@
 ---
 // お問い合わせ AI チャット ウィジェット（機能フラグで切替・src/config/contact.ts）。
+// ChatPanel（チャット UI）と HandoffForm（連絡先フォーム）を組み合わせ、
+// クライアント側の挙動はこのファイル末尾のインラインスクリプトが担う。
 //
 // セキュリティ要件（バックエンド README の必読項目）:
 //   chat の `reply` は攻撃者が誘導しうる LLM 出力のため、必ず textContent で
@@ -13,6 +15,8 @@
 //   PUBLIC_TURNSTILE_SITEKEY  Cloudflare Turnstile のサイトキー（任意）。
 //                             未設定なら Turnstile ウィジェットは描画しない（開発時）。
 import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+import ChatPanel from './chat/ChatPanel.astro';
+import HandoffForm from './chat/HandoffForm.astro';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -50,172 +54,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
       </p>
     </div>
 
-    <div
-      id="contact-chat"
-      class="mt-6 flex flex-col overflow-hidden rounded-2xl bg-primary-50 ring-1 ring-primary-900/15 dark:bg-primary-950 dark:ring-primary-200/15"
-      data-dev={isDev ? 'true' : 'false'}
-      data-turnstile-sitekey={turnstileSiteKey}
-    >
-      <!-- メッセージ一覧 -->
-      <div
-        id="chat-messages"
-        class="flex min-h-[18rem] flex-col gap-3 overflow-y-auto p-4 sm:p-6"
-        aria-live="polite"
-        aria-atomic="false"
-        aria-label={c.assistantLabel}
-      >
-        <!-- 初期グリーティング（assistant・PLAIN TEXT で挿入） -->
-        <div class="flex flex-col items-start gap-1">
-          <span class="text-xs font-medium text-primary-950/50 dark:text-primary-200/50">{c.assistantLabel}</span>
-          <div
-            class="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-base text-primary-950 shadow-sm dark:bg-primary-900 dark:text-primary-100"
-          >
-            {c.greeting}
-          </div>
-        </div>
-      </div>
-
-      <!-- 入力中インジケータ -->
-      <div id="chat-typing" class="hidden px-4 pb-2 sm:px-6" aria-hidden="true">
-        <span class="inline-flex items-center gap-2 text-sm text-primary-950/60 dark:text-primary-200/60">
-          <span class="inline-flex gap-1">
-            <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.3s]"></span>
-            <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.15s]"></span>
-            <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400"></span>
-          </span>
-          {c.thinking}
-        </span>
-      </div>
-
-      <!-- 入力フォーム -->
-      <form id="chat-form" class="flex items-end gap-2 border-t border-primary-900/10 p-3 dark:border-primary-200/10">
-        <label for="chat-input" class="sr-only">{c.placeholder}</label>
-        <textarea
-          id="chat-input"
-          rows="1"
-          placeholder={c.placeholder}
-          autocomplete="off"
-          class="block max-h-40 min-h-[48px] w-full resize-none appearance-none rounded-xl border-0 bg-white px-4 py-3 text-base text-primary-950 ring-1 ring-primary-900/20 transition placeholder:text-primary-950/50 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-900 dark:text-primary-100 dark:ring-primary-200/20 dark:placeholder:text-primary-200/50 dark:focus:ring-primary-400"
-        ></textarea>
-        <button
-          type="submit"
-          id="chat-send"
-          class="inline-flex min-h-[48px] min-w-[48px] items-center justify-center rounded-xl bg-primary-600 px-5 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
-        >
-          {c.send}
-        </button>
-      </form>
-    </div>
+    <ChatPanel c={c} isDev={isDev} turnstileSiteKey={turnstileSiteKey} />
 
     <!-- 連絡先フォーム（readyForContact=true で表示） -->
-    <div id="contact-handoff" class="mt-6 hidden">
-      <p
-        class="mb-4 rounded-md bg-primary-100 px-4 py-3 text-base text-primary-950 dark:bg-primary-900 dark:text-primary-100"
-        role="status"
-      >
-        {c.readyNotice}
-      </p>
-
-      <form id="handoff-form" class="flex flex-col gap-y-4" novalidate>
-        <h3 class="text-xl font-medium tracking-tight">{c.form.title}</h3>
-
-        <div>
-          <label for="handoff-name" class="mb-1 block text-sm font-medium">{c.form.name} *</label>
-          <input
-            type="text"
-            id="handoff-name"
-            name="name"
-            autocomplete="name"
-            required
-            class="block min-h-[48px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
-          />
-        </div>
-
-        <div>
-          <label for="handoff-email" class="mb-1 block text-sm font-medium">{c.form.email} *</label>
-          <input
-            type="email"
-            id="handoff-email"
-            name="email"
-            autocomplete="email"
-            inputmode="email"
-            required
-            class="block min-h-[48px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
-          />
-        </div>
-
-        <div>
-          <label for="handoff-company" class="mb-1 block text-sm font-medium">{c.form.company}</label>
-          <input
-            type="text"
-            id="handoff-company"
-            name="company"
-            autocomplete="organization"
-            class="block min-h-[48px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
-          />
-        </div>
-
-        <div>
-          <label for="handoff-message" class="mb-1 block text-sm font-medium">{c.form.message} *</label>
-          <textarea
-            id="handoff-message"
-            name="message"
-            rows="4"
-            required
-            class="block min-h-[120px] w-full appearance-none rounded-md border-0 bg-primary-50 px-4 py-3 text-base ring-1 ring-primary-900/40 transition focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-950 dark:ring-primary-200/40 dark:focus:ring-primary-400"
-          ></textarea>
-        </div>
-
-        <!-- ハニーポット: 人間には見えない。bot が埋めると submit 側で握り潰される。 -->
-        <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
-          <label for="handoff-website">Website</label>
-          <input
-            type="text"
-            id="handoff-website"
-            name="website"
-            tabindex="-1"
-            autocomplete="off"
-          />
-        </div>
-
-        {/* Turnstile は handoff 表示時に JS で明示レンダリングする（cf-turnstile クラスを付けず
-            自動レンダリングを抑止。hidden コンテナ内で 0px レンダリングされるのを防ぐ）。 */}
-        {turnstileSiteKey && (
-          <div id="handoff-turnstile" data-sitekey={turnstileSiteKey}></div>
-        )}
-
-        <!-- 利用目的 + プライバシーポリシー同意 -->
-        <div class="flex flex-col gap-3 rounded-md bg-primary-100/60 px-4 py-4 dark:bg-primary-900/40">
-          <p class="text-sm text-primary-950/70 dark:text-primary-200/70">{c.consent.purpose}</p>
-          <p class="text-sm text-primary-950/70 dark:text-primary-200/70">
-            {c.consent.linkBefore}<a
-              href={privacyHref}
-              class="font-medium text-primary-700 underline underline-offset-2 hover:text-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-300 dark:hover:text-primary-100"
-            >{c.consent.linkText}</a>{c.consent.linkAfter}
-          </p>
-          <div class="flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="handoff-consent"
-              name="privacyConsent"
-              required
-              class="mt-0.5 h-6 w-6 shrink-0 rounded border-primary-900/40 text-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/40"
-            />
-            <label for="handoff-consent" class="text-sm text-primary-950 dark:text-primary-200">{c.consent.checkboxLabel}</label>
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          id="handoff-submit"
-          class="inline-flex min-h-[48px] items-center justify-center self-start rounded-full bg-primary-600 px-6 py-3 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
-        >
-          {c.form.submit}
-        </button>
-
-        <p id="handoff-status" class="hidden text-base" role="status" aria-live="polite"></p>
-      </form>
-    </div>
+    <HandoffForm c={c} privacyHref={privacyHref} turnstileSiteKey={turnstileSiteKey} />
   </div>
 </section>
 
