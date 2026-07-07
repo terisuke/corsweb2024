@@ -21,6 +21,34 @@ const t = getTranslations(currentLocale);
         {t.security.lead}
       </p>
 
+      <section>
+        <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.basicPolicy.title}</h2>
+        {
+          t.security.basicPolicy.note && (
+            <p class="mb-6 rounded-md border border-primary-900/15 bg-primary-900/[0.03] px-4 py-3 text-sm dark:border-primary-300/15 dark:bg-primary-300/[0.04]">
+              {t.security.basicPolicy.note}
+            </p>
+          )
+        }
+        {
+          Array.isArray(t.security.basicPolicy.preamble) &&
+            t.security.basicPolicy.preamble.map((para) => <p class="mb-4">{para}</p>)
+        }
+        <h3 class="type-heading mb-4 mt-8 text-lg font-medium">{t.security.basicPolicy.guidelinesTitle}</h3>
+        <ol class="list-outside list-decimal space-y-3 pl-6">
+          {
+            Array.isArray(t.security.basicPolicy.guidelines) &&
+              t.security.basicPolicy.guidelines.map((item) => <li>{item}</li>)
+          }
+        </ol>
+        <div class="mt-8 text-end">
+          <p>{t.security.basicPolicy.signatureDate}</p>
+          <p class="mt-1">{t.security.basicPolicy.signatureCompany}</p>
+          <p class="mt-1 font-medium">{t.security.basicPolicy.signatureName}</p>
+        </div>
+        <p class="mt-6 text-sm text-primary-950/50 dark:text-primary-200/50">{t.security.basicPolicy.meta}</p>
+      </section>
+
       <h2 class="type-heading mb-6 mt-12 text-xl font-medium sm:text-2xl">{t.security.pillarsTitle}</h2>
       <div class="flex flex-col gap-8">
         {
