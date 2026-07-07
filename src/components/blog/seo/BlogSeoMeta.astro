@@ -1,0 +1,54 @@
+---
+// ブログ記事の基本SEOメタタグ: description/keywords/canonical/RSS/article:*/hreflang。
+// BlogLayout から抽出（出力は抽出前と同一）。
+import type { Locale } from '../../../utils/i18n';
+
+interface Props {
+  description: string;
+  keywords: string;
+  author: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  category: string;
+  tags: string[];
+  currentLocale: Locale;
+}
+
+const { description, keywords, author, pubDate, updatedDate, category, tags, currentLocale } =
+  Astro.props;
+---
+
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="author" content={author} />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="revisit-after" content="7 days" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+
+<!-- RSS Feeds -->
+<link rel="alternate" type="application/rss+xml" title="Cor.inc 技術ブログ (日本語)" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title="Cor.inc Tech Blog (English)" href="/en/rss.xml" />
+
+<!-- Article specific meta tags -->
+<meta property="article:published_time" content={pubDate.toISOString()} />
+{updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+<meta property="article:author" content={author} />
+<meta property="article:section" content={category} />
+{tags.map(tag => <meta property="article:tag" content={tag} />)}
+
+<!-- Hreflang tags for bilingual SEO -->
+{currentLocale === 'ja' ? (
+  <>
+    <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="ja" />
+    <link rel="alternate" href={new URL(`/en${Astro.url.pathname}`, Astro.site)} hreflang="en" />
+    <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="x-default" />
+  </>
+) : (
+  <>
+    <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="ja" />
+    <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="en" />
+    <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="x-default" />
+  </>
+)}
