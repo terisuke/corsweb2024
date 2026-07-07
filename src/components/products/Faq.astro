@@ -4,7 +4,15 @@ import { getCurrentLocale, getTranslations } from '../../utils/i18n';
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
-
+// ja のみ linkHref/linkLabel を持つ設問がある。id は aria-controls 用（現状未使用ロケールあり）。
+type FaqQuestion = {
+  question: string;
+  answer: string;
+  id?: string;
+  linkHref?: string;
+  linkLabel?: string;
+};
+const questions: FaqQuestion[] = t.faq.questions;
 ---
 
 <section class="py-16 sm:py-20">
@@ -16,7 +24,7 @@ const t = getTranslations(currentLocale);
       <div class="lg:col-span-2">
         <dl class="-mt-3">
           {
-            t.faq.questions.map((question, index) => (
+            questions.map((question, index) => (
               <div
                 class="rounded-3xl px-4 transition"
                 x-data={`{ open: false }`}
