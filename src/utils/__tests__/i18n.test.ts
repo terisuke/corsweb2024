@@ -49,6 +49,8 @@ describe('getCurrentLocale', () => {
 
   it('does not match a locale that appears mid-path', () => {
     expect(getCurrentLocale(makeUrl('/blog/en'))).toBe('ja');
+    expect(getCurrentLocale(makeUrl('/blog/en/post'))).toBe('ja');
+    expect(getCurrentLocale(makeUrl('/docs/es/guide'))).toBe('ja');
   });
 });
 
@@ -74,10 +76,12 @@ describe('getLocalizedUrl', () => {
     expect(getLocalizedUrl('/', 'es')).toBe('/es');
   });
 
-  it('round-trips with getCurrentLocale for non-root paths', () => {
+  it('round-trips with getCurrentLocale for root and non-root paths', () => {
     for (const locale of ['en', 'zh', 'ko', 'es'] as const) {
-      const localized = getLocalizedUrl('/blog', locale);
-      expect(getCurrentLocale(makeUrl(localized))).toBe(locale);
+      for (const path of ['/', '/blog']) {
+        const localized = getLocalizedUrl(path, locale);
+        expect(getCurrentLocale(makeUrl(localized))).toBe(locale);
+      }
     }
   });
 });
@@ -98,7 +102,7 @@ describe('getOtherLocale', () => {
       current = getOtherLocale(current);
       visited.push(current);
     }
-    expect([...visited].sort()).toEqual(['en', 'es', 'ja', 'ko', 'zh']);
+    expect([...visited].sort()).toEqual([...LOCALES].sort());
     expect(current).toBe('ja'); // returns to the start
   });
 });
@@ -157,11 +161,14 @@ describe('getTranslations / getJaTranslations', () => {
   });
 });
 
-// Recursive key set (array-aware): objects contribute dotted paths, arrays
-// contribute the union of member paths under a "[]" segment.
+// Index-aware recursive key set: objects contribute dotted paths, arrays
+// descend into each element with a concrete "[i]" index segment. Using the
+// index (rather than a union "[]") means a per-index divergence — e.g. a `link`
+// key that moves to a different array position, or a locale gaining/losing an
+// array element — surfaces as a distinct path and fails the comparison.
 function collectKeys(value: unknown, prefix: string, acc: Set<string>): void {
   if (Array.isArray(value)) {
-    for (const el of value) collectKeys(el, `${prefix}[]`, acc);
+    value.forEach((el, i) => collectKeys(el, `${prefix}[${i}]`, acc));
   } else if (value !== null && typeof value === 'object') {
     for (const key of Object.keys(value as Record<string, unknown>)) {
       const path = prefix ? `${prefix}.${key}` : key;
@@ -177,25 +184,74 @@ function keySet(locale: Locale): Set<string> {
   return acc;
 }
 
+// Collect the length of every array reachable in the tree, keyed by its dotted
+// path (index segments omitted so the path is stable across locales).
+function collectArrayLengths(
+  value: unknown,
+  prefix: string,
+  acc: Map<string, number>,
+): void {
+  if (Array.isArray(value)) {
+    acc.set(prefix, value.length);
+    value.forEach((el) => collectArrayLengths(el, `${prefix}[]`, acc));
+  } else if (value !== null && typeof value === 'object') {
+    for (const key of Object.keys(value as Record<string, unknown>)) {
+      const path = prefix ? `${prefix}.${key}` : key;
+      collectArrayLengths((value as Record<string, unknown>)[key], path, acc);
+    }
+  }
+}
+
+function arrayLengths(locale: Locale): Map<string, number> {
+  const acc = new Map<string, number>();
+  collectArrayLengths(getTranslations(locale), '', acc);
+  return acc;
+}
+
 describe('locale JSON key-structure consistency (regression guard M-2)', () => {
   const TRANSLATED: Locale[] = ['en', 'zh', 'ko', 'es'];
 
-  it.each(TRANSLATED)('locale %s has the exact same key set as en', (locale) => {
-    const en = keySet('en');
-    const target = keySet(locale);
-    const missing = [...en].filter((k) => !target.has(k));
-    const extra = [...target].filter((k) => !en.has(k));
-    expect(missing).toEqual([]);
-    expect(extra).toEqual([]);
-  });
+  it.each(TRANSLATED)(
+    'locale %s has the exact same index-aware key set as en',
+    (locale) => {
+      const en = keySet('en');
+      const target = keySet(locale);
+      const missing = [...en].filter((k) => !target.has(k));
+      const extra = [...target].filter((k) => !en.has(k));
+      expect(missing).toEqual([]);
+      expect(extra).toEqual([]);
+    },
+  );
 
-  it('ja is a superset of en except for the single known extra key', () => {
+  it.each(TRANSLATED)(
+    'locale %s has the same array lengths as en at every path',
+    (locale) => {
+      const en = arrayLengths('en');
+      const target = arrayLengths(locale);
+      expect([...target.keys()].sort()).toEqual([...en.keys()].sort());
+      for (const [path, length] of en) {
+        expect(target.get(path)).toBe(length);
+      }
+    },
+  );
+
+  it('freezes the exact set of index-aware keys en has but ja lacks', () => {
     const en = keySet('en');
     const ja = keySet('ja');
-    // ja may add keys, but every en key must exist in ja EXCEPT works.items[].link,
-    // which currently exists only in en. This freezes the current state so any
-    // new divergence fails the test.
-    const enNotJa = [...en].filter((k) => !ja.has(k));
-    expect(enNotJa).toEqual(['works.items[].link']);
+    // ja and en diverge in the works.items array: en/zh/ko/es carry a link on
+    // items[1] and a whole extra 7th item (items[6]) that ja does not have.
+    // Freeze that exact difference so any new divergence fails the test.
+    const enNotJa = [...en].filter((k) => !ja.has(k)).sort();
+    expect(enNotJa).toEqual([
+      'works.items[1].link',
+      'works.items[6].description',
+      'works.items[6].name',
+      'works.items[6].tag',
+    ]);
+  });
+
+  it('reflects the ja/en works.items length difference (ja: 6, en: 7)', () => {
+    expect(arrayLengths('ja').get('works.items')).toBe(6);
+    expect(arrayLengths('en').get('works.items')).toBe(7);
   });
 });
