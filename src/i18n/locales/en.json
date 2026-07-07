@@ -1268,6 +1268,30 @@
     "title": "Security",
     "tagline": "Build freely. Protect responsibly.",
     "lead": "Cor. Inc. is building out its information security program to balance the speed of AI development with the responsibility of protecting our customers' valuable information. While maintaining a local-first environment where developers can be highly productive, we operate a combination of sensitivity-based access controls, approved AI tools, minimal security logging, and an incident response framework.",
+    "basicPolicy": {
+      "title": "Information Security Basic Policy",
+      "note": "The Japanese version is the authoritative text. This English translation is provided for convenience.",
+      "preamble": [
+        "Cor. Inc. (hereinafter, “the Company”), under its management philosophy of “shaping the future and realizing a happy society through co-creation rather than competition,” engages in businesses including contracted AI development and AI adoption support, AI advisory and training, the provision of the AI evaluation platform “Grift,” and support for highly confidential AI operations using local LLMs.",
+        "The scope of this Basic Policy covers all operations related to the entirety of the Company's business at its head office (Fukuoka) — the planning, requirements definition, development, and operation of AI solutions, together with the associated accounting and finance work — as well as the information assets handled in those operations.",
+        "Because these businesses involve handling many information assets — including confidential information, source code, and training data entrusted to us by customers — the Company recognizes ensuring information security as a critical management issue. The Company believes that implementing appropriate safeguards for customer information collected through its operations and for the information assets it handles, and maintaining their confidentiality, integrity, and availability, forms the foundation of the trust it builds with customers and of the sustainable development of its business.",
+        "Through the establishment and operation of an information security management system (ISMS), the Company aims to prevent security incidents such as information leaks and tampering, and to that end establishes the following information security guidelines."
+      ],
+      "guidelinesTitle": "Guidelines",
+      "guidelines": [
+        "The Company will identify information asset risks using defined procedures and implement appropriate risk treatment in order to establish and continually improve its information security management system.",
+        "The Company will clearly define roles and responsibilities for information security and appropriately manage its information assets.",
+        "The Company will conduct education and awareness activities for management, employees, and all related parties so that they recognize their responsibility to maintain information security.",
+        "The Company will monitor and record the implementation of its information security management system, and will improve operational reliability and pursue continual improvement through the setting and achievement of information security objectives and through periodic internal audits and management reviews.",
+        "In the unlikely event of an information security problem, the Company will immediately investigate the cause, minimize the damage, and strive to ensure business continuity.",
+        "The Company will comply with laws and regulations, other social norms, and contracts with customers concerning information assets and their handling.",
+        "The Company will consider climate change and other changes in the business environment as issues relevant to information security and business continuity."
+      ],
+      "signatureDate": "July 1, 2026",
+      "signatureCompany": "Cor. Inc.",
+      "signatureName": "Representative Director Kosuke Terada",
+      "meta": "Established: July 1, 2026 / Version 1"
+    },
     "pillarsTitle": "Three Pillars",
     "pillars": [
       {

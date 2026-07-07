@@ -1268,6 +1268,30 @@
     "title": "Seguridad",
     "tagline": "Crea con libertad. Protege con responsabilidad.",
     "lead": "Cor. Inc. está desarrollando su programa de seguridad de la información para equilibrar la velocidad del desarrollo de IA con la responsabilidad de proteger la valiosa información de nuestros clientes. Manteniendo un entorno local-first en el que los desarrolladores pueden ser muy productivos, operamos con una combinación de controles de acceso según la confidencialidad, herramientas de IA aprobadas, un registro de seguridad mínimo y un marco de respuesta a incidentes.",
+    "basicPolicy": {
+      "title": "Política Básica de Seguridad de la Información",
+      "note": "La versión en japonés es el texto auténtico. Esta traducción al español se ofrece únicamente a título informativo.",
+      "preamble": [
+        "Cor. Inc. (en adelante, «la Compañía»), bajo su filosofía de gestión de «abrir el futuro y realizar una sociedad feliz a través de la cocreación en lugar de la competencia», desarrolla actividades como el desarrollo de IA por encargo y el apoyo a la adopción de IA, la asesoría y formación en IA, la provisión de la plataforma de evaluación de IA «Grift» y el apoyo a operaciones de IA de alta confidencialidad mediante LLM locales.",
+        "El ámbito de aplicación de esta Política Básica comprende las operaciones relacionadas con la totalidad de los negocios de la Compañía en su sede central (Fukuoka) —la planificación, definición de requisitos, desarrollo y operación de soluciones de IA, así como las tareas contables y financieras asociadas— y los activos de información tratados en dichas operaciones.",
+        "Dado que estos negocios implican el manejo de numerosos activos de información, incluidos la información confidencial, el código fuente y los datos de entrenamiento que nos confían nuestros clientes, la Compañía reconoce la garantía de la seguridad de la información como una cuestión de gestión fundamental. La Compañía considera que adoptar medidas de seguridad adecuadas respecto a la información de los clientes recopilada a través de sus operaciones y a los activos de información que maneja, y mantener su confidencialidad, integridad y disponibilidad, constituye la base de la relación de confianza con los clientes y del desarrollo continuo de su negocio.",
+        "Mediante el establecimiento y la operación de un sistema de gestión de seguridad de la información (ISMS), la Compañía tiene como objetivo prevenir incidentes de seguridad como fugas de información y alteraciones, y con ese fin establece las siguientes directrices de actuación en materia de seguridad de la información."
+      ],
+      "guidelinesTitle": "Directrices de actuación",
+      "guidelines": [
+        "La Compañía identificará los riesgos de los activos de información mediante procedimientos definidos e implementará el tratamiento de riesgos adecuado, a fin de establecer y mejorar continuamente su sistema de gestión de seguridad de la información.",
+        "La Compañía definirá claramente las funciones y responsabilidades relativas a la seguridad de la información y gestionará adecuadamente sus activos de información.",
+        "La Compañía llevará a cabo actividades de educación y concienciación dirigidas a la dirección, los empleados y todas las partes relacionadas, para que sean conscientes de su responsabilidad de mantener la seguridad de la información.",
+        "La Compañía supervisará y registrará la aplicación de su sistema de gestión de seguridad de la información y, mediante el establecimiento y la consecución de objetivos de seguridad de la información, así como auditorías internas y revisiones por la dirección periódicas, aumentará la fiabilidad de su operación y buscará la mejora continua.",
+        "En el caso improbable de que se produzca un problema de seguridad de la información, la Compañía investigará de inmediato la causa, minimizará los daños y se esforzará por garantizar la continuidad del negocio.",
+        "La Compañía cumplirá las leyes y reglamentos, otras normas sociales y los contratos con los clientes en lo relativo a los activos de información y su tratamiento.",
+        "La Compañía considerará el cambio climático y otros cambios en el entorno empresarial como cuestiones pertinentes para la seguridad de la información y la continuidad del negocio."
+      ],
+      "signatureDate": "1 de julio de 2026",
+      "signatureCompany": "Cor. Inc.",
+      "signatureName": "Director Representante Kosuke Terada",
+      "meta": "Fecha de establecimiento: 1 de julio de 2026 / 1.ª versión"
+    },
     "pillarsTitle": "Tres pilares",
     "pillars": [
       {
