@@ -1,0 +1,76 @@
+---
+// チャット UI（メッセージ一覧・入力中インジケータ・入力フォーム）。
+//
+// セキュリティ要件（バックエンド README の必読項目）:
+//   chat の `reply` は攻撃者が誘導しうる LLM 出力のため、必ず textContent で
+//   PLAIN TEXT として描画する。innerHTML / markdown→HTML は使わない。
+//   （描画ロジックは親 ContactChat.astro のインラインスクリプト参照）
+import { getTranslations } from '../../../utils/i18n';
+
+type ContactChatStrings = ReturnType<typeof getTranslations>['contactChat'];
+
+interface Props {
+  c: ContactChatStrings;
+  isDev: boolean;
+  turnstileSiteKey: string;
+}
+
+const { c, isDev, turnstileSiteKey } = Astro.props;
+---
+
+<div
+  id="contact-chat"
+  class="mt-6 flex flex-col overflow-hidden rounded-2xl bg-primary-50 ring-1 ring-primary-900/15 dark:bg-primary-950 dark:ring-primary-200/15"
+  data-dev={isDev ? 'true' : 'false'}
+  data-turnstile-sitekey={turnstileSiteKey}
+>
+  <!-- メッセージ一覧 -->
+  <div
+    id="chat-messages"
+    class="flex min-h-[18rem] flex-col gap-3 overflow-y-auto p-4 sm:p-6"
+    aria-live="polite"
+    aria-atomic="false"
+    aria-label={c.assistantLabel}
+  >
+    <!-- 初期グリーティング（assistant・PLAIN TEXT で挿入） -->
+    <div class="flex flex-col items-start gap-1">
+      <span class="text-xs font-medium text-primary-950/50 dark:text-primary-200/50">{c.assistantLabel}</span>
+      <div
+        class="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-base text-primary-950 shadow-sm dark:bg-primary-900 dark:text-primary-100"
+      >
+        {c.greeting}
+      </div>
+    </div>
+  </div>
+
+  <!-- 入力中インジケータ -->
+  <div id="chat-typing" class="hidden px-4 pb-2 sm:px-6" aria-hidden="true">
+    <span class="inline-flex items-center gap-2 text-sm text-primary-950/60 dark:text-primary-200/60">
+      <span class="inline-flex gap-1">
+        <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.3s]"></span>
+        <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400 [animation-delay:-0.15s]"></span>
+        <span class="h-2 w-2 animate-bounce rounded-full bg-primary-400"></span>
+      </span>
+      {c.thinking}
+    </span>
+  </div>
+
+  <!-- 入力フォーム -->
+  <form id="chat-form" class="flex items-end gap-2 border-t border-primary-900/10 p-3 dark:border-primary-200/10">
+    <label for="chat-input" class="sr-only">{c.placeholder}</label>
+    <textarea
+      id="chat-input"
+      rows="1"
+      placeholder={c.placeholder}
+      autocomplete="off"
+      class="block max-h-40 min-h-[48px] w-full resize-none appearance-none rounded-xl border-0 bg-white px-4 py-3 text-base text-primary-950 ring-1 ring-primary-900/20 transition placeholder:text-primary-950/50 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-primary-900 dark:text-primary-100 dark:ring-primary-200/20 dark:placeholder:text-primary-200/50 dark:focus:ring-primary-400"
+    ></textarea>
+    <button
+      type="submit"
+      id="chat-send"
+      class="inline-flex min-h-[48px] min-w-[48px] items-center justify-center rounded-xl bg-primary-600 px-5 text-base font-medium text-white transition hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
+    >
+      {c.send}
+    </button>
+  </form>
+</div>
