@@ -8,6 +8,11 @@ import {
   getJaTranslations,
   type Locale,
 } from '../i18n';
+import jaJson from '../../i18n/locales/ja.json';
+import enJson from '../../i18n/locales/en.json';
+import zhJson from '../../i18n/locales/zh.json';
+import koJson from '../../i18n/locales/ko.json';
+import esJson from '../../i18n/locales/es.json';
 
 const makeUrl = (pathname: string): URL => new URL(`https://example.com${pathname}`);
 
@@ -159,6 +164,18 @@ describe('getTranslations / getJaTranslations', () => {
   it('getJaTranslations() is the same object as getTranslations("ja")', () => {
     expect(getJaTranslations()).toBe(getTranslations('ja'));
   });
+
+  it('wires each locale to its own JSON module (no cross-wiring)', () => {
+    // Assert identity against the directly-imported JSON so that a mistake like
+    // returning en for zh/ko in the translations map is caught. Object identity
+    // (toBe) fails if a locale is pointed at the wrong module.
+    expect(getTranslations('ja')).toBe(jaJson);
+    expect(getTranslations('en')).toBe(enJson);
+    expect(getTranslations('zh')).toBe(zhJson);
+    expect(getTranslations('ko')).toBe(koJson);
+    expect(getTranslations('es')).toBe(esJson);
+    expect(getJaTranslations()).toBe(jaJson);
+  });
 });
 
 // Index-aware recursive key set: objects contribute dotted paths, arrays
@@ -184,8 +201,11 @@ function keySet(locale: Locale): Set<string> {
   return acc;
 }
 
-// Collect the length of every array reachable in the tree, keyed by its dotted
-// path (index segments omitted so the path is stable across locales).
+// Collect the length of every array reachable in the tree, keyed by its
+// index-preserving path (e.g. privacy.sections[0].body). Keeping the concrete
+// index means a length change in a nested array at ONE position produces a
+// distinct Map key, so it cannot be masked by a same-named sibling at another
+// index (which a normalized "[]" key would overwrite).
 function collectArrayLengths(
   value: unknown,
   prefix: string,
@@ -193,7 +213,7 @@ function collectArrayLengths(
 ): void {
   if (Array.isArray(value)) {
     acc.set(prefix, value.length);
-    value.forEach((el) => collectArrayLengths(el, `${prefix}[]`, acc));
+    value.forEach((el, i) => collectArrayLengths(el, `${prefix}[${i}]`, acc));
   } else if (value !== null && typeof value === 'object') {
     for (const key of Object.keys(value as Record<string, unknown>)) {
       const path = prefix ? `${prefix}.${key}` : key;
@@ -209,7 +229,9 @@ function arrayLengths(locale: Locale): Map<string, number> {
 }
 
 describe('locale JSON key-structure consistency (regression guard M-2)', () => {
-  const TRANSLATED: Locale[] = ['en', 'zh', 'ko', 'es'];
+  // Compare the translated locales AGAINST en as the reference. en itself is
+  // excluded to avoid an en-vs-en self-comparison tautology.
+  const TRANSLATED: Locale[] = ['zh', 'ko', 'es'];
 
   it.each(TRANSLATED)(
     'locale %s has the exact same index-aware key set as en',
