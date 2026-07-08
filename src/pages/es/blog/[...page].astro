@@ -30,7 +30,7 @@ const { page } = Astro.props;
 const pageTitle = 'Blog | Cor.inc';
 const pageDescription = 'Notas claras sobre IA, producto e ingeniería, escritas para leer primero los puntos de decisión prácticos.';
 const countLabel = page.total > page.size
-  ? `Mostrando ${page.start + 1}-${page.end} de ${page.total} artículos`
+  ? `Mostrando ${page.start + 1}-${page.end + 1} de ${page.total} artículos`
   : `${page.total} artículos`;
 ---
 

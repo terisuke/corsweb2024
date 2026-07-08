@@ -30,7 +30,7 @@ const { page } = Astro.props;
 const pageTitle = 'ブログ | Cor.inc';
 const pageDescription = 'AI活用、開発、経営の現場で得た知見を、専門外の方にも読みやすい形でまとめています。';
 const countLabel = page.total > page.size
-  ? `${page.total}記事中 ${page.start + 1}-${page.end}記事を表示`
+  ? `${page.total}記事中 ${page.start + 1}-${page.end + 1}記事を表示`
   : `${page.total}記事`;
 ---
 
