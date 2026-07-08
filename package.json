@@ -20,7 +20,11 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:visual-text": "playwright test --config=playwright.visual.config.ts",
-    "verify:visual-text": "npm run build && npm run test:visual-text"
+    "verify:visual-text": "npm run build && npm run test:visual-text",
+    "security:audit:firebase": "node scripts/audit-firebase-headers.mjs",
+    "security:audit:workers": "node scripts/audit-worker-headers.mjs",
+    "security:audit:dist": "node scripts/audit-dist-security.mjs",
+    "security:audit": "npm run security:audit:firebase && npm run security:audit:workers && npm run security:audit:dist"
   },
   "dependencies": {
     "@alpinejs/collapse": "3.12.3",
