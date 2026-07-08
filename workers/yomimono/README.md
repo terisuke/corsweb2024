@@ -3,6 +3,8 @@
 凪沙さんが **main マージ権限なしで毎日記事を投稿**できるようにする、サーバーレス・バックエンド＋管理画面。
 記事は DB を使わず **.md として git にコミット**され、既存の静的デプロイでそのまま公開される（A案：記事bot方式）。
 
+> **コレクション拡張（ADR-0009）**: 記事bot は **blog / news / cases の3コレクション配下**に書く（`src/content/{blog/ja,news,cases}/`）。blog は稼働中・cases は M2・**news は M3 で有効化**。切り替えは `body.collection`（既定 `'blog'`）。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
+
 管理画面は **HP と同じドメインの隠しページ `https://cor-jp.com/blog-admin`** で開ける（cor-jp.com は Cloudflare の裏にいるため、`/blog-admin*` だけを Cloudflare Worker のルートに流す）。HP本体（静的・Firebase）はそのまま。
 
 ```
@@ -16,11 +18,13 @@
 |--------|------|------|
 | GET  | `/` | 管理画面HTML（凪沙さん用） → `cor-jp.com/blog-admin` |
 | GET  | `/health` | 死活確認 → `cor-jp.com/blog-admin/health` |
-| GET  | `/api/recent` | 既存記事スラッグ一覧（重複テーマ回避） |
+| GET  | `/api/recent` | 既存記事スラッグ一覧（重複テーマ回避・`?collection=` で切替） |
 | POST | `/api/collect` | 直近約27hのAI/DX/ローカルLLM記事から候補テーマを10〜15件返す |
 | POST | `/api/generate` | 選んだテーマで記事を1本生成（社長の文体）＋ガードレール検査結果を同梱 |
-| POST | `/api/validate` | コミットせずガードレール再チェック（編集後の確認用） |
-| POST | `/api/publish` | 記事botが `src/content/blog/ja/<slug>.md` を `main` にコミット |
+| POST | `/api/validate` | コミットせずガードレール再チェック（編集後の確認用・`body.collection` 対応） |
+| POST | `/api/publish` | 記事botが `body.collection`（既定 `'blog'`）に応じて `src/content/{blog/ja,news,cases}/<slug>.md` を `main` にコミット |
+| GET  | `/manual/news` | ニュース投稿UI（**M3 で有効化・準備中**） |
+| GET  | `/manual/cases` | 実績投稿UI（**M2・準備中**） |
 
 Worker は受信パスから `BASE_PATH`(=`/blog-admin`) を剥がして上記の論理パスにルーティングする。`BASE_PATH` 空ならルート直下（`*.workers.dev/` でのテスト）でもそのまま動く。
 
@@ -93,7 +97,8 @@ npm run typecheck    # tsc --noEmit
 
 ## 関連
 
-- 設計: `docs/adr/ADR-0008-yomimono-ai-workflow.md`（A案：静的＋記事bot）
+- 設計: `docs/adr/ADR-0008-yomimono-ai-workflow.md`（A案：静的＋記事bot・ブログ単機能）
+- 拡張: `docs/adr/ADR-0009-news-cases-cms-expansion.md`（blog/news/cases の3コレクション拡張 + 非エンジニア向けUI改善 + OGP PNG化）
 - セットアップ全体: `docs/yomimono-cms-setup.md`
 - 文体の正本: `docs/blog-style-guide.md`（生成時に Worker が取得）
 - ガードレール正本: `scripts/blog-guardrails.mjs`（本Workerの `src/guardrails.ts` と同期）
