@@ -2,7 +2,7 @@
 
 ADR-0008(rev.2) / Epic #130 の **A案（静的＋記事bot・DBなし・Cloudflare Workers バックエンド）** を動かすために、**諫山さん（org 管理者）の側で一度だけ**用意するものをまとめます。ここが揃えば、以降のコードは私（実装側）が組みます。**シークレットは諫山さんの管理下に置き、私はコードから参照する形**にします（鍵を私が保持しません）。
 
-> **コレクション拡張（ADR-0009 / Epic #220）**: 本基盤は **blog / news / cases の3コレクション**に拡張済み（同一 Worker・同一 GitHub App・`body.collection` で切替）。blog は稼働中・cases は M2・**news は M3 で有効化**。下記セットアップ（GitHub App・Cloudflare・シークレット・認証）は3コレクション共通で追加不要。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
+> **コレクション拡張（ADR-0009 / Epic #220）**: 本基盤は **blog / news / cases の3コレクション**に拡張済み（同一 Worker・同一 GitHub App・`body.collection` で切替）。blog と cases は稼働対象・**news は M3 で有効化**。下記セットアップ（GitHub App・Cloudflare・シークレット・認証）は3コレクション共通で追加不要。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
 
 ---
 

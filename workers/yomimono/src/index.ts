@@ -14,6 +14,7 @@ import { sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput 
 import { HUB_HTML } from './ui-hub';
 import { AI_HTML } from './ui-ai';
 import { MANUAL_HTML } from './ui-manual';
+import { MANUAL_CASES_HTML } from './ui-manual-cases';
 import { LOGIN_HTML } from './ui-login';
 import { STYLE_GUIDE_FALLBACK } from './style-guide';
 
@@ -216,6 +217,9 @@ export default {
       }
       if (req.method === 'GET' && path === '/manual') {
         return html(MANUAL_HTML, env);
+      }
+      if (req.method === 'GET' && path === '/manual/cases') {
+        return html(MANUAL_CASES_HTML, env);
       }
 
       // 既存記事スラッグ一覧（重複テーマ回避用）

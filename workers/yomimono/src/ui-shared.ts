@@ -146,7 +146,8 @@ export function header(active: 'hub' | 'ai' | 'manual' | 'manual-news' | 'manual
     '<nav class="nav">' +
     link('/', 'ハブ', 'hub') +
     link('/ai', 'AI生成', 'ai') +
-    link('/manual', '手動作成', 'manual') +
+    link('/manual', 'ブログ作成', 'manual') +
+    link('/manual/cases', '実績作成', 'manual-cases') +
     '</nav></div></header>'
   );
 }
