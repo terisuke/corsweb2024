@@ -2,6 +2,7 @@
 // ブログ記事の構造化データ (JSON-LD): Article/BreadcrumbList/WebSite。
 // BlogLayout から抽出（出力は抽出前と同一）。
 import type { Locale } from '../../../utils/i18n';
+import { safeJsonLd } from '../../../utils/blog-seo';
 
 interface Props {
   title: string;
@@ -160,6 +161,6 @@ const websiteJsonLd = {
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
-<script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
-<script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+<script type="application/ld+json" set:html={safeJsonLd(articleJsonLd)} />
+<script type="application/ld+json" set:html={safeJsonLd(breadcrumbJsonLd)} />
+<script type="application/ld+json" set:html={safeJsonLd(websiteJsonLd)} />
