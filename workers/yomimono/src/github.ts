@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { assertSlug, safeImageName } from './validate';
-import type { Env } from './types';
+import type { Collection, Env } from './types';
 
 export function makeOctokit(env: Env): Octokit {
   return new Octokit({
@@ -28,6 +28,13 @@ function base64ToUtf8(b64: string): string {
   return new TextDecoder().decode(bytes);
 }
 
+// コレクションに応じたコンテンツディレクトリを返す。
+export function contentDir(env: Env, collection: Collection = 'blog'): string {
+  if (collection === 'news') return env.NEWS_DIR;
+  if (collection === 'cases') return env.CASES_DIR;
+  return `${env.BLOG_DIR}/ja`;
+}
+
 // リポジトリのファイル内容を取得（文体ガイド等）。
 export async function getFileContent(env: Env, octokit: Octokit, path: string): Promise<string> {
   const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
@@ -41,13 +48,18 @@ export async function getFileContent(env: Env, octokit: Octokit, path: string): 
   return base64ToUtf8(data.content);
 }
 
-// 既存記事のスラッグ一覧（重複テーマ回避用）。BLOG_DIR/ja のファイル名から .md を除いたもの。
-export async function listArticleSlugs(env: Env, octokit: Octokit): Promise<string[]> {
+// 既存記事のスラッグ一覧（重複テーマ回避用）。コレクションディレクトリのファイル名から .md を除いたもの。
+export async function listArticleSlugs(
+  env: Env,
+  octokit: Octokit,
+  collection: Collection = 'blog',
+): Promise<string[]> {
   try {
+    const dir = contentDir(env, collection);
     const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
       owner: env.GH_OWNER,
       repo: env.GH_REPO,
-      path: `${env.BLOG_DIR}/ja`,
+      path: dir,
       ref: env.PUBLISH_BRANCH,
     });
     const items = res.data as Array<{ name: string; type: string }>;
@@ -69,9 +81,11 @@ export async function commitArticle(
   slug: string,
   markdown: string,
   authorEmail: string,
+  collection: Collection = 'blog',
 ): Promise<{ committed: true; path: string; commitUrl: string }> {
   assertSlug(slug); // 多重防御: 呼び出し側でも検証済みだが、ここでもパストラバーサルを必ず弾く
-  const path = `${env.BLOG_DIR}/ja/${slug}.md`;
+  const dir = contentDir(env, collection);
+  const path = `${dir}/${slug}.md`;
 
   // 重複 slug チェック（既存なら拒否）
   try {
@@ -90,13 +104,14 @@ export async function commitArticle(
   // 公開コミットは public 履歴に残るため、メールアドレス全体は埋め込まない（収集対策）。
   // ローカル部のみ記録し、完全なメールはサーバー側ログにのみ残す。
   const author = authorEmail.split('@')[0];
-  console.log('yomimono publish:', { slug, authorEmail });
+  const prefix = collection === 'news' ? 'news' : collection === 'cases' ? 'case' : 'post';
+  console.log(`yomimono publish (${collection}):`, { slug, authorEmail });
   const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: env.GH_OWNER,
     repo: env.GH_REPO,
     path,
     branch: env.PUBLISH_BRANCH,
-    message: `post(yomimono): ${slug}（公開: ${author}）`,
+    message: `${prefix}(yomimono): ${slug}（公開: ${author}）`,
     content: utf8ToBase64(markdown),
   });
   const data = res.data as { commit?: { html_url?: string } };

@@ -1,3 +1,5 @@
+export type Collection = 'blog' | 'news' | 'cases';
+
 export interface Env {
   // secrets
   ANTHROPIC_API_KEY: string;
@@ -8,6 +10,8 @@ export interface Env {
   GH_APP_ID: string;
   GH_INSTALLATION_ID: string;
   BLOG_DIR: string;
+  NEWS_DIR: string;
+  CASES_DIR: string;
   PUBLISH_BRANCH: string;
   STYLE_GUIDE_PATH: string;
   BASE_PATH: string; // マウントプレフィックス（例 /blog-admin）。cor-jp.com/blog-admin* ルートで使用。空ならルート直下。

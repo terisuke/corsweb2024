@@ -3,9 +3,16 @@ import {
   assertSlug,
   normalizeArticle,
   normalizeCategory,
+  normalizeCollection,
   safeImageName,
   sanitizeText,
+  isHttpUrl,
+  isValidCalendarDate,
   SLUG_RE,
+  DATE_RE,
+  VALID_CATEGORIES,
+  NEWS_CATEGORIES,
+  CASES_CATEGORIES,
 } from '../validate';
 
 describe('assertSlug — パストラバーサル防止（CRITICAL修正の要）', () => {
@@ -43,6 +50,324 @@ describe('normalizeCategory', () => {
   it('未知カテゴリは ai にフォールバック', () => {
     expect(normalizeCategory('malicious')).toBe('ai');
     expect(normalizeCategory(undefined)).toBe('ai');
+  });
+});
+
+describe('normalizeCategory — collection 別の category enum 検証', () => {
+  it.each(NEWS_CATEGORIES)('news の正当カテゴリ(%s)はそのまま返す', (c) => {
+    expect(normalizeCategory(c, 'news')).toBe(c);
+  });
+  it.each(CASES_CATEGORIES)('cases の正当カテゴリ(%s)はそのまま返す', (c) => {
+    expect(normalizeCategory(c, 'cases')).toBe(c);
+  });
+  it('news: 未知カテゴリは info にフォールバック（blog の ai ではない＝反証可能）', () => {
+    expect(normalizeCategory('malicious', 'news')).toBe('info');
+    expect(normalizeCategory(undefined, 'news')).toBe('info');
+    // blog の正当値 ai は news では不正 → info へ
+    expect(normalizeCategory('ai', 'news')).toBe('info');
+  });
+  it('cases: 未知カテゴリは grift にフォールバック（blog の ai ではない＝反証可能）', () => {
+    expect(normalizeCategory('malicious', 'cases')).toBe('grift');
+    expect(normalizeCategory(undefined, 'cases')).toBe('grift');
+    expect(normalizeCategory('ai', 'cases')).toBe('grift');
+    expect(normalizeCategory('engineering', 'cases')).toBe('grift');
+  });
+  it('blog/cases/news の enum は互いに素（回帰防止）', () => {
+    const blog = new Set<string>(VALID_CATEGORIES);
+    const news = new Set<string>(NEWS_CATEGORIES);
+    const cases = new Set<string>(CASES_CATEGORIES);
+    for (const c of news) expect(blog.has(c)).toBe(false);
+    for (const c of cases) expect(blog.has(c)).toBe(false);
+    for (const c of cases) expect(news.has(c)).toBe(false);
+  });
+});
+
+describe('normalizeCollection — collection 値の安全な正規化', () => {
+  it.each(['news', 'cases', 'blog'] as const)('正当な collection(%s)はそのまま', (c) => {
+    expect(normalizeCollection(c)).toBe(c);
+  });
+  it.each([undefined, null, '', 'malicious', 'NEWS', 'blog;', {}, 1])(
+    '不正・未知の collection(%s)は blog にフォールバック',
+    (raw) => {
+      expect(normalizeCollection(raw)).toBe('blog');
+    },
+  );
+});
+
+describe('DATE_RE / publishedAt — 日付形式の検証', () => {
+  it.each(['2026-07-08', '2026-01-01', '1999-12-31'])('正当な YYYY-MM-DD(%s)を受理', (d) => {
+    expect(DATE_RE.test(d)).toBe(true);
+  });
+  it.each(['2026-7-8', '2026/07/08', '2026-07-08T00:00:00', 'not-a-date', ''])(
+    '不正な日付形式(%s)を拒否（DATE_RE は書式のみ・暦の妥当性は見ない）',
+    (d) => {
+      expect(DATE_RE.test(d)).toBe(false);
+    },
+  );
+  it('normalizeArticle: 不正な publishedAt は undefined に正規化（反証可能）', () => {
+    const r = normalizeArticle({
+      slug: 'valid-slug',
+      title: 'タイトル',
+      description: '説明',
+      body: '本文',
+      publishedAt: '2026/07/08',
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.publishedAt).toBeUndefined();
+  });
+  it('normalizeArticle: 正当な publishedAt は保持', () => {
+    const r = normalizeArticle({
+      slug: 'valid-slug',
+      title: 'タイトル',
+      description: '説明',
+      body: '本文',
+      publishedAt: '2026-07-08',
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.publishedAt).toBe('2026-07-08');
+  });
+});
+
+describe('isValidCalendarDate — 暦日付の厳密検証（P3: DATE_RE 通過後のロールオーバー拒否）', () => {
+  it.each(['2026-07-08', '2026-01-01', '2024-02-29', '2000-02-29'])(
+    '正当な実在日付(%s)は true',
+    (d) => {
+      expect(isValidCalendarDate(d)).toBe(true);
+    },
+  );
+  // DATE_RE は書式のみ検証するため、2026-99-99 は書式は通るが Date で NaN になる。
+  it('2026-99-99 は DATE_RE を通るが Date で NaN → 拒否（反証可能: isValidCalendarDate 未導入なら受理してしまう）', () => {
+    expect(DATE_RE.test('2026-99-99')).toBe(true);
+    expect(isValidCalendarDate('2026-99-99')).toBe(false);
+  });
+  it.each(['2026-02-30', '2026-04-31', '2026-13-01', '2026-00-10', '2026-12-32', '2025-02-29'])(
+    'ロールオーバー日付(%s)は拒否（実在しない暦日）',
+    (d) => {
+      expect(isValidCalendarDate(d)).toBe(false);
+    },
+  );
+  it.each(['2026-7-8', '2026/07/08', 'not-a-date', ''])('書式不正(%s)は拒否', (d) => {
+    expect(isValidCalendarDate(d)).toBe(false);
+  });
+});
+
+describe('normalizeArticle — publishedAt 暦日付検証の反映（P3・反証可能）', () => {
+  const base = {
+    slug: 'valid-slug',
+    title: 'タイトル',
+    description: '説明',
+    body: '本文',
+  };
+  it.each(['2026-99-99', '2026-02-30', '2026-04-31', '2026-13-01'])(
+    '実在しない暦日付(%s)は undefined に正規化（反証可能: isValidCalendarDate未導入なら保持してしまう）',
+    (d) => {
+      const r = normalizeArticle({ ...base, publishedAt: d });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.article.publishedAt).toBeUndefined();
+    },
+  );
+  it.each(['2026-07-08', '2024-02-29'])('実在日付(%s)は保持', (d) => {
+    const r = normalizeArticle({ ...base, publishedAt: d });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.publishedAt).toBe(d);
+  });
+});
+
+describe('normalizeArticle — news collection', () => {
+  const newsBase = {
+    slug: 'news-slug',
+    title: 'ニュースタイトル',
+    description: 'ニュース説明',
+    category: 'info',
+    tags: ['tag'],
+    body: '## 本文',
+    collection: 'news' as const,
+  };
+
+  it('news: externalUrl あり は body 不要で ok', () => {
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: 'https://example.com/article' },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.collection).toBe('news');
+      expect(r.article.category).toBe('info');
+      expect(r.article.externalUrl).toBe('https://example.com/article');
+    }
+  });
+
+  it('news: externalUrl なし は body 必須（反証可能: body 不要化バグなら失敗）', () => {
+    const r = normalizeArticle({ ...newsBase, body: undefined }, 'news');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.status).toBe(400);
+      expect(r.error).toContain('body');
+    }
+  });
+
+  it('news: externalUrl なし + body あり は ok', () => {
+    const r = normalizeArticle({ ...newsBase }, 'news');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.body).toBe('## 本文');
+  });
+
+  it('news: カテゴリ info/media/update/event/award のみ受理・それ以外は info へ', () => {
+    const r = normalizeArticle({ ...newsBase, category: 'media' }, 'news');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.category).toBe('media');
+
+    const fallback = normalizeArticle({ ...newsBase, category: 'evil' }, 'news');
+    expect(fallback.ok).toBe(true);
+    if (fallback.ok) expect(fallback.article.category).toBe('info');
+  });
+
+  it('news: slug/title/description 欠落は 400', () => {
+    const r = normalizeArticle({ ...newsBase, slug: undefined }, 'news');
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(400);
+  });
+});
+
+describe('isHttpUrl — http(s) URL のみ受理', () => {
+  it.each([
+    'https://example.com',
+    'http://example.com/article',
+    'HTTPS://COR-JP.COM/',
+    'https://blog.cor-jp.com/posts/foo',
+  ])('正当な http(s) URL(%s)は true', (u) => {
+    expect(isHttpUrl(u)).toBe(true);
+  });
+  it.each([
+    'not-a-url',
+    '',
+    'javascript:alert(1)',
+    'data:text/html,<script>',
+    'ftp://example.com',
+    '//example.com',
+    'mailto:foo@example.com',
+  ])('不正URL(%s)は false', (u) => {
+    expect(isHttpUrl(u)).toBe(false);
+  });
+});
+
+describe('normalizeArticle — news externalUrl 検証（P2・反証可能）', () => {
+  const newsBase = {
+    slug: 'news-slug',
+    title: 'ニュースタイトル',
+    description: 'ニュース説明',
+    category: 'info',
+    tags: ['tag'],
+    body: '## 本文',
+  };
+
+  it.each(['', '   ', 'not-a-url', 'javascript:alert(1)', 'ftp://example.com'])(
+    '不正URL(%s)は externalUrl 無し扱い → body 必須（反証可能: 検証未導入なら body 無しで受理してしまう）',
+    (badUrl) => {
+      const r = normalizeArticle(
+        { ...newsBase, body: undefined, externalUrl: badUrl },
+        'news',
+      );
+      expect(r.ok).toBe(false);
+      if (!r.ok) {
+        expect(r.status).toBe(400);
+        expect(r.error).toContain('body');
+      }
+    },
+  );
+
+  it.each([
+    'https://example.com/article',
+    'http://example.com',
+    'https://cor-jp.com/news/foo',
+  ])('有効 http(s) URL(%s)は body 不要で受理', (goodUrl) => {
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: goodUrl },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.externalUrl).toBe(goodUrl);
+  });
+
+  it('不正URL + body あり は受理（externalUrl は undefined に正規化）', () => {
+    const r = normalizeArticle(
+      { ...newsBase, externalUrl: 'not-a-url' },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.externalUrl).toBeUndefined();
+  });
+
+  it('sanitize（```除去）後も有効 http(s) URL なら body 不要で受理・コードフェンスは除去', () => {
+    // sanitizeText は ``` を除去するので、``https://...`` のような入力が URL として生き残るか確認
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: '```https://example.com```' },
+      'news',
+    );
+    // sanitize 後は "https://example.com" になるため有効 URL として受理するはず
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.externalUrl).toBe('https://example.com');
+  });
+
+  it('sanitize → http(s) 検証の順序: sanitize で空になったら body 必須（反証可能）', () => {
+    // externalUrl がコードフェンスのみで構成される場合、sanitize 後に空になる → body 必須
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: '``````' },
+      'news',
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain('body');
+  });
+});
+
+describe('normalizeArticle — cases collection', () => {
+  const casesBase = {
+    slug: 'cases-slug',
+    title: 'ケースタイトル',
+    description: 'ケース説明',
+    category: 'grift',
+    tags: ['tag'],
+    body: '## 本文',
+    summary: 'ケース要約',
+    collection: 'cases' as const,
+  };
+
+  it('cases: summary あり は ok（反証可能: summary 必須を誤って削除すると失敗）', () => {
+    const r = normalizeArticle({ ...casesBase }, 'cases');
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.collection).toBe('cases');
+      expect(r.article.category).toBe('grift');
+      expect(r.article.summary).toBe('ケース要約');
+    }
+  });
+
+  it('cases: summary 欠落は 400（反証可能）', () => {
+    const r = normalizeArticle({ ...casesBase, summary: undefined }, 'cases');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.status).toBe(400);
+      expect(r.error).toContain('summary');
+    }
+  });
+
+  it('cases: カテゴリ grift/confidential-ai/local-llm/ai-contract/tech-culture のみ・それ以外は grift', () => {
+    const r = normalizeArticle({ ...casesBase, category: 'local-llm' }, 'cases');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.category).toBe('local-llm');
+
+    const fallback = normalizeArticle({ ...casesBase, category: 'ai' }, 'cases');
+    expect(fallback.ok).toBe(true);
+    if (fallback.ok) expect(fallback.article.category).toBe('grift');
+  });
+
+  it('cases: body 欠落は 400（news と違い externalUrl でも免除されない）', () => {
+    const r = normalizeArticle(
+      { ...casesBase, body: undefined, externalUrl: 'https://example.com' },
+      'cases',
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain('body');
   });
 });
 

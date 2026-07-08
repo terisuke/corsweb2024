@@ -104,7 +104,7 @@ export function head(title: string): string {
   );
 }
 
-export function header(active: 'hub' | 'ai' | 'manual'): string {
+export function header(active: 'hub' | 'ai' | 'manual' | 'manual-news' | 'manual-cases'): string {
   const link = (href: string, label: string, key: string) =>
     '<a href="__BASE__' + href + '"' + (active === key ? ' class="on"' : '') + '>' + label + '</a>';
   return (
