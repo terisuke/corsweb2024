@@ -5,6 +5,11 @@ export const VALID_CATEGORIES = ['ai', 'engineering', 'founder', 'lab'] as const
 export const NEWS_CATEGORIES = ['info', 'media', 'update', 'event', 'award'] as const;
 export const CASES_CATEGORIES = ['grift', 'confidential-ai', 'local-llm', 'ai-contract', 'tech-culture'] as const;
 
+// コレクション別の厳密な category 型。normalizeCategory の戻り型と NormalizedArticle で使用。
+export type BlogCategory = (typeof VALID_CATEGORIES)[number];
+export type NewsCategory = (typeof NEWS_CATEGORIES)[number];
+export type CaseCategory = (typeof CASES_CATEGORIES)[number];
+
 // slug は公開パス `src/content/blog/ja/<slug>.md` に直結する。
 // `/`・`.`・`..` を弾き、記事ディレクトリ外への書き込み（パストラバーサル）を防ぐ。
 export function assertSlug(slug: string): void {
@@ -13,6 +18,11 @@ export function assertSlug(slug: string): void {
   }
 }
 
+// collection 引数で戻り型を厳密化（blog 規定で BlogCategory、news で NewsCategory、cases で CaseCategory）。
+// 呼び出し側はリテラルで collection を渡す必要がある（Collection 全体だとオーバーロード未解決で型エラー）。
+export function normalizeCategory(c: string | undefined, collection?: 'blog'): BlogCategory;
+export function normalizeCategory(c: string | undefined, collection: 'news'): NewsCategory;
+export function normalizeCategory(c: string | undefined, collection: 'cases'): CaseCategory;
 export function normalizeCategory(c: string | undefined, collection: Collection = 'blog'): string {
   const validCategories =
     collection === 'news'
@@ -76,19 +86,22 @@ export interface ArticleInput {
   publishedAt?: string;
   featured?: boolean;
 }
-export type NormalizedArticle = {
+// collection 判別可能なユニオン型。blog/news/cases 各々で category を厳密に型付けする（4b3c257 以前の blog 厳密性を回復）。
+type NormalizedArticleCommon = {
   slug: string;
   title: string;
   description: string;
-  category: string;
   tags: string[];
   body: string;
-  collection: Collection;
   externalUrl?: string;
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
 };
+export type NormalizedArticle =
+  | (NormalizedArticleCommon & { collection: 'blog'; category: BlogCategory })
+  | (NormalizedArticleCommon & { collection: 'news'; category: NewsCategory })
+  | (NormalizedArticleCommon & { collection: 'cases'; category: CaseCategory });
 
 // publish / validate 共通: 受け取った article を検証・正規化（パストラバーサル防止含む）。
 export function normalizeArticle(
@@ -117,21 +130,28 @@ export function normalizeArticle(
     return { ok: false, error: e instanceof Error ? e.message : 'slug が不正です', status: 400 };
   }
 
-  const article: NormalizedArticle = {
+  const common = {
     slug: a.slug,
     title: sanitizeText(a.title, 200),
     description: sanitizeText(a.description, 500),
-    category: normalizeCategory(a.category, coll),
     tags: Array.isArray(a.tags)
       ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
       : [],
     body: String(a.body ?? '').slice(0, 100_000),
-    collection: coll,
     externalUrl: a.externalUrl ? sanitizeText(a.externalUrl, 2000) : undefined,
     summary: a.summary ? sanitizeText(a.summary, 1000) : undefined,
     publishedAt: a.publishedAt ? sanitizeText(a.publishedAt, 10) : undefined,
     featured: a.featured === true,
   };
+  // coll をリテラル狭めし、各コレクションの厳密な category 型を持つユニオンメンバを構築する。
+  let article: NormalizedArticle;
+  if (coll === 'news') {
+    article = { ...common, collection: 'news', category: normalizeCategory(a.category, 'news') };
+  } else if (coll === 'cases') {
+    article = { ...common, collection: 'cases', category: normalizeCategory(a.category, 'cases') };
+  } else {
+    article = { ...common, collection: 'blog', category: normalizeCategory(a.category) };
+  }
   if (!article.title || !article.description) {
     return { ok: false, error: 'title / description が空です', status: 400 };
   }
