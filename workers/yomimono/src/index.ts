@@ -313,9 +313,9 @@ export default {
         // news は上で拒否済みなので blog/cases のみ（buildNewsMarkdown は M3 で有効化）
         let markdown: string;
         if (collection === 'cases') {
-          markdown = buildCasesMarkdown(normalized);
+          markdown = buildCasesMarkdown(normalized, normalized.isDraft);
         } else {
-          markdown = buildMarkdown(normalized);
+          markdown = buildMarkdown(normalized, normalized.isDraft);
         }
         const violations = scanForViolations(markdown);
         return json({ violations });
@@ -337,9 +337,9 @@ export default {
         // news は上で拒否済みなので blog/cases のみ（buildNewsMarkdown は M3 で有効化）
         let markdown: string;
         if (collection === 'cases') {
-          markdown = buildCasesMarkdown(normalized);
+          markdown = buildCasesMarkdown(normalized, normalized.isDraft);
         } else {
-          markdown = buildMarkdown(normalized);
+          markdown = buildMarkdown(normalized, normalized.isDraft);
         }
         const violations = scanForViolations(markdown);
         if (violations.length > 0) {

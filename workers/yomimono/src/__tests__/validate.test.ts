@@ -472,3 +472,37 @@ describe('sanitizeText — プロンプト注入対策', () => {
     expect(sanitizeText('x'.repeat(500), 200)).toHaveLength(200);
   });
 });
+
+describe('normalizeArticle — isDraft パススルー（非エンジニア向けUI改善・反証可能）', () => {
+  const base = {
+    slug: 'draft-test',
+    title: '下書きテスト',
+    description: '説明',
+    body: '本文',
+  };
+  it('isDraft 省略時は false（従来の公開挙動は不変）', () => {
+    const r = normalizeArticle(base);
+    if (!r.ok) throw new Error('正規化失敗');
+    expect(r.article.isDraft).toBe(false);
+  });
+  it('isDraft: true を通す（「下書きとして保存」で反映される）', () => {
+    const r = normalizeArticle({ ...base, isDraft: true });
+    if (!r.ok) throw new Error('正規化失敗');
+    expect(r.article.isDraft).toBe(true);
+  });
+  it('isDraft に非真値は false に正規化（文字列 "true"・1 等を拒否）', () => {
+    for (const v of ['true', 1, 'yes', {}, []]) {
+      const r = normalizeArticle({ ...base, isDraft: v as unknown as boolean });
+      if (!r.ok) throw new Error('正規化失敗');
+      expect(r.article.isDraft).toBe(false);
+    }
+  });
+  it('cases でも isDraft を通す', () => {
+    const r = normalizeArticle(
+      { ...base, summary: 'リード', isDraft: true },
+      'cases',
+    );
+    if (!r.ok) throw new Error('正規化失敗');
+    expect(r.article.isDraft).toBe(true);
+  });
+});

@@ -108,6 +108,7 @@ export interface ArticleInput {
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
+  isDraft?: boolean;
 }
 // collection 判別可能なユニオン型。blog/news/cases 各々で category を厳密に型付けする（4b3c257 以前の blog 厳密性を回復）。
 type NormalizedArticleCommon = {
@@ -120,6 +121,9 @@ type NormalizedArticleCommon = {
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
+  // isDraft: 「下書きとして保存」用。true なら frontmatter に isDraft: true を書き、
+  // サイト一覧（!data.isDraft フィルタ）で非表示。既定 false で従来の公開挙動は不変。
+  isDraft: boolean;
 };
 export type NormalizedArticle =
   | (NormalizedArticleCommon & { collection: 'blog'; category: BlogCategory })
@@ -178,6 +182,7 @@ export function normalizeArticle(
         ? sanitizeText(a.publishedAt, 10)
         : undefined,
     featured: a.featured === true,
+    isDraft: a.isDraft === true,
   };
   // coll をリテラル狭めし、各コレクションの厳密な category 型を持つユニオンメンバを構築する。
   let article: NormalizedArticle;
