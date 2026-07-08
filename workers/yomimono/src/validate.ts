@@ -4,6 +4,13 @@ export const SLUG_RE = /^[a-z0-9-]{3,80}$/;
 export const VALID_CATEGORIES = ['ai', 'engineering', 'founder', 'lab'] as const;
 export const NEWS_CATEGORIES = ['info', 'media', 'update', 'event', 'award'] as const;
 export const CASES_CATEGORIES = ['grift', 'confidential-ai', 'local-llm', 'ai-contract', 'tech-culture'] as const;
+export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+// コレクション値を安全に正規化（unknown または無効な値は 'blog' フォールバック）
+export function normalizeCollection(raw: unknown): Collection {
+  if (raw === 'news' || raw === 'cases') return raw;
+  return 'blog';
+}
 
 // コレクション別の厳密な category 型。normalizeCategory の戻り型と NormalizedArticle で使用。
 export type BlogCategory = (typeof VALID_CATEGORIES)[number];
@@ -80,7 +87,6 @@ export interface ArticleInput {
   category?: string;
   tags?: unknown;
   body?: string;
-  collection?: Collection;
   externalUrl?: string;
   summary?: string;
   publishedAt?: string;
@@ -110,18 +116,23 @@ export function normalizeArticle(
 ): { ok: true; article: NormalizedArticle } | { ok: false; error: string; status: number } {
   const coll = collection || 'blog';
 
-  // news で externalUrl がある場合は body 不要
-  const requiresBody = coll !== 'news' || !a?.externalUrl;
-  if (!a?.slug || !a?.title || !a?.description || (requiresBody && !a?.body)) {
-    const required = ['slug', 'title', 'description'];
-    if (requiresBody) required.push('body');
-    if (coll === 'cases') required.push('summary');
-    return { ok: false, error: `article.${required.join(' / ')} は必須です`, status: 400 };
+  // a が未定義・非オブジェクトなら先に弾く（以降の a.* アクセスを安全にする＝TS2532/18047 抑制）
+  if (!a || typeof a !== 'object') {
+    return { ok: false, error: 'article は必須です', status: 400 };
   }
 
-  // cases は summary 必須
-  if (coll === 'cases' && !a?.summary) {
-    return { ok: false, error: 'article.summary は cases で必須です', status: 400 };
+  // 必須フィールドを一元検証: 欠落名を収集してメッセージに使い、
+  // 同じ条件で直接 return することで TS が slug/title/description を string に狭める
+  // （配列経由の遅延 return ではプロパティの型が狭まらないため）。
+  const requiresBody = coll !== 'news' || !a.externalUrl;
+  const missing: string[] = [];
+  if (!a.slug) missing.push('slug');
+  if (!a.title) missing.push('title');
+  if (!a.description) missing.push('description');
+  if (requiresBody && !a.body) missing.push('body');
+  if (coll === 'cases' && !a.summary) missing.push('summary');
+  if (!a.slug || !a.title || !a.description || (requiresBody && !a.body) || (coll === 'cases' && !a.summary)) {
+    return { ok: false, error: `article.${missing.join(' / ')} は必須です`, status: 400 };
   }
 
   try {
@@ -140,7 +151,8 @@ export function normalizeArticle(
     body: String(a.body ?? '').slice(0, 100_000),
     externalUrl: a.externalUrl ? sanitizeText(a.externalUrl, 2000) : undefined,
     summary: a.summary ? sanitizeText(a.summary, 1000) : undefined,
-    publishedAt: a.publishedAt ? sanitizeText(a.publishedAt, 10) : undefined,
+    publishedAt:
+      a.publishedAt && DATE_RE.test(a.publishedAt) ? sanitizeText(a.publishedAt, 10) : undefined,
     featured: a.featured === true,
   };
   // coll をリテラル狭めし、各コレクションの厳密な category 型を持つユニオンメンバを構築する。

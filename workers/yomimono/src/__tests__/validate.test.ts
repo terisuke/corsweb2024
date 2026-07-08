@@ -3,9 +3,14 @@ import {
   assertSlug,
   normalizeArticle,
   normalizeCategory,
+  normalizeCollection,
   safeImageName,
   sanitizeText,
   SLUG_RE,
+  DATE_RE,
+  VALID_CATEGORIES,
+  NEWS_CATEGORIES,
+  CASES_CATEGORIES,
 } from '../validate';
 
 describe('assertSlug — パストラバーサル防止（CRITICAL修正の要）', () => {
@@ -43,6 +48,188 @@ describe('normalizeCategory', () => {
   it('未知カテゴリは ai にフォールバック', () => {
     expect(normalizeCategory('malicious')).toBe('ai');
     expect(normalizeCategory(undefined)).toBe('ai');
+  });
+});
+
+describe('normalizeCategory — collection 別の category enum 検証', () => {
+  it.each(NEWS_CATEGORIES)('news の正当カテゴリ(%s)はそのまま返す', (c) => {
+    expect(normalizeCategory(c, 'news')).toBe(c);
+  });
+  it.each(CASES_CATEGORIES)('cases の正当カテゴリ(%s)はそのまま返す', (c) => {
+    expect(normalizeCategory(c, 'cases')).toBe(c);
+  });
+  it('news: 未知カテゴリは info にフォールバック（blog の ai ではない＝反証可能）', () => {
+    expect(normalizeCategory('malicious', 'news')).toBe('info');
+    expect(normalizeCategory(undefined, 'news')).toBe('info');
+    // blog の正当値 ai は news では不正 → info へ
+    expect(normalizeCategory('ai', 'news')).toBe('info');
+  });
+  it('cases: 未知カテゴリは grift にフォールバック（blog の ai ではない＝反証可能）', () => {
+    expect(normalizeCategory('malicious', 'cases')).toBe('grift');
+    expect(normalizeCategory(undefined, 'cases')).toBe('grift');
+    expect(normalizeCategory('ai', 'cases')).toBe('grift');
+    expect(normalizeCategory('engineering', 'cases')).toBe('grift');
+  });
+  it('blog/cases/news の enum は互いに素（回帰防止）', () => {
+    const blog = new Set<string>(VALID_CATEGORIES);
+    const news = new Set<string>(NEWS_CATEGORIES);
+    const cases = new Set<string>(CASES_CATEGORIES);
+    for (const c of news) expect(blog.has(c)).toBe(false);
+    for (const c of cases) expect(blog.has(c)).toBe(false);
+    for (const c of cases) expect(news.has(c)).toBe(false);
+  });
+});
+
+describe('normalizeCollection — collection 値の安全な正規化', () => {
+  it.each(['news', 'cases', 'blog'] as const)('正当な collection(%s)はそのまま', (c) => {
+    expect(normalizeCollection(c)).toBe(c);
+  });
+  it.each([undefined, null, '', 'malicious', 'NEWS', 'blog;', {}, 1])(
+    '不正・未知の collection(%s)は blog にフォールバック',
+    (raw) => {
+      expect(normalizeCollection(raw)).toBe('blog');
+    },
+  );
+});
+
+describe('DATE_RE / publishedAt — 日付形式の検証', () => {
+  it.each(['2026-07-08', '2026-01-01', '1999-12-31'])('正当な YYYY-MM-DD(%s)を受理', (d) => {
+    expect(DATE_RE.test(d)).toBe(true);
+  });
+  it.each(['2026-7-8', '2026/07/08', '2026-07-08T00:00:00', 'not-a-date', ''])(
+    '不正な日付形式(%s)を拒否（DATE_RE は書式のみ・暦の妥当性は見ない）',
+    (d) => {
+      expect(DATE_RE.test(d)).toBe(false);
+    },
+  );
+  it('normalizeArticle: 不正な publishedAt は undefined に正規化（反証可能）', () => {
+    const r = normalizeArticle({
+      slug: 'valid-slug',
+      title: 'タイトル',
+      description: '説明',
+      body: '本文',
+      publishedAt: '2026/07/08',
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.publishedAt).toBeUndefined();
+  });
+  it('normalizeArticle: 正当な publishedAt は保持', () => {
+    const r = normalizeArticle({
+      slug: 'valid-slug',
+      title: 'タイトル',
+      description: '説明',
+      body: '本文',
+      publishedAt: '2026-07-08',
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.publishedAt).toBe('2026-07-08');
+  });
+});
+
+describe('normalizeArticle — news collection', () => {
+  const newsBase = {
+    slug: 'news-slug',
+    title: 'ニュースタイトル',
+    description: 'ニュース説明',
+    category: 'info',
+    tags: ['tag'],
+    body: '## 本文',
+    collection: 'news' as const,
+  };
+
+  it('news: externalUrl あり は body 不要で ok', () => {
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: 'https://example.com/article' },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.collection).toBe('news');
+      expect(r.article.category).toBe('info');
+      expect(r.article.externalUrl).toBe('https://example.com/article');
+    }
+  });
+
+  it('news: externalUrl なし は body 必須（反証可能: body 不要化バグなら失敗）', () => {
+    const r = normalizeArticle({ ...newsBase, body: undefined }, 'news');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.status).toBe(400);
+      expect(r.error).toContain('body');
+    }
+  });
+
+  it('news: externalUrl なし + body あり は ok', () => {
+    const r = normalizeArticle({ ...newsBase }, 'news');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.body).toBe('## 本文');
+  });
+
+  it('news: カテゴリ info/media/update/event/award のみ受理・それ以外は info へ', () => {
+    const r = normalizeArticle({ ...newsBase, category: 'media' }, 'news');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.category).toBe('media');
+
+    const fallback = normalizeArticle({ ...newsBase, category: 'evil' }, 'news');
+    expect(fallback.ok).toBe(true);
+    if (fallback.ok) expect(fallback.article.category).toBe('info');
+  });
+
+  it('news: slug/title/description 欠落は 400', () => {
+    const r = normalizeArticle({ ...newsBase, slug: undefined }, 'news');
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(400);
+  });
+});
+
+describe('normalizeArticle — cases collection', () => {
+  const casesBase = {
+    slug: 'cases-slug',
+    title: 'ケースタイトル',
+    description: 'ケース説明',
+    category: 'grift',
+    tags: ['tag'],
+    body: '## 本文',
+    summary: 'ケース要約',
+    collection: 'cases' as const,
+  };
+
+  it('cases: summary あり は ok（反証可能: summary 必須を誤って削除すると失敗）', () => {
+    const r = normalizeArticle({ ...casesBase }, 'cases');
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.collection).toBe('cases');
+      expect(r.article.category).toBe('grift');
+      expect(r.article.summary).toBe('ケース要約');
+    }
+  });
+
+  it('cases: summary 欠落は 400（反証可能）', () => {
+    const r = normalizeArticle({ ...casesBase, summary: undefined }, 'cases');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.status).toBe(400);
+      expect(r.error).toContain('summary');
+    }
+  });
+
+  it('cases: カテゴリ grift/confidential-ai/local-llm/ai-contract/tech-culture のみ・それ以外は grift', () => {
+    const r = normalizeArticle({ ...casesBase, category: 'local-llm' }, 'cases');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.category).toBe('local-llm');
+
+    const fallback = normalizeArticle({ ...casesBase, category: 'ai' }, 'cases');
+    expect(fallback.ok).toBe(true);
+    if (fallback.ok) expect(fallback.article.category).toBe('grift');
+  });
+
+  it('cases: body 欠落は 400（news と違い externalUrl でも免除されない）', () => {
+    const r = normalizeArticle(
+      { ...casesBase, body: undefined, externalUrl: 'https://example.com' },
+      'cases',
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain('body');
   });
 });
 

@@ -124,7 +124,7 @@ export function buildCasesMarkdown(article: NormalizedArticle, isDraft = false):
     `tags: ${JSON.stringify(article.tags)}`,
     `publishedAt: ${publishedAt}`,
     `summary: ${JSON.stringify(article.summary || '')}`,
-    'isDraft: false',
+    `isDraft: ${isDraft}`,
     `featured: ${article.featured || false}`,
     '---',
     '',

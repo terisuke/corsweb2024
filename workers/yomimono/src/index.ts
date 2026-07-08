@@ -9,7 +9,7 @@ import { collectTopics } from './collect';
 import { generateArticle, buildMarkdown, buildNewsMarkdown, buildCasesMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
 import { makeOctokit, getFileContent, commitArticle, commitImage, listArticleSlugs } from './github';
-import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
+import { sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput } from './validate';
 import { HUB_HTML } from './ui-hub';
 import { AI_HTML } from './ui-ai';
 import { MANUAL_HTML } from './ui-manual';
@@ -216,7 +216,7 @@ export default {
 
       // 既存記事スラッグ一覧（重複テーマ回避用）
       if (req.method === 'GET' && path === '/api/recent') {
-        const collection = (url.searchParams.get('collection') || 'blog') as Collection;
+        const collection = normalizeCollection(url.searchParams.get('collection'));
         const octokit = makeOctokit(env);
         const slugs = await listArticleSlugs(env, octokit, collection);
         return json({ slugs });
@@ -294,7 +294,7 @@ export default {
       if (req.method === 'POST' && path === '/api/validate') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-        const collection = (body.collection || 'blog') as Collection;
+        const collection = normalizeCollection(body.collection);
         const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
@@ -314,7 +314,7 @@ export default {
       if (req.method === 'POST' && path === '/api/publish') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-        const collection = (body.collection || 'blog') as Collection;
+        const collection = normalizeCollection(body.collection);
         const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
