@@ -13,6 +13,7 @@ describe('buildNewsMarkdown — news frontmatter 形式検証', () => {
     collection: 'news',
     publishedAt: '2026-07-08',
     externalUrl: 'https://example.com/article',
+    isDraft: false,
   };
 
   it('news: externalUrl あり→frontmatter に externalUrl を含む', () => {
@@ -85,6 +86,7 @@ describe('buildCasesMarkdown — cases frontmatter 形式検証', () => {
     publishedAt: '2026-07-08',
     summary: 'テストケース要約',
     featured: true,
+    isDraft: false,
   };
 
   it('cases: frontmatter に summary を含む', () => {
@@ -153,6 +155,7 @@ describe('buildMarkdown — blog との整合性検証', () => {
     tags: ['tag1', 'tag2'],
     body: '## テスト本文\n\n内容',
     collection: 'blog',
+    isDraft: false,
   };
 
   it('blog: isDraft パラメータを反映', () => {
