@@ -3,7 +3,7 @@
 凪沙さんが **main マージ権限なしで毎日記事を投稿**できるようにする、サーバーレス・バックエンド＋管理画面。
 記事は DB を使わず **.md として git にコミット**され、既存の静的デプロイでそのまま公開される（A案：記事bot方式）。
 
-> **コレクション拡張（ADR-0009）**: 記事bot は **blog / news / cases の3コレクション配下**に書く（`src/content/{blog/ja,news,cases}/`）。blog は稼働中・cases は M2・**news は M3 で有効化**。切り替えは `body.collection`（既定 `'blog'`）。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
+> **コレクション拡張（ADR-0009）**: 記事bot は **blog / news / cases の3コレクション配下**に書く（`src/content/{blog/ja,news,cases}/`）。blog と cases は稼働対象・**news は M3 で有効化**。切り替えは `body.collection`（既定 `'blog'`）。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
 
 管理画面は **HP と同じドメインの隠しページ `https://cor-jp.com/blog-admin`** で開ける（cor-jp.com は Cloudflare の裏にいるため、`/blog-admin*` だけを Cloudflare Worker のルートに流す）。HP本体（静的・Firebase）はそのまま。
 
@@ -24,7 +24,7 @@
 | POST | `/api/validate` | コミットせずガードレール再チェック（編集後の確認用・`body.collection` 対応） |
 | POST | `/api/publish` | 記事botが `body.collection`（既定 `'blog'`）に応じて `src/content/{blog/ja,news,cases}/<slug>.md` を `main` にコミット |
 | GET  | `/manual/news` | ニュース投稿UI（**M3 で有効化・準備中**） |
-| GET  | `/manual/cases` | 実績投稿UI（**M2・準備中**） |
+| GET  | `/manual/cases` | 実績投稿UI（cases / `src/content/cases/<slug>.md` へ公開） |
 
 Worker は受信パスから `BASE_PATH`(=`/blog-admin`) を剥がして上記の論理パスにルーティングする。`BASE_PATH` 空ならルート直下（`*.workers.dev/` でのテスト）でもそのまま動く。
 

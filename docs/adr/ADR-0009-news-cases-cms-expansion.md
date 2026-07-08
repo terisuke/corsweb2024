@@ -45,7 +45,7 @@ ADR-0008 の「静的＋記事bot・DBなし・Cloudflare Worker」アーキテ�
 ## 影響
 - **Milestone 構成（1PR=1意図・ワークツリー分岐）**:
   - **M1: yomimono collection 基盤 + UI改善基盤** — I1（collection 対応基盤）/ I2（UI改善基盤・共通）/ I3（既存記事編集）。**M1-I1 は PR #221 で develop マージ済**（test 172 緑・blog 回帰なし・`contentDir`/`normalizeArticle`/`buildMarkdown` の collection 分岐）。
-  - **M2: cases CMS** — I4（cases 投稿UI・改善版）。
+  - **M2: cases CMS** — I4（cases 投稿UI・改善版）。`/manual/cases` から `body.collection='cases'` で `src/content/cases/<slug>.md` へ投稿する経路を追加済み。
   - **M3: news 機能**（★news は M3 で有効化）— I5（news コレクション+投稿UI）/ I6（一覧・個別・NewsCard・SEO）/ I7（i18n+nav+sitemap+RSS）。
   - **M4: OGP PNG化**（★news リリース前完了推奨・先輩の直接要件）— I10（SVG→PNG・全ページ共通）。
 - **ADR-0008 からの進化**: ADR-0008「ブログ単機能」を「blog/news/cases の3コレクション・DBレス同 bot・非エンジニア向けUI」に拡張。ADR-0008 本体は温存し、本 ADR で拡張する関係（詳細は ADR-0008 末尾の追記参照）。
