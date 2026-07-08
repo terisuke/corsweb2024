@@ -74,6 +74,15 @@ describe('yomimono Worker — cases CMS posting path', () => {
     expect(res.status).toBe(200);
     expect(html).toContain('実績記事を公開する');
     expect(html).toContain('value="local-llm"');
+    expect(html).toContain('id="m_draftBar"');
+    expect(html).toContain('data-md="quote"');
+    expect(html).toContain('data-md="hr"');
+    expect(html).toContain('URLを編集する（上級者向け）');
+    expect(html).toContain("titleToSlug($('m_title').value)");
+    expect(html).toContain("var DRAFT_KEY = 'draft:cases:new'");
+    expect(html).toContain('var IMG_CACHE_MAX = 20');
+    expect(html).toContain("out.push('<blockquote>')");
+    expect(html).toContain("out.push('<hr>')");
     expect(html).toContain("api('/api/validate', { collection:'cases', article:a })");
     expect(html).toContain("api('/api/publish', { collection:'cases', article:a })");
   });
