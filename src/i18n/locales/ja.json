@@ -11,6 +11,15 @@
     "description": "AI導入・機密データの安全な活用・見積もりの考え方など、現場で使える視点をまとめています。",
     "cta": "ブログをすべて見る"
   },
+  "news": {
+    "eyebrow": "News",
+    "title": "ニュース",
+    "intro": "Cor.株式会社からのお知らせ、サービス更新、外部掲載、イベント情報をまとめています。",
+    "rssLabel": "ニュースRSSを購読",
+    "empty": "現在公開中のニュースはありません。",
+    "updatedLabel": "更新",
+    "backToList": "ニュース一覧へ戻る"
+  },
   "nav": {
     "home": "ホーム",
     "about": "Cor.株式会社について",
@@ -19,6 +28,7 @@
     "contact": "お問い合わせ",
     "security": "セキュリティ",
     "works": "実績・事例",
+    "news": "ニュース",
     "grift": "Grift"
   },
   "hero": {
@@ -181,6 +191,7 @@
       "home": "ホーム",
       "about": "Cor.株式会社について",
       "products": "事業と読みもの",
+      "news": "ニュース",
       "contact": "お問い合わせ",
       "privacy": "プライバシー",
       "security": "セキュリティ",
@@ -507,6 +518,10 @@
     "works": {
       "title": "実績 | Cor.株式会社",
       "description": "Cor.株式会社の実績紹介。お客様の業務課題を、課題・設計・実装・運用の軸で解決した事例を掲載。機密データAI・ローカルLLM・Griftを軸に、AIを使う前の情報設計から伴走します。"
+    },
+    "news": {
+      "title": "ニュース | Cor.株式会社",
+      "description": "Cor.株式会社からのお知らせ、サービス更新、外部掲載、イベント情報を掲載しています。"
     },
     "industryMedical": {
       "title": "医療・ヘルスケア向けAI伴走 | Cor.inc",

@@ -11,6 +11,15 @@
     "description": "AI 导入、机密数据的安全运用、报价的思路等，汇总了现场可用的视角。",
     "cta": "查看全部文章"
   },
+  "news": {
+    "eyebrow": "News",
+    "title": "公司新闻",
+    "intro": "汇总 Cor.株式会社的公告、服务更新、外部报道和活动信息。",
+    "rssLabel": "订阅新闻 RSS",
+    "empty": "目前没有已发布的新闻。",
+    "updatedLabel": "更新",
+    "backToList": "返回新闻列表"
+  },
   "homeHero": {
     "kicker": "超越想象，与你共同实现。",
     "title": "<span class='nowrap'>让停滞的业务</span><br /><span class='nowrap'>一起实现突破。</span>",
@@ -604,6 +613,7 @@
     "contact": "联系我们",
     "security": "安全",
     "works": "Works",
+    "news": "News",
     "grift": "Grift"
   },
   "hero": {
@@ -764,6 +774,7 @@
       "home": "首页",
       "about": "关于Cor.株式会社",
       "products": "产品&洞察",
+      "news": "News",
       "contact": "联系我们",
       "privacy": "隐私",
       "security": "安全",
@@ -1100,6 +1111,10 @@
     "security": {
       "title": "安全 | Cor.inc",
       "description": "关于 Cor. 股份公司的信息安全、面向 ISMS 认证的体制建设，以及基于本地优先与机密度分级的 AI 开发环境。"
+    },
+    "news": {
+      "title": "新闻 | Cor.inc",
+      "description": "Cor.株式会社的公告、服务更新、外部报道和活动信息。"
     }
   },
   "privacy": {

@@ -38,13 +38,18 @@ const bottomLinks = [
         href: getLocalizedUrl('/about', currentLocale),
         isExternal: false,
       },
-      // /works は現状 ja ルートのみ存在するため、Header と同様に ja 限定で表示し
-      // 非ja言語で /xx/works が 404 になるのを防ぐ（5言語 works 新設時にこのガードを外す）。
+      // /works と /news は現状 ja ルートのみ存在するため、Header と同様に ja 限定で表示し
+      // 非ja言語で /xx/works や /xx/news が 404 になるのを防ぐ。
       ...(currentLocale === 'ja'
         ? [
             {
               name: t.nav.works,
               href: getLocalizedUrl('/works', currentLocale),
+              isExternal: false,
+            },
+            {
+              name: t.footer.links.news,
+              href: getLocalizedUrl('/news', currentLocale),
               isExternal: false,
             },
           ]

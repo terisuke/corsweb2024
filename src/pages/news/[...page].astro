@@ -1,0 +1,128 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import NewsCard from '../../components/news/NewsCard.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getJaTranslations } from '../../utils/i18n';
+import { safeJsonLd } from '../../utils/json-ld';
+
+interface Props {
+  page: Page<CollectionEntry<'news'>>;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const news = await getCollection('news', ({ data }) => {
+    return import.meta.env.DEV || !data.isDraft;
+  });
+
+  const sortedNews = news.sort(
+    (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime(),
+  );
+
+  return paginate(sortedNews, { pageSize: 12 });
+};
+
+const { page } = Astro.props;
+const t = getJaTranslations();
+const pageUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: t.news.title,
+  description: t.meta.news.description,
+  inLanguage: 'ja',
+  url: pageUrl,
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: page.data.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: page.start + index + 1,
+      name: entry.data.title,
+      url: entry.data.externalUrl || new URL(`/news/${entry.slug}/`, Astro.site).toString(),
+    })),
+  },
+};
+---
+
+<Layout
+  description={t.meta.news.description}
+  title={t.meta.news.title}
+  availableLocales={['ja']}
+  ogImage="/og/page/news.svg"
+>
+  <main class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
+    <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-10 text-start sm:pb-12">
+      <p class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">
+        {t.news.eyebrow}
+      </p>
+      <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{t.news.title}</h1>
+      <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">
+        {t.news.intro}
+      </p>
+      <a
+        href="/news.xml"
+        class="type-action inline-flex w-fit items-center gap-2 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+      >
+        {t.news.rssLabel}
+      </a>
+    </div>
+
+    {page.total > page.size && (
+      <p class="mx-auto mb-8 max-w-3xl text-sm text-primary-950/50 dark:text-primary-200/50">
+        {`${page.total}件中 ${page.start + 1}-${page.end}件を表示 (${page.currentPage}/${page.lastPage}ページ)`}
+      </p>
+    )}
+
+    {page.data.length > 0 ? (
+      <ul class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {page.data.map((entry) => (
+          <li>
+            <NewsCard entry={entry} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="mx-auto flex max-w-3xl flex-col gap-4 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+        <p class="type-copy text-primary-950/70 dark:text-primary-200/70">{t.news.empty}</p>
+        <a
+          href="/blog"
+          class="type-action inline-flex w-fit items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+        >
+          {t.homeBlog.cta}
+        </a>
+      </div>
+    )}
+
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex flex-wrap items-center justify-center gap-2" aria-label="Pagination">
+        <a
+          href={page.url.prev || '#'}
+          class:list={[
+            'rounded-full px-4 py-2 text-sm font-medium transition',
+            page.url.prev
+              ? 'bg-primary-500/10 text-primary-950 hover:bg-primary-500/20 dark:bg-primary-400/10 dark:text-primary-200 dark:hover:bg-primary-400/20'
+              : 'pointer-events-none bg-primary-950/5 text-primary-950/30 dark:bg-primary-200/5 dark:text-primary-200/30',
+          ]}
+          aria-disabled={!page.url.prev}
+        >
+          前へ
+        </a>
+        <a
+          href={page.url.next || '#'}
+          class:list={[
+            'rounded-full px-4 py-2 text-sm font-medium transition',
+            page.url.next
+              ? 'bg-primary-500/10 text-primary-950 hover:bg-primary-500/20 dark:bg-primary-400/10 dark:text-primary-200 dark:hover:bg-primary-400/20'
+              : 'pointer-events-none bg-primary-950/5 text-primary-950/30 dark:bg-primary-200/5 dark:text-primary-200/30',
+          ]}
+          aria-disabled={!page.url.next}
+        >
+          次へ
+        </a>
+      </nav>
+    )}
+  </main>
+
+  <script type="application/ld+json" set:html={safeJsonLd(itemListJsonLd)} is:inline />
+</Layout>

@@ -11,6 +11,15 @@
     "description": "AI 도입, 기밀 데이터의 안전한 활용, 견적에 대한 사고방식 등 현장에서 바로 쓸 수 있는 관점을 정리했습니다.",
     "cta": "블로그 전체 보기"
   },
+  "news": {
+    "eyebrow": "News",
+    "title": "회사 뉴스",
+    "intro": "Cor.주식회사의 공지, 서비스 업데이트, 외부 게재, 이벤트 정보를 모았습니다.",
+    "rssLabel": "뉴스 RSS 구독",
+    "empty": "현재 공개된 뉴스가 없습니다.",
+    "updatedLabel": "업데이트",
+    "backToList": "뉴스 목록으로 돌아가기"
+  },
   "homeHero": {
     "kicker": "상상 그 너머까지, 함께 구현합니다.",
     "title": "<span class='nowrap'>멈춘 업무를</span><br /><span class='nowrap'>함께 구현으로 넘습니다.</span>",
@@ -604,6 +613,7 @@
     "contact": "문의",
     "security": "보안",
     "works": "Works",
+    "news": "News",
     "grift": "Grift"
   },
   "hero": {
@@ -764,6 +774,7 @@
       "home": "홈",
       "about": "Cor.주식회사에 대하여",
       "products": "제품&인사이트",
+      "news": "News",
       "contact": "문의",
       "privacy": "개인정보처리방침",
       "security": "보안",
@@ -1100,6 +1111,10 @@
     "security": {
       "title": "보안 | Cor.inc",
       "description": "Cor. 주식회사의 정보 보안, ISMS 인증 취득을 위한 체제, 그리고 로컬 퍼스트와 기밀도 등급에 기반한 AI 개발 환경에 대하여."
+    },
+    "news": {
+      "title": "뉴스 | Cor.inc",
+      "description": "Cor.주식회사의 공지, 서비스 업데이트, 외부 게재, 이벤트 정보입니다."
     }
   },
   "privacy": {
