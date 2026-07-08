@@ -4,12 +4,15 @@ import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
-// /works は現状 ja ルートのみ存在。C案の5言語展開までは Works ナビを ja 限定にし、
-// 非ja言語で /xx/works が 404 になるのを防ぐ（5言語 works 新設時にこのガードを外す）。
+// /works と /news は現状 ja ルートのみ存在。5言語展開までは ja 限定にし、
+// 非ja言語で /xx/works や /xx/news が 404 になるのを防ぐ。
 const baseLinks = [
   { name: t.nav.home, href: getLocalizedUrl('/', currentLocale), isExternal: false },
   ...(currentLocale === 'ja'
-    ? [{ name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false }]
+    ? [
+        { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false },
+        { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
+      ]
     : []),
   { name: t.nav.grift, href: 'https://griftai.org', isExternal: true },
   { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale), isExternal: false },

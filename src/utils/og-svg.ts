@@ -26,6 +26,7 @@ export const OG_PAGES: OgPage[] = [
     title: '実績・事例',
     subtitle: 'AI受託開発・基幹DB移行・多言語AI受付・建築AI・Grift',
   },
+  { slug: 'news', title: 'ニュース', subtitle: 'Cor.株式会社からのお知らせ・更新情報' },
   {
     slug: 'security',
     title: 'セキュリティ',

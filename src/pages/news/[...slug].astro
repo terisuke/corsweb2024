@@ -1,0 +1,167 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { getNewsCategoryLabel } from '../../config/news-categories';
+import { getJaTranslations } from '../../utils/i18n';
+import { safeJsonLd } from '../../utils/json-ld';
+
+export async function getStaticPaths() {
+  const news = await getCollection('news', ({ data }) => {
+    return (import.meta.env.DEV || !data.isDraft) && !data.externalUrl;
+  });
+
+  return news.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+type Props = {
+  entry: CollectionEntry<'news'>;
+};
+
+const { entry } = Astro.props as Props;
+const { Content } = await entry.render();
+const data = entry.data;
+const t = getJaTranslations();
+const categoryLabel = getNewsCategoryLabel(data.category, 'ja');
+const formattedPublishedAt = new Date(data.publishedAt).toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const formattedUpdatedAt = data.updatedAt
+  ? new Date(data.updatedAt).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = data.ogImage || '/og/page/news.svg';
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: data.title,
+  description: data.description,
+  inLanguage: 'ja',
+  datePublished: data.publishedAt.toISOString(),
+  dateModified: (data.updatedAt || data.publishedAt).toISOString(),
+  author: {
+    '@type': 'Organization',
+    '@id': 'https://cor-jp.com#organization',
+    name: 'Cor.株式会社',
+    url: 'https://cor-jp.com',
+  },
+  publisher: {
+    '@type': 'Organization',
+    '@id': 'https://cor-jp.com#organization',
+    name: 'Cor.株式会社',
+    url: 'https://cor-jp.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://cor-jp.com/logo.png',
+      width: 400,
+      height: 400,
+    },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': fullUrl },
+  url: fullUrl,
+  articleSection: data.category,
+  about: data.tags.map((tag) => ({ '@type': 'Thing', name: tag })),
+  image: new URL(ogImageUrl, Astro.site).toString(),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'ホーム',
+      item: new URL('/', Astro.site).toString(),
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: t.news.title,
+      item: new URL('/news', Astro.site).toString(),
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: data.title,
+      item: fullUrl,
+    },
+  ],
+};
+---
+
+<Layout
+  title={`${data.title} | Cor.株式会社 ニュース`}
+  description={data.description}
+  availableLocales={['ja']}
+  ogImage={ogImageUrl}
+  ogType="article"
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={data.updatedAt?.toISOString()}
+>
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <nav class="mb-8" aria-label="Breadcrumb">
+      <ol class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-primary-950/60 dark:text-primary-200/60">
+        <li><a href="/" class="hover:text-primary-950 dark:hover:text-primary-100">ホーム</a></li>
+        <li class="before:mx-2 before:content-['/']">
+          <a href="/news" class="hover:text-primary-950 dark:hover:text-primary-100">{t.news.title}</a>
+        </li>
+        <li class="hidden min-w-0 items-center before:mx-2 before:content-['/'] sm:flex">
+          <span class="block max-w-md truncate text-primary-950 dark:text-primary-100">{data.title}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <header class="mb-10">
+      <div class="mb-4 flex flex-wrap items-center gap-3 text-sm">
+        <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
+          {categoryLabel}
+        </span>
+        <time datetime={data.publishedAt.toISOString()} class="text-primary-950/50 dark:text-primary-200/50">
+          {formattedPublishedAt}
+        </time>
+        {formattedUpdatedAt && (
+          <span class="text-primary-950/50 dark:text-primary-200/50">{t.news.updatedLabel}: {formattedUpdatedAt}</span>
+        )}
+      </div>
+
+      <h1 class="type-heading mb-4 text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{data.title}</h1>
+      <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">{data.description}</p>
+    </header>
+
+    <div class="prose prose-lg prose-stone mx-auto max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline dark:prose-a:text-blue-400">
+      <Content />
+    </div>
+
+    {data.tags.length > 0 && (
+      <div class="mt-12 flex flex-wrap gap-2 border-t border-primary-950/10 pt-8 dark:border-primary-200/10">
+        {data.tags.map((tag) => (
+          <span class="rounded-full bg-primary-500/10 px-3 py-1 text-xs font-medium text-primary-950/60 dark:bg-primary-400/10 dark:text-primary-200/60">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
+
+    <div class="mt-12">
+      <a
+        class="type-action inline-flex items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+        href="/news"
+      >
+        <span aria-hidden="true">←</span>
+        {t.news.backToList}
+      </a>
+    </div>
+  </article>
+
+  <script type="application/ld+json" set:html={safeJsonLd([articleJsonLd, breadcrumbJsonLd])} is:inline />
+</Layout>

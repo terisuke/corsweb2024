@@ -70,6 +70,7 @@ export default defineConfig({
       customPages: [
         'https://cor-jp.com/blog',
         'https://cor-jp.com/en/blog',
+        'https://cor-jp.com/news',
         'https://cor-jp.com/blog/category/ai',
         'https://cor-jp.com/blog/category/engineering',
         'https://cor-jp.com/blog/category/founder',

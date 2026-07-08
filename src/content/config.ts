@@ -1,5 +1,6 @@
 import { z, defineCollection } from 'astro:content';
 import { getCategoryIds } from '../config/categories';
+import { getNewsCategoryIds } from '../config/news-categories';
 
 const blogCollection = defineCollection({
   type: 'content',
@@ -63,7 +64,27 @@ const casesCollection = defineCollection({
   }),
 });
 
+const newsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishedAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
+    author: z.string().default('Terisuke'),
+    category: z.enum(getNewsCategoryIds() as [string, ...string[]]),
+    tags: z.array(z.string()).default([]),
+    externalUrl: z.string().url().optional(),
+    source: z.string().optional(),
+    ogImage: z.string().optional(),
+    isDraft: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    lang: z.enum(['ja']).default('ja'),
+  }),
+});
+
 export const collections = {
   blog: blogCollection,
   cases: casesCollection,
+  news: newsCollection,
 };

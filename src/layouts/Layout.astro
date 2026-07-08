@@ -10,7 +10,7 @@ interface Props {
   description: string;
   title: string;
   // この URL に実在する言語版だけを hreflang に出す（既定は全5言語）。
-  // ja のみのページ（/works, /industries/*）は ['ja'] を渡す。
+  // ja のみのページ（/works, /news, /industries/*）は ['ja'] を渡す。
   availableLocales?: readonly Locale[];
   // ページ固有の OG 画像（絶対URL or サイト基準パス）。未指定なら path から自動選択。
   ogImage?: string;
@@ -49,6 +49,7 @@ const OG_PAGE_SLUGS: Record<string, string> = {
   '/': 'home',
   '/about': 'about',
   '/works': 'works',
+  '/news': 'news',
   '/security': 'security',
   '/contact': 'contact',
   '/privacy': 'privacy',

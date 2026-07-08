@@ -11,6 +11,15 @@
     "description": "Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.",
     "cta": "Ver todos los artículos"
   },
+  "news": {
+    "eyebrow": "News",
+    "title": "Noticias de la empresa",
+    "intro": "Avisos de Cor. Inc., actualizaciones de servicios, menciones externas e información de eventos.",
+    "rssLabel": "Suscribirse al RSS de noticias",
+    "empty": "Todavía no hay noticias publicadas.",
+    "updatedLabel": "Actualizado",
+    "backToList": "Volver a noticias"
+  },
   "homeHero": {
     "kicker": "Más allá de lo imaginado, lo construimos contigo.",
     "title": "Convertimos lo estancado<br />en avances construidos juntos.",
@@ -604,6 +613,7 @@
     "contact": "Contacto",
     "security": "Seguridad",
     "works": "Works",
+    "news": "News",
     "grift": "Grift"
   },
   "hero": {
@@ -764,6 +774,7 @@
       "home": "Inicio",
       "about": "Sobre Cor.Inc.",
       "products": "Productos&Insights",
+      "news": "News",
       "contact": "Contacto",
       "privacy": "Privacidad",
       "security": "Seguridad",
@@ -1100,6 +1111,10 @@
     "security": {
       "title": "Seguridad | Cor.inc",
       "description": "Sobre la seguridad de la información de Cor. Inc., su hoja de ruta hacia la ISMS y un entorno de desarrollo de IA local-first con niveles de confidencialidad."
+    },
+    "news": {
+      "title": "Noticias | Cor.inc",
+      "description": "Avisos de Cor. Inc., actualizaciones de servicios, menciones externas e información de eventos."
     }
   },
   "privacy": {

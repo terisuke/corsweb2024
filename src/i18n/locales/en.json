@@ -11,6 +11,15 @@
     "description": "AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.",
     "cta": "See all articles"
   },
+  "news": {
+    "eyebrow": "News",
+    "title": "Company news",
+    "intro": "Updates from Cor. Inc., service announcements, external coverage, and event information.",
+    "rssLabel": "Subscribe to news RSS",
+    "empty": "No news is published yet.",
+    "updatedLabel": "Updated",
+    "backToList": "Back to news"
+  },
   "homeHero": {
     "kicker": "Building with you, beyond what you imagined.",
     "title": "<span class='nowrap'>Turn stuck work</span><br />into what we build together.",
@@ -604,6 +613,7 @@
     "contact": "Contact",
     "security": "Security",
     "works": "Works",
+    "news": "News",
     "grift": "Grift"
   },
   "hero": {
@@ -764,6 +774,7 @@
       "home": "Home",
       "about": "About Cor.Inc.",
       "products": "Products&Insights",
+      "news": "News",
       "contact": "Contact",
       "privacy": "Privacy",
       "security": "Security",
@@ -1100,6 +1111,10 @@
     "security": {
       "title": "Security | Cor.inc",
       "description": "Cor. Inc.'s information security: our ISMS roadmap, and a local-first, sensitivity-tiered AI development environment."
+    },
+    "news": {
+      "title": "News | Cor.inc",
+      "description": "Company announcements, service updates, external coverage, and event information from Cor. Inc."
     }
   },
   "privacy": {
