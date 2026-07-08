@@ -63,6 +63,11 @@ function recordLoginFailure(ip: string): void {
 const CSP =
   "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; " +
   "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
+const SECURITY_HEADERS = {
+  'x-content-type-options': 'nosniff',
+  'referrer-policy': 'no-referrer',
+  'cache-control': 'no-store',
+} as const;
 // __BASE__ プレースホルダを実際のマウントパス(env.BASE_PATH)へ置換して配信。
 // BASE_PATH は JS文字列(var BASE="__BASE__") と HTML属性(href="__BASE__/ai") の両方に入るため、
 // パスに使う文字種のみへ正規化してから埋め込む（万一の注入を構造的に防ぐ）。
@@ -73,8 +78,7 @@ const html = (body: string, env: Env, status = 200): Response => {
     headers: {
       'content-type': 'text/html; charset=utf-8',
       'content-security-policy': CSP,
-      'x-content-type-options': 'nosniff',
-      'referrer-policy': 'no-referrer',
+      ...SECURITY_HEADERS,
     },
   });
 };
@@ -82,7 +86,7 @@ const html = (body: string, env: Env, status = 200): Response => {
 const json = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' },
+    headers: { 'content-type': 'application/json; charset=utf-8', ...SECURITY_HEADERS },
   });
 
 // 長時間処理（AI＋web検索）向け。即座にヘッダを返し、処理中は空白を送り続けて
@@ -135,7 +139,7 @@ function streamJson(work: Promise<unknown>): Response {
     },
   });
   return new Response(stream, {
-    headers: { 'content-type': 'application/json; charset=utf-8', 'x-content-type-options': 'nosniff' },
+    headers: { 'content-type': 'application/json; charset=utf-8', ...SECURITY_HEADERS },
   });
 }
 
@@ -196,7 +200,7 @@ export default {
         const cookie = await createSessionCookie(env);
         return new Response(JSON.stringify({ ok: true }), {
           status: 200,
-          headers: { 'content-type': 'application/json; charset=utf-8', 'set-cookie': cookie },
+          headers: { 'content-type': 'application/json; charset=utf-8', 'set-cookie': cookie, ...SECURITY_HEADERS },
         });
       }
       if (req.method === 'POST' && path === '/api/logout') {
@@ -205,6 +209,7 @@ export default {
           headers: {
             'content-type': 'application/json; charset=utf-8',
             'set-cookie': clearSessionCookie(env),
+            ...SECURITY_HEADERS,
           },
         });
       }
@@ -214,7 +219,7 @@ export default {
       if (!authed) {
         // ページは /login へリダイレクト、APIは401
         if (req.method === 'GET') {
-          return new Response(null, { status: 302, headers: { location: base + '/login' } });
+          return new Response(null, { status: 302, headers: { location: base + '/login', ...SECURITY_HEADERS } });
         }
         return json({ error: 'ログインが必要です' }, 401);
       }
