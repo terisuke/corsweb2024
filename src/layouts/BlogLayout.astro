@@ -37,7 +37,7 @@ interface Props {
   prevPost?: BlogPost;
 }
 
-const { post, relatedPosts, nextPost, prevPost } = Astro.props;
+const { post } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 const { title, description, pubDate, updatedDate, author, category, tags, image, ogImage } = post.data;
 
@@ -181,6 +181,10 @@ const keywords = generateKeywords(tags, category, currentLocale);
       [x-cloak] { display: none !important; }
       
       /* Blog specific styles */
+      .prose {
+        max-width: none;
+      }
+
       .prose :where(h1, h2, h3) {
         word-break: auto-phrase;
         overflow-wrap: anywhere;
@@ -193,10 +197,41 @@ const keywords = generateKeywords(tags, category, currentLocale);
         overflow-wrap: break-word;
         line-break: strict;
         text-wrap: pretty;
+        line-height: 1.9;
       }
 
       .prose :where(a) {
         overflow-wrap: anywhere;
+      }
+
+      .prose :where(h2) {
+        border-top: 1px solid #e7e5e4;
+        margin-top: 3rem;
+        padding-top: 2rem;
+      }
+
+      .dark .prose :where(h2) {
+        border-top-color: #44403c;
+      }
+
+      .prose :where(blockquote) {
+        border-left-color: #2563eb;
+        background-color: #fafaf9;
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+      }
+
+      .dark .prose :where(blockquote) {
+        background-color: #1c1917;
+      }
+
+      .prose :where(img) {
+        border-radius: 0.5rem;
+        border: 1px solid #e7e5e4;
+      }
+
+      .dark .prose :where(img) {
+        border-color: #44403c;
       }
 
       .prose pre {
@@ -258,9 +293,9 @@ const keywords = generateKeywords(tags, category, currentLocale);
       /* Link Card Styles */
       .remark-link-card-plus__container {
         margin: 1.5rem 0;
-        border-radius: 0.75rem;
+        border-radius: 0.5rem;
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
         background-color: #fafaf9;
         border: 1px solid #e7e5e4;
       }
@@ -308,7 +343,7 @@ const keywords = generateKeywords(tags, category, currentLocale);
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: transform 0.15s ease;
       }
       
       .remark-link-card-plus__card:hover .remark-link-card-plus__image {

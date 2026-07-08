@@ -64,77 +64,8 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
 ---
 
-<style>
-  /* Hide the appended heading links to keep clean heading appearance */
-  .prose .heading-link {
-    opacity: 0;
-    transition: opacity 0.2s;
-    text-decoration: none;
-    margin-left: 0.5rem;
-    font-size: 0.875em;
-  }
-  
-  .prose h1:hover .heading-link,
-  .prose h2:hover .heading-link,
-  .prose h3:hover .heading-link,
-  .prose h4:hover .heading-link,
-  .prose h5:hover .heading-link,
-  .prose h6:hover .heading-link {
-    opacity: 0.7;
-  }
-  
-  .prose .heading-link:hover {
-    opacity: 1;
-  }
-
-  /* Ensure proper heading styles */
-  .prose h1 {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
-    line-height: 1.25 !important;
-    color: rgb(28 25 23) !important;
-    margin-top: 2rem !important;
-    margin-bottom: 1.5rem !important;
-  }
-
-  .prose h2 {
-    font-size: 1.5rem !important;
-    font-weight: 700 !important;
-    line-height: 1.375 !important;
-    color: rgb(28 25 23) !important;
-    margin-top: 2rem !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .prose h3 {
-    font-size: 1.25rem !important;
-    font-weight: 600 !important;
-    line-height: 1.5 !important;
-    color: rgb(28 25 23) !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 0.75rem !important;
-  }
-
-  .prose h4 {
-    font-size: 1.125rem !important;
-    font-weight: 600 !important;
-    line-height: 1.5 !important;
-    color: rgb(28 25 23) !important;
-    margin-top: 1rem !important;
-    margin-bottom: 0.5rem !important;
-  }
-
-  /* Dark mode heading colors */
-  .dark .prose h1,
-  .dark .prose h2,
-  .dark .prose h3,
-  .dark .prose h4 {
-    color: rgb(245 245 244) !important;
-  }
-</style>
-
 <BlogLayout post={post} relatedPosts={relatedPosts} nextPost={nextPost} prevPost={prevPost}>
-  <article class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+  <article class="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
     <!-- Breadcrumb -->
     <nav class="mb-8" aria-label="Breadcrumb">
       <ol class="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-stone-600 dark:text-stone-400">
@@ -194,7 +125,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
     <!-- Featured Image -->
     {post.data.image && (
-      <div class="mb-8 overflow-hidden rounded-2xl">
+      <div class="mb-8 overflow-hidden rounded-lg">
         <img
           src={post.data.image.url}
           alt={post.data.image.alt}
@@ -225,7 +156,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     <!-- Tags -->
     {post.data.tags.length > 0 && (
       <div class="mt-12 border-t border-stone-200 pt-8 dark:border-stone-700">
-        <h3 class="mb-4 text-sm font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
+        <h3 class="mb-4 text-sm font-medium text-stone-500 dark:text-stone-400">
           {currentLocale === 'ja' ? 'タグ' : 'Tags'}
         </h3>
         <TagList tags={post.data.tags} />
@@ -271,7 +202,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
         </h2>
         <div class="grid gap-8 md:grid-cols-3">
           {relatedPosts.map(relatedPost => (
-            <PostCard post={relatedPost} />
+            <PostCard post={relatedPost} variant="compact" />
           ))}
         </div>
       </section>
