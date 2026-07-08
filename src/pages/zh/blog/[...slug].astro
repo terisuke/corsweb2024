@@ -4,9 +4,9 @@ import CategoryBadge from '../../../components/blog/CategoryBadge.astro';
 import PostCard from '../../../components/blog/PostCard.astro';
 import ShareButtons from '../../../components/blog/ShareButtons.astro';
 import TableOfContents from '../../../components/blog/TableOfContents.astro';
+import TagList from '../../../components/blog/TagList.astro';
 import TipButton from '../../../components/blog/TipButton.astro';
 import BlogLayout from '../../../layouts/BlogLayout.astro';
-import { getCurrentLocale } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => {
@@ -23,7 +23,6 @@ interface Props { post: CollectionEntry<'blog'> }
 
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
-const currentLocale = getCurrentLocale(Astro.url);
 
 // Get related posts and navigation posts
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -61,7 +60,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <BlogLayout post={post} relatedPosts={relatedPosts} nextPost={nextPost} prevPost={prevPost}>
-  <article class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+  <article class="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
     <!-- Breadcrumb -->
     <nav class="mb-8" aria-label="Breadcrumb">
       <ol class="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-stone-600 dark:text-stone-400">
@@ -93,7 +92,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     </header>
 
     {post.data.image && (
-      <div class="mb-8 overflow-hidden rounded-2xl">
+      <div class="mb-8 overflow-hidden rounded-lg">
         <img src={post.data.image.url} alt={post.data.image.alt} class="h-auto w-full" loading="eager" decoding="async" />
       </div>
     )}
@@ -109,19 +108,10 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     <!-- Tags -->
     {post.data.tags.length > 0 && (
       <div class="mt-12 border-t border-stone-200 pt-8 dark:border-stone-700">
-        <h3 class="mb-4 text-sm font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
+        <h3 class="mb-4 text-sm font-medium text-stone-500 dark:text-stone-400">
           标签
         </h3>
-        <div class="flex flex-wrap gap-2">
-          {post.data.tags.map(tag => (
-            <a
-              href={`/zh/blog/tags/${tag}`}
-              class="rounded-full bg-stone-100 px-3 py-1 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-200 dark:bg-stone-700 dark:text-stone-300 dark:hover:bg-stone-600"
-            >
-              #{tag}
-            </a>
-          ))}
-        </div>
+        <TagList tags={post.data.tags} />
       </div>
     )}
 
@@ -169,7 +159,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
         <h2 class="mb-6 text-2xl font-bold text-stone-900 dark:text-stone-100">相关文章</h2>
         <div class="grid gap-8 md:grid-cols-3">
           {relatedPosts.map(relPost => (
-            <PostCard post={relPost} />
+            <PostCard post={relPost} variant="compact" />
           ))}
         </div>
       </div>
