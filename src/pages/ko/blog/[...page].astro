@@ -30,7 +30,7 @@ const { page } = Astro.props;
 const pageTitle = '블로그 | Cor.inc';
 const pageDescription = 'AI, 제품, 엔지니어링 현장에서 얻은 배움을 의사결정에 필요한 내용부터 읽기 쉽게 정리합니다.';
 const countLabel = page.total > page.size
-  ? `총 ${page.total}개 중 ${page.start + 1}-${page.end}개 글 표시`
+  ? `총 ${page.total}개 중 ${page.start + 1}-${page.end + 1}개 글 표시`
   : `총 ${page.total}개 글`;
 ---
 

@@ -52,7 +52,7 @@ const categoryDesc = getCategoryDescription(id, currentLocale === 'ja' ? 'ja' : 
 const pageDescription = categoryDesc || (currentLocale === 'ja'
   ? `${categoryLabel} に属するブログ記事一覧` : `Blog posts in ${categoryLabel}`);
 const countLabel = page.total > page.size
-  ? `${page.total}記事中 ${page.start + 1}-${page.end}記事を表示`
+  ? `${page.total}記事中 ${page.start + 1}-${page.end + 1}記事を表示`
   : `${page.total}記事`;
 ---
 

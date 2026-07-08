@@ -30,7 +30,7 @@ const { page } = Astro.props;
 const pageTitle = '博客 | Cor.inc';
 const pageDescription = '整理 AI、产品和工程现场的经验，优先说明实际判断点，让非专业读者也容易阅读。';
 const countLabel = page.total > page.size
-  ? `显示 ${page.start + 1}-${page.end} / 共 ${page.total} 篇文章`
+  ? `显示 ${page.start + 1}-${page.end + 1} / 共 ${page.total} 篇文章`
   : `共 ${page.total} 篇文章`;
 ---
 
