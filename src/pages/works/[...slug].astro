@@ -2,7 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
 import NextStep from '../../components/common/NextStep.astro'
-import { safeJsonLd } from '../../utils/blog-seo'
+import { safeJsonLd } from '../../utils/json-ld'
 
 // /works/<slug> の実績記事テンプレート。/works（index）とはルートが衝突しない。
 // 本番ビルドでは下書き（isDraft）を除外。dev では下書きも表示して執筆中プレビューを可能にする。
