@@ -19,6 +19,8 @@ const EVIDENCE_SCREENSHOT_ROUTES = new Set([
   '/zh',
   '/ko',
   '/es',
+  '/news',
+  '/news/news-static-v1',
   '/blog/ai-development-estimate-knowledge-asset',
   '/privacy',
   '/works',

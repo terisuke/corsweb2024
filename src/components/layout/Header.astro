@@ -36,6 +36,25 @@ const links = baseLinks.map((link, index) => ({
   isActive: !link.isExternal && normalizePath(link.href) === currentPath,
 }));
 
+const isCurrentSection = (href: string) => {
+  const normalizedHref = normalizePath(href);
+  return currentPath === normalizedHref || (normalizedHref !== '/' && currentPath.startsWith(`${normalizedHref}/`));
+};
+
+const quickLinks = [
+  ...(currentLocale === 'ja'
+    ? [
+        { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale) },
+        { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale) },
+      ]
+    : []),
+  { name: t.nav.blog, href: getLocalizedUrl('/blog', currentLocale) },
+  { name: t.nav.contact, href: getLocalizedUrl('/contact', currentLocale) },
+].map((link) => ({
+  ...link,
+  isActive: isCurrentSection(link.href),
+}));
+
 // 言語切替（プルダウン）: 各言語の遷移先URLを現在パスから算出し、一覧から直接選べるようにする。
 const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'] as const;
 const langNames: Record<string, string> = {
@@ -83,6 +102,25 @@ const langOptions = localeOrder.map((loc) => ({
         <img class="h-20 w-auto" width="65" height="40" :src="'/assets/logo.avif'" alt="Cor.株式会社" loading="lazy" />
       </a>
     </div>
+
+    <nav class="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex" aria-label="主要ページ">
+      {
+        quickLinks.map((link) => (
+          <a
+            href={link.href}
+            aria-current={link.isActive ? 'page' : undefined}
+            class:list={[
+              'rounded-full px-2.5 py-2 text-sm font-medium transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 dark:hover:bg-primary-400/10 dark:focus-visible:ring-primary-200 xl:px-4',
+              link.isActive
+                ? 'bg-primary-500/10 text-[#2d4a6b] dark:bg-primary-400/10 dark:text-primary-100'
+                : 'text-primary-950 dark:text-primary-200',
+            ]}
+          >
+            {link.name}
+          </a>
+        ))
+      }
+    </nav>
 
     <!-- Actions -->
     <div class="-mr-2 flex items-center space-x-2 sm:space-x-3">

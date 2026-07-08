@@ -11,6 +11,12 @@
     "description": "AI 导入、机密数据的安全运用、报价的思路等，汇总了现场可用的视角。",
     "cta": "查看全部文章"
   },
+  "homeNews": {
+    "eyebrow": "News",
+    "title": "最新消息",
+    "description": "Cor.株式会社的公告、服务更新、外部报道和活动信息。",
+    "cta": "查看全部新闻"
+  },
   "news": {
     "eyebrow": "News",
     "title": "公司新闻",

@@ -11,6 +11,12 @@
     "description": "AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.",
     "cta": "See all articles"
   },
+  "homeNews": {
+    "eyebrow": "News",
+    "title": "Latest news",
+    "description": "Company announcements, service updates, external coverage, and event information from Cor. Inc.",
+    "cta": "See all news"
+  },
   "news": {
     "eyebrow": "News",
     "title": "Company news",
