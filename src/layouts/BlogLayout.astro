@@ -41,8 +41,9 @@ const { post, relatedPosts, nextPost, prevPost } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 const { title, description, pubDate, updatedDate, author, category, tags, image, ogImage } = post.data;
 
-// Use auto-generated OGP image if no custom ogImage is set
-const finalOgImage = ogImage || new URL(`/og/${post.slug}.svg`, Astro.site).toString();
+// Use SNS-compatible PNG OGP image if no custom ogImage is set. SVG routes remain available.
+const finalOgImage = ogImage || new URL(`/og/${post.slug}.png`, Astro.site).toString();
+const usesGeneratedOgImage = !ogImage;
 
 const estimatedReadingTime = estimateReadingTime(description);
 const keywords = generateKeywords(tags, category, currentLocale);
@@ -79,6 +80,9 @@ const keywords = generateKeywords(tags, category, currentLocale);
       title={title}
       description={description}
       ogImage={finalOgImage}
+      ogImageAlt={title}
+      ogImageWidth={usesGeneratedOgImage ? 1200 : undefined}
+      ogImageHeight={usesGeneratedOgImage ? 630 : undefined}
       currentLocale={currentLocale}
     />
     

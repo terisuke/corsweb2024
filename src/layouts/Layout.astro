@@ -43,8 +43,8 @@ const basePath =
   currentLocale === 'ja'
     ? Astro.url.pathname
     : Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
-// 通常ページは path から個別 OG 画像（/og/page/<slug>.svg）を選ぶ。未対応の path は logo.png にフォールバック。
-// slug は src/pages/og/page/[...slug].svg.ts の OG_PAGES と一致させること。
+// 通常ページは path から SNS 対応の個別 PNG 画像（/og/page/<slug>.png）を選ぶ。
+// slug は src/utils/og-svg.ts の OG_PAGES と一致させること。SVG ルートも互換用に維持する。
 const OG_PAGE_SLUGS: Record<string, string> = {
   '/': 'home',
   '/about': 'about',
@@ -59,8 +59,9 @@ const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey];
 const ogImage = ogImageProp
   ? new URL(ogImageProp, Astro.site)
   : ogPageSlug
-    ? new URL(`/og/page/${ogPageSlug}.svg`, Astro.site)
+    ? new URL(`/og/page/${ogPageSlug}.png`, Astro.site)
     : new URL('/logo.png', Astro.site);
+const usesGeneratedOgImage = !ogImageProp && Boolean(ogPageSlug);
 ---
 
 <!doctype html>
@@ -100,6 +101,10 @@ const ogImage = ogImageProp
     <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={socialDescription} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    {usesGeneratedOgImage && <meta property="og:image:width" content="1200" />}
+    {usesGeneratedOgImage && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={socialTitle} />
     <meta property="og:locale" content={OG_LOCALES[currentLocale]} />
     <meta property="og:site_name" content="Cor.Inc." />
     <meta property="article:author" content="寺田康佑" />
@@ -112,6 +117,7 @@ const ogImage = ogImageProp
     <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={socialDescription} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={socialTitle} />
     
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">

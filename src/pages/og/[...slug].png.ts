@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { createPngResponse, renderOgPng } from '../../utils/og-png';
 import { buildBlogOgSvg } from '../../utils/og-svg';
 
 interface Props {
@@ -7,8 +8,6 @@ interface Props {
 
 export async function GET({ params }: Props) {
   const { slug } = params;
-
-  // Get the blog post
   const posts = await getCollection('blog');
   const post = posts.find((p) => p.slug === slug);
 
@@ -18,13 +17,9 @@ export async function GET({ params }: Props) {
 
   const { title, description, category, author } = post.data;
   const svg = buildBlogOgSvg({ title, description, category, author });
+  const png = await renderOgPng(svg);
 
-  return new Response(svg, {
-    headers: {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    },
-  });
+  return createPngResponse(png);
 }
 
 export async function getStaticPaths() {
