@@ -7,10 +7,21 @@ interface Props {
   title: string;
   description: string;
   ogImage: string;
+  ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   currentLocale: Locale;
 }
 
-const { title, description, ogImage, currentLocale } = Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  ogImageAlt = title,
+  ogImageWidth,
+  ogImageHeight,
+  currentLocale,
+} = Astro.props;
 ---
 
 <!-- Open Graph / Facebook -->
@@ -19,6 +30,10 @@ const { title, description, ogImage, currentLocale } = Astro.props;
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:secure_url" content={ogImage} />
+{ogImageWidth && <meta property="og:image:width" content={String(ogImageWidth)} />}
+{ogImageHeight && <meta property="og:image:height" content={String(ogImageHeight)} />}
+<meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
 <meta property="og:site_name" content="Cor.inc Blog" />
 
@@ -30,3 +45,4 @@ const { title, description, ogImage, currentLocale } = Astro.props;
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
