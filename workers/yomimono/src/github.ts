@@ -2,6 +2,23 @@ import { Octokit } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { assertSlug, safeImageName } from './validate';
 import type { Collection, Env } from './types';
+import { parseBlogMarkdown } from './article-markdown';
+
+export interface BlogArticleSummary {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  isDraft: boolean;
+  pubDate: string;
+}
+
+export interface BlogArticleFile extends BlogArticleSummary {
+  article: ReturnType<typeof parseBlogMarkdown>['article'];
+  markdown: string;
+  sha: string;
+  path: string;
+}
 
 export function makeOctokit(env: Env): Octokit {
   return new Octokit({
@@ -70,6 +87,101 @@ export async function listArticleSlugs(
       : [];
   } catch {
     return []; // 一覧取得失敗は致命的でない（重複回避が弱まるだけ）
+  }
+}
+
+function blogArticlePath(env: Env, slug: string): string {
+  assertSlug(slug);
+  return `${contentDir(env, 'blog')}/${slug}.md`;
+}
+
+function asString(value: unknown): string {
+  return typeof value === 'string' ? value : '';
+}
+
+export async function readBlogArticle(
+  env: Env,
+  octokit: Octokit,
+  slug: string,
+): Promise<BlogArticleFile> {
+  const path = blogArticlePath(env, slug);
+  const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+    owner: env.GH_OWNER,
+    repo: env.GH_REPO,
+    path,
+    ref: env.PUBLISH_BRANCH,
+  });
+  const data = res.data as { content?: string; sha?: string };
+  if (!data.content || !data.sha) throw new Error(`記事を取得できません: ${path}`);
+  const markdown = base64ToUtf8(data.content);
+  const parsed = parseBlogMarkdown(slug, markdown);
+  return {
+    slug,
+    title: asString(parsed.frontmatter.title),
+    description: asString(parsed.frontmatter.description),
+    category: asString(parsed.frontmatter.category),
+    isDraft: parsed.frontmatter.isDraft === true,
+    pubDate: asString(parsed.frontmatter.pubDate),
+    article: parsed.article,
+    markdown,
+    sha: data.sha,
+    path,
+  };
+}
+
+export async function listBlogArticles(
+  env: Env,
+  octokit: Octokit,
+): Promise<BlogArticleSummary[]> {
+  const slugs = await listArticleSlugs(env, octokit, 'blog');
+  const articles: BlogArticleSummary[] = [];
+  for (const slug of slugs) {
+    try {
+      const article = await readBlogArticle(env, octokit, slug);
+      articles.push({
+        slug: article.slug,
+        title: article.title || slug,
+        description: article.description,
+        category: article.category,
+        isDraft: article.isDraft,
+        pubDate: article.pubDate,
+      });
+    } catch {
+      // 一覧では壊れた単一記事で画面全体を落とさない。
+    }
+  }
+  return articles.sort((a, b) => b.pubDate.localeCompare(a.pubDate) || a.slug.localeCompare(b.slug));
+}
+
+export async function updateBlogArticle(
+  env: Env,
+  octokit: Octokit,
+  slug: string,
+  markdown: string,
+  sha: string,
+  authorEmail: string,
+): Promise<{ updated: true; path: string; commitUrl: string }> {
+  const path = blogArticlePath(env, slug);
+  if (!sha) throw new Error('更新元の記事情報が不足しています。記事を開き直してください');
+
+  const author = authorEmail.split('@')[0];
+  try {
+    const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+      owner: env.GH_OWNER,
+      repo: env.GH_REPO,
+      path,
+      branch: env.PUBLISH_BRANCH,
+      message: `post(yomimono): ${slug}（更新: ${author}）`,
+      content: utf8ToBase64(markdown),
+      sha,
+    });
+    const data = res.data as { commit?: { html_url?: string } };
+    return { updated: true, path, commitUrl: data.commit?.html_url ?? '' };
+  } catch (e: unknown) {
+    if ((e as { status?: number }).status === 409) {
+      throw new Error('記事が別の編集で更新されています。開き直してから保存してください');
+    }
+    throw e;
   }
 }
 

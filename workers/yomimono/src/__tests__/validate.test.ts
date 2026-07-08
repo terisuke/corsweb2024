@@ -430,6 +430,16 @@ describe('normalizeArticle — publish/validate 共通の検証・正規化', ()
     if (r.ok) expect(r.article.body.length).toBe(100_000);
   });
 
+  it('isDraft は true のときだけ保持する', () => {
+    const draft = normalizeArticle({ ...base, isDraft: true });
+    expect(draft.ok).toBe(true);
+    if (draft.ok) expect(draft.article.isDraft).toBe(true);
+
+    const published = normalizeArticle({ ...base, isDraft: false });
+    expect(published.ok).toBe(true);
+    if (published.ok) expect(published.article.isDraft).toBe(false);
+  });
+
   it('サニタイズ後に title が空なら 400', () => {
     const r = normalizeArticle({ ...base, title: '```' });
     expect(r.ok).toBe(false);
