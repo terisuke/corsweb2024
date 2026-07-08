@@ -1,6 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import { contentDir } from '../github';
+import { describe, it, expect, vi } from 'vitest';
+import { contentDir, readBlogArticle, updateBlogArticle } from '../github';
 import type { Env } from '../types';
+
+function utf8ToBase64(str: string): string {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
 
 describe('contentDir — コレクション別コンテンツディレクトリパス', () => {
   const mockEnv: Env = {
@@ -53,5 +60,85 @@ describe('contentDir — コレクション別コンテンツディレクトリ�
     const casesDir = contentDir(mockEnv, 'cases');
     expect(casesDir).not.toContain('//');
     expect(casesDir).toMatch(/^[^/]+\/[^/]+\/[^/]+$/);
+  });
+});
+
+describe('readBlogArticle / updateBlogArticle — 既存記事編集', () => {
+  const mockEnv: Env = {
+    BLOG_DIR: 'src/content/blog',
+    NEWS_DIR: 'src/content/news',
+    CASES_DIR: 'src/content/cases',
+    GH_OWNER: 'test-owner',
+    GH_REPO: 'test-repo',
+    GH_APP_ID: '123',
+    GH_INSTALLATION_ID: '456',
+    GH_APP_PRIVATE_KEY: 'test-key',
+    PUBLISH_BRANCH: 'main',
+    STYLE_GUIDE_PATH: 'docs/blog-style-guide.md',
+    ANTHROPIC_API_KEY: 'test-key',
+    ACCESS_PASSWORD: 'x'.repeat(20),
+    SESSION_SECRET: 'test-secret',
+    BASE_PATH: '/',
+  };
+
+  const markdown = `---
+title: "編集対象"
+description: "説明"
+pubDate: 2026-07-08
+author: "Terisuke"
+category: "ai"
+tags: ["a","b"]
+lang: "ja"
+isDraft: false
+---
+
+本文
+`;
+
+  it('readBlogArticle は blog/ja/<slug>.md を読み、sha と article を返す', async () => {
+    const request = vi.fn(async () => ({
+      data: {
+        content: utf8ToBase64(markdown),
+        sha: 'file-sha',
+      },
+    }));
+    const article = await readBlogArticle(mockEnv, { request } as never, 'edit-target');
+    expect(request).toHaveBeenCalledWith('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      path: 'src/content/blog/ja/edit-target.md',
+      ref: 'main',
+    });
+    expect(article.sha).toBe('file-sha');
+    expect(article.article.title).toBe('編集対象');
+    expect(article.article.slug).toBe('edit-target');
+  });
+
+  it('updateBlogArticle は sha 付き PUT で同じ slug を更新する', async () => {
+    const request = vi.fn(async () => ({
+      data: { commit: { html_url: 'https://github.com/test/commit/1' } },
+    }));
+    const result = await updateBlogArticle(
+      mockEnv,
+      { request } as never,
+      'edit-target',
+      markdown,
+      'file-sha',
+      'editor@example.com',
+    );
+    expect(result).toEqual({
+      updated: true,
+      path: 'src/content/blog/ja/edit-target.md',
+      commitUrl: 'https://github.com/test/commit/1',
+    });
+    expect(request).toHaveBeenCalledWith('PUT /repos/{owner}/{repo}/contents/{path}', {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      path: 'src/content/blog/ja/edit-target.md',
+      branch: 'main',
+      message: 'post(yomimono): edit-target（更新: editor）',
+      content: utf8ToBase64(markdown),
+      sha: 'file-sha',
+    });
   });
 });

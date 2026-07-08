@@ -9,12 +9,23 @@ import { collectTopics } from './collect';
 // buildNewsMarkdown は M3 で news を有効化する際に再import（基盤関数は generate.ts に維持）
 import { generateArticle, buildMarkdown, buildCasesMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
-import { makeOctokit, getFileContent, commitArticle, commitImage, listArticleSlugs } from './github';
-import { sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput } from './validate';
+import {
+  makeOctokit,
+  getFileContent,
+  commitArticle,
+  commitImage,
+  listArticleSlugs,
+  listBlogArticles,
+  readBlogArticle,
+  updateBlogArticle,
+} from './github';
+import { rebuildBlogMarkdown } from './article-markdown';
+import { assertSlug, sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput } from './validate';
 import { HUB_HTML } from './ui-hub';
 import { AI_HTML } from './ui-ai';
 import { MANUAL_HTML } from './ui-manual';
 import { MANUAL_CASES_HTML } from './ui-manual-cases';
+import { EDIT_HTML } from './ui-edit';
 import { LOGIN_HTML } from './ui-login';
 import { STYLE_GUIDE_FALLBACK } from './style-guide';
 
@@ -221,6 +232,9 @@ export default {
       if (req.method === 'GET' && path === '/manual/cases') {
         return html(MANUAL_CASES_HTML, env);
       }
+      if (req.method === 'GET' && path === '/edit') {
+        return html(EDIT_HTML, env);
+      }
 
       // 既存記事スラッグ一覧（重複テーマ回避用）
       if (req.method === 'GET' && path === '/api/recent') {
@@ -232,6 +246,35 @@ export default {
         const octokit = makeOctokit(env);
         const slugs = await listArticleSlugs(env, octokit, collection);
         return json({ slugs });
+      }
+
+      // 既存ブログ記事の一覧・読み込み・更新（M1-I3）。
+      // M2/M3 の cases/news CMS とは分け、ここでは blog のみ編集対象にする。
+      if (req.method === 'GET' && path === '/api/articles') {
+        const collection = normalizeCollection(url.searchParams.get('collection'));
+        if (collection !== 'blog') {
+          return json({ error: '既存記事編集は現在 blog のみ対応しています' }, 400);
+        }
+        const octokit = makeOctokit(env);
+        const articles = await listBlogArticles(env, octokit);
+        return json({ articles });
+      }
+
+      if (req.method === 'GET' && path === '/api/article') {
+        const collection = normalizeCollection(url.searchParams.get('collection'));
+        if (collection !== 'blog') {
+          return json({ error: '既存記事編集は現在 blog のみ対応しています' }, 400);
+        }
+        const slug = url.searchParams.get('slug') || '';
+        if (!slug) return json({ error: 'slug は必須です' }, 400);
+        try {
+          assertSlug(slug);
+        } catch (e) {
+          return json({ error: e instanceof Error ? e.message : 'slug が不正です' }, 400);
+        }
+        const octokit = makeOctokit(env);
+        const file = await readBlogArticle(env, octokit, slug);
+        return json({ article: file.article, sha: file.sha, path: file.path });
       }
 
       // 画像アップロード（手動エディタ用）。public/images/blog/uploads/ にコミットしURLを返す。
@@ -352,6 +395,37 @@ export default {
         const octokit = makeOctokit(env);
         const result = await commitArticle(env, octokit, normalized.slug, markdown, EDITOR, collection);
         return json(result);
+      }
+
+      // 既存ブログ記事の更新。同じ slug/path を sha 付きで上書きし、同時編集を検出する。
+      if (req.method === 'POST' && path === '/api/update') {
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const collection = normalizeCollection(body.collection);
+        if (collection !== 'blog') {
+          return json({ error: '既存記事編集は現在 blog のみ対応しています' }, 400);
+        }
+        const sha = typeof body.sha === 'string' ? body.sha : '';
+        if (!sha) return json({ error: '更新元の記事情報がありません。記事を開き直してください' }, 400);
+        const norm = normalizeArticle(body.article as ArticleInput | undefined, 'blog');
+        if (!norm.ok) return json({ error: norm.error }, norm.status);
+        const normalized = norm.article;
+        const octokit = makeOctokit(env);
+        const existing = await readBlogArticle(env, octokit, normalized.slug);
+        const markdown = rebuildBlogMarkdown(existing.markdown, normalized);
+        const violations = scanForViolations(markdown);
+        if (violations.length > 0) {
+          return json({ error: 'ガードレール違反のため更新を中止しました', violations }, 422);
+        }
+        try {
+          const result = await updateBlogArticle(env, octokit, normalized.slug, markdown, sha, EDITOR);
+          return json(result);
+        } catch (e: unknown) {
+          if (e instanceof Error && /^記事が|^更新元/.test(e.message)) {
+            return json({ error: e.message }, 409);
+          }
+          throw e;
+        }
       }
 
       return json({ error: 'Not Found' }, 404);
