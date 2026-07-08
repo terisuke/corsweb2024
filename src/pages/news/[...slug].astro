@@ -38,7 +38,7 @@ const formattedUpdatedAt = data.updatedAt
     })
   : null;
 const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const ogImageUrl = data.ogImage || '/og/page/news.svg';
+const ogImageUrl = data.ogImage || '/og/page/news.png';
 
 const articleJsonLd = {
   '@context': 'https://schema.org',
@@ -103,7 +103,7 @@ const breadcrumbJsonLd = {
   title={`${data.title} | Cor.株式会社 ニュース`}
   description={data.description}
   availableLocales={['ja']}
-  ogImage={ogImageUrl}
+  ogImage={data.ogImage}
   ogType="article"
   publishedTime={data.publishedAt.toISOString()}
   modifiedTime={data.updatedAt?.toISOString()}

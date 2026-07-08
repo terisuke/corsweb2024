@@ -55,7 +55,7 @@ const OG_PAGE_SLUGS: Record<string, string> = {
   '/privacy': 'privacy',
 };
 const ogBaseKey = basePath.replace(/\/+$/, '') || '/';
-const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey];
+const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey] ?? (ogBaseKey.startsWith('/news/') ? 'news' : undefined);
 // ページ固有 OG 画像（ogImage prop）があれば最優先。なければ path 別 → logo.png。
 const ogImage = ogImageProp
   ? new URL(ogImageProp, Astro.site)
