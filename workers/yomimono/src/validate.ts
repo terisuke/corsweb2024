@@ -1,7 +1,9 @@
-import type { Article } from './types';
+import type { Article, Collection } from './types';
 
 export const SLUG_RE = /^[a-z0-9-]{3,80}$/;
 export const VALID_CATEGORIES = ['ai', 'engineering', 'founder', 'lab'] as const;
+export const NEWS_CATEGORIES = ['info', 'media', 'update', 'event', 'award'] as const;
+export const CASES_CATEGORIES = ['grift', 'confidential-ai', 'local-llm', 'ai-contract', 'tech-culture'] as const;
 
 // slug は公開パス `src/content/blog/ja/<slug>.md` に直結する。
 // `/`・`.`・`..` を弾き、記事ディレクトリ外への書き込み（パストラバーサル）を防ぐ。
@@ -11,10 +13,20 @@ export function assertSlug(slug: string): void {
   }
 }
 
-export function normalizeCategory(c: string | undefined): Article['category'] {
-  return (VALID_CATEGORIES as readonly string[]).includes(c ?? '')
-    ? (c as Article['category'])
-    : 'ai';
+export function normalizeCategory(c: string | undefined, collection: Collection = 'blog'): string {
+  const validCategories =
+    collection === 'news'
+      ? NEWS_CATEGORIES
+      : collection === 'cases'
+        ? CASES_CATEGORIES
+        : VALID_CATEGORIES;
+  return (validCategories as readonly string[]).includes(c ?? '')
+    ? (c ?? 'ai')
+    : collection === 'news'
+      ? 'info'
+      : collection === 'cases'
+        ? 'grift'
+        : 'ai';
 }
 
 // プロンプト注入対策: コードフェンス・制御文字を除去し、長さを制限する。
@@ -58,37 +70,67 @@ export interface ArticleInput {
   category?: string;
   tags?: unknown;
   body?: string;
+  collection?: Collection;
+  externalUrl?: string;
+  summary?: string;
+  publishedAt?: string;
+  featured?: boolean;
 }
 export type NormalizedArticle = {
   slug: string;
   title: string;
   description: string;
-  category: Article['category'];
+  category: string;
   tags: string[];
   body: string;
+  collection: Collection;
+  externalUrl?: string;
+  summary?: string;
+  publishedAt?: string;
+  featured?: boolean;
 };
 
 // publish / validate 共通: 受け取った article を検証・正規化（パストラバーサル防止含む）。
 export function normalizeArticle(
   a: ArticleInput | undefined,
+  collection: Collection = 'blog',
 ): { ok: true; article: NormalizedArticle } | { ok: false; error: string; status: number } {
-  if (!a?.slug || !a?.body || !a?.title || !a?.description) {
-    return { ok: false, error: 'article.slug / title / description / body は必須です', status: 400 };
+  const coll = collection || 'blog';
+
+  // news で externalUrl がある場合は body 不要
+  const requiresBody = coll !== 'news' || !a?.externalUrl;
+  if (!a?.slug || !a?.title || !a?.description || (requiresBody && !a?.body)) {
+    const required = ['slug', 'title', 'description'];
+    if (requiresBody) required.push('body');
+    if (coll === 'cases') required.push('summary');
+    return { ok: false, error: `article.${required.join(' / ')} は必須です`, status: 400 };
   }
+
+  // cases は summary 必須
+  if (coll === 'cases' && !a?.summary) {
+    return { ok: false, error: 'article.summary は cases で必須です', status: 400 };
+  }
+
   try {
     assertSlug(a.slug);
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'slug が不正です', status: 400 };
   }
+
   const article: NormalizedArticle = {
     slug: a.slug,
     title: sanitizeText(a.title, 200),
     description: sanitizeText(a.description, 500),
-    category: normalizeCategory(a.category),
+    category: normalizeCategory(a.category, coll),
     tags: Array.isArray(a.tags)
       ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
       : [],
-    body: String(a.body).slice(0, 100_000), // markdown構造を保つため制御文字は除去せず長さのみ制限
+    body: String(a.body ?? '').slice(0, 100_000),
+    collection: coll,
+    externalUrl: a.externalUrl ? sanitizeText(a.externalUrl, 2000) : undefined,
+    summary: a.summary ? sanitizeText(a.summary, 1000) : undefined,
+    publishedAt: a.publishedAt ? sanitizeText(a.publishedAt, 10) : undefined,
+    featured: a.featured === true,
   };
   if (!article.title || !article.description) {
     return { ok: false, error: 'title / description が空です', status: 400 };

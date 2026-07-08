@@ -1,7 +1,7 @@
 import { callClaude, parseLastJsonBlock } from './anthropic';
 import { scanForViolations } from './guardrails';
-import { assertSlug, normalizeCategory } from './validate';
-import type { Env, Article, Violation, TopicCandidate } from './types';
+import { assertSlug, normalizeCategory, type NormalizedArticle } from './validate';
+import type { Collection, Env, Article, Violation, TopicCandidate } from './types';
 
 // ④ 記事生成: 社長の文体メモリ（blog-style-guide.md）で1本書く。
 // 戻り値に guardrail 検査結果を含め、⑤レビューで人が確認できるようにする。
@@ -71,7 +71,7 @@ ${recentTitles.map((t) => `- ${t}`).join('\n')}
 }
 
 // JST基準の日付で frontmatter を組む（公開時はこの markdown をそのままコミット）。
-export function buildMarkdown(article: Article, isDraft = false): string {
+export function buildMarkdown(article: NormalizedArticle | Article, isDraft = false): string {
   const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const frontmatter = [
     '---',
@@ -89,4 +89,46 @@ export function buildMarkdown(article: Article, isDraft = false): string {
   // body 先頭が `---` だと frontmatter 区切りと紛らわしいので、先頭の区切り行のみ除去する。
   const body = article.body.replace(/^(?:\s*\n)*-{3,}[ \t]*(?:\n|$)/, '');
   return `${frontmatter}${body}\n`;
+}
+
+// news コレクション用の markdown を生成する。
+export function buildNewsMarkdown(article: NormalizedArticle, isDraft = false): string {
+  const publishedAt = article.publishedAt || new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const frontmatter = [
+    '---',
+    `title: ${JSON.stringify(article.title)}`,
+    `description: ${JSON.stringify(article.description)}`,
+    `publishedAt: ${publishedAt}`,
+    'author: "Terisuke"',
+    `category: "${article.category}"`,
+    `tags: ${JSON.stringify(article.tags)}`,
+    'lang: "ja"',
+    `isDraft: ${isDraft}`,
+  ];
+  if (article.externalUrl) {
+    frontmatter.push(`externalUrl: ${JSON.stringify(article.externalUrl)}`);
+  }
+  frontmatter.push('---', '');
+  const body = article.body.replace(/^(?:\s*\n)*-{3,}[ \t]*(?:\n|$)/, '');
+  return `${frontmatter.join('\n')}${body}\n`;
+}
+
+// cases コレクション用の markdown を生成する。
+export function buildCasesMarkdown(article: NormalizedArticle, isDraft = false): string {
+  const publishedAt = article.publishedAt || new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const frontmatter = [
+    '---',
+    `title: ${JSON.stringify(article.title)}`,
+    `description: ${JSON.stringify(article.description)}`,
+    `category: "${article.category}"`,
+    `tags: ${JSON.stringify(article.tags)}`,
+    `publishedAt: ${publishedAt}`,
+    `summary: ${JSON.stringify(article.summary || '')}`,
+    'isDraft: false',
+    `featured: ${article.featured || false}`,
+    '---',
+    '',
+  ];
+  const body = article.body.replace(/^(?:\s*\n)*-{3,}[ \t]*(?:\n|$)/, '');
+  return `${frontmatter.join('\n')}${body}\n`;
 }

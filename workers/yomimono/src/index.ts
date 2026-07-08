@@ -1,4 +1,4 @@
-import type { Env } from './types';
+import type { Collection, Env } from './types';
 import {
   verifySession,
   checkPassword,
@@ -6,7 +6,7 @@ import {
   clearSessionCookie,
 } from './session';
 import { collectTopics } from './collect';
-import { generateArticle, buildMarkdown } from './generate';
+import { generateArticle, buildMarkdown, buildNewsMarkdown, buildCasesMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
 import { makeOctokit, getFileContent, commitArticle, commitImage, listArticleSlugs } from './github';
 import { sanitizeText, normalizeArticle, type ArticleInput } from './validate';
@@ -216,8 +216,9 @@ export default {
 
       // 既存記事スラッグ一覧（重複テーマ回避用）
       if (req.method === 'GET' && path === '/api/recent') {
+        const collection = (url.searchParams.get('collection') || 'blog') as Collection;
         const octokit = makeOctokit(env);
-        const slugs = await listArticleSlugs(env, octokit);
+        const slugs = await listArticleSlugs(env, octokit, collection);
         return json({ slugs });
       }
 
@@ -293,9 +294,19 @@ export default {
       if (req.method === 'POST' && path === '/api/validate') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-        const norm = normalizeArticle(body.article as ArticleInput | undefined);
+        const collection = (body.collection || 'blog') as Collection;
+        const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
-        const violations = scanForViolations(buildMarkdown(norm.article));
+        const normalized = norm.article;
+        let markdown: string;
+        if (collection === 'news') {
+          markdown = buildNewsMarkdown(normalized);
+        } else if (collection === 'cases') {
+          markdown = buildCasesMarkdown(normalized);
+        } else {
+          markdown = buildMarkdown(normalized);
+        }
+        const violations = scanForViolations(markdown);
         return json({ violations });
       }
 
@@ -303,17 +314,25 @@ export default {
       if (req.method === 'POST' && path === '/api/publish') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-        const norm = normalizeArticle(body.article as ArticleInput | undefined);
+        const collection = (body.collection || 'blog') as Collection;
+        const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
         // 公開直前にもう一度ガードレールを通す（最終防衛線）
-        const markdown = buildMarkdown(normalized);
+        let markdown: string;
+        if (collection === 'news') {
+          markdown = buildNewsMarkdown(normalized);
+        } else if (collection === 'cases') {
+          markdown = buildCasesMarkdown(normalized);
+        } else {
+          markdown = buildMarkdown(normalized);
+        }
         const violations = scanForViolations(markdown);
         if (violations.length > 0) {
           return json({ error: 'ガードレール違反のため公開を中止しました', violations }, 422);
         }
         const octokit = makeOctokit(env);
-        const result = await commitArticle(env, octokit, normalized.slug, markdown, EDITOR);
+        const result = await commitArticle(env, octokit, normalized.slug, markdown, EDITOR, collection);
         return json(result);
       }
 
