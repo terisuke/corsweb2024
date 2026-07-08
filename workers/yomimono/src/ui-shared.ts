@@ -33,6 +33,13 @@ export const CSS = `
   .card .t { font-weight:700; font-size:14px; }
   .card .s { font-size:13px; color:#374151; margin:4px 0; }
   .card .src a { font-size:11px; color:var(--accent); margin-right:10px; word-break:break-all; }
+  .article-list { display:grid; gap:10px; }
+  .article-item { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
+  .article-item b { color:var(--navy); font-size:13px; }
+  .article-item p { margin:4px 0; color:#374151; font-size:12px; }
+  .article-item small { color:var(--muted); font-size:11px; word-break:break-all; }
+  .article-item button { flex:0 0 auto; padding:8px 12px; border-radius:8px; }
+  .empty { border:1px dashed var(--line); border-radius:10px; padding:16px; color:var(--muted); font-size:13px; background:#fff; }
   .badge { display:inline-block; font-size:11px; background:#eef2f7; color:var(--muted); border-radius:20px; padding:2px 9px; margin-left:6px; }
   .field { margin:10px 0; }
   .field label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
@@ -92,13 +99,6 @@ export const CSS = `
   /* .draft-bar の display:flex は [hidden]{display:none} より後に定義されるため
      specificity で hidden が負ける。属性セレクタを併用して hidden を優先する。 */
   .draft-bar[hidden] { display:none; }
-  .article-list { display:grid; gap:10px; }
-  .article-item { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; }
-  .article-item b { color:var(--navy); font-size:13px; }
-  .article-item p { margin:4px 0; color:#374151; font-size:12px; }
-  .article-item small { color:var(--muted); font-size:11px; word-break:break-all; }
-  .article-item button { flex:0 0 auto; padding:8px 12px; border-radius:8px; }
-  .empty { border:1px dashed var(--line); border-radius:10px; padding:16px; color:var(--muted); font-size:13px; background:#fff; }
   .checkline { display:flex; gap:8px; align-items:center; color:var(--ink); font-size:13px; margin-top:10px; }
 `;
 
