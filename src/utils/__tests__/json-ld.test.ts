@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { safeJsonLd } from '../blog-seo';
+import { safeJsonLd } from '../json-ld';
 
 describe('safeJsonLd', () => {
   it('escapes </script> so a <script type="application/ld+json"> block cannot be closed early', () => {
