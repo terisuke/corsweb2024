@@ -6,6 +6,8 @@ import {
   normalizeCollection,
   safeImageName,
   sanitizeText,
+  isHttpUrl,
+  isValidCalendarDate,
   SLUG_RE,
   DATE_RE,
   VALID_CATEGORIES,
@@ -126,6 +128,51 @@ describe('DATE_RE / publishedAt — 日付形式の検証', () => {
   });
 });
 
+describe('isValidCalendarDate — 暦日付の厳密検証（P3: DATE_RE 通過後のロールオーバー拒否）', () => {
+  it.each(['2026-07-08', '2026-01-01', '2024-02-29', '2000-02-29'])(
+    '正当な実在日付(%s)は true',
+    (d) => {
+      expect(isValidCalendarDate(d)).toBe(true);
+    },
+  );
+  // DATE_RE は書式のみ検証するため、2026-99-99 は書式は通るが Date で NaN になる。
+  it('2026-99-99 は DATE_RE を通るが Date で NaN → 拒否（反証可能: isValidCalendarDate 未導入なら受理してしまう）', () => {
+    expect(DATE_RE.test('2026-99-99')).toBe(true);
+    expect(isValidCalendarDate('2026-99-99')).toBe(false);
+  });
+  it.each(['2026-02-30', '2026-04-31', '2026-13-01', '2026-00-10', '2026-12-32', '2025-02-29'])(
+    'ロールオーバー日付(%s)は拒否（実在しない暦日）',
+    (d) => {
+      expect(isValidCalendarDate(d)).toBe(false);
+    },
+  );
+  it.each(['2026-7-8', '2026/07/08', 'not-a-date', ''])('書式不正(%s)は拒否', (d) => {
+    expect(isValidCalendarDate(d)).toBe(false);
+  });
+});
+
+describe('normalizeArticle — publishedAt 暦日付検証の反映（P3・反証可能）', () => {
+  const base = {
+    slug: 'valid-slug',
+    title: 'タイトル',
+    description: '説明',
+    body: '本文',
+  };
+  it.each(['2026-99-99', '2026-02-30', '2026-04-31', '2026-13-01'])(
+    '実在しない暦日付(%s)は undefined に正規化（反証可能: isValidCalendarDate未導入なら保持してしまう）',
+    (d) => {
+      const r = normalizeArticle({ ...base, publishedAt: d });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.article.publishedAt).toBeUndefined();
+    },
+  );
+  it.each(['2026-07-08', '2024-02-29'])('実在日付(%s)は保持', (d) => {
+    const r = normalizeArticle({ ...base, publishedAt: d });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.publishedAt).toBe(d);
+  });
+});
+
 describe('normalizeArticle — news collection', () => {
   const newsBase = {
     slug: 'news-slug',
@@ -179,6 +226,97 @@ describe('normalizeArticle — news collection', () => {
     const r = normalizeArticle({ ...newsBase, slug: undefined }, 'news');
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.status).toBe(400);
+  });
+});
+
+describe('isHttpUrl — http(s) URL のみ受理', () => {
+  it.each([
+    'https://example.com',
+    'http://example.com/article',
+    'HTTPS://COR-JP.COM/',
+    'https://blog.cor-jp.com/posts/foo',
+  ])('正当な http(s) URL(%s)は true', (u) => {
+    expect(isHttpUrl(u)).toBe(true);
+  });
+  it.each([
+    'not-a-url',
+    '',
+    'javascript:alert(1)',
+    'data:text/html,<script>',
+    'ftp://example.com',
+    '//example.com',
+    'mailto:foo@example.com',
+  ])('不正URL(%s)は false', (u) => {
+    expect(isHttpUrl(u)).toBe(false);
+  });
+});
+
+describe('normalizeArticle — news externalUrl 検証（P2・反証可能）', () => {
+  const newsBase = {
+    slug: 'news-slug',
+    title: 'ニュースタイトル',
+    description: 'ニュース説明',
+    category: 'info',
+    tags: ['tag'],
+    body: '## 本文',
+  };
+
+  it.each(['', '   ', 'not-a-url', 'javascript:alert(1)', 'ftp://example.com'])(
+    '不正URL(%s)は externalUrl 無し扱い → body 必須（反証可能: 検証未導入なら body 無しで受理してしまう）',
+    (badUrl) => {
+      const r = normalizeArticle(
+        { ...newsBase, body: undefined, externalUrl: badUrl },
+        'news',
+      );
+      expect(r.ok).toBe(false);
+      if (!r.ok) {
+        expect(r.status).toBe(400);
+        expect(r.error).toContain('body');
+      }
+    },
+  );
+
+  it.each([
+    'https://example.com/article',
+    'http://example.com',
+    'https://cor-jp.com/news/foo',
+  ])('有効 http(s) URL(%s)は body 不要で受理', (goodUrl) => {
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: goodUrl },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.externalUrl).toBe(goodUrl);
+  });
+
+  it('不正URL + body あり は受理（externalUrl は undefined に正規化）', () => {
+    const r = normalizeArticle(
+      { ...newsBase, externalUrl: 'not-a-url' },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.externalUrl).toBeUndefined();
+  });
+
+  it('sanitize（```除去）後も有効 http(s) URL なら body 不要で受理・コードフェンスは除去', () => {
+    // sanitizeText は ``` を除去するので、``https://...`` のような入力が URL として生き残るか確認
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: '```https://example.com```' },
+      'news',
+    );
+    // sanitize 後は "https://example.com" になるため有効 URL として受理するはず
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.externalUrl).toBe('https://example.com');
+  });
+
+  it('sanitize → http(s) 検証の順序: sanitize で空になったら body 必須（反証可能）', () => {
+    // externalUrl がコードフェンスのみで構成される場合、sanitize 後に空になる → body 必須
+    const r = normalizeArticle(
+      { ...newsBase, body: undefined, externalUrl: '``````' },
+      'news',
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain('body');
   });
 });
 

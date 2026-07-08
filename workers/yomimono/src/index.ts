@@ -6,7 +6,8 @@ import {
   clearSessionCookie,
 } from './session';
 import { collectTopics } from './collect';
-import { generateArticle, buildMarkdown, buildNewsMarkdown, buildCasesMarkdown } from './generate';
+// buildNewsMarkdown は M3 で news を有効化する際に再import（基盤関数は generate.ts に維持）
+import { generateArticle, buildMarkdown, buildCasesMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
 import { makeOctokit, getFileContent, commitArticle, commitImage, listArticleSlugs } from './github';
 import { sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput } from './validate';
@@ -19,6 +20,9 @@ import { STYLE_GUIDE_FALLBACK } from './style-guide';
 // コミット attribution（Access廃止で個人メールが無いため固定名）。
 const EDITOR = 'yomimono';
 const MIN_PASSWORD_LEN = 16;
+// news コレクションは M3 まで公開準備中: エンドポイント層で一時拒否するメッセージ。
+// 基盤関数（normalizeArticle('news') / buildNewsMarkdown / contentDir / commitArticle）は維持・M3 で有効化。
+const NEWS_NOT_READY_MSG = 'news collection は現在準備中です（blog/cases のみ利用可能）';
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -217,6 +221,10 @@ export default {
       // 既存記事スラッグ一覧（重複テーマ回避用）
       if (req.method === 'GET' && path === '/api/recent') {
         const collection = normalizeCollection(url.searchParams.get('collection'));
+        // news は M3 まで公開準備中: エンドポイント層で空配列を返す（基盤関数は維持・M3 で有効化）
+        if (collection === 'news') {
+          return json({ slugs: [] });
+        }
         const octokit = makeOctokit(env);
         const slugs = await listArticleSlugs(env, octokit, collection);
         return json({ slugs });
@@ -295,13 +303,16 @@ export default {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const collection = normalizeCollection(body.collection);
+        // news は M3 まで一時拒否（基盤関数は維持・M3 で有効化）
+        if (collection === 'news') {
+          return json({ error: NEWS_NOT_READY_MSG }, 400);
+        }
         const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
+        // news は上で拒否済みなので blog/cases のみ（buildNewsMarkdown は M3 で有効化）
         let markdown: string;
-        if (collection === 'news') {
-          markdown = buildNewsMarkdown(normalized);
-        } else if (collection === 'cases') {
+        if (collection === 'cases') {
           markdown = buildCasesMarkdown(normalized);
         } else {
           markdown = buildMarkdown(normalized);
@@ -315,14 +326,17 @@ export default {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const collection = normalizeCollection(body.collection);
+        // news は M3 まで一時拒否（基盤関数は維持・M3 で有効化）
+        if (collection === 'news') {
+          return json({ error: NEWS_NOT_READY_MSG }, 400);
+        }
         const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
         // 公開直前にもう一度ガードレールを通す（最終防衛線）
+        // news は上で拒否済みなので blog/cases のみ（buildNewsMarkdown は M3 で有効化）
         let markdown: string;
-        if (collection === 'news') {
-          markdown = buildNewsMarkdown(normalized);
-        } else if (collection === 'cases') {
+        if (collection === 'cases') {
           markdown = buildCasesMarkdown(normalized);
         } else {
           markdown = buildMarkdown(normalized);

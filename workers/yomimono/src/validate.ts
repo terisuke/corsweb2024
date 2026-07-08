@@ -58,6 +58,23 @@ export function sanitizeText(s: unknown, maxLen: number): string {
     .slice(0, maxLen);
 }
 
+// http(s) URL のみ受理（javascript: / data: 等の危険なスキームを排除）。
+const HTTP_URL_RE = /^https?:\/\//i;
+export function isHttpUrl(s: string): boolean {
+  return HTTP_URL_RE.test(s);
+}
+
+// YYYY-MM-DD 形式かつ実在する暦日付か検証（2026-99-99・2026-02-30 等のロールオーバーを拒否）。
+export function isValidCalendarDate(s: string): boolean {
+  if (!DATE_RE.test(s)) return false;
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return false;
+  // Date はロールオーバーする（2026-02-30 → 2026-03-02）ので、
+  // 入力の Y/M/D がそのまま Date に反映されたか検証する。
+  const [yyyy, mm, dd] = s.split('-').map(Number);
+  return d.getFullYear() === yyyy && d.getMonth() + 1 === mm && d.getDate() === dd;
+}
+
 export const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'] as const;
 
 // アップロード画像のファイル名を安全な basename に正規化（パストラバーサル/拡張子偽装を防ぐ）。
@@ -121,10 +138,15 @@ export function normalizeArticle(
     return { ok: false, error: 'article は必須です', status: 400 };
   }
 
+  // externalUrl: sanitize した上で http(s) URL のみ採用。不正（空白・"not-a-url" 等）は
+  // externalUrl 無しとして扱い、news でも body 必須とする（危険なスキームの URL で本文免除を防ぐ）。
+  const sanitizedExternalUrl = a.externalUrl ? sanitizeText(a.externalUrl, 2000) : '';
+  const validExternalUrl = isHttpUrl(sanitizedExternalUrl) ? sanitizedExternalUrl : undefined;
+
   // 必須フィールドを一元検証: 欠落名を収集してメッセージに使い、
   // 同じ条件で直接 return することで TS が slug/title/description を string に狭める
   // （配列経由の遅延 return ではプロパティの型が狭まらないため）。
-  const requiresBody = coll !== 'news' || !a.externalUrl;
+  const requiresBody = coll !== 'news' || !validExternalUrl;
   const missing: string[] = [];
   if (!a.slug) missing.push('slug');
   if (!a.title) missing.push('title');
@@ -149,10 +171,12 @@ export function normalizeArticle(
       ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
       : [],
     body: String(a.body ?? '').slice(0, 100_000),
-    externalUrl: a.externalUrl ? sanitizeText(a.externalUrl, 2000) : undefined,
+    externalUrl: validExternalUrl,
     summary: a.summary ? sanitizeText(a.summary, 1000) : undefined,
     publishedAt:
-      a.publishedAt && DATE_RE.test(a.publishedAt) ? sanitizeText(a.publishedAt, 10) : undefined,
+      a.publishedAt && isValidCalendarDate(a.publishedAt)
+        ? sanitizeText(a.publishedAt, 10)
+        : undefined,
     featured: a.featured === true,
   };
   // coll をリテラル狭めし、各コレクションの厳密な category 型を持つユニオンメンバを構築する。
