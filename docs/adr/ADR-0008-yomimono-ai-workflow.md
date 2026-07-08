@@ -38,6 +38,7 @@
 - **秘密URL（隠しパス）** — 認証なしは推測アクセスのリスクで却下。
 
 ## 関連
+- **拡張: ADR-0009** — 本 ADR（ブログ単機能）を **blog/news/cases の3コレクションに拡張**（DBレス・同 GitHub App・静的・非エンジニア向けUI改善・OGP PNG化）。news/cases は ADR-0009 にて。本 ADR 本体はブログ単機能の設計記録として温存。
 - 将来オプション: ADR-0001（StudioCMS）/ ADR-0002（SSR Hosting）/ ADR-0003（Supabase）= 本MVPでは不採用・拡張時に再検討
 - 整合: ADR-0006（i18n 単一正本）/ ADR-0007（対外表現ガードレール）
 - 既存資産: `docs/blog-style-guide.md` / `scripts/generate-blog-draft.mjs` / `scripts/blog-guardrails.mjs` / `.github/workflows/blog-autodraft.yml`（自動下書きの cron 版。本ワークフローは対話・編集者単独公開版）

@@ -2,6 +2,8 @@
 
 ADR-0008(rev.2) / Epic #130 の **A案（静的＋記事bot・DBなし・Cloudflare Workers バックエンド）** を動かすために、**諫山さん（org 管理者）の側で一度だけ**用意するものをまとめます。ここが揃えば、以降のコードは私（実装側）が組みます。**シークレットは諫山さんの管理下に置き、私はコードから参照する形**にします（鍵を私が保持しません）。
 
+> **コレクション拡張（ADR-0009 / Epic #220）**: 本基盤は **blog / news / cases の3コレクション**に拡張済み（同一 Worker・同一 GitHub App・`body.collection` で切替）。blog は稼働中・cases は M2・**news は M3 で有効化**。下記セットアップ（GitHub App・Cloudflare・シークレット・認証）は3コレクション共通で追加不要。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
+
 ---
 
 ## 1. 記事公開bot（GitHub App）を作る ＝ 公開の要
@@ -23,7 +25,7 @@ ADR-0008(rev.2) / Epic #130 の **A案（静的＋記事bot・DBなし・Cloudfl
    JSON
    ```
    ※ App slug は作成時のURLスラッグ（例: `cor-yomimono-bot`）。
-   → 人のマージ権限は `kisayama0725` のまま、bot は記事パスのみコミット。
+   → 人のマージ権限は `kisayama0725` のまま、bot は **`src/content/{blog/ja,news,cases}/` 配下のコンテンツのみ**コミット（コード不接触・news は M3 で有効化）。
 
 ## 2. Cloudflare Workers（バックエンドの置き場・無料枠）
 1. **Cloudflare アカウント**（無料）を作成 or 既存利用
@@ -50,7 +52,7 @@ Worker 用意後、`wrangler secret put` で登録（値は諫山さんが入力
 ## 揃ったら私がやること（実装）
 1. `workers/yomimono/` に Worker（`/api/collect` `/api/generate` `/api/publish` ＋認証検証）を実装（#133）
 2. 情報収集（Claude+web_search・27h・ランキング）#134 / 生成（社長文体・ガードレール）#135 — 既存 `scripts/generate-blog-draft.mjs`・`blog-guardrails.mjs`・`docs/blog-style-guide.md` を再利用
-3. 公開（bot が `src/content/blog/` へコミット→自動デプロイ）#131/#136
+3. 公開（bot が `src/content/{blog/ja,news,cases}/` へコミット→自動デプロイ・`body.collection` で切替）#131/#136・news/cases 拡張は ADR-0009（Epic #220）
 4. 管理ダッシュボードUI（モック済のフロー）#137
 5. 各段 ja不変・ガードレール・レビュー・PR・CI緑の規律で develop へ。本番反映の初回だけ動作をスクショ提示。
 
