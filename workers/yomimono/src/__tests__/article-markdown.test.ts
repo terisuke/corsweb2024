@@ -124,14 +124,34 @@ featured: true
     expect(rebuilt).toContain('author: "Terisuke"');
   });
 
+  it('cases の単一引用符 tags を編集フォーム用 article に変換する', () => {
+    const originalCase = `---
+title: '旧実績'
+description: '旧説明'
+category: 'grift'
+tags: ['Grift', 'AI', '要件定義']
+publishedAt: 2026-07-01
+summary: '旧リード'
+isDraft: false
+featured: true
+---
+
+本文
+`;
+    const parsed = parseArticleMarkdown('case-slug', originalCase, 'cases');
+    expect(parsed.article.tags).toEqual(['Grift', 'AI', '要件定義']);
+  });
+
   it('cases は summary/publishedAt/featured を差し替え、未知 frontmatter を保持する', () => {
     const originalCase = `---
 title: "旧実績"
 description: "旧説明"
 publishedAt: 2026-07-01
+# updatedAt: 2026-07-15
 category: "grift"
 tags: ["AI"]
 summary: "旧リード"
+# securityNote は必要な場合だけ有効化する
 securityNote: "NDA"
 isDraft: false
 featured: false
@@ -155,6 +175,8 @@ featured: false
     const rebuilt = rebuildArticleMarkdown(originalCase, updated);
     expect(rebuilt).toContain('summary: "新リード"');
     expect(rebuilt).toContain('publishedAt: 2026-07-09');
+    expect(rebuilt).toContain('# updatedAt: 2026-07-15');
+    expect(rebuilt).toContain('# securityNote は必要な場合だけ有効化する');
     expect(rebuilt).toContain('featured: true');
     expect(rebuilt).toContain('securityNote: "NDA"');
     expect(rebuilt).toContain('## 成果\n\n更新本文\n');

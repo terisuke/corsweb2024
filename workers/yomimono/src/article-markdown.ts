@@ -61,10 +61,19 @@ function parseValue(lines: string[]): unknown {
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed.map(String) : [];
     } catch {
-      return [];
+      return parseLooseInlineArray(raw);
     }
   }
   return scalarValue(raw);
+}
+
+function parseLooseInlineArray(raw: string): string[] {
+  const body = raw.replace(/^\[/, '').replace(/\]$/, '').trim();
+  if (!body) return [];
+  return body
+    .split(',')
+    .map((item) => scalarValue(item))
+    .filter(Boolean);
 }
 
 function parseFrontmatter(blocks: FrontmatterBlock[]): Record<string, unknown> {
@@ -147,6 +156,13 @@ function replacementLines(article: NormalizedArticle): Record<string, string | n
   };
 }
 
+function preservedCommentLines(block: FrontmatterBlock): string[] {
+  return block.lines.slice(1).filter((line) => {
+    const trimmed = line.trim();
+    return trimmed === '' || trimmed.startsWith('#');
+  });
+}
+
 export function rebuildBlogMarkdown(originalMarkdown: string, article: NormalizedArticle): string {
   return rebuildArticleMarkdown(originalMarkdown, article);
 }
@@ -161,6 +177,7 @@ export function rebuildArticleMarkdown(originalMarkdown: string, article: Normal
     if (Object.prototype.hasOwnProperty.call(replacements, block.key)) {
       const replacement = replacements[block.key];
       if (replacement === null) {
+        lines.push(...preservedCommentLines(block));
         emitted.add(block.key);
         continue;
       }
@@ -169,6 +186,7 @@ export function rebuildArticleMarkdown(originalMarkdown: string, article: Normal
         continue;
       }
       lines.push(replacement);
+      lines.push(...preservedCommentLines(block));
       emitted.add(block.key);
     } else {
       lines.push(...block.lines);

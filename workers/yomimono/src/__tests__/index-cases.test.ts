@@ -312,6 +312,30 @@ describe('yomimono Worker — cases CMS posting path', () => {
     expect(collection).toBe('news');
   });
 
+  it('POST /api/update は sha conflict を 409 で返す', async () => {
+    mocks.updateBlogArticle.mockRejectedValueOnce(
+      new Error('記事が別の編集で更新されています。開き直してから保存してください'),
+    );
+    const res = await worker.fetch(
+      req('/blog-admin/api/update', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          sha: 'stale-sha',
+          article: { ...newsArticle, title: '競合ニュース' },
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(409);
+    expect(await res.json()).toEqual({
+      error: '記事が別の編集で更新されています。開き直してから保存してください',
+    });
+  });
+
   it('POST /api/update は originalSlug と article.slug の差異を拒否する', async () => {
     const res = await worker.fetch(
       req('/blog-admin/api/update', {

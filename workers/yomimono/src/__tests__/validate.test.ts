@@ -264,6 +264,9 @@ describe('isHttpUrl — http(s) URL のみ受理', () => {
     'javascript:alert(1)',
     'data:text/html,<script>',
     'ftp://example.com',
+    'https://',
+    'http://',
+    'https://example.com bad',
     '//example.com',
     'mailto:foo@example.com',
   ])('不正URL(%s)は false', (u) => {
@@ -281,7 +284,7 @@ describe('normalizeArticle — news externalUrl 検証（P2・反証可能）', 
     body: '## 本文',
   };
 
-  it.each(['', '   ', 'not-a-url', 'javascript:alert(1)', 'ftp://example.com'])(
+  it.each(['', '   ', 'not-a-url', 'javascript:alert(1)', 'ftp://example.com', 'https://'])(
     '不正URL(%s)は externalUrl 無し扱い → body 必須（反証可能: 検証未導入なら body 無しで受理してしまう）',
     (badUrl) => {
       const r = normalizeArticle(

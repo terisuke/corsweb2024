@@ -59,9 +59,15 @@ export function sanitizeText(s: unknown, maxLen: number): string {
 }
 
 // http(s) URL のみ受理（javascript: / data: 等の危険なスキームを排除）。
-const HTTP_URL_RE = /^https?:\/\//i;
 export function isHttpUrl(s: string): boolean {
-  return HTTP_URL_RE.test(s);
+  const value = String(s ?? '').trim();
+  if (!value || /\s/.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 // YYYY-MM-DD 形式かつ実在する暦日付か検証（2026-99-99・2026-02-30 等のロールオーバーを拒否）。
