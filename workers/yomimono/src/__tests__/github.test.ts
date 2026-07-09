@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { contentDir, readBlogArticle, updateBlogArticle } from '../github';
+import { contentDir, deleteBlogArticle, readBlogArticle, updateBlogArticle } from '../github';
 import type { Env } from '../types';
 
 function utf8ToBase64(str: string): string {
@@ -140,5 +140,45 @@ isDraft: false
       content: utf8ToBase64(markdown),
       sha: 'file-sha',
     });
+  });
+
+  it('deleteBlogArticle は sha 付き DELETE で対象collectionのMarkdownだけを削除する', async () => {
+    const request = vi.fn(async () => ({
+      data: { commit: { html_url: 'https://github.com/test/commit/delete' } },
+    }));
+    const result = await deleteBlogArticle(
+      mockEnv,
+      { request } as never,
+      'news-target',
+      'news-sha',
+      'editor@example.com',
+      'news',
+    );
+
+    expect(result).toEqual({
+      deleted: true,
+      path: 'src/content/news/news-target.md',
+      commitUrl: 'https://github.com/test/commit/delete',
+    });
+    expect(request).toHaveBeenCalledWith('DELETE /repos/{owner}/{repo}/contents/{path}', {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      path: 'src/content/news/news-target.md',
+      branch: 'main',
+      message: 'news(yomimono): news-target（削除: editor）',
+      sha: 'news-sha',
+    });
+  });
+
+  it('deleteBlogArticle は GitHub 409 を同時編集エラーに変換する', async () => {
+    const request = vi.fn(async () => {
+      const error = new Error('Conflict') as Error & { status?: number };
+      error.status = 409;
+      throw error;
+    });
+
+    await expect(
+      deleteBlogArticle(mockEnv, { request } as never, 'edit-target', 'stale-sha', 'editor@example.com'),
+    ).rejects.toThrow('記事が別の編集で更新されています。開き直してから削除してください');
   });
 });

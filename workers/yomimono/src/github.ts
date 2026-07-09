@@ -200,6 +200,41 @@ export async function updateBlogArticle(
   }
 }
 
+export async function deleteBlogArticle(
+  env: Env,
+  octokit: Octokit,
+  slug: string,
+  sha: string,
+  authorEmail: string,
+  collection: Collection = 'blog',
+): Promise<{ deleted: true; path: string; commitUrl: string }> {
+  const path = blogArticlePath(env, slug, collection);
+  if (!sha) throw new Error('削除元の記事情報が不足しています。記事を開き直してください');
+
+  const author = authorEmail.split('@')[0];
+  const prefix = collection === 'news' ? 'news' : collection === 'cases' ? 'case' : 'post';
+  try {
+    const res = await octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
+      owner: env.GH_OWNER,
+      repo: env.GH_REPO,
+      path,
+      branch: env.PUBLISH_BRANCH,
+      message: `${prefix}(yomimono): ${slug}（削除: ${author}）`,
+      sha,
+    });
+    const data = res.data as { commit?: { html_url?: string } };
+    return { deleted: true, path, commitUrl: data.commit?.html_url ?? '' };
+  } catch (e: unknown) {
+    if ((e as { status?: number }).status === 409) {
+      throw new Error('記事が別の編集で更新されています。開き直してから削除してください');
+    }
+    if ((e as { status?: number }).status === 404) {
+      throw new Error('記事が見つかりません。すでに削除されている可能性があります');
+    }
+    throw e;
+  }
+}
+
 // 記事 .md を PUBLISH_BRANCH（既定 main）へコミット。
 // content-bot はこのパス（記事のみ）にしか書かない＝コードには触れない。
 export async function commitArticle(

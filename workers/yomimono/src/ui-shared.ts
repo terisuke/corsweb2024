@@ -27,6 +27,9 @@ export const CSS = `
   .ghost { background:#eef2f7; color:var(--ink); }
   .pub { background:var(--ok); color:#fff; }
   .pub:disabled { background:#bbb; cursor:not-allowed; }
+  .warn-btn { background:#fef3c7; color:#92400e; }
+  .danger-btn { background:var(--warn); color:#fff; }
+  .danger-btn:disabled { background:#f3a8a8; cursor:not-allowed; }
   .card { border:1px solid var(--line); border-radius:12px; padding:14px; margin:10px 0; }
   .card.sel { border-color:var(--accent); background:#f0f6ff; }
   .card label { display:flex; gap:10px; align-items:flex-start; cursor:pointer; }
@@ -50,6 +53,11 @@ export const CSS = `
   .done { background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; border-radius:8px; padding:10px 12px; font-size:13px; }
   .done a { color:#166534; }
   .err { background:#fff1f2; border:1px solid #fecaca; color:#991b1b; border-radius:8px; padding:10px 12px; font-size:13px; margin:8px 0; }
+  .danger-zone { border:1px solid #fecaca; border-radius:12px; padding:16px; margin-top:18px; background:#fffafa; }
+  .danger-zone h3 { margin:0 0 4px; color:#991b1b; font-size:14px; }
+  .danger-zone p { margin:0 0 10px; color:#7f1d1d; font-size:12px; }
+  .danger-zone details { margin-top:12px; }
+  .danger-zone summary { cursor:pointer; color:#991b1b; font-size:12px; font-weight:700; }
   .spin { display:inline-block; width:15px; height:15px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:sp .8s linear infinite; vertical-align:-2px; margin-right:6px; }
   @keyframes sp { to { transform:rotate(360deg); } }
   .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
