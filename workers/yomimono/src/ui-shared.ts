@@ -155,8 +155,9 @@ export function header(active: 'hub' | 'ai' | 'manual' | 'edit' | 'manual-news' 
     link('/', 'ハブ', 'hub') +
     link('/ai', 'AI生成', 'ai') +
     link('/manual', 'ブログ作成', 'manual') +
+    link('/manual/news', 'ニュース作成', 'manual-news') +
     link('/manual/cases', '実績作成', 'manual-cases') +
-    link('/edit', '既存記事を編集', 'edit') +
+    link('/edit', '既存編集', 'edit') +
     '</nav></div></header>'
   );
 }

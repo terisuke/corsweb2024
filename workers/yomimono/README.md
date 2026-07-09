@@ -3,7 +3,7 @@
 凪沙さんが **main マージ権限なしで毎日記事を投稿**できるようにする、サーバーレス・バックエンド＋管理画面。
 記事は DB を使わず **.md として git にコミット**され、既存の静的デプロイでそのまま公開される（A案：記事bot方式）。
 
-> **コレクション拡張（ADR-0009）**: 記事bot は **blog / news / cases の3コレクション配下**に書く（`src/content/{blog/ja,news,cases}/`）。blog と cases は稼働対象・**news は M3 で有効化**。切り替えは `body.collection`（既定 `'blog'`）。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
+> **コレクション拡張（ADR-0009）**: 記事bot は **blog / news / cases の3コレクション配下**に書く（`src/content/{blog/ja,news,cases}/`）。3コレクションとも投稿・一覧・読み込み・更新に対応する。切り替えは `body.collection` / `?collection=`（既定 `'blog'`）。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
 
 管理画面は **HP と同じドメインの隠しページ `https://cor-jp.com/blog-admin`** で開ける（cor-jp.com は Cloudflare の裏にいるため、`/blog-admin*` だけを Cloudflare Worker のルートに流す）。HP本体（静的・Firebase）はそのまま。
 
@@ -19,12 +19,17 @@
 | GET  | `/` | 管理画面HTML（凪沙さん用） → `cor-jp.com/blog-admin` |
 | GET  | `/health` | 死活確認 → `cor-jp.com/blog-admin/health` |
 | GET  | `/api/recent` | 既存記事スラッグ一覧（重複テーマ回避・`?collection=` で切替） |
+| GET  | `/api/articles` | 既存コンテンツ一覧（`?collection=blog/news/cases`） |
+| GET  | `/api/article` | 既存コンテンツ読み込み（`?collection=blog/news/cases&slug=...`、`sha` 付き） |
 | POST | `/api/collect` | 直近約27hのAI/DX/ローカルLLM記事から候補テーマを10〜15件返す |
 | POST | `/api/generate` | 選んだテーマで記事を1本生成（社長の文体）＋ガードレール検査結果を同梱 |
 | POST | `/api/validate` | コミットせずガードレール再チェック（編集後の確認用・`body.collection` 対応） |
 | POST | `/api/publish` | 記事botが `body.collection`（既定 `'blog'`）に応じて `src/content/{blog/ja,news,cases}/<slug>.md` を `main` にコミット |
-| GET  | `/manual/news` | ニュース投稿UI（**M3 で有効化・準備中**） |
+| POST | `/api/update` | 既存コンテンツを同じ slug のまま `sha` 付きで更新（競合検出あり） |
+| GET  | `/manual` | ブログ投稿UI（blog / `src/content/blog/ja/<slug>.md` へ公開） |
+| GET  | `/manual/news` | ニュース投稿UI（news / `src/content/news/<slug>.md` へ公開） |
 | GET  | `/manual/cases` | 実績投稿UI（cases / `src/content/cases/<slug>.md` へ公開） |
+| GET  | `/edit` | 既存コンテンツ編集UI（blog/news/cases 切替） |
 
 Worker は受信パスから `BASE_PATH`(=`/blog-admin`) を剥がして上記の論理パスにルーティングする。`BASE_PATH` 空ならルート直下（`*.workers.dev/` でのテスト）でもそのまま動く。
 

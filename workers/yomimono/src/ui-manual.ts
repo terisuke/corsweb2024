@@ -4,9 +4,7 @@ import { head, header, tail, toolbarButtonsHtml, draftBarHtml, UI_KIT_JS } from 
 // - slug は タイトルから自動生成（上級者は <details> で編集可・非エンジニアは触れない）
 // - ツールバーで太字/見出し/リンク等の Markdown 記号を挿入（insertMarkdown）
 // - LocalStorage 自動下書き（デバウンス保存・復元バー）+「下書きをブラウザに保存」（localStorage のみ）
-//   ※ サーバー下書き（isDraft:true コミット）は M1-I3 の updateArticle 実装まで非提供。
-//     現状の commitArticle は同 slug 重複を拒否するため、下書き保存→公開が同 slug で不可なため。
-//     validate.ts/index.ts の isDraft 伝播・テストは M1-I3 で使用するため維持（UIからの送信のみ削除）。
+// - サーバー下書き（isDraft:true）は通常公開と同じ新規作成として保存し、公開化は /edit から更新する。
 // - 画像はドラッグ&ドロップ/貼り付け/ボタンでアップロード（既存維持）。公開フロー・ガードレール不変。
 const BODY = `<main class="wide">
   ` + draftBarHtml('m') + `
@@ -21,6 +19,10 @@ const BODY = `<main class="wide">
     <div class="row" style="gap:14px;margin-top:10px">
       <div class="field" style="flex:1;min-width:220px;margin:0"><label>記事のまとめ（一覧に表示される短文）</label><input id="m_desc" placeholder="記事の要約。一覧やSNSで表示されます"></div>
       <div class="field" style="width:240px;margin:0"><label>タグ（カンマ区切り）</label><input id="m_tags" placeholder="AI, 業務効率"></div>
+    </div>
+    <div class="row" style="gap:14px;margin-top:10px">
+      <div class="field" style="width:170px;margin:0"><label>公開日</label><input id="m_date" type="date"></div>
+      <label class="checkline" style="margin:0"><input id="m_draft_state" type="checkbox"> 下書きとして保存する</label>
     </div>
     <details class="advanced"><summary>URLを編集する（上級者向け）</summary>
       <div class="field" style="margin-top:8px"><label>URLの末尾（英小文字/数字/ハイフン・空欄でタイトルから自動生成）</label><input id="m_slug" placeholder="自動生成されます"></div>
@@ -75,6 +77,12 @@ const JS = `
   var IMG_CACHE_MAX = 20; // プレビュー用 data URL のキャッシュ上限（古いものから破棄）
   var _pvTimer = null;
   var _draftTimer = null; // 下書き自動保存タイマー（公開成功時にキャンセルして競合防止）
+
+  function todayString(){
+    var d=new Date(), p=function(n){return (n<10?'0':'')+n;};
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+  }
+  function setDefaultDate(){ $('m_date').value = todayString(); }
 
   // imgCache に data URL を登録。上限超過時は最古のエントリから削除（挿入順 = 古い順）。
   function setImgCache(url, dataUrl){
@@ -157,7 +165,7 @@ const JS = `
 
   // === 入力データ収集 ===
   function gatherAll(){
-    return { title:$('m_title').value, desc:$('m_desc').value, cat:$('m_cat').value, tags:$('m_tags').value, slug:$('m_slug').value, body:$('m_body').value };
+    return { title:$('m_title').value, desc:$('m_desc').value, cat:$('m_cat').value, tags:$('m_tags').value, slug:$('m_slug').value, pubDate:$('m_date').value, isDraft:$('m_draft_state').checked, body:$('m_body').value };
   }
   function applyDraft(d){
     if(!d) return;
@@ -166,6 +174,8 @@ const JS = `
     $('m_cat').value = d.cat || 'ai';
     $('m_tags').value = d.tags || '';
     $('m_slug').value = d.slug || '';
+    $('m_date').value = d.pubDate || todayString();
+    $('m_draft_state').checked = d.isDraft === true;
     $('m_body').value = d.body || '';
     slugEdited = !!($('m_slug').value.trim());
     updatePreview();
@@ -174,11 +184,12 @@ const JS = `
     var tags = $('m_tags').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
     // slug は空欄ならタイトルから自動生成（slug 隠蔽・非エンジニアは意識しない）
     var slug = $('m_slug').value.trim() || titleToSlug($('m_title').value);
-    return { slug: slug, title: $('m_title').value.trim(), description: $('m_desc').value.trim(), category: $('m_cat').value, tags: tags, body: $('m_body').value };
+    return { slug: slug, title: $('m_title').value.trim(), description: $('m_desc').value.trim(), category: $('m_cat').value, tags: tags, pubDate:$('m_date').value, body: $('m_body').value, isDraft:$('m_draft_state').checked };
   }
   function validateLocal(a){
     if(!a.title) return 'タイトルを入力してください';
     if(!a.description) return '記事のまとめを入力してください';
+    if(a.pubDate && !/^\\d{4}-\\d{2}-\\d{2}$/.test(a.pubDate)) return '公開日は YYYY-MM-DD で入力してください';
     if(!a.body.trim()) return '本文を入力してください';
     if(!/^[a-z0-9-]{3,80}$/.test(a.slug)) return 'URLの末尾は英小文字・数字・ハイフン（3〜80字）で指定してください';
     return '';
@@ -194,12 +205,13 @@ const JS = `
   function cancelDraftSave(){ if(_draftTimer){ clearTimeout(_draftTimer); _draftTimer=null; } }
   function resetForm(){
     $('m_title').value=''; $('m_desc').value=''; $('m_cat').value='ai';
-    $('m_tags').value=''; $('m_slug').value=''; $('m_body').value='';
+    $('m_tags').value=''; $('m_slug').value=''; setDefaultDate(); $('m_draft_state').checked=false; $('m_body').value='';
     slugEdited = false; imgCache = {};
     updatePreview();
   }
 
   // === 初期化 ===
+  setDefaultDate();
   wireToolbar($('m_toolbar'), $('m_body'));
   (function(){
     var d = loadDraft(DRAFT_KEY);
@@ -215,6 +227,8 @@ const JS = `
   $('m_desc').addEventListener('input', scheduleDraftSave);
   $('m_tags').addEventListener('input', scheduleDraftSave);
   $('m_cat').addEventListener('change', scheduleDraftSave);
+  $('m_date').addEventListener('change', scheduleDraftSave);
+  $('m_draft_state').addEventListener('change', scheduleDraftSave);
   $('m_body').addEventListener('input', function(){ schedulePreview(); scheduleDraftSave(); });
 
   $('m_restore').addEventListener('click', function(){ applyDraft(pendingDraft); $('m_draftBar').hidden = true; });
@@ -241,7 +255,7 @@ const JS = `
     }).catch(function(e){ $('m_msg').innerHTML='<span style="color:#dc2626">'+esc(e.message)+'</span>'; btn.disabled=false; });
   });
 
-  // === 公開する（article のみ送信・isDraft は既定 false） ===
+  // === 公開する（isDraft:true ならサーバー下書きとして保存） ===
   $('m_pub').addEventListener('click', function(){
     var a=gather(); var err=validateLocal(a);
     if(err){ $('m_msg').innerHTML='<span style="color:#dc2626">'+esc(err)+'</span>'; return; }

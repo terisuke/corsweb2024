@@ -59,9 +59,15 @@ export function sanitizeText(s: unknown, maxLen: number): string {
 }
 
 // http(s) URL のみ受理（javascript: / data: 等の危険なスキームを排除）。
-const HTTP_URL_RE = /^https?:\/\//i;
 export function isHttpUrl(s: string): boolean {
-  return HTTP_URL_RE.test(s);
+  const value = String(s ?? '').trim();
+  if (!value || /\s/.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 // YYYY-MM-DD 形式かつ実在する暦日付か検証（2026-99-99・2026-02-30 等のロールオーバーを拒否）。
@@ -104,7 +110,9 @@ export interface ArticleInput {
   category?: string;
   tags?: unknown;
   body?: string;
+  pubDate?: string;
   externalUrl?: string;
+  source?: string;
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
@@ -117,7 +125,9 @@ type NormalizedArticleCommon = {
   description: string;
   tags: string[];
   body: string;
+  pubDate?: string;
   externalUrl?: string;
+  source?: string;
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
@@ -175,7 +185,12 @@ export function normalizeArticle(
       ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
       : [],
     body: String(a.body ?? '').slice(0, 100_000),
+    pubDate:
+      a.pubDate && isValidCalendarDate(a.pubDate)
+        ? sanitizeText(a.pubDate, 10)
+        : undefined,
     externalUrl: validExternalUrl,
+    source: a.source ? sanitizeText(a.source, 200) : undefined,
     summary: a.summary ? sanitizeText(a.summary, 1000) : undefined,
     publishedAt:
       a.publishedAt && isValidCalendarDate(a.publishedAt)
@@ -184,6 +199,9 @@ export function normalizeArticle(
     featured: a.featured === true,
     isDraft: a.isDraft === true,
   };
+  if (coll === 'cases' && !common.summary) {
+    return { ok: false, error: 'article.summary は必須です', status: 400 };
+  }
   // coll をリテラル狭めし、各コレクションの厳密な category 型を持つユニオンメンバを構築する。
   let article: NormalizedArticle;
   if (coll === 'news') {

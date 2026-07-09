@@ -4,6 +4,9 @@ import type { Env } from '../types';
 const mocks = vi.hoisted(() => ({
   commitArticle: vi.fn(),
   listArticleSlugs: vi.fn(),
+  listBlogArticles: vi.fn(),
+  readBlogArticle: vi.fn(),
+  updateBlogArticle: vi.fn(),
 }));
 
 vi.mock('../session', () => ({
@@ -19,6 +22,9 @@ vi.mock('../github', () => ({
   commitArticle: mocks.commitArticle,
   commitImage: vi.fn(),
   listArticleSlugs: mocks.listArticleSlugs,
+  listBlogArticles: mocks.listBlogArticles,
+  readBlogArticle: mocks.readBlogArticle,
+  updateBlogArticle: mocks.updateBlogArticle,
 }));
 
 const worker = (await import('../index')).default;
@@ -56,6 +62,19 @@ const caseArticle = {
   featured: true,
 };
 
+const newsArticle = {
+  slug: 'external-news',
+  title: '外部掲載ニュース',
+  description: '外部掲載の説明',
+  category: 'media',
+  tags: ['news'],
+  body: '',
+  publishedAt: '2026-07-08',
+  externalUrl: 'https://example.com/article',
+  source: 'Example Media',
+  featured: true,
+};
+
 describe('yomimono Worker — cases CMS posting path', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -65,6 +84,53 @@ describe('yomimono Worker — cases CMS posting path', () => {
       commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/test',
     });
     mocks.listArticleSlugs.mockResolvedValue(['grift', 'local-llm-poc']);
+    mocks.listBlogArticles.mockResolvedValue([
+      {
+        collection: 'news',
+        slug: 'external-news',
+        title: '外部掲載ニュース',
+        description: '外部掲載の説明',
+        category: 'media',
+        isDraft: false,
+        pubDate: '2026-07-08',
+        publishedAt: '2026-07-08',
+        featured: true,
+      },
+    ]);
+    mocks.readBlogArticle.mockResolvedValue({
+      collection: 'news',
+      slug: 'external-news',
+      title: '外部掲載ニュース',
+      description: '外部掲載の説明',
+      category: 'media',
+      isDraft: false,
+      pubDate: '2026-07-08',
+      publishedAt: '2026-07-08',
+      featured: true,
+      article: newsArticle,
+      sha: 'news-sha',
+      path: 'src/content/news/external-news.md',
+      markdown:
+        '---\n' +
+        'title: "外部掲載ニュース"\n' +
+        'description: "外部掲載の説明"\n' +
+        'publishedAt: 2026-07-08\n' +
+        'author: "Terisuke"\n' +
+        'category: "media"\n' +
+        'tags: ["news"]\n' +
+        'lang: "ja"\n' +
+        'isDraft: false\n' +
+        'externalUrl: "https://example.com/article"\n' +
+        'source: "Example Media"\n' +
+        'featured: true\n' +
+        '---\n' +
+        '\n',
+    });
+    mocks.updateBlogArticle.mockResolvedValue({
+      updated: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/update-news',
+    });
   });
 
   it('GET /manual/cases は cases 投稿 UI を返し、collection 指定の publish/validate を含む', async () => {
@@ -87,12 +153,64 @@ describe('yomimono Worker — cases CMS posting path', () => {
     expect(html).toContain("api('/api/publish', { collection:'cases', article:a })");
   });
 
+  it('GET /manual/news は news 投稿 UI を返し、本文なし外部URL投稿の説明を含む', async () => {
+    const res = await worker.fetch(req('/blog-admin/manual/news'), env);
+    const html = await res.text();
+
+    expect(res.status).toBe(200);
+    expect(html).toContain('ニュースを保存する');
+    expect(html).toContain('value="media"');
+    expect(html).toContain("var DRAFT_KEY = 'draft:news:new'");
+    expect(html).toContain("api('/api/validate', { collection:'news', article:a })");
+    expect(html).toContain("api('/api/publish', { collection:'news', article:a })");
+    expect(html).toContain('外部URLがないニュースは本文を入力してください');
+  });
+
   it('GET /api/recent?collection=cases は cases の slug 一覧を返す', async () => {
     const res = await worker.fetch(req('/blog-admin/api/recent?collection=cases'), env);
 
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ slugs: ['grift', 'local-llm-poc'] });
     expect(mocks.listArticleSlugs).toHaveBeenCalledWith(env, { mocked: true }, 'cases');
+  });
+
+  it('GET /api/articles?collection=news は news 一覧を返す', async () => {
+    const res = await worker.fetch(req('/blog-admin/api/articles?collection=news'), env);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      articles: [
+        {
+          collection: 'news',
+          slug: 'external-news',
+          title: '外部掲載ニュース',
+          description: '外部掲載の説明',
+          category: 'media',
+          isDraft: false,
+          pubDate: '2026-07-08',
+          publishedAt: '2026-07-08',
+          featured: true,
+        },
+      ],
+    });
+    expect(mocks.listBlogArticles).toHaveBeenCalledWith(env, { mocked: true }, 'news');
+  });
+
+  it('GET /api/article?collection=news は sha 付きで news 記事を返す', async () => {
+    const res = await worker.fetch(req('/blog-admin/api/article?collection=news&slug=external-news'), env);
+
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json).toMatchObject({
+      sha: 'news-sha',
+      path: 'src/content/news/external-news.md',
+      article: {
+        slug: 'external-news',
+        externalUrl: 'https://example.com/article',
+        source: 'Example Media',
+      },
+    });
+    expect(mocks.readBlogArticle).toHaveBeenCalledWith(env, { mocked: true }, 'external-news', 'news');
   });
 
   it('POST /api/validate は cases article を cases markdown として検査する', async () => {
@@ -135,20 +253,106 @@ describe('yomimono Worker — cases CMS posting path', () => {
     expect(collection).toBe('cases');
   });
 
-  it('news collection は M3 まで publish を拒否し続ける', async () => {
+  it('POST /api/publish は news externalUrl ありなら本文なしで commitArticle を呼ぶ', async () => {
+    mocks.commitArticle.mockResolvedValueOnce({
+      committed: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/news',
+    });
     const res = await worker.fetch(
       req('/blog-admin/api/publish', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ collection: 'news', article: caseArticle }),
+        body: JSON.stringify({ collection: 'news', article: newsArticle }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      committed: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/news',
+    });
+    const [_env, _octokit, slug, markdown, _editor, collection] = mocks.commitArticle.mock.calls[0];
+    expect(slug).toBe('external-news');
+    expect(markdown).toContain('externalUrl: "https://example.com/article"');
+    expect(markdown).toContain('source: "Example Media"');
+    expect(markdown).toContain('featured: true');
+    expect(collection).toBe('news');
+  });
+
+  it('POST /api/update は news を sha 付きで同じ slug に更新する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/update', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          sha: 'news-sha',
+          article: { ...newsArticle, title: '更新ニュース', isDraft: true },
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      updated: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/update-news',
+    });
+    const [_env, _octokit, slug, markdown, sha, _editor, collection] = mocks.updateBlogArticle.mock.calls[0];
+    expect(slug).toBe('external-news');
+    expect(markdown).toContain('title: "更新ニュース"');
+    expect(markdown).toContain('isDraft: true');
+    expect(markdown).toContain('source: "Example Media"');
+    expect(sha).toBe('news-sha');
+    expect(collection).toBe('news');
+  });
+
+  it('POST /api/update は sha conflict を 409 で返す', async () => {
+    mocks.updateBlogArticle.mockRejectedValueOnce(
+      new Error('記事が別の編集で更新されています。開き直してから保存してください'),
+    );
+    const res = await worker.fetch(
+      req('/blog-admin/api/update', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          sha: 'stale-sha',
+          article: { ...newsArticle, title: '競合ニュース' },
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(409);
+    expect(await res.json()).toEqual({
+      error: '記事が別の編集で更新されています。開き直してから保存してください',
+    });
+  });
+
+  it('POST /api/update は originalSlug と article.slug の差異を拒否する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/update', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          sha: 'news-sha',
+          article: { ...newsArticle, slug: 'changed-news' },
+        }),
       }),
       env,
     );
 
     expect(res.status).toBe(400);
-    expect(await res.json()).toEqual({
-      error: 'news collection は現在準備中です（blog/cases のみ利用可能）',
-    });
-    expect(mocks.commitArticle).not.toHaveBeenCalled();
+    expect(await res.json()).toEqual({ error: 'slug は変更できません。記事を開き直してください' });
+    expect(mocks.updateBlogArticle).not.toHaveBeenCalled();
   });
 });

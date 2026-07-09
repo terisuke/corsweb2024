@@ -212,6 +212,26 @@ describe('normalizeArticle — news collection', () => {
     if (r.ok) expect(r.article.body).toBe('## 本文');
   });
 
+  it('news: source / featured / publishedAt / isDraft を正規化する', () => {
+    const r = normalizeArticle(
+      {
+        ...newsBase,
+        source: '```Example Media```',
+        featured: true,
+        publishedAt: '2026-07-08',
+        isDraft: true,
+      },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.source).toBe('Example Media');
+      expect(r.article.featured).toBe(true);
+      expect(r.article.publishedAt).toBe('2026-07-08');
+      expect(r.article.isDraft).toBe(true);
+    }
+  });
+
   it('news: カテゴリ info/media/update/event/award のみ受理・それ以外は info へ', () => {
     const r = normalizeArticle({ ...newsBase, category: 'media' }, 'news');
     expect(r.ok).toBe(true);
@@ -244,6 +264,9 @@ describe('isHttpUrl — http(s) URL のみ受理', () => {
     'javascript:alert(1)',
     'data:text/html,<script>',
     'ftp://example.com',
+    'https://',
+    'http://',
+    'https://example.com bad',
     '//example.com',
     'mailto:foo@example.com',
   ])('不正URL(%s)は false', (u) => {
@@ -261,7 +284,7 @@ describe('normalizeArticle — news externalUrl 検証（P2・反証可能）', 
     body: '## 本文',
   };
 
-  it.each(['', '   ', 'not-a-url', 'javascript:alert(1)', 'ftp://example.com'])(
+  it.each(['', '   ', 'not-a-url', 'javascript:alert(1)', 'ftp://example.com', 'https://'])(
     '不正URL(%s)は externalUrl 無し扱い → body 必須（反証可能: 検証未導入なら body 無しで受理してしまう）',
     (badUrl) => {
       const r = normalizeArticle(
@@ -344,6 +367,15 @@ describe('normalizeArticle — cases collection', () => {
 
   it('cases: summary 欠落は 400（反証可能）', () => {
     const r = normalizeArticle({ ...casesBase, summary: undefined }, 'cases');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.status).toBe(400);
+      expect(r.error).toContain('summary');
+    }
+  });
+
+  it('cases: summary が空白だけなら 400', () => {
+    const r = normalizeArticle({ ...casesBase, summary: '   ' }, 'cases');
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.status).toBe(400);
@@ -504,5 +536,26 @@ describe('normalizeArticle — isDraft パススルー（非エンジニア向�
     );
     if (!r.ok) throw new Error('正規化失敗');
     expect(r.article.isDraft).toBe(true);
+  });
+});
+
+describe('normalizeArticle — blog pubDate', () => {
+  const base = {
+    slug: 'blog-slug',
+    title: 'ブログ',
+    description: '説明',
+    category: 'ai',
+    tags: [],
+    body: '本文',
+  };
+
+  it('blog: pubDate は実在日付だけ正規化する', () => {
+    const r = normalizeArticle({ ...base, pubDate: '2026-07-08' });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.pubDate).toBe('2026-07-08');
+
+    const invalid = normalizeArticle({ ...base, pubDate: '2026-02-30' });
+    expect(invalid.ok).toBe(true);
+    if (invalid.ok) expect(invalid.article.pubDate).toBeUndefined();
   });
 });

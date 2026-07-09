@@ -2,19 +2,22 @@ import { Octokit } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
 import { assertSlug, safeImageName } from './validate';
 import type { Collection, Env } from './types';
-import { parseBlogMarkdown } from './article-markdown';
+import { parseArticleMarkdown } from './article-markdown';
 
 export interface BlogArticleSummary {
+  collection: Collection;
   slug: string;
   title: string;
   description: string;
   category: string;
   isDraft: boolean;
   pubDate: string;
+  publishedAt?: string;
+  featured?: boolean;
 }
 
 export interface BlogArticleFile extends BlogArticleSummary {
-  article: ReturnType<typeof parseBlogMarkdown>['article'];
+  article: ReturnType<typeof parseArticleMarkdown>['article'];
   markdown: string;
   sha: string;
   path: string;
@@ -90,9 +93,9 @@ export async function listArticleSlugs(
   }
 }
 
-function blogArticlePath(env: Env, slug: string): string {
+function blogArticlePath(env: Env, slug: string, collection: Collection = 'blog'): string {
   assertSlug(slug);
-  return `${contentDir(env, 'blog')}/${slug}.md`;
+  return `${contentDir(env, collection)}/${slug}.md`;
 }
 
 function asString(value: unknown): string {
@@ -103,8 +106,9 @@ export async function readBlogArticle(
   env: Env,
   octokit: Octokit,
   slug: string,
+  collection: Collection = 'blog',
 ): Promise<BlogArticleFile> {
-  const path = blogArticlePath(env, slug);
+  const path = blogArticlePath(env, slug, collection);
   const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
     owner: env.GH_OWNER,
     repo: env.GH_REPO,
@@ -114,14 +118,19 @@ export async function readBlogArticle(
   const data = res.data as { content?: string; sha?: string };
   if (!data.content || !data.sha) throw new Error(`記事を取得できません: ${path}`);
   const markdown = base64ToUtf8(data.content);
-  const parsed = parseBlogMarkdown(slug, markdown);
+  const parsed = parseArticleMarkdown(slug, markdown, collection);
+  const pubDate = asString(parsed.frontmatter.pubDate);
+  const publishedAt = asString(parsed.frontmatter.publishedAt);
   return {
+    collection,
     slug,
     title: asString(parsed.frontmatter.title),
     description: asString(parsed.frontmatter.description),
     category: asString(parsed.frontmatter.category),
     isDraft: parsed.frontmatter.isDraft === true,
-    pubDate: asString(parsed.frontmatter.pubDate),
+    pubDate: collection === 'blog' ? pubDate : publishedAt,
+    publishedAt,
+    featured: parsed.frontmatter.featured === true,
     article: parsed.article,
     markdown,
     sha: data.sha,
@@ -132,19 +141,23 @@ export async function readBlogArticle(
 export async function listBlogArticles(
   env: Env,
   octokit: Octokit,
+  collection: Collection = 'blog',
 ): Promise<BlogArticleSummary[]> {
-  const slugs = await listArticleSlugs(env, octokit, 'blog');
+  const slugs = await listArticleSlugs(env, octokit, collection);
   const articles: BlogArticleSummary[] = [];
   for (const slug of slugs) {
     try {
-      const article = await readBlogArticle(env, octokit, slug);
+      const article = await readBlogArticle(env, octokit, slug, collection);
       articles.push({
+        collection,
         slug: article.slug,
         title: article.title || slug,
         description: article.description,
         category: article.category,
         isDraft: article.isDraft,
         pubDate: article.pubDate,
+        publishedAt: article.publishedAt,
+        featured: article.featured,
       });
     } catch {
       // 一覧では壊れた単一記事で画面全体を落とさない。
@@ -160,18 +173,20 @@ export async function updateBlogArticle(
   markdown: string,
   sha: string,
   authorEmail: string,
+  collection: Collection = 'blog',
 ): Promise<{ updated: true; path: string; commitUrl: string }> {
-  const path = blogArticlePath(env, slug);
+  const path = blogArticlePath(env, slug, collection);
   if (!sha) throw new Error('更新元の記事情報が不足しています。記事を開き直してください');
 
   const author = authorEmail.split('@')[0];
+  const prefix = collection === 'news' ? 'news' : collection === 'cases' ? 'case' : 'post';
   try {
     const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
       owner: env.GH_OWNER,
       repo: env.GH_REPO,
       path,
       branch: env.PUBLISH_BRANCH,
-      message: `post(yomimono): ${slug}（更新: ${author}）`,
+      message: `${prefix}(yomimono): ${slug}（更新: ${author}）`,
       content: utf8ToBase64(markdown),
       sha,
     });

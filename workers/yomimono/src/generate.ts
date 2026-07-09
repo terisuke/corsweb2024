@@ -73,11 +73,12 @@ ${recentTitles.map((t) => `- ${t}`).join('\n')}
 // JST基準の日付で frontmatter を組む（公開時はこの markdown をそのままコミット）。
 export function buildMarkdown(article: NormalizedArticle | Article, isDraft = false): string {
   const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const pubDate = 'pubDate' in article && article.pubDate ? article.pubDate : today;
   const frontmatter = [
     '---',
     `title: ${JSON.stringify(article.title)}`,
     `description: ${JSON.stringify(article.description)}`,
-    `pubDate: ${today}`,
+    `pubDate: ${pubDate}`,
     'author: "Terisuke"',
     `category: "${article.category}"`,
     `tags: ${JSON.stringify(article.tags)}`,
@@ -108,6 +109,10 @@ export function buildNewsMarkdown(article: NormalizedArticle, isDraft = false): 
   if (article.externalUrl) {
     frontmatter.push(`externalUrl: ${JSON.stringify(article.externalUrl)}`);
   }
+  if (article.source) {
+    frontmatter.push(`source: ${JSON.stringify(article.source)}`);
+  }
+  frontmatter.push(`featured: ${article.featured || false}`);
   frontmatter.push('---', '');
   const body = article.body.replace(/^(?:\s*\n)*-{3,}[ \t]*(?:\n|$)/, '');
   return `${frontmatter.join('\n')}${body}\n`;
