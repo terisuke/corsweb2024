@@ -11,6 +11,12 @@
     "description": "Adopción de IA, uso seguro de datos confidenciales, cómo plantear los presupuestos y más: perspectivas prácticas para el día a día.",
     "cta": "Ver todos los artículos"
   },
+  "homeNews": {
+    "eyebrow": "News",
+    "title": "Últimas noticias",
+    "description": "Avisos, actualizaciones de servicios, menciones externas e información de eventos de Cor. Inc.",
+    "cta": "Ver todas las noticias"
+  },
   "news": {
     "eyebrow": "News",
     "title": "Noticias de la empresa",
