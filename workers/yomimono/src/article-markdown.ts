@@ -1,4 +1,5 @@
 import { normalizeCategory, type ArticleInput, type NormalizedArticle } from './validate';
+import type { Collection } from './types';
 
 interface FrontmatterBlock {
   key: string;
@@ -79,41 +80,94 @@ function tagsValue(raw: unknown): string[] {
 }
 
 export function parseBlogMarkdown(slug: string, markdown: string): ParsedBlogArticle {
+  return parseArticleMarkdown(slug, markdown, 'blog');
+}
+
+export function parseArticleMarkdown(
+  slug: string,
+  markdown: string,
+  collection: Collection = 'blog',
+): ParsedBlogArticle {
   const parsed = splitMarkdown(markdown);
   const frontmatter = parseFrontmatter(parsed.blocks);
+  const category =
+    collection === 'news'
+      ? normalizeCategory(String(frontmatter.category ?? undefined), 'news')
+      : collection === 'cases'
+        ? normalizeCategory(String(frontmatter.category ?? undefined), 'cases')
+        : normalizeCategory(String(frontmatter.category ?? undefined));
   return {
     frontmatter,
     article: {
       slug,
       title: String(frontmatter.title ?? ''),
       description: String(frontmatter.description ?? ''),
-      category: normalizeCategory(String(frontmatter.category ?? undefined)),
+      category,
       tags: tagsValue(frontmatter.tags),
       body: parsed.body,
+      pubDate: typeof frontmatter.pubDate === 'string' ? frontmatter.pubDate : undefined,
+      publishedAt: typeof frontmatter.publishedAt === 'string' ? frontmatter.publishedAt : undefined,
+      externalUrl: typeof frontmatter.externalUrl === 'string' ? frontmatter.externalUrl : undefined,
+      source: typeof frontmatter.source === 'string' ? frontmatter.source : undefined,
+      summary: typeof frontmatter.summary === 'string' ? frontmatter.summary : undefined,
+      featured: frontmatter.featured === true,
       isDraft: frontmatter.isDraft === true,
     },
   };
 }
 
-function replacementLines(article: NormalizedArticle): Record<string, string> {
-  return {
+function replacementLines(article: NormalizedArticle): Record<string, string | null | undefined> {
+  const common: Record<string, string | null | undefined> = {
     title: `title: ${JSON.stringify(article.title)}`,
     description: `description: ${JSON.stringify(article.description)}`,
     category: `category: "${article.category}"`,
     tags: `tags: ${JSON.stringify(article.tags)}`,
     isDraft: `isDraft: ${article.isDraft === true}`,
   };
+  if (article.collection === 'blog') {
+    return {
+      ...common,
+      pubDate: article.pubDate ? `pubDate: ${article.pubDate}` : undefined,
+    };
+  }
+  if (article.collection === 'news') {
+    return {
+      ...common,
+      publishedAt: article.publishedAt ? `publishedAt: ${article.publishedAt}` : undefined,
+      externalUrl: article.externalUrl ? `externalUrl: ${JSON.stringify(article.externalUrl)}` : null,
+      source: article.source ? `source: ${JSON.stringify(article.source)}` : null,
+      featured: `featured: ${article.featured === true}`,
+    };
+  }
+  return {
+    ...common,
+    publishedAt: article.publishedAt ? `publishedAt: ${article.publishedAt}` : undefined,
+    summary: `summary: ${JSON.stringify(article.summary || '')}`,
+    featured: `featured: ${article.featured === true}`,
+  };
 }
 
 export function rebuildBlogMarkdown(originalMarkdown: string, article: NormalizedArticle): string {
+  return rebuildArticleMarkdown(originalMarkdown, article);
+}
+
+export function rebuildArticleMarkdown(originalMarkdown: string, article: NormalizedArticle): string {
   const parsed = splitMarkdown(originalMarkdown);
   const replacements = replacementLines(article);
   const emitted = new Set<string>();
   const lines: string[] = [];
 
   for (const block of parsed.blocks) {
-    const replacement = replacements[block.key];
-    if (replacement) {
+    if (Object.prototype.hasOwnProperty.call(replacements, block.key)) {
+      const replacement = replacements[block.key];
+      if (replacement === null) {
+        emitted.add(block.key);
+        continue;
+      }
+      if (!replacement) {
+        lines.push(...block.lines);
+        continue;
+      }
       lines.push(replacement);
       emitted.add(block.key);
     } else {
@@ -121,10 +175,16 @@ export function rebuildBlogMarkdown(originalMarkdown: string, article: Normalize
     }
   }
 
-  const requiredOrder = ['title', 'description', 'category', 'tags', 'isDraft'];
+  const requiredOrder =
+    article.collection === 'blog'
+      ? ['title', 'description', 'pubDate', 'category', 'tags', 'isDraft']
+      : article.collection === 'news'
+        ? ['title', 'description', 'publishedAt', 'category', 'tags', 'externalUrl', 'source', 'isDraft', 'featured']
+        : ['title', 'description', 'category', 'tags', 'publishedAt', 'summary', 'isDraft', 'featured'];
   for (const key of requiredOrder) {
-    if (!emitted.has(key)) {
-      lines.push(replacements[key]);
+    const replacement = replacements[key];
+    if (!emitted.has(key) && replacement) {
+      lines.push(replacement);
     }
   }
 

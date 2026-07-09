@@ -13,12 +13,16 @@ describe('buildNewsMarkdown — news frontmatter 形式検証', () => {
     collection: 'news',
     publishedAt: '2026-07-08',
     externalUrl: 'https://example.com/article',
+    source: 'Example Media',
+    featured: true,
     isDraft: false,
   };
 
   it('news: externalUrl あり→frontmatter に externalUrl を含む', () => {
     const markdown = buildNewsMarkdown(newsArticle, false);
     expect(markdown).toContain('externalUrl: "https://example.com/article"');
+    expect(markdown).toContain('source: "Example Media"');
+    expect(markdown).toContain('featured: true');
     expect(markdown).toContain('title: "テストニュース"');
     expect(markdown).toContain('description: "テストニュース説明"');
     expect(markdown).toContain('category: "info"');
@@ -155,6 +159,7 @@ describe('buildMarkdown — blog との整合性検証', () => {
     tags: ['tag1', 'tag2'],
     body: '## テスト本文\n\n内容',
     collection: 'blog',
+    pubDate: '2026-07-08',
     isDraft: false,
   };
 
@@ -168,7 +173,7 @@ describe('buildMarkdown — blog との整合性検証', () => {
 
   it('blog: pubDate を使用（publishedAt ではなく）', () => {
     const markdown = buildMarkdown(blogArticle, false);
-    expect(markdown).toContain('pubDate:');
+    expect(markdown).toContain('pubDate: 2026-07-08');
     expect(markdown).not.toContain('publishedAt:');
   });
 });

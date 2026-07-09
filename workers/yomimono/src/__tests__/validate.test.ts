@@ -212,6 +212,26 @@ describe('normalizeArticle — news collection', () => {
     if (r.ok) expect(r.article.body).toBe('## 本文');
   });
 
+  it('news: source / featured / publishedAt / isDraft を正規化する', () => {
+    const r = normalizeArticle(
+      {
+        ...newsBase,
+        source: '```Example Media```',
+        featured: true,
+        publishedAt: '2026-07-08',
+        isDraft: true,
+      },
+      'news',
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.article.source).toBe('Example Media');
+      expect(r.article.featured).toBe(true);
+      expect(r.article.publishedAt).toBe('2026-07-08');
+      expect(r.article.isDraft).toBe(true);
+    }
+  });
+
   it('news: カテゴリ info/media/update/event/award のみ受理・それ以外は info へ', () => {
     const r = normalizeArticle({ ...newsBase, category: 'media' }, 'news');
     expect(r.ok).toBe(true);
@@ -504,5 +524,26 @@ describe('normalizeArticle — isDraft パススルー（非エンジニア向�
     );
     if (!r.ok) throw new Error('正規化失敗');
     expect(r.article.isDraft).toBe(true);
+  });
+});
+
+describe('normalizeArticle — blog pubDate', () => {
+  const base = {
+    slug: 'blog-slug',
+    title: 'ブログ',
+    description: '説明',
+    category: 'ai',
+    tags: [],
+    body: '本文',
+  };
+
+  it('blog: pubDate は実在日付だけ正規化する', () => {
+    const r = normalizeArticle({ ...base, pubDate: '2026-07-08' });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.article.pubDate).toBe('2026-07-08');
+
+    const invalid = normalizeArticle({ ...base, pubDate: '2026-02-30' });
+    expect(invalid.ok).toBe(true);
+    if (invalid.ok) expect(invalid.article.pubDate).toBeUndefined();
   });
 });

@@ -104,7 +104,9 @@ export interface ArticleInput {
   category?: string;
   tags?: unknown;
   body?: string;
+  pubDate?: string;
   externalUrl?: string;
+  source?: string;
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
@@ -117,7 +119,9 @@ type NormalizedArticleCommon = {
   description: string;
   tags: string[];
   body: string;
+  pubDate?: string;
   externalUrl?: string;
+  source?: string;
   summary?: string;
   publishedAt?: string;
   featured?: boolean;
@@ -175,7 +179,12 @@ export function normalizeArticle(
       ? a.tags.slice(0, 10).map((t) => sanitizeText(t, 50)).filter(Boolean)
       : [],
     body: String(a.body ?? '').slice(0, 100_000),
+    pubDate:
+      a.pubDate && isValidCalendarDate(a.pubDate)
+        ? sanitizeText(a.pubDate, 10)
+        : undefined,
     externalUrl: validExternalUrl,
+    source: a.source ? sanitizeText(a.source, 200) : undefined,
     summary: a.summary ? sanitizeText(a.summary, 1000) : undefined,
     publishedAt:
       a.publishedAt && isValidCalendarDate(a.publishedAt)

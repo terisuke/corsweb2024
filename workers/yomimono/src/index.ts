@@ -6,8 +6,7 @@ import {
   clearSessionCookie,
 } from './session';
 import { collectTopics } from './collect';
-// buildNewsMarkdown は M3 で news を有効化する際に再import（基盤関数は generate.ts に維持）
-import { generateArticle, buildMarkdown, buildCasesMarkdown } from './generate';
+import { generateArticle, buildMarkdown, buildNewsMarkdown, buildCasesMarkdown } from './generate';
 import { scanForViolations } from './guardrails';
 import {
   makeOctokit,
@@ -19,11 +18,12 @@ import {
   readBlogArticle,
   updateBlogArticle,
 } from './github';
-import { rebuildBlogMarkdown } from './article-markdown';
-import { assertSlug, sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput } from './validate';
+import { rebuildArticleMarkdown } from './article-markdown';
+import { assertSlug, sanitizeText, normalizeArticle, normalizeCollection, type ArticleInput, type NormalizedArticle } from './validate';
 import { HUB_HTML } from './ui-hub';
 import { AI_HTML } from './ui-ai';
 import { MANUAL_HTML } from './ui-manual';
+import { MANUAL_NEWS_HTML } from './ui-manual-news';
 import { MANUAL_CASES_HTML } from './ui-manual-cases';
 import { EDIT_HTML } from './ui-edit';
 import { LOGIN_HTML } from './ui-login';
@@ -32,9 +32,6 @@ import { STYLE_GUIDE_FALLBACK } from './style-guide';
 // コミット attribution（Access廃止で個人メールが無いため固定名）。
 const EDITOR = 'yomimono';
 const MIN_PASSWORD_LEN = 16;
-// news コレクションは M3 まで公開準備中: エンドポイント層で一時拒否するメッセージ。
-// 基盤関数（normalizeArticle('news') / buildNewsMarkdown / contentDir / commitArticle）は維持・M3 で有効化。
-const NEWS_NOT_READY_MSG = 'news collection は現在準備中です（blog/cases のみ利用可能）';
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -159,6 +156,12 @@ function sanitizeTitles(input: unknown): string[] {
   return input.slice(0, 50).map((t) => sanitizeText(t, 200)).filter(Boolean);
 }
 
+function buildCollectionMarkdown(article: NormalizedArticle): string {
+  if (article.collection === 'news') return buildNewsMarkdown(article, article.isDraft);
+  if (article.collection === 'cases') return buildCasesMarkdown(article, article.isDraft);
+  return buildMarkdown(article, article.isDraft);
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
@@ -234,6 +237,9 @@ export default {
       if (req.method === 'GET' && path === '/manual') {
         return html(MANUAL_HTML, env);
       }
+      if (req.method === 'GET' && path === '/manual/news') {
+        return html(MANUAL_NEWS_HTML, env);
+      }
       if (req.method === 'GET' && path === '/manual/cases') {
         return html(MANUAL_CASES_HTML, env);
       }
@@ -244,32 +250,21 @@ export default {
       // 既存記事スラッグ一覧（重複テーマ回避用）
       if (req.method === 'GET' && path === '/api/recent') {
         const collection = normalizeCollection(url.searchParams.get('collection'));
-        // news は M3 まで公開準備中: エンドポイント層で空配列を返す（基盤関数は維持・M3 で有効化）
-        if (collection === 'news') {
-          return json({ slugs: [] });
-        }
         const octokit = makeOctokit(env);
         const slugs = await listArticleSlugs(env, octokit, collection);
         return json({ slugs });
       }
 
-      // 既存ブログ記事の一覧・読み込み・更新（M1-I3）。
-      // M2/M3 の cases/news CMS とは分け、ここでは blog のみ編集対象にする。
+      // 既存コンテンツの一覧・読み込み・更新。collection で blog/news/cases を切り替える。
       if (req.method === 'GET' && path === '/api/articles') {
         const collection = normalizeCollection(url.searchParams.get('collection'));
-        if (collection !== 'blog') {
-          return json({ error: '既存記事編集は現在 blog のみ対応しています' }, 400);
-        }
         const octokit = makeOctokit(env);
-        const articles = await listBlogArticles(env, octokit);
+        const articles = await listBlogArticles(env, octokit, collection);
         return json({ articles });
       }
 
       if (req.method === 'GET' && path === '/api/article') {
         const collection = normalizeCollection(url.searchParams.get('collection'));
-        if (collection !== 'blog') {
-          return json({ error: '既存記事編集は現在 blog のみ対応しています' }, 400);
-        }
         const slug = url.searchParams.get('slug') || '';
         if (!slug) return json({ error: 'slug は必須です' }, 400);
         try {
@@ -278,7 +273,7 @@ export default {
           return json({ error: e instanceof Error ? e.message : 'slug が不正です' }, 400);
         }
         const octokit = makeOctokit(env);
-        const file = await readBlogArticle(env, octokit, slug);
+        const file = await readBlogArticle(env, octokit, slug, collection);
         return json({ article: file.article, sha: file.sha, path: file.path });
       }
 
@@ -355,20 +350,10 @@ export default {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const collection = normalizeCollection(body.collection);
-        // news は M3 まで一時拒否（基盤関数は維持・M3 で有効化）
-        if (collection === 'news') {
-          return json({ error: NEWS_NOT_READY_MSG }, 400);
-        }
         const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
-        // news は上で拒否済みなので blog/cases のみ（buildNewsMarkdown は M3 で有効化）
-        let markdown: string;
-        if (collection === 'cases') {
-          markdown = buildCasesMarkdown(normalized, normalized.isDraft);
-        } else {
-          markdown = buildMarkdown(normalized, normalized.isDraft);
-        }
+        const markdown = buildCollectionMarkdown(normalized);
         const violations = scanForViolations(markdown);
         return json({ violations });
       }
@@ -378,21 +363,11 @@ export default {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const collection = normalizeCollection(body.collection);
-        // news は M3 まで一時拒否（基盤関数は維持・M3 で有効化）
-        if (collection === 'news') {
-          return json({ error: NEWS_NOT_READY_MSG }, 400);
-        }
         const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
         // 公開直前にもう一度ガードレールを通す（最終防衛線）
-        // news は上で拒否済みなので blog/cases のみ（buildNewsMarkdown は M3 で有効化）
-        let markdown: string;
-        if (collection === 'cases') {
-          markdown = buildCasesMarkdown(normalized, normalized.isDraft);
-        } else {
-          markdown = buildMarkdown(normalized, normalized.isDraft);
-        }
+        const markdown = buildCollectionMarkdown(normalized);
         const violations = scanForViolations(markdown);
         if (violations.length > 0) {
           return json({ error: 'ガードレール違反のため公開を中止しました', violations }, 422);
@@ -407,23 +382,29 @@ export default {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
         const collection = normalizeCollection(body.collection);
-        if (collection !== 'blog') {
-          return json({ error: '既存記事編集は現在 blog のみ対応しています' }, 400);
-        }
         const sha = typeof body.sha === 'string' ? body.sha : '';
         if (!sha) return json({ error: '更新元の記事情報がありません。記事を開き直してください' }, 400);
-        const norm = normalizeArticle(body.article as ArticleInput | undefined, 'blog');
+        const norm = normalizeArticle(body.article as ArticleInput | undefined, collection);
         if (!norm.ok) return json({ error: norm.error }, norm.status);
         const normalized = norm.article;
+        const originalSlug = typeof body.originalSlug === 'string' ? body.originalSlug : normalized.slug;
+        try {
+          assertSlug(originalSlug);
+        } catch (e) {
+          return json({ error: e instanceof Error ? e.message : 'slug が不正です' }, 400);
+        }
+        if (originalSlug !== normalized.slug) {
+          return json({ error: 'slug は変更できません。記事を開き直してください' }, 400);
+        }
         const octokit = makeOctokit(env);
-        const existing = await readBlogArticle(env, octokit, normalized.slug);
-        const markdown = rebuildBlogMarkdown(existing.markdown, normalized);
+        const existing = await readBlogArticle(env, octokit, originalSlug, collection);
+        const markdown = rebuildArticleMarkdown(existing.markdown, normalized);
         const violations = scanForViolations(markdown);
         if (violations.length > 0) {
           return json({ error: 'ガードレール違反のため更新を中止しました', violations }, 422);
         }
         try {
-          const result = await updateBlogArticle(env, octokit, normalized.slug, markdown, sha, EDITOR);
+          const result = await updateBlogArticle(env, octokit, originalSlug, markdown, sha, EDITOR, collection);
           return json(result);
         } catch (e: unknown) {
           if (e instanceof Error && /^記事が|^更新元/.test(e.message)) {
