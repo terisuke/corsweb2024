@@ -53,6 +53,21 @@ const BODY = `<main class="wide">
         <span class="meta" id="e_msg"></span>
       </div>
       <div id="e_result"></div>
+      <section class="danger-zone" id="e_danger_box" aria-labelledby="e_danger_title">
+        <h3 id="e_danger_title">非公開化・削除</h3>
+        <p>通常は削除せず、まず下書き化してサイト上の一覧や詳細から非表示にしてください。完全削除はGitHub上のMarkdownファイルを削除します。</p>
+        <div class="row">
+          <button class="warn-btn" id="e_unpublish" type="button">公開サイトから非表示にする</button>
+          <span class="meta" id="e_danger_msg"></span>
+        </div>
+        <details id="e_delete_details">
+          <summary>完全削除を開く（管理操作）</summary>
+          <p>削除するとこのCMSから復元できません。削除前に対象URLをもう一度確認してください。</p>
+          <label class="checkline"><input id="e_delete_ack" type="checkbox"> 公開停止だけなら削除ではなく非公開化を使うことを理解しました</label>
+          <div class="field"><label>削除するURLを入力</label><input id="e_delete_confirm" autocomplete="off" placeholder="表示中のURLを入力"></div>
+          <button class="danger-btn" id="e_delete" type="button" disabled>GitHubから完全削除する</button>
+        </details>
+      </section>
     </section>
   </div>
 </main>`;
@@ -116,6 +131,11 @@ const JS = `
     $('e_original_slug').value = '';
     $('e_result').innerHTML = '';
     $('e_msg').textContent = '';
+    $('e_danger_msg').textContent = '';
+    $('e_delete_ack').checked = false;
+    $('e_delete_confirm').value = '';
+    $('e_delete').disabled = true;
+    $('e_delete_details').open = false;
   }
   function emptyHtml(){
     return '<div class="empty">'+esc(cfg().label)+'はまだ見つかりません。<br><a href="'+esc(BASE+cfg().newPath)+'">'+esc(cfg().label)+'を書く</a></div>';
@@ -166,6 +186,11 @@ const JS = `
       $('e_body').value=a.body||'';
       $('e_featured').checked=a.featured===true;
       $('e_draft').checked=a.isDraft===true;
+      $('e_danger_msg').textContent='';
+      $('e_delete_ack').checked=false;
+      $('e_delete_confirm').value='';
+      $('e_delete').disabled=true;
+      $('e_delete_details').open=false;
       $('e_form_box').hidden=false;
       $('e_msg').textContent=cfg().label+'を読み込みました';
     }).catch(function(e){
@@ -244,6 +269,51 @@ const JS = `
       loadList();
     }).catch(function(e){
       $('e_msg').innerHTML='<span style="color:#dc2626">'+esc(e.message)+'</span>';
+      setBusy(btn,false,'');
+    });
+  });
+  $('e_unpublish').setAttribute('data-label','公開サイトから非表示にする');
+  $('e_unpublish').addEventListener('click',function(){
+    var slug=$('e_original_slug').value;
+    if(!slug || !$('e_sha').value){ $('e_danger_msg').innerHTML='<span style="color:#dc2626">記事を開き直してください</span>'; return; }
+    if(!confirm(cfg().label+'「'+slug+'」を下書き化し、公開サイトから非表示にします。GitHub上のファイルは削除しません。')) return;
+    var btn=this; setBusy(btn,true,'非公開化中...'); $('e_danger_msg').textContent='更新中...'; $('e_result').innerHTML='';
+    postJson('/api/unpublish',{collection:currentCollection,originalSlug:slug,confirmSlug:slug,sha:$('e_sha').value}).then(function(j){
+      var link=j&&j.commitUrl?'<a href="'+esc(safeUrl(j.commitUrl))+'" target="_blank" rel="noopener">コミットを見る</a>':'';
+      $('e_result').innerHTML='<div class="done">下書き化しました。数分でサイトから非表示になります。 '+link+'</div>';
+      $('e_draft').checked=true;
+      $('e_danger_msg').textContent='';
+      setBusy(btn,false,'');
+      loadArticle(slug);
+    }).catch(function(e){
+      $('e_danger_msg').innerHTML='<span style="color:#dc2626">'+esc(e.message)+'</span>';
+      setBusy(btn,false,'');
+    });
+  });
+  function updateDeleteReady(){
+    var slug=$('e_original_slug').value;
+    $('e_delete').disabled=!($('e_delete_ack').checked && $('e_delete_confirm').value.trim()===slug && slug && $('e_sha').value);
+  }
+  $('e_delete_ack').addEventListener('change',updateDeleteReady);
+  $('e_delete_confirm').addEventListener('input',updateDeleteReady);
+  $('e_delete').setAttribute('data-label','GitHubから完全削除する');
+  $('e_delete').addEventListener('click',function(){
+    var slug=$('e_original_slug').value;
+    var confirmSlug=$('e_delete_confirm').value.trim();
+    if(!$('e_delete_ack').checked){ $('e_danger_msg').innerHTML='<span style="color:#dc2626">削除確認のチェックを入れてください</span>'; return; }
+    if(confirmSlug!==slug){ $('e_danger_msg').innerHTML='<span style="color:#dc2626">確認用URLが一致しません</span>'; return; }
+    if(!slug || !$('e_sha').value){ $('e_danger_msg').innerHTML='<span style="color:#dc2626">記事を開き直してください</span>'; return; }
+    if(!confirm(cfg().label+'「'+slug+'」のMarkdownファイルをGitHubから完全削除します。この操作は通常更新とは別操作で、元に戻せません。')) return;
+    var btn=this; setBusy(btn,true,'削除中...'); $('e_danger_msg').textContent='削除中...'; $('e_result').innerHTML='';
+    postJson('/api/delete',{collection:currentCollection,originalSlug:slug,confirmSlug:confirmSlug,confirmDelete:true,sha:$('e_sha').value}).then(function(j){
+      var link=j&&j.commitUrl?'<a href="'+esc(safeUrl(j.commitUrl))+'" target="_blank" rel="noopener">コミットを見る</a>':'';
+      $('e_result').innerHTML='<div class="done">削除しました。数分でサイトから消えます。 '+link+'</div>';
+      $('e_danger_msg').textContent='';
+      setBusy(btn,false,'');
+      resetForm();
+      loadList();
+    }).catch(function(e){
+      $('e_danger_msg').innerHTML='<span style="color:#dc2626">'+esc(e.message)+'</span>';
       setBusy(btn,false,'');
     });
   });

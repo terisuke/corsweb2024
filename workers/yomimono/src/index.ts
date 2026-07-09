@@ -13,6 +13,7 @@ import {
   getFileContent,
   commitArticle,
   commitImage,
+  deleteBlogArticle,
   listArticleSlugs,
   listBlogArticles,
   readBlogArticle,
@@ -160,6 +161,13 @@ function buildCollectionMarkdown(article: NormalizedArticle): string {
   if (article.collection === 'news') return buildNewsMarkdown(article, article.isDraft);
   if (article.collection === 'cases') return buildCasesMarkdown(article, article.isDraft);
   return buildMarkdown(article, article.isDraft);
+}
+
+function requireCollection(raw: unknown): { ok: true; collection: Collection } | { ok: false; error: string } {
+  if (raw === 'blog' || raw === 'news' || raw === 'cases') {
+    return { ok: true, collection: raw };
+  }
+  return { ok: false, error: 'collection は blog / news / cases のいずれかを指定してください' };
 }
 
 export default {
@@ -408,6 +416,84 @@ export default {
           return json(result);
         } catch (e: unknown) {
           if (e instanceof Error && /^記事が|^更新元/.test(e.message)) {
+            return json({ error: e.message }, 409);
+          }
+          throw e;
+        }
+      }
+
+      // 既存コンテンツを非公開化する。ファイルは残し、isDraft:true へ更新する。
+      if (req.method === 'POST' && path === '/api/unpublish') {
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const coll = requireCollection(body.collection);
+        if (!coll.ok) return json({ error: coll.error }, 400);
+        const collection = coll.collection;
+        const sha = typeof body.sha === 'string' ? body.sha : '';
+        if (!sha) return json({ error: '更新元の記事情報がありません。記事を開き直してください' }, 400);
+        const originalSlug = typeof body.originalSlug === 'string' ? body.originalSlug : '';
+        const confirmSlug = typeof body.confirmSlug === 'string' ? body.confirmSlug : originalSlug;
+        if (!originalSlug || !confirmSlug) return json({ error: 'slug は必須です' }, 400);
+        try {
+          assertSlug(originalSlug);
+          assertSlug(confirmSlug);
+        } catch (e) {
+          return json({ error: e instanceof Error ? e.message : 'slug が不正です' }, 400);
+        }
+        if (originalSlug !== confirmSlug) {
+          return json({ error: '確認用URLが一致しません。非公開化を中止しました' }, 400);
+        }
+        const octokit = makeOctokit(env);
+        const existing = await readBlogArticle(env, octokit, originalSlug, collection);
+        const norm = normalizeArticle({ ...existing.article, isDraft: true }, collection);
+        if (!norm.ok) return json({ error: norm.error }, norm.status);
+        const markdown = rebuildArticleMarkdown(existing.markdown, norm.article);
+        try {
+          const result = await updateBlogArticle(env, octokit, originalSlug, markdown, sha, EDITOR, collection);
+          return json({ ...result, unpublished: true });
+        } catch (e: unknown) {
+          if (e instanceof Error && /^記事が|^更新元/.test(e.message)) {
+            return json({ error: e.message }, 409);
+          }
+          throw e;
+        }
+      }
+
+      // 既存コンテンツを GitHub Contents API で削除する。破壊的操作のため sha と slug 再入力を必須にする。
+      if (req.method === 'POST' && path === '/api/delete') {
+        const body = await readJsonBody(req);
+        if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+        const coll = requireCollection(body.collection);
+        if (!coll.ok) return json({ error: coll.error }, 400);
+        const collection = coll.collection;
+        const sha = typeof body.sha === 'string' ? body.sha : '';
+        if (!sha) return json({ error: '削除元の記事情報がありません。記事を開き直してください' }, 400);
+        const originalSlug = typeof body.originalSlug === 'string' ? body.originalSlug : '';
+        const confirmSlug = typeof body.confirmSlug === 'string' ? body.confirmSlug : '';
+        if (body.confirmDelete !== true) {
+          return json({ error: '完全削除の確認が必要です' }, 400);
+        }
+        if (!originalSlug || !confirmSlug) {
+          return json({ error: '削除するURLを確認入力してください' }, 400);
+        }
+        try {
+          assertSlug(originalSlug);
+          assertSlug(confirmSlug);
+        } catch (e) {
+          return json({ error: e instanceof Error ? e.message : 'slug が不正です' }, 400);
+        }
+        if (originalSlug !== confirmSlug) {
+          return json({ error: '確認用URLが一致しません。削除を中止しました' }, 400);
+        }
+        const octokit = makeOctokit(env);
+        try {
+          const result = await deleteBlogArticle(env, octokit, originalSlug, sha, EDITOR, collection);
+          return json(result);
+        } catch (e: unknown) {
+          if (e instanceof Error && /^記事が見つかりません/.test(e.message)) {
+            return json({ error: e.message }, 404);
+          }
+          if (e instanceof Error && /^記事が|^削除元/.test(e.message)) {
             return json({ error: e.message }, 409);
           }
           throw e;

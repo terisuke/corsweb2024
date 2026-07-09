@@ -3,6 +3,7 @@ import type { Env } from '../types';
 
 const mocks = vi.hoisted(() => ({
   commitArticle: vi.fn(),
+  deleteBlogArticle: vi.fn(),
   listArticleSlugs: vi.fn(),
   listBlogArticles: vi.fn(),
   readBlogArticle: vi.fn(),
@@ -20,6 +21,7 @@ vi.mock('../github', () => ({
   makeOctokit: vi.fn(() => ({ mocked: true })),
   getFileContent: vi.fn(),
   commitArticle: mocks.commitArticle,
+  deleteBlogArticle: mocks.deleteBlogArticle,
   commitImage: vi.fn(),
   listArticleSlugs: mocks.listArticleSlugs,
   listBlogArticles: mocks.listBlogArticles,
@@ -131,6 +133,11 @@ describe('yomimono Worker — cases CMS posting path', () => {
       path: 'src/content/news/external-news.md',
       commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/update-news',
     });
+    mocks.deleteBlogArticle.mockResolvedValue({
+      deleted: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/delete-news',
+    });
   });
 
   it('GET /manual/cases は cases 投稿 UI を返し、collection 指定の publish/validate を含む', async () => {
@@ -211,6 +218,19 @@ describe('yomimono Worker — cases CMS posting path', () => {
       },
     });
     expect(mocks.readBlogArticle).toHaveBeenCalledWith(env, { mocked: true }, 'external-news', 'news');
+  });
+
+  it('GET /edit は非公開化と二段確認付き削除UIを返す', async () => {
+    const res = await worker.fetch(req('/blog-admin/edit'), env);
+    const html = await res.text();
+
+    expect(res.status).toBe(200);
+    expect(html).toContain('公開サイトから非表示にする');
+    expect(html).toContain('完全削除を開く（管理操作）');
+    expect(html).toContain('公開停止だけなら削除ではなく非公開化を使うことを理解しました');
+    expect(html).toContain('GitHubから完全削除する');
+    expect(html).toContain("postJson('/api/unpublish'");
+    expect(html).toContain("postJson('/api/delete'");
   });
 
   it('POST /api/validate は cases article を cases markdown として検査する', async () => {
@@ -354,5 +374,166 @@ describe('yomimono Worker — cases CMS posting path', () => {
     expect(res.status).toBe(400);
     expect(await res.json()).toEqual({ error: 'slug は変更できません。記事を開き直してください' });
     expect(mocks.updateBlogArticle).not.toHaveBeenCalled();
+  });
+
+  it('POST /api/unpublish は既存newsを isDraft true に更新する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/unpublish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          sha: 'news-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      updated: true,
+      unpublished: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/update-news',
+    });
+    const [_env, _octokit, slug, markdown, sha, _editor, collection] = mocks.updateBlogArticle.mock.calls[0];
+    expect(slug).toBe('external-news');
+    expect(markdown).toContain('isDraft: true');
+    expect(markdown).toContain('externalUrl: "https://example.com/article"');
+    expect(sha).toBe('news-sha');
+    expect(collection).toBe('news');
+  });
+
+  it('POST /api/unpublish は不正collectionをblogへフォールバックせず拒否する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/unpublish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'invalid',
+          originalSlug: 'external-news',
+          confirmSlug: 'external-news',
+          sha: 'news-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: 'collection は blog / news / cases のいずれかを指定してください' });
+    expect(mocks.updateBlogArticle).not.toHaveBeenCalled();
+  });
+
+  it('POST /api/delete は確認slugとsha付きでGitHub file deleteを呼ぶ', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/delete', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          confirmSlug: 'external-news',
+          confirmDelete: true,
+          sha: 'news-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      deleted: true,
+      path: 'src/content/news/external-news.md',
+      commitUrl: 'https://github.com/Cor-Incorporated/corsweb2024/commit/delete-news',
+    });
+    expect(mocks.deleteBlogArticle).toHaveBeenCalledWith(env, { mocked: true }, 'external-news', 'news-sha', 'yomimono', 'news');
+  });
+
+  it('POST /api/delete は確認slug不一致を拒否する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/delete', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          confirmSlug: 'other-news',
+          confirmDelete: true,
+          sha: 'news-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: '確認用URLが一致しません。削除を中止しました' });
+    expect(mocks.deleteBlogArticle).not.toHaveBeenCalled();
+  });
+
+  it('POST /api/delete は confirmDelete 欠落を拒否する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/delete', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          confirmSlug: 'external-news',
+          sha: 'news-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: '完全削除の確認が必要です' });
+    expect(mocks.deleteBlogArticle).not.toHaveBeenCalled();
+  });
+
+  it('POST /api/delete は不正collectionをblogへフォールバックせず拒否する', async () => {
+    const res = await worker.fetch(
+      req('/blog-admin/api/delete', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'invalid',
+          originalSlug: 'external-news',
+          confirmSlug: 'external-news',
+          confirmDelete: true,
+          sha: 'news-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: 'collection は blog / news / cases のいずれかを指定してください' });
+    expect(mocks.deleteBlogArticle).not.toHaveBeenCalled();
+  });
+
+  it('POST /api/delete は sha conflict を409で返す', async () => {
+    mocks.deleteBlogArticle.mockRejectedValueOnce(
+      new Error('記事が別の編集で更新されています。開き直してから削除してください'),
+    );
+    const res = await worker.fetch(
+      req('/blog-admin/api/delete', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          collection: 'news',
+          originalSlug: 'external-news',
+          confirmSlug: 'external-news',
+          confirmDelete: true,
+          sha: 'stale-sha',
+        }),
+      }),
+      env,
+    );
+
+    expect(res.status).toBe(409);
+    expect(await res.json()).toEqual({
+      error: '記事が別の編集で更新されています。開き直してから削除してください',
+    });
   });
 });
