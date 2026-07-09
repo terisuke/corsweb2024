@@ -180,6 +180,10 @@ const ariaLabel = ARIA[locale] ?? ARIA.ja;
     if (w.__pwRaf) cancelAnimationFrame(w.__pwRaf);
     if (w.__pwTimer) clearInterval(w.__pwTimer);
     if (w.__pwRO) { try { w.__pwRO.disconnect(); } catch (e) { /* noop */ } }
+    if (w.__pwAC) { try { w.__pwAC.abort(); } catch (e) { /* noop */ } }
+    // 前ページの window/document リスナを確実に破棄（遷移で蓄積しないように）
+    const ac = new AbortController();
+    w.__pwAC = ac;
 
     const layer = peng.parentElement as HTMLElement;
     const rot = peng.querySelector('.pw-rot') as HTMLElement;
@@ -289,11 +293,11 @@ const ariaLabel = ARIA[locale] ?? ARIA.ja;
         x = clamp(x, margin, W - PW - margin);
         if (wasWalking) setPos(x, floorY);
       }, 150);
-    });
+    }, { signal: ac.signal });
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { if (w.__pwRaf) cancelAnimationFrame(w.__pwRaf); }
       else if (state === 'walk') { lastT = 0; w.__pwRaf = requestAnimationFrame(walkFrame); }
-    });
+    }, { signal: ac.signal });
 
     // init
     btxt.textContent = messages[0] || '';
