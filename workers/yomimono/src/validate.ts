@@ -199,6 +199,9 @@ export function normalizeArticle(
     featured: a.featured === true,
     isDraft: a.isDraft === true,
   };
+  if (coll === 'cases' && !common.summary) {
+    return { ok: false, error: 'article.summary は必須です', status: 400 };
+  }
   // coll をリテラル狭めし、各コレクションの厳密な category 型を持つユニオンメンバを構築する。
   let article: NormalizedArticle;
   if (coll === 'news') {

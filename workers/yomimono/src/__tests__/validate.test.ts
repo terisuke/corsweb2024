@@ -374,6 +374,15 @@ describe('normalizeArticle — cases collection', () => {
     }
   });
 
+  it('cases: summary が空白だけなら 400', () => {
+    const r = normalizeArticle({ ...casesBase, summary: '   ' }, 'cases');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.status).toBe(400);
+      expect(r.error).toContain('summary');
+    }
+  });
+
   it('cases: カテゴリ grift/confidential-ai/local-llm/ai-contract/tech-culture のみ・それ以外は grift', () => {
     const r = normalizeArticle({ ...casesBase, category: 'local-llm' }, 'cases');
     expect(r.ok).toBe(true);

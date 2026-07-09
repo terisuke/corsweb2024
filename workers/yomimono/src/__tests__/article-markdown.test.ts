@@ -142,6 +142,55 @@ featured: true
     expect(parsed.article.tags).toEqual(['Grift', 'AI', '要件定義']);
   });
 
+  it('単一引用符 tags の値内カンマを分割せずに保持する', () => {
+    const markdown = `---
+title: '旧実績'
+description: '旧説明'
+category: 'grift'
+tags: ['A, B', 'C']
+publishedAt: 2026-07-01
+summary: '旧リード'
+---
+
+本文
+`;
+    const parsed = parseArticleMarkdown('case-slug', markdown, 'cases');
+    expect(parsed.article.tags).toEqual(['A, B', 'C']);
+  });
+
+  it('news は後から externalUrl/source を追加しても frontmatter に反映する', () => {
+    const originalNews = `---
+title: "旧ニュース"
+description: "旧説明"
+publishedAt: 2026-07-08
+category: "info"
+tags: ["更新"]
+isDraft: false
+featured: false
+---
+
+## 本文
+`;
+    const updated: NormalizedArticle = {
+      slug: 'old-news',
+      title: '外部掲載ニュース',
+      description: '外部掲載説明',
+      category: 'media',
+      tags: ['掲載'],
+      body: '',
+      collection: 'news',
+      publishedAt: '2026-07-09',
+      externalUrl: 'https://example.com/news',
+      source: 'Example',
+      featured: true,
+      isDraft: false,
+    };
+    const rebuilt = rebuildArticleMarkdown(originalNews, updated);
+    expect(rebuilt).toContain('externalUrl: "https://example.com/news"');
+    expect(rebuilt).toContain('source: "Example"');
+    expect(rebuilt).toContain('featured: true');
+  });
+
   it('cases は summary/publishedAt/featured を差し替え、未知 frontmatter を保持する', () => {
     const originalCase = `---
 title: "旧実績"

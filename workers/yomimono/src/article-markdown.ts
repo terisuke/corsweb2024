@@ -70,10 +70,32 @@ function parseValue(lines: string[]): unknown {
 function parseLooseInlineArray(raw: string): string[] {
   const body = raw.replace(/^\[/, '').replace(/\]$/, '').trim();
   if (!body) return [];
-  return body
-    .split(',')
-    .map((item) => scalarValue(item))
-    .filter(Boolean);
+  const items: string[] = [];
+  let current = '';
+  let quote = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    if (quote) {
+      current += ch;
+      if (ch === quote && body[i - 1] !== '\\') quote = '';
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      current += ch;
+      continue;
+    }
+    if (ch === ',') {
+      const value = scalarValue(current);
+      if (value) items.push(value);
+      current = '';
+      continue;
+    }
+    current += ch;
+  }
+  const value = scalarValue(current);
+  if (value) items.push(value);
+  return items;
 }
 
 function parseFrontmatter(blocks: FrontmatterBlock[]): Record<string, unknown> {
