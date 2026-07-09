@@ -1,5 +1,6 @@
 ---
 import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import PenguinWalker from './PenguinWalker.astro';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -71,6 +72,8 @@ const griftUrl = 'https://griftai.org';
       </p>
     </div>
   </div>
+  {/* ロゴのペンギンがヒーロー下部を歩く演出（装飾）。クリックで飛び立ち、下から再登場。 */}
+  <PenguinWalker bubble={t.homeHero.penguinBubble} locale={currentLocale} />
   {/* 「↓」スクロールヒント: 下に続きがあると気づかせ離脱を防ぐ。少しスクロールで消える。 */}
   <div class="scroll-hint pointer-events-none absolute inset-x-0 bottom-8 z-10 flex justify-center" aria-hidden="true">
     <span class="scroll-hint-arrow text-2xl text-primary-950/40 dark:text-primary-200/40">↓</span>
