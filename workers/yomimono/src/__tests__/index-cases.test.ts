@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   deleteBlogArticle: vi.fn(),
   listArticleSlugs: vi.fn(),
   listBlogArticles: vi.fn(),
+  listBlogArticlesWithSource: vi.fn(),
   readBlogArticle: vi.fn(),
   updateBlogArticle: vi.fn(),
 }));
@@ -25,6 +26,7 @@ vi.mock('../github', () => ({
   commitImage: vi.fn(),
   listArticleSlugs: mocks.listArticleSlugs,
   listBlogArticles: mocks.listBlogArticles,
+  listBlogArticlesWithSource: mocks.listBlogArticlesWithSource,
   readBlogArticle: mocks.readBlogArticle,
   updateBlogArticle: mocks.updateBlogArticle,
 }));
@@ -41,7 +43,7 @@ const env: Env = {
   BLOG_DIR: 'src/content/blog',
   NEWS_DIR: 'src/content/news',
   CASES_DIR: 'src/content/cases',
-  PUBLISH_BRANCH: 'main',
+  PUBLISH_BRANCH: 'develop',
   STYLE_GUIDE_PATH: 'docs/blog-style-guide.md',
   BASE_PATH: '/blog-admin',
   ACCESS_PASSWORD: 'x'.repeat(20),
@@ -99,6 +101,28 @@ describe('yomimono Worker — cases CMS posting path', () => {
         featured: true,
       },
     ]);
+    mocks.listBlogArticlesWithSource.mockImplementation(async (_env, _octokit, collection = 'blog') => {
+      const dir = collection === 'news' ? env.NEWS_DIR : collection === 'cases' ? env.CASES_DIR : `${env.BLOG_DIR}/ja`;
+      return {
+        articles:
+          collection === 'news'
+            ? [
+                {
+                  collection: 'news',
+                  slug: 'external-news',
+                  title: '外部掲載ニュース',
+                  description: '外部掲載の説明',
+                  category: 'media',
+                  isDraft: false,
+                  pubDate: '2026-07-08',
+                  publishedAt: '2026-07-08',
+                  featured: true,
+                },
+              ]
+            : [],
+        source: { collection, branch: env.PUBLISH_BRANCH, dir },
+      };
+    });
     mocks.readBlogArticle.mockResolvedValue({
       collection: 'news',
       slug: 'external-news',
@@ -199,8 +223,34 @@ describe('yomimono Worker — cases CMS posting path', () => {
           featured: true,
         },
       ],
+      source: {
+        collection: 'news',
+        branch: 'develop',
+        dir: 'src/content/news',
+      },
     });
-    expect(mocks.listBlogArticles).toHaveBeenCalledWith(env, { mocked: true }, 'news');
+    expect(mocks.listBlogArticlesWithSource).toHaveBeenCalledWith(env, { mocked: true }, 'news');
+  });
+
+  it('GET /api/articles?collection=news は対象ディレクトリ未存在時に source と warning を返す', async () => {
+    mocks.listBlogArticlesWithSource.mockResolvedValueOnce({
+      articles: [],
+      source: { collection: 'news', branch: 'develop', dir: 'src/content/news' },
+      warning: '管理対象 branch "develop" に src/content/news が見つかりません',
+    });
+    const res = await worker.fetch(req('/blog-admin/api/articles?collection=news'), env);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      articles: [],
+      source: {
+        collection: 'news',
+        branch: 'develop',
+        dir: 'src/content/news',
+      },
+      warning: '管理対象 branch "develop" に src/content/news が見つかりません',
+    });
+    expect(mocks.listBlogArticlesWithSource).toHaveBeenCalledWith(env, { mocked: true }, 'news');
   });
 
   it('GET /api/article?collection=news は sha 付きで news 記事を返す', async () => {
@@ -229,6 +279,7 @@ describe('yomimono Worker — cases CMS posting path', () => {
     expect(html).toContain('完全削除を開く（管理操作）');
     expect(html).toContain('公開停止だけなら削除ではなく非公開化を使うことを理解しました');
     expect(html).toContain('GitHubから完全削除する');
+    expect(html).toContain('管理対象: ');
     expect(html).toContain("postJson('/api/unpublish'");
     expect(html).toContain("postJson('/api/delete'");
   });

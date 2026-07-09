@@ -3,7 +3,7 @@ import { head, header, tail } from './ui-shared';
 // AI生成ページ（情報収集→テーマ選択→生成→レビュー→公開）。
 // 共通JS(BASE/esc/safeUrl/$/api)は ui-shared の COMMON_JS から供給される。
 const BODY = `<main>
-  <p class="lead">情報収集 → テーマ選定 → 生成 → レビュー → 公開（main マージ不要で公開されます）</p>
+  <p class="lead">情報収集 → テーマ選定 → 生成 → レビュー → 公開（現在の管理対象 branch に保存されます）</p>
   <section class="step" id="s1">
     <h2><span class="num">1</span>情報収集</h2>
     <p class="hint">直近およそ27時間の AI / DX / ローカルLLM などの話題から、中小企業に刺さる候補テーマを集めます。</p>
@@ -147,7 +147,7 @@ const JS = `
 
   function finishPublish(slot, uid, j){
     var link = j && j.commitUrl ? ('<a href="'+esc(safeUrl(j.commitUrl))+'" target="_blank" rel="noopener">コミットを見る</a>') : '';
-    slot.innerHTML = '<div class="done">✓ 公開しました（main にコミット → 数分でサイトに反映されます） '+link+'</div>';
+    slot.innerHTML = '<div class="done">✓ 公開しました（現在の管理対象 branch にコミット → 数分でサイトに反映されます） '+link+'</div>';
   }
 `;
 

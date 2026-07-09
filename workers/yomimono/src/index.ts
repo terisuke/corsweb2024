@@ -15,7 +15,7 @@ import {
   commitImage,
   deleteBlogArticle,
   listArticleSlugs,
-  listBlogArticles,
+  listBlogArticlesWithSource,
   readBlogArticle,
   updateBlogArticle,
 } from './github';
@@ -181,7 +181,7 @@ export default {
     if (base && path === base) path = '/';
     else if (base && path.startsWith(base + '/')) path = path.slice(base.length);
 
-    if (path === '/health') return json({ ok: true });
+    if (path === '/health') return json({ ok: true, publishBranch: env.PUBLISH_BRANCH });
 
     try {
       // --- 認証不要: ログイン画面 + ログイン/ログアウトAPI ---
@@ -267,8 +267,8 @@ export default {
       if (req.method === 'GET' && path === '/api/articles') {
         const collection = normalizeCollection(url.searchParams.get('collection'));
         const octokit = makeOctokit(env);
-        const articles = await listBlogArticles(env, octokit, collection);
-        return json({ articles });
+        const result = await listBlogArticlesWithSource(env, octokit, collection);
+        return json(result);
       }
 
       if (req.method === 'GET' && path === '/api/article') {
@@ -366,7 +366,7 @@ export default {
         return json({ violations });
       }
 
-      // ⑥ 公開（記事botが main へコミット → 既存の静的デプロイで公開）
+      // ⑥ 公開（記事botが現在の管理対象 branch へコミット → 既存の静的デプロイで公開）
       if (req.method === 'POST' && path === '/api/publish') {
         const body = await readJsonBody(req);
         if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);

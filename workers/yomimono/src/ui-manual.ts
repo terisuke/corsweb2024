@@ -58,7 +58,7 @@ const BODY = `<main class="wide">
     <details class="help"><summary>技術的なメモ（かっこのある方向け）</summary>
       <div class="help-body">
         <ul>
-          <li>公開は GitHub の main ブランチへコミットされ、数分で静的サイトに反映されます（main マージ不要）。</li>
+          <li>公開は GitHub の現在の管理対象 branch へコミットされ、数分で静的サイトに反映されます。</li>
           <li>本文は Markdown 形式で保存されます。ツールバーが記号を自動挿入します。</li>
           <li>「下書きをブラウザに保存」はこの端末のブラウザ（localStorage）にのみ保存されます。サーバーには送信されません。</li>
           <li>入力中の内容は自動的にこのブラウザに保存されます（デバイスごと・公開時に消去）。</li>
