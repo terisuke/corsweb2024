@@ -1,7 +1,7 @@
 # 読みものCMS バックエンド（Cloudflare Worker / `cor-yomimono`）
 
-凪沙さんが **main マージ権限なしで毎日記事を投稿**できるようにする、サーバーレス・バックエンド＋管理画面。
-記事は DB を使わず **.md として git にコミット**され、既存の静的デプロイでそのまま公開される（A案：記事bot方式）。
+凪沙さんが **GitHub のマージ操作なしで毎日記事を投稿**できるようにする、サーバーレス・バックエンド＋管理画面。
+記事は DB を使わず **.md として git にコミット**され、管理対象 branch の静的デプロイでそのまま公開される（A案：記事bot方式）。
 
 > **コレクション拡張（ADR-0009）**: 記事bot は **blog / news / cases の3コレクション配下**に書く（`src/content/{blog/ja,news,cases}/`）。3コレクションとも投稿・一覧・読み込み・更新に対応する。切り替えは `body.collection` / `?collection=`（既定 `'blog'`）。詳細は `docs/adr/ADR-0009-news-cases-cms-expansion.md`。
 
@@ -9,7 +9,7 @@
 
 ```
 情報収集(/blog-admin/api/collect) → テーマ選定(人) → 生成(/blog-admin/api/generate) → レビュー(人) → 公開(/blog-admin/api/publish)
-                                       Claude                  Claude＋ガードレール          記事botがmainへcommit
+                                       Claude                  Claude＋ガードレール          記事botが管理対象branchへcommit
 ```
 
 ## エンドポイント（`BASE_PATH=/blog-admin` のため実URLは `cor-jp.com/blog-admin...`）
@@ -24,7 +24,7 @@
 | POST | `/api/collect` | 直近約27hのAI/DX/ローカルLLM記事から候補テーマを10〜15件返す |
 | POST | `/api/generate` | 選んだテーマで記事を1本生成（社長の文体）＋ガードレール検査結果を同梱 |
 | POST | `/api/validate` | コミットせずガードレール再チェック（編集後の確認用・`body.collection` 対応） |
-| POST | `/api/publish` | 記事botが `body.collection`（既定 `'blog'`）に応じて `src/content/{blog/ja,news,cases}/<slug>.md` を `main` にコミット |
+| POST | `/api/publish` | 記事botが `body.collection`（既定 `'blog'`）に応じて `src/content/{blog/ja,news,cases}/<slug>.md` を `PUBLISH_BRANCH` にコミット |
 | POST | `/api/update` | 既存コンテンツを同じ slug のまま `sha` 付きで更新（競合検出あり） |
 | GET  | `/manual` | ブログ投稿UI（blog / `src/content/blog/ja/<slug>.md` へ公開） |
 | GET  | `/manual/news` | ニュース投稿UI（news / `src/content/news/<slug>.md` へ公開） |
@@ -51,7 +51,7 @@ npx wrangler secret put SESSION_SECRET         # セッション署名鍵。`ope
 npm run deploy            # cor-jp.com/blog-admin* に公開（routes 設定済）
 ```
 
-`wrangler.toml` の `[vars]` に App ID / Installation ID 等の非シークレット設定が入っている（編集不要）。
+`wrangler.toml` の `[vars]` に App ID / Installation ID 等の非シークレット設定が入っている（編集不要）。`PUBLISH_BRANCH` は既定 `develop`。main release 用に同じ Worker を main 管理へ戻す場合は、CI/CD または deploy 時に `PUBLISH_BRANCH=main` を指定する。
 
 ## ルート（`cor-jp.com/blog-admin`）について
 
@@ -70,7 +70,7 @@ Cloudflare Access は使わず、Worker 自身がログインを管理する（A
 
 ### セキュリティ運用（重要）
 
-合言葉がこのツール（main 書込み＋API予算）の唯一の鍵なので、**高エントロピー必須**:
+合言葉がこのツール（管理対象 branch 書込み＋API予算）の唯一の鍵なので、**高エントロピー必須**:
 
 - `ACCESS_PASSWORD` は**ランダム生成**して password manager で配布する（覚えやすい語句は不可）。例:
   ```bash
@@ -84,9 +84,9 @@ Cloudflare Access は使わず、Worker 自身がログインを管理する（A
 
 `/api/collect` `/api/generate` は Opus + web_search を呼ぶため高コスト。認証済み社内ユーザーのみが叩ける前提だが、念のため Cloudflare ダッシュボード → **Security → WAF → Rate limiting rules** で当 Worker のパスに「1メール/分あたり N 回」の制限を1本入れておくと安全。
 
-## 記事botを main の許可プッシャーに追加（公開を通すため）
+## main release 時: 記事botを main の許可プッシャーに追加
 
-main はブランチ保護で push 制限がかかっている。記事bot（GitHub App）を許可リストに追加する:
+通常の develop 運用では `PUBLISH_BRANCH=develop` を読む。main release 後に同じ `/blog-admin` route を `PUBLISH_BRANCH=main` として使う場合、main はブランチ保護で push 制限がかかっているため、記事bot（GitHub App）を許可リストに追加する:
 
 ```bash
 gh api -X POST repos/Cor-Incorporated/corsweb2024/branches/main/protection/restrictions/apps \

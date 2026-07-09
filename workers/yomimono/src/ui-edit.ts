@@ -140,9 +140,12 @@ const JS = `
   function emptyHtml(){
     return '<div class="empty">'+esc(cfg().label)+'はまだ見つかりません。<br><a href="'+esc(BASE+cfg().newPath)+'">'+esc(cfg().label)+'を書く</a></div>';
   }
-  function renderList(items){
+  function renderList(items, warning){
     var box=$('e_list');
-    if(!items.length){ box.innerHTML=emptyHtml(); return; }
+    if(!items.length){
+      box.innerHTML=(warning?'<div class="err">'+esc(warning)+'</div>':'')+emptyHtml();
+      return;
+    }
     box.innerHTML=items.map(function(a){
       var state=a.isDraft?'<span class="badge">下書き</span>':'';
       var featured=a.featured?'<span class="badge">注目</span>':'';
@@ -156,12 +159,18 @@ const JS = `
       buttons[i].addEventListener('click',function(){ loadArticle(this.getAttribute('data-slug')); });
     }
   }
+  function sourceText(source, count){
+    if(!source) return cfg().label+'を表示中';
+    return cfg().label+'を表示中 / 管理対象: '+(source.branch||'未設定')+' / '+(source.dir||'不明')+' / '+count+'件';
+  }
   function loadList(){
     resetForm();
     $('e_list_status').textContent='読み込み中...';
     getJson('/api/articles?collection='+encodeURIComponent(currentCollection)).then(function(j){
-      renderList(j.articles||[]);
-      $('e_list_status').textContent=(j.articles||[]).length+'件';
+      var items=j.articles||[];
+      renderList(items,j.warning||'');
+      $('e_list_status').textContent=items.length+'件';
+      setStatus(sourceText(j.source,items.length));
     }).catch(function(e){
       $('e_list').innerHTML='<div class="err">'+esc(e.message)+'</div>';
       $('e_list_status').textContent='';

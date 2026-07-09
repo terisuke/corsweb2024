@@ -12,7 +12,7 @@ const env: Env = {
   BLOG_DIR: 'src/content/blog/ja',
   NEWS_DIR: 'src/content/news',
   CASES_DIR: 'src/content/cases',
-  PUBLISH_BRANCH: 'main',
+  PUBLISH_BRANCH: 'develop',
   STYLE_GUIDE_PATH: 'docs/blog-style-guide.md',
   BASE_PATH: '/blog-admin',
   ACCESS_PASSWORD: 'correct-horse-battery-staple',
@@ -54,7 +54,7 @@ describe('yomimono Worker security headers', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/json');
-    expect(await response.json()).toEqual({ ok: true });
+    expect(await response.json()).toEqual({ ok: true, publishBranch: 'develop' });
     expectSecurityHeaders(response);
   });
 

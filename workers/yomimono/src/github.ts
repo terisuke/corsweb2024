@@ -23,6 +23,18 @@ export interface BlogArticleFile extends BlogArticleSummary {
   path: string;
 }
 
+export interface CollectionSource {
+  collection: Collection;
+  branch: string;
+  dir: string;
+}
+
+export interface ArticleListResult {
+  articles: BlogArticleSummary[];
+  source: CollectionSource;
+  warning?: string;
+}
+
 export function makeOctokit(env: Env): Octokit {
   return new Octokit({
     authStrategy: createAppAuth,
@@ -55,6 +67,14 @@ export function contentDir(env: Env, collection: Collection = 'blog'): string {
   return `${env.BLOG_DIR}/ja`;
 }
 
+export function collectionSource(env: Env, collection: Collection = 'blog'): CollectionSource {
+  return {
+    collection,
+    branch: env.PUBLISH_BRANCH,
+    dir: contentDir(env, collection),
+  };
+}
+
 // リポジトリのファイル内容を取得（文体ガイド等）。
 export async function getFileContent(env: Env, octokit: Octokit, path: string): Promise<string> {
   const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
@@ -75,21 +95,42 @@ export async function listArticleSlugs(
   collection: Collection = 'blog',
 ): Promise<string[]> {
   try {
-    const dir = contentDir(env, collection);
+    const result = await listArticleSlugsDetailed(env, octokit, collection);
+    return result.slugs;
+  } catch {
+    return []; // 一覧取得失敗は致命的でない（重複回避が弱まるだけ）
+  }
+}
+
+export async function listArticleSlugsDetailed(
+  env: Env,
+  octokit: Octokit,
+  collection: Collection = 'blog',
+): Promise<{ slugs: string[]; source: CollectionSource; warning?: string }> {
+  const source = collectionSource(env, collection);
+  try {
     const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
       owner: env.GH_OWNER,
       repo: env.GH_REPO,
-      path: dir,
+      path: source.dir,
       ref: env.PUBLISH_BRANCH,
     });
     const items = res.data as Array<{ name: string; type: string }>;
-    return Array.isArray(items)
+    const slugs = Array.isArray(items)
       ? items
           .filter((it) => it.type === 'file' && it.name.endsWith('.md'))
           .map((it) => it.name.replace(/\.md$/, ''))
       : [];
-  } catch {
-    return []; // 一覧取得失敗は致命的でない（重複回避が弱まるだけ）
+    return { slugs, source };
+  } catch (e: unknown) {
+    if ((e as { status?: number }).status === 404) {
+      return {
+        slugs: [],
+        source,
+        warning: `管理対象 branch "${source.branch}" に ${source.dir} が見つかりません`,
+      };
+    }
+    throw e;
   }
 }
 
@@ -143,7 +184,26 @@ export async function listBlogArticles(
   octokit: Octokit,
   collection: Collection = 'blog',
 ): Promise<BlogArticleSummary[]> {
-  const slugs = await listArticleSlugs(env, octokit, collection);
+  const { slugs } = await listArticleSlugsDetailed(env, octokit, collection);
+  return readArticleSummaries(env, octokit, collection, slugs);
+}
+
+export async function listBlogArticlesWithSource(
+  env: Env,
+  octokit: Octokit,
+  collection: Collection = 'blog',
+): Promise<ArticleListResult> {
+  const { slugs, source, warning } = await listArticleSlugsDetailed(env, octokit, collection);
+  const articles = await readArticleSummaries(env, octokit, collection, slugs);
+  return { articles, source, ...(warning ? { warning } : {}) };
+}
+
+async function readArticleSummaries(
+  env: Env,
+  octokit: Octokit,
+  collection: Collection,
+  slugs: string[],
+): Promise<BlogArticleSummary[]> {
   const articles: BlogArticleSummary[] = [];
   for (const slug of slugs) {
     try {
@@ -235,7 +295,7 @@ export async function deleteBlogArticle(
   }
 }
 
-// 記事 .md を PUBLISH_BRANCH（既定 main）へコミット。
+// 記事 .md を PUBLISH_BRANCH（develop/main をCIまたはdeploy時に指定）へコミット。
 // content-bot はこのパス（記事のみ）にしか書かない＝コードには触れない。
 export async function commitArticle(
   env: Env,

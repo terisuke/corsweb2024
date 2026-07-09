@@ -1,5 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { contentDir, deleteBlogArticle, readBlogArticle, updateBlogArticle } from '../github';
+import {
+  contentDir,
+  deleteBlogArticle,
+  listArticleSlugsDetailed,
+  readBlogArticle,
+  updateBlogArticle,
+} from '../github';
 import type { Env } from '../types';
 
 function utf8ToBase64(str: string): string {
@@ -114,6 +120,24 @@ isDraft: false
     expect(article.article.slug).toBe('edit-target');
   });
 
+  it('readBlogArticle は env.PUBLISH_BRANCH を ref として使う', async () => {
+    const envDevelop = { ...mockEnv, PUBLISH_BRANCH: 'develop' };
+    const request = vi.fn(async () => ({
+      data: {
+        content: utf8ToBase64(markdown),
+        sha: 'file-sha',
+      },
+    }));
+    await readBlogArticle(envDevelop, { request } as never, 'edit-target');
+
+    expect(request).toHaveBeenCalledWith('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      path: 'src/content/blog/ja/edit-target.md',
+      ref: 'develop',
+    });
+  });
+
   it('updateBlogArticle は sha 付き PUT で同じ slug を更新する', async () => {
     const request = vi.fn(async () => ({
       data: { commit: { html_url: 'https://github.com/test/commit/1' } },
@@ -139,6 +163,45 @@ isDraft: false
       message: 'post(yomimono): edit-target（更新: editor）',
       content: utf8ToBase64(markdown),
       sha: 'file-sha',
+    });
+  });
+
+  it('updateBlogArticle は env.PUBLISH_BRANCH を branch として使う', async () => {
+    const envDevelop = { ...mockEnv, PUBLISH_BRANCH: 'develop' };
+    const request = vi.fn(async () => ({
+      data: { commit: { html_url: 'https://github.com/test/commit/2' } },
+    }));
+    await updateBlogArticle(envDevelop, { request } as never, 'edit-target', markdown, 'file-sha', 'editor@example.com');
+
+    expect(request).toHaveBeenCalledWith('PUT /repos/{owner}/{repo}/contents/{path}', {
+      owner: 'test-owner',
+      repo: 'test-repo',
+      path: 'src/content/blog/ja/edit-target.md',
+      branch: 'develop',
+      message: 'post(yomimono): edit-target（更新: editor）',
+      content: utf8ToBase64(markdown),
+      sha: 'file-sha',
+    });
+  });
+
+  it('listArticleSlugsDetailed は対象ディレクトリ404を source/warning 付きで返す', async () => {
+    const envDevelop = { ...mockEnv, PUBLISH_BRANCH: 'develop' };
+    const request = vi.fn(async () => {
+      const error = new Error('Not Found') as Error & { status?: number };
+      error.status = 404;
+      throw error;
+    });
+
+    const result = await listArticleSlugsDetailed(envDevelop, { request } as never, 'news');
+
+    expect(result).toEqual({
+      slugs: [],
+      source: {
+        collection: 'news',
+        branch: 'develop',
+        dir: 'src/content/news',
+      },
+      warning: '管理対象 branch "develop" に src/content/news が見つかりません',
     });
   });
 

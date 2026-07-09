@@ -18,7 +18,7 @@ GH_INSTALLATION_ID = "142454743"
 BLOG_DIR = "src/content/blog"
 NEWS_DIR = "src/content/news"
 CASES_DIR = "src/content/cases"
-PUBLISH_BRANCH = "main"
+PUBLISH_BRANCH = "develop"
 STYLE_GUIDE_PATH = "docs/blog-style-guide.md"
 # ↓ BASE_PATH は上の routes の pattern と必ず一致させること（/blog-admin ⇔ cor-jp.com/blog-admin*）
 BASE_PATH = "/blog-admin"          # cor-jp.com/blog-admin* に載せるためのプレフィックス
