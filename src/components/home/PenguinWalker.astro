@@ -93,7 +93,7 @@ const ariaLabel = ARIA[locale] ?? ARIA.ja;
   }
   .pw {
     position: absolute; left: 0; top: 0;
-    width: clamp(66px, 10vw, 88px); height: auto;
+    width: clamp(50px, 7vw, 66px); height: auto;
     cursor: pointer; pointer-events: auto; will-change: transform;
     -webkit-tap-highlight-color: transparent;
     filter: drop-shadow(0 10px 12px rgba(10, 20, 35, .26));
@@ -162,7 +162,7 @@ const ariaLabel = ARIA[locale] ?? ARIA.ja;
   .pw-bubble.swap .pw-btxt { opacity: 0; transform: translateY(-3px); }
   .pw.is-walking .pw-bubble { opacity: 1; animation: pw-bubbob 2.4s ease-in-out infinite; }
   @keyframes pw-bubbob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-3px); } }
-  .pw.no-bubble .pw-bubble, .pw.edge .pw-bubble { opacity: 0 !important; }
+  .pw.no-bubble .pw-bubble, .pw.edge .pw-bubble, .pw.tight .pw-bubble { opacity: 0 !important; }
 
   @media (prefers-reduced-motion: reduce) {
     .pw, .pw * { animation: none !important; transition: none !important; }
@@ -196,20 +196,22 @@ const ariaLabel = ARIA[locale] ?? ARIA.ja;
     try { const parsed = JSON.parse(peng.dataset.bubble || '[]'); if (Array.isArray(parsed) && parsed.length) messages = parsed; } catch (e) { /* keep default */ }
 
     let W = 0, H = 0, PW = 0, PH = 0, floorY = 0, margin = 40;
-    const bubbleHalf = 78;
+    const bubbleHalf = 62;
     let x = 60, dir = 1, state = 'walk', facing = 1, lastT = 0, bi = 0;
     const speed = 42;
 
     function measure() {
       const r = layer.getBoundingClientRect();
       W = r.width; H = r.height; PW = peng.offsetWidth; PH = peng.offsetHeight;
-      // ヒーローは 88vh より高くなる場合があるため、床は「初期ビューポート下端」に合わせて常に見える位置に。
-      const layerTopDoc = r.top + window.scrollY;
-      const viewFloor = (window.innerHeight - 18) - layerTopDoc - PH;
-      const hi = H - PH - 12;
-      const lo = Math.min(hi, H * 0.5);
-      floorY = clamp(viewFloor, lo, hi);
-      margin = Math.min(44, W * 0.1);
+      const hi = H - PH - 10;
+      // 本文（テキスト）の下端より下＝空きスペースにだけ立つ。吹き出し分の余白も確保して文字に被らないように。
+      let contentBottom = H * 0.6;
+      const content = document.querySelector('[data-hero-content]');
+      if (content) contentBottom = content.getBoundingClientRect().bottom - r.top; // レイヤー基準の本文下端
+      floorY = clamp(contentBottom + 46, Math.min(H * 0.5, hi), hi);
+      // 本文との余白が足りない狭い画面では吹き出しを隠して文字被りを防ぐ。
+      peng.classList.toggle('tight', (floorY - contentBottom) < 34);
+      margin = Math.min(40, W * 0.1);
     }
     function setPos(px: number, py: number) { peng.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0)'; }
     function face(d: number) { facing = d; flip.style.transform = 'scaleX(' + d + ')'; }
@@ -308,7 +310,15 @@ const ariaLabel = ARIA[locale] ?? ARIA.ja;
       x = clamp(x, margin, W - PW - margin);
       if (state === 'walk') setPos(x, floorY);
     }
-    try { w.__pwRO = new ResizeObserver(reflow); w.__pwRO.observe(layer); } catch (e) { /* RO 無しでも下記で動く */ }
+    try {
+      w.__pwRO = new ResizeObserver(reflow);
+      w.__pwRO.observe(layer);
+      const cEl = document.querySelector('[data-hero-content]');
+      if (cEl) w.__pwRO.observe(cEl); // 本文の高さが後から確定（フォント適用・折返し）しても追従
+    } catch (e) { /* RO 無しでも下記で動く */ }
+    // 初期レイアウト確定が遅れる端末向けの保険（フォント適用後など）。
+    window.addEventListener('load', reflow, { signal: ac.signal });
+    setTimeout(reflow, 500);
 
     requestAnimationFrame(function () {
       measure();
