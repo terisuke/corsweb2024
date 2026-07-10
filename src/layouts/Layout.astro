@@ -5,6 +5,7 @@ import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
 import Analytics from '../components/analytics/Analytics.astro';
 import { getCurrentLocale, type Locale } from '../utils/i18n';
+import { isProductionSite } from '../config/site';
 
 interface Props {
   description: string;
@@ -63,6 +64,10 @@ const ogImage = ogImageProp
     ? new URL(`/og/page/${ogPageSlug}.png`, Astro.site)
     : new URL('/logo.png', Astro.site);
 const usesGeneratedOgImage = !ogImageProp && Boolean(ogPageSlug);
+// Preview / develop は noindex（ADR-0010）。canonical は本番向きのままでよい。
+const robotsContent = isProductionSite()
+  ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+  : 'noindex, nofollow';
 ---
 
 <!doctype html>
@@ -81,6 +86,7 @@ const usesGeneratedOgImage = !ogImageProp && Boolean(ogPageSlug);
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="robots" content={robotsContent} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     

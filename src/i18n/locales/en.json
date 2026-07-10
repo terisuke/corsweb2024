@@ -31,11 +31,10 @@
     "title": "<span class='nowrap'>Turn stuck work</span><br />into what we build together.",
     "subtitle": "Built around confidential-data AI, local LLMs, and Grift,<br class='sm:hidden' />Cor. Inc. walks with you end to end — from framing the problem to design, build, and operations.<br />We don't just take orders: when it's right, we'll even propose <em>not</em> building yet.",
     "support": "A Fukuoka-born AI implementation company that walks with you end to end — from framing the problem to design, build, and operations — built around confidential-data AI, local LLMs, and Grift.",
-    "primaryCta": "Try AI estimate (30 sec)",
-    "secondaryCta": "Get a free consultation",
+    "primaryCta": "Discuss a confidential-data AI assessment",
+    "secondaryCta": "Discuss a local LLM / secure AI PoC",
     "philosophyCta": "Read about our \"Kyousou\" philosophy",
     "trustBadges": [
-      "AI-driven development, 4–5× (internal measurement)",
       "Local LLM — your data stays in",
       "Secure Infrastructure",
       "Born in Fukuoka, serving all of Japan"
@@ -74,15 +73,15 @@
         "description": "From shaping your AI strategy to internal training and refining how you run development, we work closely with your team."
       }
     ],
-    "cta": "Get a free consultation",
-    "ctaPrimary": "Try an AI estimate",
-    "ctaSecondary": "Start with a consultation"
+    "cta": "Discuss a confidential-data AI assessment",
+    "ctaPrimary": "Discuss a confidential-data AI assessment",
+    "ctaSecondary": "See how Grift works"
   },
   "griftBridge": {
     "eyebrow": "Try Our AI / Grift",
     "title": "Before you put it into words, why not try it with AI?",
-    "description": "Based on our past development track record and current market rates, we'll give you reference cost, timeline, and similar cases in 30 seconds.",
-    "cta": "Try an AI estimate with Grift",
+    "description": "Based on our past development track record and current market rates, we provide reference cost, timeline, and similar cases.",
+    "cta": "See how Grift works",
     "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements.",
     "mock": {
       "input": "I want to automate sales-quote creation with AI",
@@ -167,18 +166,27 @@
     "cta": "Read the founder's story"
   },
   "finalCta": {
-    "title": "Let's start \"Kyousou\" from your challenge.",
-    "description": "Try a reference estimate with Grift, or reach out about a challenge you haven't yet been able to put into words.",
-    "primary": "Try an AI estimate",
-    "secondary": "Get in touch"
+    "title": "Move stuck work forward with implementation.",
+    "description": "From framing the problem to AI design, build, and operations — a Fukuoka-based AI implementation partner works with you end to end.",
+    "primary": "Discuss a confidential-data AI assessment",
+    "secondary": "See Grift Team Beta"
   },
   "serviceCtas": {
     "heading": "Reach out based on what you need.",
     "items": [
-      "Ask about a confidential-data AI assessment",
-      "Ask about Grift Team Beta",
-      "Discuss a local LLM / AI platform PoC",
-      "Ask about AI contract development"
+      {
+        "label": "Discuss a confidential-data AI assessment",
+        "intent": "confidential-ai-assessment"
+      },
+      {
+        "label": "Discuss a local LLM / secure AI PoC",
+        "intent": "local-llm-poc"
+      },
+      {
+        "label": "See Grift Team Beta",
+        "intent": "grift-team-beta",
+        "external": "grift"
+      }
     ]
   },
   "homeIndustries": {
@@ -284,11 +292,11 @@
       ]
     },
     "cta": {
-      "title": "Why not start with a 30-second reference estimate?",
-      "description": "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-      "primary": "Try Grift in 30 seconds",
-      "secondary": "Get a free consultation",
-      "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
     }
   },
   "industryShigyo": {
@@ -347,11 +355,11 @@
       ]
     },
     "cta": {
-      "title": "Why not start with a 30-second reference estimate?",
-      "description": "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-      "primary": "Try Grift in 30 seconds",
-      "secondary": "Get a free consultation",
-      "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
     }
   },
   "industryConstruction": {
@@ -418,11 +426,11 @@
       ]
     },
     "cta": {
-      "title": "Why not start with a 30-second reference estimate?",
-      "description": "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-      "primary": "Try Grift in 30 seconds",
-      "secondary": "Get a free consultation",
-      "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
     }
   },
   "industryManufacturing": {
@@ -481,11 +489,11 @@
       ]
     },
     "cta": {
-      "title": "Why not start with a 30-second reference estimate?",
-      "description": "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-      "primary": "Try Grift in 30 seconds",
-      "secondary": "Get a free consultation",
-      "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
     }
   },
   "industryEducation": {
@@ -544,11 +552,11 @@
       ]
     },
     "cta": {
-      "title": "Why not start with a 30-second reference estimate?",
-      "description": "Based on our past development track record and market rates, Grift gives you reference cost, timeline, and similar cases. Use it to organize your thoughts before we even talk.",
-      "primary": "Try Grift in 30 seconds",
-      "secondary": "Get a free consultation",
-      "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements."
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
     }
   },
   "works": {
@@ -565,7 +573,7 @@
         "name": "Grift",
         "tag": "In-house product",
         "description": "Our in-house AI estimation and evaluation platform that generates explainable reference estimates from GitHub track records and market rates.",
-        "link": "https://griftai.org"
+        "link": "grift"
       },
       {
         "name": "cor-jp.com",
@@ -624,7 +632,13 @@
     "security": "Security",
     "works": "Works",
     "news": "News",
-    "grift": "Grift"
+    "grift": "Grift",
+    "services": "Services",
+    "serviceAssessment": "Confidential-data AI assessment",
+    "serviceLocalLlm": "Local LLM / secure AI PoC",
+    "serviceAiDev": "AI platform & contract development",
+    "industries": "Industries",
+    "consult": "Talk with Cloudia"
   },
   "hero": {
     "title": "Beyond Words, Delivering Feelings.",
@@ -1385,7 +1399,7 @@
     "governanceTitle": "Building Our Framework",
     "governanceDescription": "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification.",
     "ctas": {
-      "primary": "Get a free consultation",
+      "primary": "Discuss a confidential-data AI assessment",
       "secondary": "Talk to us",
       "tertiary": "Privacy Policy"
     }
@@ -1402,7 +1416,7 @@
     },
     "security": {
       "heading": "If it feels like something you can trust us with, why not start with a conversation?",
-      "ctaLabel": "Get a free consultation"
+      "ctaLabel": "Discuss a confidential-data AI assessment"
     }
   }
 }

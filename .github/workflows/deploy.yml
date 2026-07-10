@@ -40,6 +40,10 @@ jobs:
           PUBLIC_GCAL_PARAMS: ${{ secrets.PUBLIC_GCAL_PARAMS || '' }}
           PUBLIC_STRIPE_PAYMENT_LINK: ${{ secrets.PUBLIC_STRIPE_PAYMENT_LINK || '' }}
           PUBLIC_YOUTUBE_API_KEY: ${{ secrets.PUBLIC_YOUTUBE_API_KEY || '' }}
+          # ADR-0010: Grift base URL（未設定時は production 既定。Preview は secrets で上書き）
+          PUBLIC_GRIFT_BASE_URL: ${{ vars.PUBLIC_GRIFT_BASE_URL || secrets.PUBLIC_GRIFT_BASE_URL || 'https://griftai.org' }}
+          # main のみ production。PR / develop は preview → noindex
+          PUBLIC_SITE_ENV: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && 'production' || 'preview' }}
 
       - name: Debug Firebase service account secret
         run: |

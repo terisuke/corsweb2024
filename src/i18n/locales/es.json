@@ -31,11 +31,10 @@
     "title": "Convertimos lo estancado<br />en avances construidos juntos.",
     "subtitle": "Cor. Inc. se apoya en IA para datos confidenciales, LLM locales y Grift,<br class='sm:hidden' />y te acompaña de principio a fin: desde ordenar el problema hasta el diseño, la implementación y la operación.<br />No solo recibimos encargos: cuando conviene, también proponemos «aún no construirlo».",
     "support": "Una empresa de implementación de IA nacida en Fukuoka que te acompaña de principio a fin —desde ordenar el problema hasta el diseño, la implementación y la operación— apoyada en IA para datos confidenciales, LLM locales y Grift.",
-    "primaryCta": "Presupuesto IA (30 s)",
-    "secondaryCta": "Consulta gratis",
+    "primaryCta": "Consultar diagnóstico de IA con datos confidenciales",
+    "secondaryCta": "Consultar PoC de LLM local / IA segura",
     "philosophyCta": "Lee la filosofía de «Kyousou»",
     "trustBadges": [
-      "Desarrollo asistido por IA 4–5× (medición interna)",
       "LLM local · tu información no sale al exterior",
       "Infraestructura Segura",
       "Desde Fukuoka · cobertura nacional"
@@ -74,15 +73,15 @@
         "description": "Desde definir la estrategia de uso de la IA hasta la formación interna y la organización del flujo de desarrollo, acompañamos a tu equipo de cerca."
       }
     ],
-    "cta": "Consulta gratis",
-    "ctaPrimary": "Prueba un presupuesto con IA",
-    "ctaSecondary": "Empieza por una consulta"
+    "cta": "Consultar diagnóstico de IA con datos confidenciales",
+    "ctaPrimary": "Consultar diagnóstico de IA con datos confidenciales",
+    "ctaSecondary": "Ver cómo funciona Grift"
   },
   "griftBridge": {
     "eyebrow": "Try Our AI / Grift",
     "title": "Antes de explicarlo con palabras, ¿por qué no lo pruebas con IA?",
-    "description": "A partir de proyectos de desarrollo anteriores y de las tarifas del mercado, te ofrecemos en 30 segundos un coste, un plazo y casos similares de referencia.",
-    "cta": "Prueba un presupuesto con IA en Grift",
+    "description": "A partir de proyectos de desarrollo anteriores y de las tarifas del mercado, ofrecemos un coste, un plazo y casos similares de referencia.",
+    "cta": "Ver cómo funciona Grift",
     "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos.",
     "mock": {
       "input": "Quiero automatizar con IA la creación de presupuestos de ventas",
@@ -167,18 +166,27 @@
     "cta": "Lee la historia de nuestro fundador"
   },
   "finalCta": {
-    "title": "Empecemos el «Kyousou» desde tu desafío.",
-    "description": "Prueba un presupuesto de referencia con Grift, o consúltanos partiendo de un desafío que aún no logras poner en palabras.",
-    "primary": "Prueba un presupuesto con IA",
-    "secondary": "Consulta"
+    "title": "Avancemos el trabajo atascado con implementación.",
+    "description": "Desde ordenar el reto hasta diseñar, construir y operar con IA: un socio de implementación desde Fukuoka te acompaña de punta a punta.",
+    "primary": "Consultar diagnóstico de IA con datos confidenciales",
+    "secondary": "Ver Grift Team Beta"
   },
   "serviceCtas": {
     "heading": "Consúltanos según lo que necesites.",
     "items": [
-      "Consultar sobre el diagnóstico de IA con datos confidenciales",
-      "Preguntar sobre Grift Team Beta",
-      "Consultar sobre un PoC de LLM local / plataforma de IA",
-      "Consultar sobre desarrollo por contrato con IA"
+      {
+        "label": "Consultar diagnóstico de IA con datos confidenciales",
+        "intent": "confidential-ai-assessment"
+      },
+      {
+        "label": "Consultar PoC de LLM local / IA segura",
+        "intent": "local-llm-poc"
+      },
+      {
+        "label": "Ver Grift Team Beta",
+        "intent": "grift-team-beta",
+        "external": "grift"
+      }
     ]
   },
   "homeIndustries": {
@@ -284,11 +292,11 @@
       ]
     },
     "cta": {
-      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
-      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-      "primary": "Probar Grift (30 s)",
-      "secondary": "Consulta gratis",
-      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      "title": "Empecemos ordenando cómo usar IA con datos confidenciales.",
+      "description": "Te ayudamos a decidir por dónde empezar según las restricciones del sector. También puedes ver cómo Grift organiza el fundamento del presupuesto.",
+      "primary": "Consultar diagnóstico de IA con datos confidenciales",
+      "secondary": "Ver cómo funciona Grift",
+      "note": "Los resultados de Grift son presupuestos de referencia previos a la consulta. El precio y el plazo formales se confirman tras revisar los requisitos."
     }
   },
   "industryShigyo": {
@@ -347,11 +355,11 @@
       ]
     },
     "cta": {
-      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
-      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-      "primary": "Probar Grift (30 s)",
-      "secondary": "Consulta gratis",
-      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      "title": "Empecemos ordenando cómo usar IA con datos confidenciales.",
+      "description": "Te ayudamos a decidir por dónde empezar según las restricciones del sector. También puedes ver cómo Grift organiza el fundamento del presupuesto.",
+      "primary": "Consultar diagnóstico de IA con datos confidenciales",
+      "secondary": "Ver cómo funciona Grift",
+      "note": "Los resultados de Grift son presupuestos de referencia previos a la consulta. El precio y el plazo formales se confirman tras revisar los requisitos."
     }
   },
   "industryConstruction": {
@@ -418,11 +426,11 @@
       ]
     },
     "cta": {
-      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
-      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-      "primary": "Probar Grift (30 s)",
-      "secondary": "Consulta gratis",
-      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      "title": "Empecemos ordenando cómo usar IA con datos confidenciales.",
+      "description": "Te ayudamos a decidir por dónde empezar según las restricciones del sector. También puedes ver cómo Grift organiza el fundamento del presupuesto.",
+      "primary": "Consultar diagnóstico de IA con datos confidenciales",
+      "secondary": "Ver cómo funciona Grift",
+      "note": "Los resultados de Grift son presupuestos de referencia previos a la consulta. El precio y el plazo formales se confirman tras revisar los requisitos."
     }
   },
   "industryManufacturing": {
@@ -481,11 +489,11 @@
       ]
     },
     "cta": {
-      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
-      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-      "primary": "Probar Grift (30 s)",
-      "secondary": "Consulta gratis",
-      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      "title": "Empecemos ordenando cómo usar IA con datos confidenciales.",
+      "description": "Te ayudamos a decidir por dónde empezar según las restricciones del sector. También puedes ver cómo Grift organiza el fundamento del presupuesto.",
+      "primary": "Consultar diagnóstico de IA con datos confidenciales",
+      "secondary": "Ver cómo funciona Grift",
+      "note": "Los resultados de Grift son presupuestos de referencia previos a la consulta. El precio y el plazo formales se confirman tras revisar los requisitos."
     }
   },
   "industryEducation": {
@@ -544,11 +552,11 @@
       ]
     },
     "cta": {
-      "title": "Para empezar, ¿por qué no pruebas un presupuesto de referencia en 30 segundos?",
-      "description": "Grift te ofrece un coste, un plazo y casos similares de referencia a partir de proyectos de desarrollo anteriores y de las tarifas del mercado. Úsalo también para ordenar ideas antes de la consulta.",
-      "primary": "Probar Grift (30 s)",
-      "secondary": "Consulta gratis",
-      "note": "Los resultados de Grift son un presupuesto orientativo previo a la consulta. El importe y el plazo definitivos se fijan tras confirmar los requisitos."
+      "title": "Empecemos ordenando cómo usar IA con datos confidenciales.",
+      "description": "Te ayudamos a decidir por dónde empezar según las restricciones del sector. También puedes ver cómo Grift organiza el fundamento del presupuesto.",
+      "primary": "Consultar diagnóstico de IA con datos confidenciales",
+      "secondary": "Ver cómo funciona Grift",
+      "note": "Los resultados de Grift son presupuestos de referencia previos a la consulta. El precio y el plazo formales se confirman tras revisar los requisitos."
     }
   },
   "works": {
@@ -565,7 +573,7 @@
         "name": "Grift",
         "tag": "Producto propio",
         "description": "Plataforma propia de presupuestos y evaluación con IA que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado.",
-        "link": "https://griftai.org"
+        "link": "grift"
       },
       {
         "name": "cor-jp.com",
@@ -624,7 +632,13 @@
     "security": "Seguridad",
     "works": "Works",
     "news": "News",
-    "grift": "Grift"
+    "grift": "Grift",
+    "services": "Servicios",
+    "serviceAssessment": "Diagnóstico de IA con datos confidenciales",
+    "serviceLocalLlm": "LLM local / PoC de IA segura",
+    "serviceAiDev": "Plataforma de IA y desarrollo por contrato",
+    "industries": "Sectores",
+    "consult": "Consultar con Cloudia"
   },
   "hero": {
     "title": "Más rápido que cualquiera, más allá del horizonte.",

@@ -1,10 +1,18 @@
 ---
-import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getContactUrl, getGriftUrl } from '../../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
-const griftUrl = 'https://griftai.org';
+const primaryHref = getContactUrl(currentLocale, {
+  intent: 'confidential-ai-assessment',
+  source: 'challenge-grid',
+});
+const secondaryHref = getGriftUrl('/', {
+  intent: 'grift-team-beta',
+  source: 'challenge-grid',
+});
 ---
 
 <section class="py-24 sm:py-32">
@@ -37,17 +45,17 @@ const griftUrl = 'https://griftai.org';
         }
       </ul>
       <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-start" data-reveal style="--reveal-delay:0.6s">
-        {/* 主役=Grift体験(外部)を大きく塗りつぶしネイビーで、脇役=相談は控えめに（凪沙さん #71）。 */}
+        {/* 主=診断 / 副=Grift 仕組み（ADR-0011） */}
         <a
-          href={griftUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={primaryHref}
           class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-6 py-4 text-center text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b] sm:w-auto sm:px-8"
         >
           {t.homeChallenges.ctaPrimary}
         </a>
         <a
-          href={getLocalizedUrl('/contact', currentLocale)}
+          href={secondaryHref}
+          target="_blank"
+          rel="noopener noreferrer"
           class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-center text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10 sm:w-auto"
         >
           {t.homeChallenges.ctaSecondary}

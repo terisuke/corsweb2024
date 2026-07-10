@@ -1,17 +1,27 @@
 ---
-import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getContactUrl } from '../../config/site';
 import PenguinWalker from './PenguinWalker.astro';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
 // 福岡100選 2026-2027 の badge は公開可能日まで非表示（正本ガードレール）。
+// 根拠のない倍率バッジは i18n 側で削除済み（ADR-0007）。
 const HIDDEN_TRUST_BADGES = ['福岡100選 2026-2027'];
 const trustBadges = t.homeHero.trustBadges.filter(
   (badge) => !HIDDEN_TRUST_BADGES.includes(badge),
 );
 
-const griftUrl = 'https://griftai.org';
+// 主CTA: 機密データAI活用診断 / 副: ローカルLLM PoC（ADR-0011）
+const primaryHref = getContactUrl(currentLocale, {
+  intent: 'confidential-ai-assessment',
+  source: 'home-hero',
+});
+const secondaryHref = getContactUrl(currentLocale, {
+  intent: 'local-llm-poc',
+  source: 'home-hero',
+});
 ---
 
 <section class="relative isolate flex min-h-[88vh] items-center overflow-hidden py-20 sm:py-28">
@@ -35,17 +45,15 @@ const griftUrl = 'https://griftai.org';
         <p class="max-w-3xl text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle} data-reveal style="--reveal-delay:0.15s"></p>
       </div>
       <div class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:justify-center" data-reveal style="--reveal-delay:0.3s">
-        {/* パターンA(凪沙さん #64): 主役=Grift体験を大きく塗りつぶしで、脇役=相談はテキストリンクで。最初の一歩を1つに絞る。 */}
+        {/* 有料入口: 診断（主）+ ローカルLLM PoC（副）。Grift は GriftBridge / ServiceCtas 側（ADR-0011）。 */}
         <a
-          href={griftUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={primaryHref}
           class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-6 py-4 text-center text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b] sm:w-auto sm:px-8"
         >
           {t.homeHero.primaryCta}
         </a>
         <a
-          href={getLocalizedUrl('/contact', currentLocale)}
+          href={secondaryHref}
           class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full px-5 py-3 text-center text-base font-medium text-primary-950 underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200 sm:w-auto"
         >
           {t.homeHero.secondaryCta}
