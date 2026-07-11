@@ -4,14 +4,31 @@
  */
 import { getLocalizedUrl, type Locale } from '../utils/i18n';
 
-/** ADR-0010 intent 正本 */
-export type ContactIntent =
-  | 'confidential-ai-assessment'
-  | 'local-llm-poc'
-  | 'grift-team-beta'
-  | 'grift-paid-trial'
-  | 'estimate-audit'
-  | 'press-speaking-other';
+/**
+ * ADR-0014 intent 正本（7 キー）。
+ * workers/contact-chat の CONTACT_INTENTS と同値（parity テストで一致を担保）。
+ */
+export const CONTACT_INTENTS = [
+  'confidential-ai-assessment',
+  'local-llm-poc',
+  'grift-team-beta',
+  'grift-paid-trial',
+  'estimate-audit',
+  'contract-dev',
+  'press-speaking-other',
+] as const;
+
+export type ContactIntent = (typeof CONTACT_INTENTS)[number];
+
+export function isContactIntent(v: unknown): v is ContactIntent {
+  return typeof v === 'string' && (CONTACT_INTENTS as readonly string[]).includes(v);
+}
+
+/**
+ * 自動 Grift ハンドオフ対象（ADR-0014）。
+ * 実装は #259（Phase 3）。#250 では定数のみ公開。
+ */
+export const AUTO_HANDOFF_INTENTS = ['contract-dev'] as const satisfies readonly ContactIntent[];
 
 export type SiteEnv = 'production' | 'preview' | 'development';
 

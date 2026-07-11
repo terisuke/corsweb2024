@@ -255,3 +255,29 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(body.ok).toBe(true);
   });
 });
+
+describe('parseChatResult — intent / structuredLead (#250)', () => {
+  it('LLM の intent と structuredLead を取り出す', () => {
+    const raw = JSON.stringify({
+      reply: '承知しました',
+      classification: 'genuine',
+      readyForContact: true,
+      intent: 'contract-dev',
+      structuredLead: { purpose: '受託開発', stage: 'exploring' },
+    });
+    const r = parseChatResult(raw);
+    expect(r.intent).toBe('contract-dev');
+    expect(r.structuredLead?.purpose).toBe('受託開発');
+    expect(r.structuredLead?.stage).toBe('exploring');
+  });
+  it('未知 intent は落とす（fallback を維持）', () => {
+    const raw = '{"reply":"x","classification":"genuine","readyForContact":false,"intent":"evil"}';
+    const r = parseChatResult(raw, 'local-llm-poc');
+    expect(r.intent).toBe('local-llm-poc');
+  });
+  it('intent なし JSON では fallback を使う', () => {
+    const raw = '{"reply":"x","classification":"genuine","readyForContact":false}';
+    const r = parseChatResult(raw, 'grift-team-beta');
+    expect(r.intent).toBe('grift-team-beta');
+  });
+});

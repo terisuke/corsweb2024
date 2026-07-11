@@ -17,15 +17,18 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
 | POST | `/api/contact/submit` | 最終問い合わせ送信（PIIをメール通知） | 同一オリジン＋任意Turnstile |
 
 ### POST /api/contact/chat
-- リクエスト: `{ "messages": [{ "role": "user"|"assistant", "content": string }] }`
-- レスポンス: `{ "reply": string, "classification": "genuine"|"sales"|"spam", "readyForContact": boolean }`
+- リクエスト: `{ "messages": [{ "role": "user"|"assistant", "content": string }], "intent"?: string, "source"?: string }`
+  - `intent`: ADR-0014 の 7 キー（未知は無視して従来フロー）。初期文脈として system に注入。
+  - `source`: 導線タグ（例: `header-ai-dev`）。メール本文に載る。
+- レスポンス: `{ "reply": string, "classification": "genuine"|"sales"|"spam", "readyForContact": boolean, "intent"?: string, "structuredLead"?: object }`
 - メッセージ数は最大20件、各2000字まで。制御文字は除去。**PIIは要求も保存もしない（会話のみ）。**
 - **Turnstile は検証しない。** Turnstile トークンは単回使用のため、複数ターン会話では2ターン目以降に
   新しいトークンが無く 403 になる。`/chat` のコスト濫用対策は同一オリジン＋IPレート制限＋
   **必須の Cloudflare WAF レート制限ルール（`cor-jp.com/api/contact/*`）** で担保する（下記チェックリスト参照）。
 
 ### POST /api/contact/submit
-- リクエスト: `{ "name", "email", "company"?, "message", "conversationSummary"?, "classification"?, "turnstileToken"?, "website"? }`
+- リクエスト: `{ "name", "email", "company"?, "message", "conversationSummary"?, "classification"?, "intent"?, "source"?, "structuredLead"?, "utm"?, "turnstileToken"?, "website"? }`
+  - `intent` / `source` / `structuredLead` / `utm`: 構造化リード（非PII）。メール件名・本文に載る。PII ではない。
   - `website` は **ハニーポット**。人間は空のまま。値が入っていれば bot とみなし、200を返して握り潰す（送信しない）。
 - レスポンス: `{ "ok": true }`
 - 検証: name 必須 / email 形式チェック / message 必須 / 各長さ上限 / サニタイズ。
@@ -104,3 +107,18 @@ npx wrangler deploy --dry-run
 - `/chat` の会話は LLM（Anthropic、**米国**）へ送られる。**会話には連絡先などのPIIを含めない設計**だが、利用者が会話本文に個人情報を書く可能性はゼロにできない。ウィジェット側でも「個人情報は入力しないでください」と案内すること。
 - `/submit` のPII（氏名・メール等）は **LLMを経由せず**、メール（Resend経由）でのみ社内に届く。
 - 個人情報の**国外移転（米Anthropic）**が発生しうるため、**プライバシーポリシーの更新が必要**（第三者提供・国外移転先の明示）。**公開前に法務（弁護士）確認を必ず取ること。**
+
+
+## Intent 正本（ADR-0014 / #250）
+
+| intent | 意味 | 処理（#250 時点） |
+|---|---|---|
+| `confidential-ai-assessment` | 機密データAI活用診断 | メール通知（人間対応） |
+| `local-llm-poc` | ローカルLLM / セキュアAI PoC | メール通知 |
+| `grift-team-beta` | Grift Team Beta | メール通知 |
+| `grift-paid-trial` | Grift Paid Trial | メール通知 |
+| `estimate-audit` | Estimate Audit | メール通知 |
+| `contract-dev` | 受託開発の相談 | メール通知（Grift 自動ハンドオフは #259） |
+| `press-speaking-other` | 取材・登壇・その他 | メール通知 |
+
+`AUTO_HANDOFF_INTENTS = ['contract-dev']` は定数のみ。HTTP ハンドオフ実装は Phase 3。

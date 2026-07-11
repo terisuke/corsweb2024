@@ -1,5 +1,18 @@
-import type { ChatResult, Classification, Env, InquiryInput } from './types';
-import { normalizeMessages, normalizeInquiry } from './validate';
+import type {
+  ChatResult,
+  Classification,
+  ContactIntent,
+  Env,
+  InquiryInput,
+  StructuredLead,
+} from './types';
+import {
+  normalizeInquiry,
+  normalizeIntent,
+  normalizeMessages,
+  normalizeSource,
+  normalizeStructuredLead,
+} from './validate';
 import {
   CHAT_LIMIT,
   SUBMIT_LIMIT,
@@ -8,7 +21,7 @@ import {
   isSameOrigin,
   verifyTurnstile,
 } from './security';
-import { SYSTEM_PROMPT, getProvider } from './llm';
+import { buildSystemPrompt, getProvider } from './llm';
 import { getEmailProvider, sendInquiryEmail } from './email';
 
 // 最大リクエストボディサイズ（DoS/暴走入力対策）。会話＋サマリでも十分な余裕。
@@ -80,10 +93,12 @@ export function extractJsonObject(s: string): string | null {
 // 形式が崩れていても安全側に倒す（生のモデル出力を reply として漏らさない）。
 // 試行順: (a) フェンスブロック → (b) trim 全体 → (c) extractJsonObject。
 // 全て失敗したときのみ素のテキストへフォールバックする。
-export function parseChatResult(raw: string): ChatResult {
+export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' = ''): ChatResult {
   const trimmed = raw.trim();
   let classification: Classification = 'genuine';
   let readyForContact = false;
+  let intent: ContactIntent | '' = fallbackIntent;
+  let structuredLead: StructuredLead | undefined;
 
   // 候補を優先順で構築（最初に parse 成功したものを採用）。
   const candidates: string[] = [];
@@ -100,12 +115,17 @@ export function parseChatResult(raw: string): ChatResult {
       const obj = JSON.parse(candidate);
       // 配列/数値/null も JSON.parse は通すため、オブジェクトのみ採用する。
       if (!obj || typeof obj !== 'object' || Array.isArray(obj)) continue;
-      const o = obj as Partial<ChatResult>;
+      const o = obj as Partial<ChatResult> & { intent?: unknown; structuredLead?: unknown };
       if (typeof o.reply === 'string') reply = o.reply.trim();
       if (typeof o.classification === 'string' && VALID_CLASS.includes(o.classification)) {
         classification = o.classification;
       }
       if (typeof o.readyForContact === 'boolean') readyForContact = o.readyForContact;
+      // LLM が返した intent を正規化。空ならクライアント初期値を維持。
+      const llmIntent = normalizeIntent(o.intent);
+      if (llmIntent) intent = llmIntent;
+      const lead = normalizeStructuredLead(o.structuredLead);
+      if (Object.keys(lead).length > 0) structuredLead = lead;
       parsedOk = true;
       break;
     } catch {
@@ -117,7 +137,10 @@ export function parseChatResult(raw: string): ChatResult {
   // ただし生の JSON ブロブをそのまま返さないよう、parse 成功時は reply のみを使う。
   if (!parsedOk) reply = trimmed;
   if (!reply) reply = '申し訳ありません、もう一度お聞かせいただけますか？';
-  return { reply, classification, readyForContact };
+  const result: ChatResult = { reply, classification, readyForContact };
+  if (intent) result.intent = intent;
+  if (structuredLead) result.structuredLead = structuredLead;
+  return result;
 }
 
 // POST /api/contact/chat — 会話による問い合わせの絞り込み。PIIは扱わない。
@@ -132,6 +155,11 @@ async function handleChat(req: Request, env: Env): Promise<Response> {
   const norm = normalizeMessages(body.messages);
   if (!norm.ok) return json({ error: norm.error }, norm.status);
 
+  // intent/source はサーバ側で正規化して system に注入（messages は改ざんしない）。
+  // 未知キーは空に落とす（400 にしない = 後方互換）。
+  const initialIntent = normalizeIntent(body.intent);
+  const source = normalizeSource(body.source);
+
   // fail closed: LLM 未設定なら 503（getProvider が投げる）。
   let provider;
   try {
@@ -140,15 +168,17 @@ async function handleChat(req: Request, env: Env): Promise<Response> {
     return json({ error: 'AIが一時的に利用できません。時間をおいて再試行してください' }, 503);
   }
 
+  const system = buildSystemPrompt({ intent: initialIntent, source });
+
   let raw: string;
   try {
-    raw = await provider.chat(SYSTEM_PROMPT, norm.messages);
+    raw = await provider.chat(system, norm.messages);
   } catch (e) {
     console.error('contact-chat llm error:', e instanceof Error ? e.message : String(e));
     return json({ error: 'AIの応答に失敗しました。時間をおいて再試行してください' }, 502);
   }
 
-  return json(parseChatResult(raw));
+  return json(parseChatResult(raw, initialIntent));
 }
 
 // POST /api/contact/submit — 最終送信。PIIはここで扱い、LLMには絶対渡さずメールにのみ送る。

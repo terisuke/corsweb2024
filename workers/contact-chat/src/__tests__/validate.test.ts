@@ -4,10 +4,15 @@ import {
   MAX_MESSAGE_LEN,
   MAX_MESSAGES,
   normalizeInquiry,
+  normalizeIntent,
   normalizeMessages,
+  normalizeSource,
+  normalizeStructuredLead,
+  normalizeUtm,
   sanitizeLine,
   sanitizeMessage,
 } from '../validate';
+import { CONTACT_INTENTS } from '../types';
 
 describe('sanitizeMessage — チャット入力サニタイズ（プロンプト注入対策）', () => {
   it('NUL/制御文字を空白化する（改行は残す）', () => {
@@ -153,5 +158,66 @@ describe('normalizeInquiry — /submit 検証＋ハニーポット', () => {
     const r = normalizeInquiry({ ...base, company: '' });
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.inquiry.company).toBe('');
+  });
+});
+
+describe('normalizeIntent / structuredLead / utm (#250)', () => {
+  it('7 キーすべてを受理する', () => {
+    for (const key of CONTACT_INTENTS) {
+      expect(normalizeIntent(key)).toBe(key);
+    }
+  });
+  it('未知キーは空文字にフォールバック（400 にしない）', () => {
+    expect(normalizeIntent('evil-intent')).toBe('');
+    expect(normalizeIntent(null)).toBe('');
+    expect(normalizeIntent(123)).toBe('');
+  });
+  it('source を単一行サニタイズする', () => {
+    expect(normalizeSource('header\nai-dev')).toBe('header ai-dev');
+  });
+  it('structuredLead の非文字列/未知キーを落とす', () => {
+    const lead = normalizeStructuredLead({
+      purpose: '受託開発',
+      evil: 'x',
+      industryRole: '製造',
+      dataSensitivity: 'confidential',
+    });
+    expect(lead).toEqual({
+      purpose: '受託開発',
+      industryRole: '製造',
+      dataSensitivity: 'confidential',
+    });
+  });
+  it('utm は utm_ プレフィックスのみ受理', () => {
+    const utm = normalizeUtm({ utm_source: 'cor', foo: 'bar', utm_campaign: 'p0' });
+    expect(utm).toEqual({ utm_source: 'cor', utm_campaign: 'p0' });
+  });
+  it('submit で intent/source/lead を正規化する', () => {
+    const r = normalizeInquiry({
+      name: '山田太郎',
+      email: 'taro@example.com',
+      message: '相談です',
+      intent: 'contract-dev',
+      source: 'header-ai-dev',
+      structuredLead: { purpose: '受託' },
+      utm: { utm_source: 'nav' },
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.inquiry.intent).toBe('contract-dev');
+      expect(r.inquiry.source).toBe('header-ai-dev');
+      expect(r.inquiry.structuredLead.purpose).toBe('受託');
+      expect(r.inquiry.utm.utm_source).toBe('nav');
+    }
+  });
+  it('未知 intent でも submit は成功し intent は空', () => {
+    const r = normalizeInquiry({
+      name: '山田太郎',
+      email: 'taro@example.com',
+      message: '相談です',
+      intent: 'not-a-real-key',
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.inquiry.intent).toBe('');
   });
 });

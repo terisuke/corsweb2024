@@ -2,9 +2,12 @@ import type {
   ChatMessage,
   ChatRole,
   Classification,
+  ContactIntent,
   InquiryInput,
   NormalizedInquiry,
+  StructuredLead,
 } from './types';
+import { CONTACT_INTENTS } from './types';
 
 // --- 入力サニタイズ（プロンプト注入・制御文字対策） ---
 // NUL/制御文字を除去し、長さを制限する。yomimono の sanitizeText と同方針。
@@ -78,6 +81,10 @@ export const MAX_EMAIL_LEN = 254; // RFC 5321 のローカル+ドメイン上限
 export const MAX_COMPANY_LEN = 200;
 export const MAX_INQUIRY_MESSAGE_LEN = 5000;
 export const MAX_SUMMARY_LEN = 8000;
+export const MAX_SOURCE_LEN = 100;
+export const MAX_LEAD_FIELD_LEN = 500;
+export const MAX_UTM_KEYS = 8;
+export const MAX_UTM_VALUE_LEN = 200;
 
 // RFC を厳密には実装せず、実用的で過剰拒否しない緩めのチェック。
 // 1個の @、前後に空白なし、ドメインに少なくとも1つのドット。制御文字は既に除去済み前提。
@@ -91,6 +98,53 @@ function normalizeClassification(c: unknown): Classification | '' {
   return typeof c === 'string' && (VALID_CLASSIFICATIONS as readonly string[]).includes(c)
     ? (c as Classification)
     : '';
+}
+
+/** 7 キー以外は空（未知は 400 にせずフォールバック） */
+export function normalizeIntent(raw: unknown): ContactIntent | '' {
+  if (typeof raw !== 'string') return '';
+  const v = raw.trim();
+  return (CONTACT_INTENTS as readonly string[]).includes(v) ? (v as ContactIntent) : '';
+}
+
+export function normalizeSource(raw: unknown): string {
+  return sanitizeLine(raw, MAX_SOURCE_LEN);
+}
+
+const LEAD_KEYS = [
+  'purpose',
+  'industryRole',
+  'dataSensitivity',
+  'stage',
+  'timingBudget',
+] as const;
+
+export function normalizeStructuredLead(raw: unknown): StructuredLead {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const src = raw as Record<string, unknown>;
+  const out: StructuredLead = {};
+  for (const key of LEAD_KEYS) {
+    const v = sanitizeMessage(src[key], MAX_LEAD_FIELD_LEN);
+    if (v) out[key] = v;
+  }
+  return out;
+}
+
+export function normalizeUtm(raw: unknown): Record<string, string> {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const src = raw as Record<string, unknown>;
+  const out: Record<string, string> = {};
+  let n = 0;
+  for (const [k, v] of Object.entries(src)) {
+    if (n >= MAX_UTM_KEYS) break;
+    const key = sanitizeLine(k, 40);
+    if (!key || !/^utm_[a-z0-9_]+$/i.test(key)) continue;
+    const val = sanitizeLine(v, MAX_UTM_VALUE_LEN);
+    if (!val) continue;
+    out[key] = val;
+    n++;
+  }
+  return out;
 }
 
 export type InquiryValidation =
@@ -116,6 +170,10 @@ export function normalizeInquiry(input: InquiryInput | undefined): InquiryValida
   const message = sanitizeMessage(input.message, MAX_INQUIRY_MESSAGE_LEN);
   const conversationSummary = sanitizeMessage(input.conversationSummary, MAX_SUMMARY_LEN);
   const classification = normalizeClassification(input.classification);
+  const intent = normalizeIntent(input.intent);
+  const source = normalizeSource(input.source);
+  const structuredLead = normalizeStructuredLead(input.structuredLead);
+  const utm = normalizeUtm(input.utm);
 
   if (!name) {
     return { ok: false, error: 'お名前は必須です', status: 400 };
@@ -129,6 +187,17 @@ export function normalizeInquiry(input: InquiryInput | undefined): InquiryValida
 
   return {
     ok: true,
-    inquiry: { name, email, company, message, conversationSummary, classification },
+    inquiry: {
+      name,
+      email,
+      company,
+      message,
+      conversationSummary,
+      classification,
+      intent,
+      source,
+      structuredLead,
+      utm,
+    },
   };
 }

@@ -68,3 +68,12 @@ describe('SYSTEM_PROMPT — 注入対策の明示指示を含む', () => {
     expect(SYSTEM_PROMPT).toMatch(/genuine.*sales.*spam/s);
   });
 });
+
+describe('SYSTEM_PROMPT — intent 7キー (#250)', () => {
+  it('7 キーと structuredLead を指示に含む', () => {
+    expect(SYSTEM_PROMPT).toContain('contract-dev');
+    expect(SYSTEM_PROMPT).toContain('confidential-ai-assessment');
+    expect(SYSTEM_PROMPT).toContain('structuredLead');
+    expect(SYSTEM_PROMPT).toContain('data sensitivity');
+  });
+});
