@@ -11,17 +11,9 @@ type ServiceCtaItem = {
   external?: string;
 };
 
-// 旧: string[] / 新: { label, intent, external? }[] の両対応
-const rawItems = t.serviceCtas.items as Array<string | ServiceCtaItem>;
+const rawItems = t.serviceCtas.items as ServiceCtaItem[];
 
 const items = rawItems.map((item) => {
-  if (typeof item === 'string') {
-    return {
-      label: item,
-      href: getContactUrl(currentLocale, { source: 'service-ctas' }),
-      isExternal: false,
-    };
-  }
   const isGrift = item.external === 'grift' || item.intent?.startsWith('grift');
   const href = isGrift
     ? getGriftUrl('/', {

@@ -31,8 +31,8 @@
     "title": "<span class='nowrap'>멈춘 업무를</span><br /><span class='nowrap'>함께 구현으로 넘습니다.</span>",
     "subtitle": "Cor.주식회사는 기밀 데이터 AI・로컬 LLM・Grift를 축으로,<br class='sm:hidden' />과제 정리부터 설계・구현・운용까지 하나로 이어 동반합니다.<br />단순한 주문 대응이 아니라, 필요하다면 「아직 만들지 않는」 선택지도 제안합니다.",
     "support": "기밀 데이터 AI・로컬 LLM・Grift를 축으로, 과제 정리부터 설계・구현・운용까지 하나로 이어 동반하는, 후쿠오카발 AI 구현 회사입니다.",
-    "primaryCta": "기밀 데이터 AI 활용 진단 상담하기",
-    "secondaryCta": "로컬 LLM / 시큐어 AI PoC 상담하기",
+    "primaryCta": "기밀 데이터 AI 활용 진단 상담하⁠기",
+    "secondaryCta": "로컬 LLM / 시큐어 AI PoC 상담하⁠기",
     "philosophyCta": "「きょうそう」의 사상을 읽기",
     "trustBadges": [
       "로컬 LLM・정보를 외부로 내보내지 않음",
@@ -73,8 +73,8 @@
         "description": "AI 활용 방침 수립, 사내 연수, 개발 진행 방식 정비까지 팀에 밀착하여 함께 진행합니다."
       }
     ],
-    "cta": "기밀 데이터 AI 활용 진단 상담하기",
-    "ctaPrimary": "기밀 데이터 AI 활용 진단 상담하기",
+    "cta": "기밀 데이터 AI 활용 진단 상담하⁠기",
+    "ctaPrimary": "기밀 데이터 AI 활용 진단 상담하⁠기",
     "ctaSecondary": "Grift 구조 보기"
   },
   "griftBridge": {
@@ -120,7 +120,7 @@
         "note": "로컬 LLM / AI 기반 PoC"
       }
     ],
-    "cta": "AI 기반 PoC 상담하기"
+    "cta": "AI 기반 PoC 상담하⁠기"
   },
   "securityTrust": {
     "title": "자유롭게 만들고, 책임지고 지킵니다.",
@@ -168,18 +168,18 @@
   "finalCta": {
     "title": "막힌 업무를 구현으로 넘깁니다.",
     "description": "과제 정리부터 AI 설계·구현·운영까지, 후쿠오카발 AI 구현 파트너가 한 번에 동행합니다.",
-    "primary": "기밀 데이터 AI 활용 진단 상담하기",
+    "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
     "secondary": "Grift Team Beta 보기"
   },
   "serviceCtas": {
     "heading": "목적에 맞게 상담해 주세요.",
     "items": [
       {
-        "label": "기밀 데이터 AI 활용 진단 상담하기",
+        "label": "기밀 데이터 AI 활용 진단 상담하⁠기",
         "intent": "confidential-ai-assessment"
       },
       {
-        "label": "로컬 LLM / 시큐어 AI PoC 상담하기",
+        "label": "로컬 LLM / 시큐어 AI PoC 상담하⁠기",
         "intent": "local-llm-poc"
       },
       {
@@ -294,7 +294,7 @@
     "cta": {
       "title": "우선 기밀 데이터 AI 활용 추진 방식부터 정리해 볼까요?",
       "description": "업종별 제약을 반영해 어디부터 시작할지 함께 정리합니다. 견적 근거는 Grift로도 확인할 수 있습니다.",
-      "primary": "기밀 데이터 AI 활용 진단 상담하기",
+      "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
       "secondary": "Grift 구조 보기",
       "note": "Grift 결과는 상담 전 참고 견적입니다. 정식 금액·납기는 요건 확인 후 확정합니다."
     }
@@ -357,7 +357,7 @@
     "cta": {
       "title": "우선 기밀 데이터 AI 활용 추진 방식부터 정리해 볼까요?",
       "description": "업종별 제약을 반영해 어디부터 시작할지 함께 정리합니다. 견적 근거는 Grift로도 확인할 수 있습니다.",
-      "primary": "기밀 데이터 AI 활용 진단 상담하기",
+      "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
       "secondary": "Grift 구조 보기",
       "note": "Grift 결과는 상담 전 참고 견적입니다. 정식 금액·납기는 요건 확인 후 확정합니다."
     }
@@ -428,7 +428,7 @@
     "cta": {
       "title": "우선 기밀 데이터 AI 활용 추진 방식부터 정리해 볼까요?",
       "description": "업종별 제약을 반영해 어디부터 시작할지 함께 정리합니다. 견적 근거는 Grift로도 확인할 수 있습니다.",
-      "primary": "기밀 데이터 AI 활용 진단 상담하기",
+      "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
       "secondary": "Grift 구조 보기",
       "note": "Grift 결과는 상담 전 참고 견적입니다. 정식 금액·납기는 요건 확인 후 확정합니다."
     }
@@ -491,7 +491,7 @@
     "cta": {
       "title": "우선 기밀 데이터 AI 활용 추진 방식부터 정리해 볼까요?",
       "description": "업종별 제약을 반영해 어디부터 시작할지 함께 정리합니다. 견적 근거는 Grift로도 확인할 수 있습니다.",
-      "primary": "기밀 데이터 AI 활용 진단 상담하기",
+      "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
       "secondary": "Grift 구조 보기",
       "note": "Grift 결과는 상담 전 참고 견적입니다. 정식 금액·납기는 요건 확인 후 확정합니다."
     }
@@ -554,7 +554,7 @@
     "cta": {
       "title": "우선 기밀 데이터 AI 활용 추진 방식부터 정리해 볼까요?",
       "description": "업종별 제약을 반영해 어디부터 시작할지 함께 정리합니다. 견적 근거는 Grift로도 확인할 수 있습니다.",
-      "primary": "기밀 데이터 AI 활용 진단 상담하기",
+      "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
       "secondary": "Grift 구조 보기",
       "note": "Grift 결과는 상담 전 참고 견적입니다. 정식 금액·납기는 요건 확인 후 확정합니다."
     }
@@ -758,7 +758,7 @@
     "validationMessage": "전송하려면 개인정보처리방침에 동의해야 합니다."
   },
   "contactChat": {
-    "heading": "AI 어시스턴트와 상담하기",
+    "heading": "AI 어시스턴트와 상담하⁠기",
     "intro": "채팅으로 문의 내용을 알려주세요. AI가 내용을 정리하고 담당자에게 연결해 드립니다.",
     "piiNotice": "채팅창에는 이름·연락처 등 개인정보를 입력하지 마세요. 연락처는 마지막 전송 양식에서만 여쭤봅니다.",
     "greeting": "안녕하세요. Cor.inc의 AI 어시스턴트입니다. 어떤 상담을 원하시나요? 편하게 작성해 주세요.",
@@ -1397,7 +1397,7 @@
     "governanceTitle": "체제 정비",
     "governanceDescription": "Cor. 주식회사는 ISO/IEC 27001 인증 취득을 목표로 ISMS(정보 보안 관리 체계)의 운영 정비를 추진하고 있습니다.",
     "ctas": {
-      "primary": "기밀 데이터 AI 활용 진단 상담하기",
+      "primary": "기밀 데이터 AI 활용 진단 상담하⁠기",
       "secondary": "문의하기",
       "tertiary": "개인정보처리방침"
     }
@@ -1414,7 +1414,7 @@
     },
     "security": {
       "heading": "안심하고 맡길 수 있을 것 같다면, 먼저 이야기부터 나눠 보시겠어요?",
-      "ctaLabel": "기밀 데이터 AI 활용 진단 상담하기"
+      "ctaLabel": "기밀 데이터 AI 활용 진단 상담하⁠기"
     }
   }
 }

@@ -721,8 +721,8 @@
     "title": "<span class='nowrap'>「進まない」業務を</span><br /><span class='nowrap'>共に実装で越える。</span>",
     "subtitle": "Cor.株式会社は、機密データAI・ローカルLLM・Griftを軸に、<br class='sm:hidden' />課題の整理から設計・実装・運用まで一気通貫で伴走します。<br />御用聞きではなく、必要なら「まだ作らない」選択肢も提案します。",
     "support": "機密データAI・ローカルLLM・Griftを軸に、課題の整理から設計・実装・運用まで一気通貫で伴走する、福岡発のAI実装会社です。",
-    "primaryCta": "機密データAI活用診断を相談する",
-    "secondaryCta": "ローカルLLM / セキュアAI PoCを相談する",
+    "primaryCta": "機密データAI活用診断を相談す⁠る",
+    "secondaryCta": "ローカルLLM / セキュアAI PoCを相談す⁠る",
     "philosophyCta": "「きょうそう」の思想を読む",
     "trustBadges": [
       "ローカルLLM・情報を外に出さない",
@@ -763,15 +763,15 @@
         "description": "AIの活用方針づくり、社内向け研修、開発の進め方の整備まで、チームに寄り添って進めます。"
       }
     ],
-    "cta": "機密データAI活用診断を相談する",
-    "ctaPrimary": "機密データAI活用診断を相談する",
-    "ctaSecondary": "Griftの仕組みを見る"
+    "cta": "機密データAI活用診断を相談す⁠る",
+    "ctaPrimary": "機密データAI活用診断を相談す⁠る",
+    "ctaSecondary": "Griftの仕組みを見⁠る"
   },
   "griftBridge": {
     "eyebrow": "Try Our AI / Grift",
     "title": "見積もりの「なぜ？」をクリアにするAI見積支援ツール『Grift』",
     "description": "過去の開発実績と市場相場をもとに、参考となる費用・納期・似た事例を出します。相談前の整理にもお使いください。",
-    "cta": "Griftの仕組みを見る",
+    "cta": "Griftの仕組みを見⁠る",
     "note": "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。",
     "mock": {
       "input": "営業の見積書作成をAIで自動化したい",
@@ -812,7 +812,7 @@
         "href": "/works/local-llm-poc"
       }
     ],
-    "cta": "AI基盤PoCを相談する"
+    "cta": "AI基盤PoCを相談す⁠る"
   },
   "services2026": {
     "title": "業務に入るAIを、設計から運用まで。",
@@ -881,18 +881,18 @@
   "finalCta": {
     "title": "進まない業務を、実装で越える。",
     "description": "課題の整理からAIの実装・運用まで、福岡発のAI実装パートナーが一気通貫で伴走します。",
-    "primary": "機密データAI活用診断を相談する",
+    "primary": "機密データAI活用診断を相談す⁠る",
     "secondary": "Grift Team Beta を見る"
   },
   "serviceCtas": {
     "heading": "目的に合わせてご相談ください",
     "items": [
       {
-        "label": "機密データAI活用診断を相談する",
+        "label": "機密データAI活用診断を相談す⁠る",
         "intent": "confidential-ai-assessment"
       },
       {
-        "label": "ローカルLLM / セキュアAI PoCを相談する",
+        "label": "ローカルLLM / セキュアAI PoCを相談す⁠る",
         "intent": "local-llm-poc"
       },
       {
@@ -1007,8 +1007,8 @@
     "cta": {
       "title": "まずは、機密データAI活用の進め方から整理しませんか？",
       "description": "業種特有の制約を踏まえ、どこから始めるかを一緒に整理します。見積の根拠づくりは Grift でも確認できます。",
-      "primary": "機密データAI活用診断を相談する",
-      "secondary": "Griftの仕組みを見る",
+      "primary": "機密データAI活用診断を相談す⁠る",
+      "secondary": "Griftの仕組みを見⁠る",
       "note": "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
     }
   },
@@ -1070,8 +1070,8 @@
     "cta": {
       "title": "まずは、機密データAI活用の進め方から整理しませんか？",
       "description": "業種特有の制約を踏まえ、どこから始めるかを一緒に整理します。見積の根拠づくりは Grift でも確認できます。",
-      "primary": "機密データAI活用診断を相談する",
-      "secondary": "Griftの仕組みを見る",
+      "primary": "機密データAI活用診断を相談す⁠る",
+      "secondary": "Griftの仕組みを見⁠る",
       "note": "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
     }
   },
@@ -1141,8 +1141,8 @@
     "cta": {
       "title": "まずは、機密データAI活用の進め方から整理しませんか？",
       "description": "業種特有の制約を踏まえ、どこから始めるかを一緒に整理します。見積の根拠づくりは Grift でも確認できます。",
-      "primary": "機密データAI活用診断を相談する",
-      "secondary": "Griftの仕組みを見る",
+      "primary": "機密データAI活用診断を相談す⁠る",
+      "secondary": "Griftの仕組みを見⁠る",
       "note": "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
     }
   },
@@ -1204,8 +1204,8 @@
     "cta": {
       "title": "まずは、機密データAI活用の進め方から整理しませんか？",
       "description": "業種特有の制約を踏まえ、どこから始めるかを一緒に整理します。見積の根拠づくりは Grift でも確認できます。",
-      "primary": "機密データAI活用診断を相談する",
-      "secondary": "Griftの仕組みを見る",
+      "primary": "機密データAI活用診断を相談す⁠る",
+      "secondary": "Griftの仕組みを見⁠る",
       "note": "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
     }
   },
@@ -1267,8 +1267,8 @@
     "cta": {
       "title": "まずは、機密データAI活用の進め方から整理しませんか？",
       "description": "業種特有の制約を踏まえ、どこから始めるかを一緒に整理します。見積の根拠づくりは Grift でも確認できます。",
-      "primary": "機密データAI活用診断を相談する",
-      "secondary": "Griftの仕組みを見る",
+      "primary": "機密データAI活用診断を相談す⁠る",
+      "secondary": "Griftの仕組みを見⁠る",
       "note": "Griftの結果は相談前の参考見積もりです。正式な金額・納期は要件確認後に確定します。"
     }
   },
@@ -1422,8 +1422,8 @@
     "privacyLinkText": "プライバシーポリシー",
     "privacySuffix": "をご覧ください。",
     "ctas": {
-      "primary": "AI導入前の情報管理を相談する",
-      "secondary": "機密データAI診断を相談する",
+      "primary": "AI導入前の情報管理を相談す⁠る",
+      "secondary": "機密データAI診断を相談す⁠る",
       "tertiary": "プライバシーポリシーを見る"
     }
   },
@@ -1439,7 +1439,7 @@
     },
     "security": {
       "heading": "安心して任せられそうと感じたら、まずは話してみませんか？",
-      "ctaLabel": "機密データAI活用診断を相談する"
+      "ctaLabel": "機密データAI活用診断を相談す⁠る"
     }
   }
 }

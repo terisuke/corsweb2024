@@ -47,20 +47,20 @@ const serviceLinks = [
   },
 ];
 
-// /works・/news・/industries は現状 ja ルートのみ。
+// /works・/news は現状 ja ルートのみ。/industries は [lang] ルートで全言語に存在する。
 const baseLinks = [
   { name: t.nav.home, href: getLocalizedUrl('/', currentLocale), isExternal: false },
   ...(currentLocale === 'ja'
     ? [
         { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false },
         { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
-        {
-          name: nav.industries || '業種別',
-          href: getLocalizedUrl('/industries/medical', currentLocale),
-          isExternal: false,
-        },
       ]
     : []),
+  {
+    name: nav.industries || '業種別',
+    href: getLocalizedUrl('/industries/medical', currentLocale),
+    isExternal: false,
+  },
   { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale), isExternal: false },
   { name: t.nav.about, href: getLocalizedUrl('/about', currentLocale), isExternal: false },
   { name: t.nav.blog, href: getLocalizedUrl('/blog', currentLocale), isExternal: false },

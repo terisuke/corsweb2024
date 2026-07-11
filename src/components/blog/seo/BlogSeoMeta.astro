@@ -2,7 +2,7 @@
 // ブログ記事の基本SEOメタタグ: description/keywords/canonical/RSS/article:*/hreflang。
 // BlogLayout から抽出（出力は抽出前と同一）。
 import type { Locale } from '../../../utils/i18n';
-import { isProductionSite } from '../../../config/site';
+import { getRobotsContent } from '../../../config/site';
 
 interface Props {
   description: string;
@@ -18,9 +18,7 @@ interface Props {
 const { description, keywords, author, pubDate, updatedDate, category, tags, currentLocale } =
   Astro.props;
 
-const robotsContent = isProductionSite()
-  ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
-  : 'noindex, nofollow';
+const robotsContent = getRobotsContent();
 ---
 
 <meta name="description" content={description} />

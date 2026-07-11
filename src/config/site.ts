@@ -31,6 +31,13 @@ export function isProductionSite(): boolean {
   return getSiteEnv() === 'production';
 }
 
+/** robots メタタグの値（Layout / BlogSeoMeta 共通） */
+export function getRobotsContent(): string {
+  return isProductionSite()
+    ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+    : 'noindex, nofollow';
+}
+
 export function getGriftBaseUrl(): string {
   const base = import.meta.env.PUBLIC_GRIFT_BASE_URL || DEFAULT_GRIFT_BASE;
   return String(base).replace(/\/$/, '');

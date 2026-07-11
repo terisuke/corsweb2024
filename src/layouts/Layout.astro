@@ -5,7 +5,7 @@ import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
 import Analytics from '../components/analytics/Analytics.astro';
 import { getCurrentLocale, type Locale } from '../utils/i18n';
-import { isProductionSite } from '../config/site';
+import { getRobotsContent } from '../config/site';
 
 interface Props {
   description: string;
@@ -65,9 +65,7 @@ const ogImage = ogImageProp
     : new URL('/logo.png', Astro.site);
 const usesGeneratedOgImage = !ogImageProp && Boolean(ogPageSlug);
 // Preview / develop は noindex（ADR-0010）。canonical は本番向きのままでよい。
-const robotsContent = isProductionSite()
-  ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
-  : 'noindex, nofollow';
+const robotsContent = getRobotsContent();
 ---
 
 <!doctype html>
