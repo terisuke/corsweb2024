@@ -744,7 +744,9 @@
         "message": "Mensaje"
       },
       "submit": "Enviar",
-      "reset": "Restablecer"
+      "reset": "Restablecer",
+      "noticeTitle": "Antes de contactarnos",
+      "noticeBody": "Este formulario es para consultas y solicitudes de presupuesto sobre nuestros servicios. Le rogamos que se abstenga de enviar mensajes con fines comerciales, de marketing o de captación. Es posible que no podamos responder a solicitudes comerciales, declaraciones falsas o cualquier contacto que consideremos inapropiado; en casos malintencionados o reiterados, dejaremos constancia y actuaremos con firmeza conforme a la legislación aplicable."
     }
   },
   "contactConsent": {
@@ -1012,10 +1014,6 @@
     "address": {
       "label": "Dirección postal",
       "value": "810-0001 Prefectura de Fukuoka, Ciudad de Fukuoka\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
-    },
-    "phone": {
-      "label": "Número de teléfono",
-      "value": "070-8561-1659"
     },
     "chat": {
       "label": "Correo electrónico",
