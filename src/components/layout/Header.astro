@@ -1,11 +1,53 @@
 ---
 import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getContactUrl, getGriftUrl } from '../../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+// nav 拡張キー（未翻訳言語向けフォールバック）
+const nav = t.nav as typeof t.nav & {
+  services?: string;
+  serviceAssessment?: string;
+  serviceLocalLlm?: string;
+  serviceAiDev?: string;
+  industries?: string;
+  consult?: string;
+};
 
-// /works と /news は現状 ja ルートのみ存在。5言語展開までは ja 限定にし、
-// 非ja言語で /xx/works や /xx/news が 404 になるのを防ぐ。
+// サービス導線（ADR-0011）: LP 未整備のため intent 付き /contact と Grift
+const serviceLinks = [
+  {
+    name: nav.serviceAssessment || '機密データAI活用診断',
+    href: getContactUrl(currentLocale, {
+      intent: 'confidential-ai-assessment',
+      source: 'header',
+    }),
+    isExternal: false,
+  },
+  {
+    name: nav.serviceLocalLlm || 'ローカルLLM / セキュアAI PoC',
+    href: getContactUrl(currentLocale, {
+      intent: 'local-llm-poc',
+      source: 'header',
+    }),
+    isExternal: false,
+  },
+  {
+    name: nav.serviceAiDev || 'AI基盤構築・AI受託',
+    href: getContactUrl(currentLocale, {
+      intent: 'confidential-ai-assessment',
+      source: 'header-ai-dev',
+    }),
+    isExternal: false,
+  },
+  {
+    name: nav.grift,
+    href: getGriftUrl('/', { intent: 'grift-team-beta', source: 'header' }),
+    isExternal: true,
+  },
+];
+
+// /works・/news は現状 ja ルートのみ。/industries は [lang] ルートで全言語に存在する。
 const baseLinks = [
   { name: t.nav.home, href: getLocalizedUrl('/', currentLocale), isExternal: false },
   ...(currentLocale === 'ja'
@@ -14,18 +56,28 @@ const baseLinks = [
         { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
       ]
     : []),
-  { name: t.nav.grift, href: 'https://griftai.org', isExternal: true },
+  {
+    name: nav.industries || '業種別',
+    href: getLocalizedUrl('/industries/medical', currentLocale),
+    isExternal: false,
+  },
   { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale), isExternal: false },
   { name: t.nav.about, href: getLocalizedUrl('/about', currentLocale), isExternal: false },
   { name: t.nav.blog, href: getLocalizedUrl('/blog', currentLocale), isExternal: false },
-  { name: t.nav.contact, href: getLocalizedUrl('/contact', currentLocale), isExternal: false },
+  {
+    name: nav.consult || t.nav.contact,
+    href: getContactUrl(currentLocale, { source: 'header' }),
+    isExternal: false,
+  },
 ];
 // 現在地ハイライト判定: Astro.url.pathname と各リンクの href を比較。
 // 末尾スラッシュの揺れを吸収するため正規化してから比較する。トップ(/)も対象。
 // ロジックは全言語共通。外部リンク(Grift 等)は判定対象外。
 const normalizePath = (path: string) => {
   if (!path) return '/';
-  const trimmed = path.replace(/\/+$/, '');
+  // query を除いて比較
+  const withoutQuery = path.split('?')[0] || '/';
+  const trimmed = withoutQuery.replace(/\/+$/, '');
   return trimmed === '' ? '/' : trimmed;
 };
 const currentPath = normalizePath(Astro.url.pathname);
@@ -48,12 +100,17 @@ const quickLinks = [
         { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale) },
       ]
     : []),
-  { name: t.nav.blog, href: getLocalizedUrl('/blog', currentLocale) },
-  { name: t.nav.contact, href: getLocalizedUrl('/contact', currentLocale) },
+  { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale) },
+  {
+    name: nav.consult || t.nav.contact,
+    href: getContactUrl(currentLocale, { source: 'header-quick' }),
+  },
 ].map((link) => ({
   ...link,
   isActive: isCurrentSection(link.href),
 }));
+
+const servicesLabel = nav.services || 'サービス';
 
 // 言語切替（プルダウン）: 各言語の遷移先URLを現在パスから算出し、一覧から直接選べるようにする。
 const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'] as const;
@@ -85,7 +142,7 @@ const langOptions = localeOrder.map((loc) => ({
 ---
 
 <header
-  x-data="{ open: false }"
+  x-data="{ open: false, servicesOpen: false }"
   class="relative z-40 transition"
   :class="{ 'bg-primary-500/10 dark:bg-primary-400/10': open, 'bg-primary-50 dark:bg-primary-950': !(open) }"
 >
@@ -104,6 +161,58 @@ const langOptions = localeOrder.map((loc) => ({
     </div>
 
     <nav class="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex" aria-label="主要ページ">
+      {/* サービス ドロップダウン（診断 / PoC / 受託 / Grift） */}
+      <div
+        class="relative"
+        @keydown.escape="servicesOpen = false"
+        @click.outside="servicesOpen = false"
+      >
+        <button
+          type="button"
+          @click="servicesOpen = !servicesOpen"
+          :aria-expanded="servicesOpen.toString()"
+          aria-haspopup="true"
+          class="inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-sm font-medium text-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 dark:text-primary-200 dark:hover:bg-primary-400/10 dark:focus-visible:ring-primary-200 xl:px-4"
+        >
+          {servicesLabel}
+          <svg
+            class="h-4 w-4 transition"
+            :class="{ 'rotate-180': servicesOpen }"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 15L7 10H17L12 15Z"></path>
+          </svg>
+        </button>
+        <ul
+          x-cloak
+          x-show="servicesOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 -translate-y-1"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-1"
+          class="absolute left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl border border-primary-900/10 bg-primary-50 py-1 shadow-lg dark:border-primary-300/10 dark:bg-primary-950"
+        >
+          {
+            serviceLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target={link.isExternal ? '_blank' : undefined}
+                  rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                  class="flex items-center px-4 py-3 text-sm font-medium text-primary-950 transition hover:bg-primary-500/10 dark:text-primary-200 dark:hover:bg-primary-400/10"
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
       {
         quickLinks.map((link) => (
           <a
@@ -336,6 +445,28 @@ const langOptions = localeOrder.map((loc) => ({
             </a>
           ))
         }
+        {/* サービス（モバイル: フラット展開） */}
+        <div class="py-6 sm:py-8">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">
+            {servicesLabel}
+          </p>
+          <ul class="flex flex-col gap-3">
+            {
+              serviceLinks.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    target={link.isExternal ? '_blank' : undefined}
+                    rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                    class="inline-flex min-h-[44px] items-center text-xl font-medium tracking-tight text-primary-950 underline-offset-4 transition hover:underline dark:text-primary-200 sm:text-2xl"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </nav>
     </div>
   </div>

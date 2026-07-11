@@ -31,11 +31,10 @@
     "title": "<span class='nowrap'>让停滞的业务</span><br /><span class='nowrap'>一起实现突破。</span>",
     "subtitle": "Cor.株式会社以机密数据AI、本地LLM与Grift为核心，<br class='sm:hidden' />从梳理课题到设计、实现、运维，全程一体化陪伴。<br />我们不做被动接单，必要时也会提出「暂不开发」的选择。",
     "support": "以机密数据AI、本地LLM与Grift为核心，从梳理课题到设计、实现、运维全程一体化陪伴，源自福冈的AI实现公司。",
-    "primaryCta": "AI 试算报价（30 秒）",
-    "secondaryCta": "免费咨询",
+    "primaryCta": "咨询机密数据 AI 应用诊断",
+    "secondaryCta": "咨询本地 LLM / 安全 AI PoC",
     "philosophyCta": "阅读「きょうそう」的理念",
     "trustBadges": [
-      "AI 驱动开发 4～5 倍（内部实测）",
       "本地 LLM・信息不外泄",
       "构建安全体系",
       "源自福冈・服务全国"
@@ -74,15 +73,15 @@
         "description": "从制定 AI 应用方针、内部培训，到完善开发推进方式，陪伴团队一起推进。"
       }
     ],
-    "cta": "免费咨询",
-    "ctaPrimary": "用 AI 试算报价",
-    "ctaSecondary": "先咨询一下"
+    "cta": "咨询机密数据 AI 应用诊断",
+    "ctaPrimary": "咨询机密数据 AI 应用诊断",
+    "ctaSecondary": "了解 Grift 的机制"
   },
   "griftBridge": {
     "eyebrow": "Try Our AI / Grift",
     "title": "在用语言说明之前，先用 AI 试一试？",
-    "description": "基于过往开发实绩与市场行情，30 秒给出可供参考的费用、工期与相似案例。",
-    "cta": "用 Grift 试算 AI 报价",
+    "description": "基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。",
+    "cta": "了解 Grift 的机制",
     "note": "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。",
     "mock": {
       "input": "想用 AI 自动化销售报价单的制作",
@@ -188,18 +187,27 @@
     "cta": "阅读代表的故事"
   },
   "finalCta": {
-    "title": "就从课题出发，开始「きょうそう」吧。",
-    "description": "可以用 Grift 试算参考报价，也可以带着尚未理清的课题来咨询。",
-    "primary": "用 AI 试算报价",
-    "secondary": "咨询"
+    "title": "用实现推动停滞的业务。",
+    "description": "从课题梳理到 AI 设计、实现与运营，福冈出发的 AI 实现伙伴全程陪伴。",
+    "primary": "咨询机密数据 AI 应用诊断",
+    "secondary": "了解 Grift Team Beta"
   },
   "serviceCtas": {
     "heading": "请按您的需求咨询。",
     "items": [
-      "咨询机密数据AI应用诊断",
-      "了解 Grift Team Beta",
-      "咨询本地LLM / AI平台PoC",
-      "咨询AI受托开发"
+      {
+        "label": "咨询机密数据 AI 应用诊断",
+        "intent": "confidential-ai-assessment"
+      },
+      {
+        "label": "咨询本地 LLM / 安全 AI PoC",
+        "intent": "local-llm-poc"
+      },
+      {
+        "label": "了解 Grift Team Beta",
+        "intent": "grift-team-beta",
+        "external": "grift"
+      }
     ]
   },
   "homeIndustries": {
@@ -305,11 +313,11 @@
       ]
     },
     "cta": {
-      "title": "先花 30 秒，试算一份参考报价吧？",
-      "description": "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-      "primary": "用 Grift 试算（30 秒）",
-      "secondary": "免费咨询",
-      "note": "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      "title": "先从机密数据 AI 应用的推进方式开始整理吧。",
+      "description": "结合行业约束，一起理清从何处着手。也可通过 Grift 了解估算依据的整理方式。",
+      "primary": "咨询机密数据 AI 应用诊断",
+      "secondary": "了解 Grift 的机制",
+      "note": "Grift 结果为咨询前的参考报价。正式金额与工期在确认需求后确定。"
     }
   },
   "industryShigyo": {
@@ -368,11 +376,11 @@
       ]
     },
     "cta": {
-      "title": "先花 30 秒，试算一份参考报价吧？",
-      "description": "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-      "primary": "用 Grift 试算（30 秒）",
-      "secondary": "免费咨询",
-      "note": "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      "title": "先从机密数据 AI 应用的推进方式开始整理吧。",
+      "description": "结合行业约束，一起理清从何处着手。也可通过 Grift 了解估算依据的整理方式。",
+      "primary": "咨询机密数据 AI 应用诊断",
+      "secondary": "了解 Grift 的机制",
+      "note": "Grift 结果为咨询前的参考报价。正式金额与工期在确认需求后确定。"
     }
   },
   "industryConstruction": {
@@ -439,11 +447,11 @@
       ]
     },
     "cta": {
-      "title": "先花 30 秒，试算一份参考报价吧？",
-      "description": "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-      "primary": "用 Grift 试算（30 秒）",
-      "secondary": "免费咨询",
-      "note": "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      "title": "先从机密数据 AI 应用的推进方式开始整理吧。",
+      "description": "结合行业约束，一起理清从何处着手。也可通过 Grift 了解估算依据的整理方式。",
+      "primary": "咨询机密数据 AI 应用诊断",
+      "secondary": "了解 Grift 的机制",
+      "note": "Grift 结果为咨询前的参考报价。正式金额与工期在确认需求后确定。"
     }
   },
   "industryManufacturing": {
@@ -502,11 +510,11 @@
       ]
     },
     "cta": {
-      "title": "先花 30 秒，试算一份参考报价吧？",
-      "description": "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-      "primary": "用 Grift 试算（30 秒）",
-      "secondary": "免费咨询",
-      "note": "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      "title": "先从机密数据 AI 应用的推进方式开始整理吧。",
+      "description": "结合行业约束，一起理清从何处着手。也可通过 Grift 了解估算依据的整理方式。",
+      "primary": "咨询机密数据 AI 应用诊断",
+      "secondary": "了解 Grift 的机制",
+      "note": "Grift 结果为咨询前的参考报价。正式金额与工期在确认需求后确定。"
     }
   },
   "industryEducation": {
@@ -565,11 +573,11 @@
       ]
     },
     "cta": {
-      "title": "先花 30 秒，试算一份参考报价吧？",
-      "description": "Grift 基于过往开发实绩与市场行情，给出可供参考的费用、工期与相似案例。也可用于咨询前的梳理。",
-      "primary": "用 Grift 试算（30 秒）",
-      "secondary": "免费咨询",
-      "note": "Grift 的结果是咨询前的参考报价。正式金额与工期将在确认需求后确定。"
+      "title": "先从机密数据 AI 应用的推进方式开始整理吧。",
+      "description": "结合行业约束，一起理清从何处着手。也可通过 Grift 了解估算依据的整理方式。",
+      "primary": "咨询机密数据 AI 应用诊断",
+      "secondary": "了解 Grift 的机制",
+      "note": "Grift 结果为咨询前的参考报价。正式金额与工期在确认需求后确定。"
     }
   },
   "works": {
@@ -586,7 +594,7 @@
         "name": "Grift",
         "tag": "自研产品",
         "description": "基于 GitHub 实绩与市场行情，生成可解释参考报价的自研 AI 报价・评估基础平台。",
-        "link": "https://griftai.org"
+        "link": "grift"
       },
       {
         "name": "cor-jp.com",
@@ -624,7 +632,13 @@
     "security": "安全",
     "works": "Works",
     "news": "News",
-    "grift": "Grift"
+    "grift": "Grift",
+    "services": "服务",
+    "serviceAssessment": "机密数据 AI 应用诊断",
+    "serviceLocalLlm": "本地 LLM / 安全 AI PoC",
+    "serviceAiDev": "AI 基础设施与受托开发",
+    "industries": "行业",
+    "consult": "通过 Cloudia 咨询"
   },
   "hero": {
     "title": "比任何人都更快，超越地平线。",
@@ -1383,7 +1397,7 @@
     "governanceTitle": "体制建设",
     "governanceDescription": "Cor. 股份公司正以取得 ISO/IEC 27001 认证为目标，推进 ISMS（信息安全管理体系）的运营建设。",
     "ctas": {
-      "primary": "免费咨询",
+      "primary": "咨询机密数据 AI 应用诊断",
       "secondary": "联系我们",
       "tertiary": "隐私政策"
     }
@@ -1400,7 +1414,7 @@
     },
     "security": {
       "heading": "如果觉得可以放心交给我们，不妨先聊一聊？",
-      "ctaLabel": "免费咨询"
+      "ctaLabel": "咨询机密数据 AI 应用诊断"
     }
   }
 }

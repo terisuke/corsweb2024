@@ -1,9 +1,13 @@
 ---
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getGriftUrl } from '../../config/site';
 
 const t = getTranslations(getCurrentLocale(Astro.url));
 
-const griftUrl = 'https://griftai.org';
+const griftUrl = getGriftUrl('/', {
+  intent: 'grift-team-beta',
+  source: 'grift-bridge',
+});
 const mock = t.griftBridge.mock;
 ---
 

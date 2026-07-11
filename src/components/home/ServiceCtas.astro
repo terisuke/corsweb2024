@@ -1,9 +1,35 @@
 ---
-import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getContactUrl, getGriftUrl } from '../../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
-const contactHref = getLocalizedUrl('/contact', currentLocale);
+
+type ServiceCtaItem = {
+  label: string;
+  intent?: string;
+  external?: string;
+};
+
+const rawItems = t.serviceCtas.items as ServiceCtaItem[];
+
+const items = rawItems.map((item) => {
+  const isGrift = item.external === 'grift' || item.intent?.startsWith('grift');
+  const href = isGrift
+    ? getGriftUrl('/', {
+        intent: item.intent || 'grift-team-beta',
+        source: 'service-ctas',
+      })
+    : getContactUrl(currentLocale, {
+        intent: item.intent,
+        source: 'service-ctas',
+      });
+  return {
+    label: item.label,
+    href,
+    isExternal: isGrift,
+  };
+});
 ---
 
 <section class="py-16 sm:py-20" data-reveal>
@@ -14,16 +40,18 @@ const contactHref = getLocalizedUrl('/contact', currentLocale);
       </h2>
       <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         {
-          t.serviceCtas.items.map((label, i) => (
+          items.map((item, i) => (
             <li
               data-reveal
               style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}
             >
               <a
-                href={contactHref}
+                href={item.href}
+                target={item.isExternal ? '_blank' : undefined}
+                rel={item.isExternal ? 'noopener noreferrer' : undefined}
                 class="flex min-h-[56px] items-center justify-between gap-4 rounded-2xl bg-primary-500/10 px-6 py-5 text-base font-medium text-primary-950 transition hover:bg-primary-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400/10 dark:text-primary-100 dark:hover:bg-primary-400/20 dark:focus-visible:outline-primary-400"
               >
-                <span>{label}</span>
+                <span>{item.label}</span>
                 <svg
                   class="h-5 w-5 shrink-0 text-primary-600 dark:text-primary-300"
                   viewBox="0 0 20 20"

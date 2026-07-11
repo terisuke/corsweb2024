@@ -2,8 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import NextStep from '../components/common/NextStep.astro';
 import { getJaTranslations } from '../utils/i18n';
+import { getContactUrl, resolveExternalHref } from '../config/site';
 
 const t = getJaTranslations();
+
+// 公開実績: href なしでも NDA 匿名事例は残す。「準備中」バッジは出さない（ADR-0007）。
+// griftai.org / センチネル 'grift' は env 経由に解決（ADR-0010）。
+const workItems = t.works.items.map((item) => {
+  const rawHref = 'href' in item ? (item.href as string | null) : null;
+  const href = resolveExternalHref(rawHref, {
+    intent: 'grift-team-beta',
+    source: 'works',
+  });
+  return { ...item, href };
+});
 ---
 
 <Layout
@@ -25,7 +37,7 @@ const t = getJaTranslations();
 
     <ul class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        t.works.items.map((item) => {
+        workItems.map((item) => {
           const isNda = 'nda' in item && item.nda;
           const tag = (
             <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
@@ -34,14 +46,7 @@ const t = getJaTranslations();
           );
           const body = (
             <>
-              <div class="flex items-center gap-2">
-                {tag}
-                {!item.href && (
-                  <span class="inline-flex w-fit rounded-full bg-primary-950/10 px-3 py-1 text-xs font-medium text-primary-950/50 dark:bg-primary-200/10 dark:text-primary-200/50">
-                    準備中
-                  </span>
-                )}
-              </div>
+              <div class="flex items-center gap-2">{tag}</div>
               <h2 class="type-heading text-lg font-medium tracking-tight">{item.name}</h2>
               <p class="type-copy text-base text-primary-950/70 dark:text-primary-200/70">
                 {item.description}
@@ -95,6 +100,6 @@ const t = getJaTranslations();
   <NextStep
     heading="気になる実績がありましたか？"
     lead="あなたの課題も、一緒に考えさせてください。"
-    ctas={[{ label: 'AI開発・導入を相談する', href: '/contact', primary: true }]}
+    ctas={[{ label: '機密データAI活用診断を相談する', href: getContactUrl('ja', { intent: 'confidential-ai-assessment', source: 'works-next' }), primary: true }]}
   />
 </Layout>
