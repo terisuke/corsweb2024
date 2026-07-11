@@ -11,14 +11,25 @@ const inquiry: NormalizedInquiry = {
   message: '新規Webアプリを作りたいです',
   conversationSummary: 'プロジェクト種別: 新規開発 / 目標: 受発注の効率化',
   classification: 'genuine',
+  intent: 'contract-dev',
+  source: 'live-verify',
+  structuredLead: {
+    purpose: '受託で業務システム開発',
+    industryRole: '製造 / 情シス',
+    dataSensitivity: 'internal',
+    stage: 'exploring',
+    timingBudget: '3ヶ月以内 / 未定',
+  },
+  utm: { utm_source: 'cor' },
 };
 
 describe('buildSubject', () => {
   it('分類タグと名前を含む', () => {
-    expect(buildSubject(inquiry)).toBe('[genuine] お問い合わせ: 山田太郎');
+    expect(buildSubject(inquiry)).toBe('[genuine][contract-dev] お問い合わせ: 山田太郎');
   });
   it('未分類なら分類タグなし', () => {
-    expect(buildSubject({ ...inquiry, classification: '' })).toBe('お問い合わせ: 山田太郎');
+    expect(buildSubject({ ...inquiry, classification: '', intent: '' })).toBe('お問い合わせ: 山田太郎');
+    expect(buildSubject({ ...inquiry, classification: '' })).toBe('[contract-dev] お問い合わせ: 山田太郎');
   });
 });
 
@@ -90,5 +101,23 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
     const r = getEmailProvider(env);
     if (!r.ok) throw new Error('provider should be ok');
     await expect(sendInquiryEmail(env, r.provider, inquiry)).rejects.toThrow(/500/);
+  });
+});
+
+describe('buildBody / buildSubject — intent 拡張 (#250)', () => {
+  it('件名に intent タグを含む', () => {
+    expect(buildSubject(inquiry)).toContain('[contract-dev]');
+  });
+  it('本文に intent / source / 構造化リード / UTM を含む', () => {
+    const body = buildBody(inquiry);
+    expect(body).toContain('intent　: contract-dev');
+    expect(body).toContain('source　: live-verify');
+    expect(body).toContain('受託で業務システム開発');
+    expect(body).toContain('utm_source: cor');
+  });
+  it('intent 未指定でも件名は classification のみ', () => {
+    expect(buildSubject({ ...inquiry, intent: '', classification: 'sales' })).toBe(
+      '[sales] お問い合わせ: 山田太郎',
+    );
   });
 });

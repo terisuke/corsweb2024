@@ -56,10 +56,13 @@ export function getEmailProvider(env: Env): EmailProviderResult {
   return { ok: true, provider: new ResendProvider(env.RESEND_API_KEY) };
 }
 
-// 件名: 分類を含め、社内でトリアージしやすくする。
+// 件名: 分類・intent を含め、社内でトリアージしやすくする。
 export function buildSubject(inquiry: NormalizedInquiry): string {
-  const tag = inquiry.classification ? `[${inquiry.classification}] ` : '';
-  return `${tag}お問い合わせ: ${inquiry.name}`;
+  const tags: string[] = [];
+  if (inquiry.classification) tags.push(inquiry.classification);
+  if (inquiry.intent) tags.push(inquiry.intent);
+  const prefix = tags.length ? `[${tags.join('][')}] ` : '';
+  return `${prefix}お問い合わせ: ${inquiry.name}`;
 }
 
 // 本文: 構造化した問い合わせ＋会話サマリ＋分類メモ。
@@ -72,10 +75,27 @@ export function buildBody(inquiry: NormalizedInquiry): string {
     `お名前　: ${inquiry.name}`,
     `メール　: ${inquiry.email}`,
     `会社名　: ${inquiry.company || '(未記入)'}`,
+    `intent　: ${inquiry.intent || '(未指定)'}`,
+    `source　: ${inquiry.source || '(未指定)'}`,
     '',
     '── 本文 ──',
     inquiry.message,
   ];
+  const lead = inquiry.structuredLead || {};
+  const leadLines: string[] = [];
+  if (lead.purpose) leadLines.push(`目的　　: ${lead.purpose}`);
+  if (lead.industryRole) leadLines.push(`業種・役割: ${lead.industryRole}`);
+  if (lead.dataSensitivity) leadLines.push(`データ感度: ${lead.dataSensitivity}`);
+  if (lead.stage) leadLines.push(`進捗段階: ${lead.stage}`);
+  if (lead.timingBudget) leadLines.push(`時期・予算: ${lead.timingBudget}`);
+  if (leadLines.length) {
+    lines.push('', '── 構造化リード（非PII） ──', ...leadLines);
+  }
+  const utmEntries = Object.entries(inquiry.utm || {});
+  if (utmEntries.length) {
+    lines.push('', '── UTM ──');
+    for (const [k, v] of utmEntries) lines.push(`${k}: ${v}`);
+  }
   if (inquiry.conversationSummary) {
     lines.push('', '── AIチャットの会話サマリ ──', inquiry.conversationSummary);
   }

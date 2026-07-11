@@ -19,11 +19,42 @@ export interface ChatMessage {
 // 問い合わせの分類。LLM が会話から判定する。
 export type Classification = 'genuine' | 'sales' | 'spam';
 
+/**
+ * ADR-0014 intent 正本（7 キー）。
+ * src/config/site.ts の CONTACT_INTENTS と同値（parity テストで一致を担保）。
+ */
+export const CONTACT_INTENTS = [
+  'confidential-ai-assessment',
+  'local-llm-poc',
+  'grift-team-beta',
+  'grift-paid-trial',
+  'estimate-audit',
+  'contract-dev',
+  'press-speaking-other',
+] as const;
+
+export type ContactIntent = (typeof CONTACT_INTENTS)[number];
+
+/** Phase 3 (#259) で Grift 自動ハンドオフする intent。#250 では定数のみ。 */
+export const AUTO_HANDOFF_INTENTS = ['contract-dev'] as const;
+
+// 構造化リード（PII ではない。具体データ本文は入れない）
+export interface StructuredLead {
+  purpose?: string;
+  industryRole?: string;
+  dataSensitivity?: string;
+  stage?: string;
+  timingBudget?: string;
+}
+
 // /chat のレスポンス。PII は一切含まない（会話のみ）。
 export interface ChatResult {
   reply: string;
   classification: Classification;
   readyForContact: boolean;
+  /** 確定または推定された intent（未知は落とす） */
+  intent?: ContactIntent | '';
+  structuredLead?: StructuredLead;
 }
 
 // /submit の受け取り。PII を含む。LLM には絶対に渡さない（メールにのみ送る）。
@@ -34,6 +65,10 @@ export interface InquiryInput {
   message?: unknown;
   conversationSummary?: unknown;
   classification?: unknown;
+  intent?: unknown;
+  source?: unknown;
+  structuredLead?: unknown;
+  utm?: unknown;
   turnstileToken?: unknown;
   website?: unknown; // ハニーポット（人間は空のまま）。値が入っていれば bot とみなす。
 }
@@ -46,4 +81,8 @@ export interface NormalizedInquiry {
   message: string;
   conversationSummary: string;
   classification: Classification | '';
+  intent: ContactIntent | '';
+  source: string;
+  structuredLead: StructuredLead;
+  utm: Record<string, string>;
 }

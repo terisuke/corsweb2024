@@ -80,3 +80,17 @@ describe('isProductionSite (ADR-0010 noindex)', () => {
     expect(isProductionSite()).toBe(false);
   });
 });
+
+describe('ContactIntent 7 keys (ADR-0014 / #250)', () => {
+  it('exports contract-dev and isContactIntent', async () => {
+    const { CONTACT_INTENTS, isContactIntent, AUTO_HANDOFF_INTENTS, getContactUrl } = await loadSite();
+    expect(CONTACT_INTENTS).toContain('contract-dev');
+    expect(CONTACT_INTENTS).toHaveLength(7);
+    expect(isContactIntent('contract-dev')).toBe(true);
+    expect(isContactIntent('nope')).toBe(false);
+    expect([...AUTO_HANDOFF_INTENTS]).toEqual(['contract-dev']);
+    expect(getContactUrl('ja', { intent: 'contract-dev', source: 'header-ai-dev' })).toBe(
+      '/contact?intent=contract-dev&source=header-ai-dev',
+    );
+  });
+});
