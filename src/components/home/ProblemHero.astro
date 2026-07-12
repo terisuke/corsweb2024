@@ -12,6 +12,13 @@ const HIDDEN_TRUST_BADGES = ['福岡100選 2026-2027'];
 const trustBadges = t.homeHero.trustBadges.filter(
   (badge) => !HIDDEN_TRUST_BADGES.includes(badge),
 );
+// trustBadges の並び（全言語共通）に対応するリンク先。順: ①ローカルLLM ②セキュリティ体制 ③福岡発。
+// 対応先が無い index は非リンク（span）で表示。
+const BADGE_HREFS: (string | null)[] = [
+  '/works/local-llm-poc',
+  '/security',
+  'https://madeinlocal.jp/category/companies/fukuoka062',
+];
 
 // 主CTA: 機密データAI活用診断 / 副: ローカルLLM PoC（ADR-0011）
 const primaryHref = getContactUrl(currentLocale, {
@@ -62,11 +69,27 @@ const secondaryHref = getContactUrl(currentLocale, {
       {
         trustBadges.length > 0 && (
           <ul class="flex flex-wrap items-center justify-center gap-3" data-reveal style="--reveal-delay:0.45s">
-            {trustBadges.map((badge) => (
-              <li class="rounded-full bg-primary-500/10 px-4 py-1.5 text-sm text-primary-950/70 dark:bg-primary-400/10 dark:text-primary-200/70">
-                {badge}
-              </li>
-            ))}
+            {trustBadges.map((badge, i) => {
+              const href = BADGE_HREFS[i];
+              const isExternal = Boolean(href && href.startsWith('http'));
+              const pill = 'inline-flex rounded-full bg-primary-500/10 px-4 py-1.5 text-sm text-primary-950/70 dark:bg-primary-400/10 dark:text-primary-200/70';
+              return (
+                <li>
+                  {href ? (
+                    <a
+                      href={href}
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                      class={`${pill} transition hover:bg-primary-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:hover:bg-primary-400/20`}
+                    >
+                      {badge}
+                    </a>
+                  ) : (
+                    <span class={pill}>{badge}</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )
       }
