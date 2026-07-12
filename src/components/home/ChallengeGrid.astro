@@ -1,5 +1,5 @@
 ---
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
 import { getContactUrl, getGriftUrl } from '../../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
@@ -13,6 +13,17 @@ const secondaryHref = getGriftUrl('/', {
   intent: 'grift-team-beta',
   source: 'challenge-grid',
 });
+
+// homeChallenges.items（全言語同一の並び）に対応する関連ページ。
+// /works・/works/<slug> は ja 限定のため bare、/industries・/blog は各言語版があるため localize。
+const CHALLENGE_HREFS: (string | null)[] = [
+  '/works/legacy-core-system-cloud-migration',        // 老朽化した基幹システムのクラウド化
+  '/works/engineer-cafe-navigator',                   // 多言語対応のAI受付・チャット
+  '/works/survey-platform-renewal',                   // 生成AIサービスの本番化（近い刷新・本番化事例）
+  '/works/confidential-data-ai-assessment',           // 機密データを外に出さずAI活用
+  getLocalizedUrl('/industries/construction', currentLocale), // 業界特化のAIツール（建築）
+  getLocalizedUrl('/blog/ai-driven-development-workflow', currentLocale), // AI駆動開発の内製化
+];
 ---
 
 <section class="py-24 sm:py-32">
@@ -30,18 +41,37 @@ const secondaryHref = getGriftUrl('/', {
       </div>
       <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
-          t.homeChallenges.items.map((item, i) => (
-            <li
-              class="flex flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10"
-              data-reveal
-              style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}
-            >
-              <h3 class="text-balance text-lg font-medium tracking-tight">{item.title}</h3>
-              <p class="text-pretty text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
-                {item.description}
-              </p>
-            </li>
-          ))
+          t.homeChallenges.items.map((item, i) => {
+            const href = CHALLENGE_HREFS[i];
+            const card = 'flex h-full flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10';
+            const inner = (
+              <>
+                <div class="flex items-start justify-between gap-2">
+                  <h3 class="text-balance text-lg font-medium tracking-tight">{item.title}</h3>
+                  {href && (
+                    <span aria-hidden="true" class="mt-0.5 shrink-0 text-primary-950/40 opacity-0 transition group-hover:opacity-100 dark:text-primary-200/40">↗</span>
+                  )}
+                </div>
+                <p class="text-pretty text-base leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+                  {item.description}
+                </p>
+              </>
+            );
+            return (
+              <li data-reveal style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}>
+                {href ? (
+                  <a
+                    href={href}
+                    class={`group ${card} cursor-pointer shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-primary-950`}
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <div class={card}>{inner}</div>
+                )}
+              </li>
+            );
+          })
         }
       </ul>
       <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-start" data-reveal style="--reveal-delay:0.6s">
