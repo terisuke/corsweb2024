@@ -1,5 +1,5 @@
 ---
-import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
 import { getContactUrl } from '../../config/site';
 import PenguinWalker from './PenguinWalker.astro';
 
@@ -15,8 +15,8 @@ const trustBadges = t.homeHero.trustBadges.filter(
 // trustBadges の並び（全言語共通）に対応するリンク先。順: ①ローカルLLM ②セキュリティ体制 ③福岡発。
 // 対応先が無い index は非リンク（span）で表示。
 const BADGE_HREFS: (string | null)[] = [
-  '/works/local-llm-poc',
-  '/security',
+  '/works/local-llm-poc', // /works は ja 限定（localized variant なし）→ bare のまま
+  getLocalizedUrl('/security', currentLocale), // /security は各言語版あり → ロケール別に
   'https://madeinlocal.jp/category/companies/fukuoka062',
 ];
 
