@@ -1,0 +1,112 @@
+---
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getContactUrl } from '../../config/site';
+import PenguinWalker from './PenguinWalker.astro';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+// 福岡100選 2026-2027 の badge は公開可能日まで非表示（正本ガードレール）。
+// 根拠のない倍率バッジは i18n 側で削除済み（ADR-0007）。
+const HIDDEN_TRUST_BADGES = ['福岡100選 2026-2027'];
+const trustBadges = t.homeHero.trustBadges.filter(
+  (badge) => !HIDDEN_TRUST_BADGES.includes(badge),
+);
+// trustBadges の並び（全言語共通）に対応するリンク先。順: ①ローカルLLM ②セキュリティ体制 ③福岡発。
+// 対応先が無い index は非リンク（span）で表示。
+const BADGE_HREFS: (string | null)[] = [
+  '/works/local-llm-poc', // /works は ja 限定（localized variant なし）→ bare のまま
+  getLocalizedUrl('/security', currentLocale), // /security は各言語版あり → ロケール別に
+  'https://madeinlocal.jp/category/companies/fukuoka062',
+];
+
+// 主CTA: 機密データAI活用診断 / 副: ローカルLLM PoC（ADR-0011）
+const primaryHref = getContactUrl(currentLocale, {
+  intent: 'confidential-ai-assessment',
+  source: 'home-hero',
+});
+const secondaryHref = getContactUrl(currentLocale, {
+  intent: 'local-llm-poc',
+  source: 'home-hero',
+});
+---
+
+<section class="relative isolate flex min-h-[88vh] items-center overflow-hidden pt-20 pb-32 sm:pt-28 sm:pb-36">
+  {/* 抽象モーション背景（装飾・読み上げ対象外）。prefers-reduced-motion で静止。 */}
+  <div class="motion-bg" aria-hidden="true"></div>
+  <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col items-center gap-8 text-center sm:gap-10" data-hero-content>
+      <p
+        class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
+        data-reveal
+        style="--reveal-delay:0.05s"
+      >
+        {t.homeHero.kicker}
+      </p>
+      <div class="flex max-w-5xl flex-col items-center gap-6 sm:gap-8">
+        {/* 巨大タイポ＝「視覚で止まる」主役。即描画(LCP死守)のため演出は付けない。 */}
+        <h1
+          class="text-balance font-semibold leading-[1.05] tracking-tight text-[clamp(2.15rem,7vw,5.75rem)]"
+          set:html={t.homeHero.title}
+        />
+        <p class="max-w-3xl text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle} data-reveal style="--reveal-delay:0.15s"></p>
+      </div>
+      <div class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:justify-center" data-reveal style="--reveal-delay:0.3s">
+        {/* 有料入口: 診断（主）+ ローカルLLM PoC（副）。Grift は GriftBridge / ServiceCtas 側（ADR-0011）。 */}
+        <a
+          href={primaryHref}
+          class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-6 py-4 text-center text-lg font-semibold text-white shadow-sm transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b] sm:w-auto sm:px-8"
+        >
+          {t.homeHero.primaryCta}
+        </a>
+        <a
+          href={secondaryHref}
+          class="inline-flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-full px-5 py-3 text-center text-base font-medium text-primary-950 underline-offset-4 transition hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200 sm:w-auto"
+        >
+          {t.homeHero.secondaryCta}
+        </a>
+      </div>
+      {
+        trustBadges.length > 0 && (
+          <ul class="flex flex-wrap items-center justify-center gap-3" data-reveal style="--reveal-delay:0.45s">
+            {trustBadges.map((badge, i) => {
+              const href = BADGE_HREFS[i];
+              const isExternal = Boolean(href && href.startsWith('http'));
+              const pill = 'inline-flex rounded-full bg-primary-500/10 px-4 py-1.5 text-sm text-primary-950/70 dark:bg-primary-400/10 dark:text-primary-200/70';
+              return (
+                <li>
+                  {href ? (
+                    <a
+                      href={href}
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                      class={`${pill} transition hover:bg-primary-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:hover:bg-primary-400/20`}
+                    >
+                      {badge}
+                    </a>
+                  ) : (
+                    <span class={pill}>{badge}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+      {/* ファーストビュー直下の補助文（#175）: 事業内容を一文で補足する控えめなライン。 */}
+      <p
+        class="max-w-3xl text-pretty text-sm leading-relaxed text-primary-950/60 dark:text-primary-200/60 sm:text-base"
+        data-reveal
+        style="--reveal-delay:0.55s"
+      >
+        {t.homeHero.support}
+      </p>
+    </div>
+  </div>
+  {/* ロゴのペンギンがヒーロー下部を歩く演出（装飾）。クリックで飛び立ち、下から再登場。 */}
+  <PenguinWalker bubble={t.homeHero.penguinBubble} locale={currentLocale} />
+  {/* 「↓」スクロールヒント: 下に続きがあると気づかせ離脱を防ぐ。少しスクロールで消える。 */}
+  <div class="scroll-hint pointer-events-none absolute inset-x-0 bottom-8 z-10 flex justify-center" aria-hidden="true">
+    <span class="scroll-hint-arrow text-2xl text-primary-950/40 dark:text-primary-200/40">↓</span>
+  </div>
+</section>

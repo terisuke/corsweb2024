@@ -1,0 +1,1420 @@
+{
+  "404": {
+    "title": "404",
+    "subtitle": "Page not found",
+    "description": "Please check the URL in the address bar and try again.",
+    "cta": "Go back home"
+  },
+  "homeBlog": {
+    "eyebrow": "Insights",
+    "title": "The \"how\" of AI, in articles.",
+    "description": "AI adoption, the safe use of confidential data, how to think about estimates — practical perspectives you can use on the ground.",
+    "cta": "See all articles"
+  },
+  "homeNews": {
+    "eyebrow": "News",
+    "title": "Latest news",
+    "description": "Company announcements, service updates, external coverage, and event information from Cor. Inc.",
+    "cta": "See all news"
+  },
+  "news": {
+    "eyebrow": "News",
+    "title": "Company news",
+    "intro": "Updates from Cor. Inc., service announcements, external coverage, and event information.",
+    "rssLabel": "Subscribe to news RSS",
+    "empty": "No news is published yet.",
+    "updatedLabel": "Updated",
+    "backToList": "Back to news"
+  },
+  "homeHero": {
+    "kicker": "Building with you, beyond what you imagined.",
+    "title": "<span class='nowrap'>Turn stuck work</span><br />into what we build together.",
+    "subtitle": "Built around confidential-data AI, local LLMs, and Grift,<br class='sm:hidden' />Cor. Inc. walks with you end to end — from framing the problem to design, build, and operations.<br />We don't just take orders: when it's right, we'll even propose <em>not</em> building yet.",
+    "support": "A Fukuoka-born AI implementation company that walks with you end to end — from framing the problem to design, build, and operations — built around confidential-data AI, local LLMs, and Grift.",
+    "primaryCta": "Discuss a confidential-data AI assessment",
+    "secondaryCta": "Discuss a local LLM / secure AI PoC",
+    "philosophyCta": "Read about our \"Kyousou\" philosophy",
+    "trustBadges": [
+      "Local LLM — your data stays in",
+      "Secure Infrastructure",
+      "Born in Fukuoka, serving all of Japan"
+    ],
+    "penguinBubble": [
+      "Welcome!",
+      "Try tapping me!"
+    ]
+  },
+  "homeChallenges": {
+    "eyebrow": "01 / Your Challenges",
+    "title": "Let's solve challenges like these, together.",
+    "items": [
+      {
+        "title": "Move an aging core system to the cloud",
+        "description": "From organizing the data you use today to migrating it to the cloud and designing how it runs, we move forward with you."
+      },
+      {
+        "title": "Introduce a multilingual AI reception desk or chat",
+        "description": "Using voice-enabled AI, AI trained on your internal documents, and AI that runs autonomously, we design guidance experiences for facilities and local governments."
+      },
+      {
+        "title": "Take a generative-AI service from zero to production",
+        "description": "From defining what to build, to the user experience, the plumbing that connects systems, billing, automated testing and release, and monitoring — we cover it all in one go."
+      },
+      {
+        "title": "Use AI without sending confidential data outside",
+        "description": "With AI that keeps your data in and approved AI tools, we design around the sensitivity rank of your information."
+      },
+      {
+        "title": "Build an industry-specific AI tool",
+        "description": "Architectural drawings, floor-plan generation, AI processing of business-specific data, and more."
+      },
+      {
+        "title": "Bring AI-driven development in-house",
+        "description": "From shaping your AI strategy to internal training and refining how you run development, we work closely with your team."
+      }
+    ],
+    "cta": "Discuss a confidential-data AI assessment",
+    "ctaPrimary": "Discuss a confidential-data AI assessment",
+    "ctaSecondary": "See how Grift works"
+  },
+  "griftBridge": {
+    "eyebrow": "Try Our AI / Grift",
+    "title": "Before you put it into words, why not try it with AI?",
+    "description": "Based on our past development track record and current market rates, we provide reference cost, timeline, and similar cases.",
+    "cta": "See how Grift works",
+    "note": "Grift's results are a reference estimate for before we talk. The formal price and timeline are confirmed after we review your requirements.",
+    "mock": {
+      "input": "I want to automate sales-quote creation with AI",
+      "costLabel": "Reference cost",
+      "cost": "From ¥1.8M",
+      "durationLabel": "Reference timeline",
+      "duration": "From 4 weeks",
+      "similarLabel": "Similar cases",
+      "similar": "5",
+      "similarNote": "Based on our own track record"
+    }
+  },
+  "proof": {
+    "eyebrow": "03 / Proof",
+    "title": "Designing Information Architecture Before Using AI.",
+    "description": "Contracts, minutes, estimates, customer data, and internal knowledge. Cor.Inc. designs secure processing for sensitive information—including input boundaries, permissions, logs, and human approval—implementing robust AI systems that actually work for your business.",
+    "stats": [
+      {
+        "label": "Core Businesses",
+        "value": "3 Areas",
+        "note": "Grift / Local LLM / Custom AI"
+      },
+      {
+        "label": "AI Operations",
+        "value": "4 Designs",
+        "note": "Boundaries / Permissions / Logs / Approvals"
+      },
+      {
+        "label": "Initial Assessment",
+        "value": "¥100k - ¥300k",
+        "note": "Confidential Data AI Assessment"
+      },
+      {
+        "label": "PoC Development",
+        "value": "From 3 Mos / ¥3M",
+        "note": "Local LLM & AI Infrastructure PoC"
+      }
+    ],
+    "cta": "Discuss an AI platform PoC"
+  },
+  "securityTrust": {
+    "title": "Build freely. Protect responsibly.",
+    "description": "To balance developer comfort with the responsibility of protecting our customers' information, Cor. operates a local-first setup, minimal security logging, and a sensitivity-tier-based approach.",
+    "items": [
+      "Working with our retained legal counsel to review contracts, AI, personal information, and ISMS operations",
+      "Building out ISMS operations, targeting ISO/IEC 27001 certification",
+      "Choosing approved AI, company accounts, and isolated environments according to sensitivity tier",
+      "Company-issued Macs, encryption, MDM, and lightweight detection-and-response controls"
+    ],
+    "cta": "See our security policy"
+  },
+  "kyousou": {
+    "title": "Cor. keeps chasing \"Kyousou.\"",
+    "description": "Not by pandering, not by clashing — but by bringing our values together, sharpening our differences, and using AI to give real shape to the challenges on the ground. That is what Cor. means by \"Kyousou\" (a coined word fusing co-creation, ensemble, competition, fantasy, and fervor — building, sharpening, and resonating together).",
+    "items": [
+      {
+        "word": "Co-creation",
+        "meaning": "Creating value together",
+        "cor": "Building together with customers, partners, and AI"
+      },
+      {
+        "word": "Ensemble",
+        "meaning": "Different strengths resonating",
+        "cor": "People, AI, expertise, and region each play a role"
+      },
+      {
+        "word": "Competition",
+        "meaning": "Sharpening one another",
+        "cor": "We refuse yes-men and raise each other through candor"
+      },
+      {
+        "word": "Fantasy",
+        "meaning": "A vision that has no shape yet",
+        "cor": "We turn it into a product instead of leaving it a daydream"
+      },
+      {
+        "word": "Fervor",
+        "meaning": "Energy, the buzz of the market",
+        "cor": "Not something we chase, but something we generate as a result"
+      }
+    ],
+    "cta": "Read the founder's story"
+  },
+  "finalCta": {
+    "title": "Move stuck work forward with implementation.",
+    "description": "From framing the problem to AI design, build, and operations — a Fukuoka-based AI implementation partner works with you end to end.",
+    "primary": "Discuss a confidential-data AI assessment",
+    "secondary": "See Grift Team Beta"
+  },
+  "serviceCtas": {
+    "heading": "Reach out based on what you need.",
+    "items": [
+      {
+        "label": "Discuss a confidential-data AI assessment",
+        "intent": "confidential-ai-assessment"
+      },
+      {
+        "label": "Discuss a local LLM / secure AI PoC",
+        "intent": "local-llm-poc"
+      },
+      {
+        "label": "See Grift Team Beta",
+        "intent": "grift-team-beta",
+        "external": "grift"
+      }
+    ]
+  },
+  "homeIndustries": {
+    "eyebrow": "Industry",
+    "title": "Every industry gets stuck for different reasons.",
+    "description": "We stay close to your on-the-ground challenges and think through everything with you, from sorting things out to how to move forward.",
+    "tableHead": {
+      "industry": "Industry",
+      "theme": "Common themes",
+      "detail": ""
+    },
+    "rows": [
+      {
+        "industry": "Healthcare",
+        "theme": "Organizing clinical data, patient response, information security, AI strategy",
+        "link": "/industries/medical",
+        "linkLabel": "Healthcare page"
+      },
+      {
+        "industry": "Professional services",
+        "theme": "Contract review, applications & registration, deadline management, subsidy applications",
+        "link": "/industries/shigyo",
+        "linkLabel": "Professional services page"
+      },
+      {
+        "industry": "Construction",
+        "theme": "Labor management, design changes, safety checks, passing on know-how",
+        "link": "/industries/construction",
+        "linkLabel": "Construction page"
+      },
+      {
+        "industry": "Manufacturing",
+        "theme": "Visual inspection, passing on know-how, equipment maintenance, inventory management",
+        "link": "/industries/manufacturing",
+        "linkLabel": "Manufacturing page"
+      },
+      {
+        "industry": "Education",
+        "theme": "Test workload, parent communication, surveys & reports, ICT roster management",
+        "link": "/industries/education",
+        "linkLabel": "Education page"
+      }
+    ]
+  },
+  "industryMedical": {
+    "hero": {
+      "eyebrow": "Medical & Healthcare",
+      "title": "Healthcare teams: do any of these \"stuck\" moments sound familiar?",
+      "subtitle": "Organizing clinical data, patient response, how information is handled — every site gets stuck for different reasons. Cor. helps you sort out requirements together and walks with you toward the next step."
+    },
+    "challenges": {
+      "eyebrow": "01 / Common Challenges",
+      "title": "The \"reasons things stall\" we often hear in healthcare.",
+      "items": [
+        {
+          "title": "Handling assessments and rejected medical-fee claims",
+          "description": "Monthly errors in fee claims and mismatches between diagnoses and procedures trigger assessments and rejections from review-and-payment bodies. The hours medical-affairs staff spend checking and fixing each case by eye become enormous."
+        },
+        {
+          "title": "The burden of electronic medical-record entry",
+          "description": "Writing up a chart after each consultation takes several minutes per patient, and on days with 100-plus outpatients the work slips into late at night. It's a direct hit from physicians' work-style reform (the \"2024 problem\")."
+        },
+        {
+          "title": "Responding to physicians' work-style reform (on-call shifts and task-shift records)",
+          "description": "To comply with the cap on physicians' overtime that took effect in April 2024, hospitals must apply for on-call permits, record task-shift results, and manage Article 36 agreements — yet they're being asked to do so before the operational flow is even in place."
+        },
+        {
+          "title": "Inefficient outpatient booking and cancellation management",
+          "description": "Bookings are mostly by phone and no-shows are frequent. Open slots can't be filled in real time, so clinical revenue leaks away."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / How Cor. Walks With You",
+      "title": "Here's how Cor. helps.",
+      "intro": "We move forward together, combining Cor.'s services to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+      "items": [
+        {
+          "challenge": "Data organization and system renewal",
+          "service": "AI contract development",
+          "description": "From organizing data to cloud migration and connecting in-hospital systems, we move forward together from requirements definition through implementation and operation."
+        },
+        {
+          "challenge": "Inquiries and guidance",
+          "service": "AI contract development",
+          "description": "We help you design guidance experiences using voice-enabled AI, AI trained on internal documents, and autonomous workflows — drawing on our experience implementing multilingual AI reception."
+        },
+        {
+          "challenge": "Information security and confidential data",
+          "service": "Local LLM & secure AI",
+          "description": "We think through AI environments that keep your data in, plus tool selection and operational design matched to sensitivity, together with you."
+        },
+        {
+          "challenge": "AI strategy and bringing it in-house",
+          "service": "AI advisory & training",
+          "description": "For in-hospital teams, we walk alongside you on AI strategy, tool selection, rolling it into operations, and building in-house capability."
+        },
+        {
+          "challenge": "Organizing estimates and internal buy-in",
+          "service": "Grift",
+          "description": "Get a reference estimate up front to use as a starting point for approval and budgeting. The formal price and timeline are confirmed after we review your requirements."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
+    }
+  },
+  "industryShigyo": {
+    "hero": {
+      "eyebrow": "Professional Services",
+      "title": "Professional-services work: are you spending too much time and nerve on it?",
+      "subtitle": "Reviewing contracts, one law change after another, double entry for government filings, and deadline management you can never afford to miss. Behind the expert work you're meant to focus on, the days are eaten up by endless manual tasks and mental pressure — and Cor. helps you change that, together."
+    },
+    "challenges": {
+      "eyebrow": "01 / Common Challenges",
+      "title": "The \"reasons things stall\" we often hear in professional services.",
+      "items": [
+        {
+          "title": "The chronic load of reviewing and amending clauses in contracts and legal documents",
+          "description": "Checking every word of contracts that arrive from clients, by eye. Because a single oversight can immediately become a risk, it drains extreme concentration and time, and is a major reason review work runs into the night."
+        },
+        {
+          "title": "The inefficiency of spec changes and double entry in filings and registrations",
+          "description": "Manually copying and re-keying data entrusted by clients to fit the quirky UIs of government and registration systems. Peak-season data entry and visual double-checks burn through enormous hours."
+        },
+        {
+          "title": "The \"absolutely no mistakes allowed\" pressure of statutory deadlines, limitation periods, and filing cutoffs",
+          "description": "Managing things like patent filings, tax returns, and litigation deadlines, where being even a single day late can lead to catastrophic damage. Relying on calendars and multiple people checking by eye creates heavy mental strain every morning."
+        },
+        {
+          "title": "Checking eligibility for subsidies and grants, and drafting mountains of documentation",
+          "description": "Reading through frequently changing application guidelines and hand-typing the \"business plan\" narrative an application calls for. The long hours of desk work needed to win approval become a real burden."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / How Cor. Walks With You",
+      "title": "Here's how Cor. walks with you.",
+      "intro": "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+      "items": [
+        {
+          "title": "We help you run an initial screening of standard, boilerplate clauses",
+          "service": "Local LLM & secure AI",
+          "description": "Building on your own templates and review criteria, we support a setup that quickly flags risk clauses and special terms — helping ease the burden of that first read-through by eye."
+        },
+        {
+          "title": "We set up the plumbing for data linkage and automatic transcription between systems",
+          "service": "AI contract development",
+          "description": "We support automating transcription work, such as mapping client data into application formats. Together we build a flow that prevents entry errors and cuts the time spent checking."
+        },
+        {
+          "title": "We guide you toward reassuring management through automated alerts and reminders",
+          "service": "AI contract development",
+          "description": "Linked to your calendar and task management, we propose a setup so important deadlines don't slip by. We build multiple guardrails together that don't rely solely on human eyes, aiming to ease the psychological load."
+        },
+        {
+          "title": "We support more efficient drafting of application documents and business plans",
+          "service": "AI advisory & training",
+          "description": "We support quickly drafting the skeleton and structure of documents, informed by requirement matching and past approval trends. We help create an environment where you spend less time writing from scratch and more time refining as the expert."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
+    }
+  },
+  "industryConstruction": {
+    "hero": {
+      "eyebrow": "Construction",
+      "title": "On-site logistics in construction: still stuck on paper and fax?",
+      "subtitle": "Labor management, design changes, safety checks, passing on know-how — when on-site logistics are tied to paper and fax, the construction work itself grinds to a halt. Cor. walks with you toward the next step, matched to your on-the-ground challenges."
+    },
+    "challenges": {
+      "eyebrow": "01 / Common Challenges",
+      "title": "The \"reasons things stall\" we often hear on construction sites.",
+      "labels": {
+        "reality": "On-site reality",
+        "risk": "If left unaddressed"
+      },
+      "items": [
+        {
+          "title": "The limits of labor management and keeping projects on schedule under the overtime cap (the \"2024 problem\")",
+          "reality": "Although the regulation from April 2024 set strict caps on overtime, the structural pressures on site — short-deadline orders, weather delays, and more — haven't changed.",
+          "risk": "Site managers end up forced to absorb the work by taking paperwork home, leading directly to burned-out staff leaving and to project delays."
+        },
+        {
+          "title": "Real-time gaps between drawings/BIM data and the site caused by frequent design changes",
+          "reality": "Every time a design change happens on site, the latest drawings and BIM data don't reach craftspeople and partner firms quickly enough, raising the risk of construction errors based on outdated information.",
+          "risk": "\"Rework\" (rebuilding) on the scale of millions to tens of millions of yen occurs, which not only squeezes costs but also causes major schedule delays."
+        },
+        {
+          "title": "Daily safety checks (KY activities) becoming a formality, and insufficient safety training for an increasingly multinational workforce",
+          "reality": "Daily hazard-prediction (KY) activities tend to become routine, with paperwork reduced to copy-paste. And as the number of foreign workers grows, there's a challenge in getting Japan's safety rules across accurately, down to the context.",
+          "risk": "The risk of serious workplace accidents rises, which can lead to grave consequences such as halted operations on site and a loss of corporate social trust."
+        },
+        {
+          "title": "The break in proprietary construction techniques and know-how as veteran craftspeople age and retire",
+          "reality": "With veterans in their 50s and older making up a large share, the techniques aren't written down or turned into manuals, and passing them to younger workers still relies on the person-dependent \"watch and learn\" approach.",
+          "risk": "The trades and unique strengths you can handle in-house are lost, leading to weaker competitiveness in winning future work and even the disappearance of the techniques themselves."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / How Cor. Walks With You",
+      "title": "Here's how Cor. walks with you.",
+      "intro": "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+      "items": [
+        {
+          "title": "Schedule simulation and visualization of operation logs",
+          "service": "AI contract development",
+          "description": "We work with you to build setups for calmer site operations — reworking complex schedules and gently detecting bottlenecks from each site's operation logs."
+        },
+        {
+          "title": "Automatic extraction of changes and instant suggestions to stakeholders",
+          "service": "AI contract development",
+          "description": "We compare updated drawing and spec data and have AI summarize and extract the key changes in an easy-to-grasp way. We help build an environment to reliably relay and share them with stakeholders, drawing on our experience implementing drawing processing."
+        },
+        {
+          "title": "Context-aware hazard prediction and high-accuracy multilingual translation",
+          "service": "AI contract development",
+          "description": "We walk with you toward safe team-building on site — with AI suggesting concrete hazard-prediction hints for the day's trade and weather, and high-accuracy multilingual translation that captures the nuance of safety manuals."
+        },
+        {
+          "title": "Structuring on-site know-how and building a skill-assist environment",
+          "service": "Local LLM & secure AI",
+          "description": "We organize veterans' work videos, past construction records, and trouble-response logs into a form AI can learn from easily. We support a setup where younger workers, when they hit a question on site, can draw on the organization's knowledge base."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
+    }
+  },
+  "industryManufacturing": {
+    "hero": {
+      "eyebrow": "Manufacturing",
+      "title": "Manufacturing know-how and logistics: are they riding on individuals?",
+      "subtitle": "Inspection standards, the craftsperson's touch, equipment maintenance, reading inventory — when on-site know-how concentrates in individuals, the reasons things stall only multiply. Cor. walks with you toward the next step, matched to your on-the-ground challenges."
+    },
+    "challenges": {
+      "eyebrow": "01 / Common Challenges",
+      "title": "The \"reasons things stall\" we often hear in manufacturing.",
+      "items": [
+        {
+          "title": "Visual inspection riding on individuals, and the risk of defective products slipping through due to inconsistent quality standards between inspectors",
+          "description": "A reality where judging scratches and burrs relies on individual feel, and keeping manuals in sync is difficult"
+        },
+        {
+          "title": "The break in machining know-how and craftsmanship as skilled workers age and retire, and the resulting delay in training younger workers",
+          "description": "A structure where intuitive skills like welding and cutting go unspoken, with no time to spare for OJT"
+        },
+        {
+          "title": "Sudden equipment breakdowns causing \"line stoppages\" and the enormous repair costs of reactive maintenance",
+          "description": "A reactive fix-it-when-it-breaks approach, with the risk of missing early signs such as faint abnormal noises or vibration in machines"
+        },
+        {
+          "title": "The difficulty of reading \"optimal inventory\" while caught between excess stock and stockout risk",
+          "description": "Conflict between sales and management anticipating material price hikes and procurement delays, and demand forecasting riding on individuals"
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / How Cor. Walks With You",
+      "title": "Here's how Cor. walks with you.",
+      "intro": "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+      "items": [
+        {
+          "title": "Helping organize visual-inspection standards into a form usable on site",
+          "service": "AI contract development",
+          "description": "We work with you to organize inspection criteria and reference images and build a setup that curbs inconsistency in judgments. On the premise that a person makes the final call, we aim to ease the burden of initial screening."
+        },
+        {
+          "title": "Putting machining know-how into words and an environment younger workers can draw on",
+          "service": "Local LLM & secure AI",
+          "description": "We organize skilled workers' work records and procedures into a form AI can learn from easily. We support a setup that keeps on-site confidential information in, letting younger workers draw on the organization's knowledge when a question comes up."
+        },
+        {
+          "title": "Exploring a setup to catch early signs from equipment data",
+          "service": "AI contract development",
+          "description": "We work with you to build a setup that catches early signs of anomalies from data you can capture on site, such as abnormal noise, vibration, and operation logs. We support a gradual shift from reactive to preventive maintenance."
+        },
+        {
+          "title": "Pulling inventory and demand reading out of individual dependence",
+          "service": "AI advisory & training",
+          "description": "We walk with you to organize information from sales, management, and the site into a state where the basis for optimal-inventory judgments can be shared. From organizing the assumptions behind demand forecasting to how to select and roll out tools, we think it through together."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
+    }
+  },
+  "industryEducation": {
+    "hero": {
+      "eyebrow": "Education",
+      "title": "In education, is there enough \"teacher time\"?",
+      "subtitle": "Writing and grading tests, communicating with parents, surveys and reports, registering rosters in ICT tools — the time meant for actual teaching tends to get taken up by paperwork and data tasks. Cor. walks with you toward the next step, matched to your on-the-ground challenges."
+    },
+    "challenges": {
+      "eyebrow": "01 / Common Challenges",
+      "title": "The \"reasons things stall\" we often hear in education.",
+      "items": [
+        {
+          "title": "The sleepless death-march when test \"writing, grading, and grade processing\" all pile up at once",
+          "description": "During exam periods, everything from writing questions to grading and creating report cards is compressed into a short window, easily squeezing the time you'd rather spend on lesson prep and talking with students."
+        },
+        {
+          "title": "Analog parent communication and the normalization of after-hours responses",
+          "description": "Phone, printouts, chat — channels are scattered, and checking and replying spills into after-school hours and days off. That kind of burden tends to become the norm on many sites."
+        },
+        {
+          "title": "Compiling data and producing documents for the mountain of surveys and reports submitted to the ministry and boards of education",
+          "description": "Gathering on-site data and finishing documents to fit each format regularly siphons off teachers' working hours."
+        },
+        {
+          "title": "Manual account-registration errors when entering student roster data into various ICT tools right after a new term or class reshuffle",
+          "description": "Rosters have to be hand-entered or transcribed into multiple ICT tools, making missed registrations and entry errors likely — the burden tends to be especially heavy at the start of a term."
+        }
+      ]
+    },
+    "support": {
+      "eyebrow": "02 / How Cor. Walks With You",
+      "title": "Here's how Cor. walks with you.",
+      "intro": "We move forward together, combining AI contract development, AI advisory, local LLM, and Grift to fit each challenge. We don't deal in certainties — we value walking alongside you in a way that fits the realities on the ground.",
+      "items": [
+        {
+          "title": "Rethinking the exam-period workload with you, starting from organizing it",
+          "service": "AI contract development",
+          "description": "We help build setups — on the premise that a person makes the final check — for drafting test questions, assisting with grading, and compiling grade data."
+        },
+        {
+          "title": "Turning scattered parent communication into a clearer flow",
+          "service": "AI contract development",
+          "description": "We work with you to design a flow that eases the burden of after-hours responses, including communication channels and drafting reply templates."
+        },
+        {
+          "title": "Building support for compiling and drafting surveys and reports",
+          "service": "Local LLM & secure AI",
+          "description": "We help you explore an environment that keeps student information in while making it easier to compile data and draft the skeleton of reports."
+        },
+        {
+          "title": "Pulling roster-to-ICT-tool linkage out of manual work",
+          "service": "AI contract development",
+          "description": "We work with you to set up automation and linkage for roster transcription and account registration, moving toward fewer entry errors and omissions — drawing on our experience with education-sector data migration."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start by framing how to use AI on confidential data.",
+      "description": "We help you decide where to begin under industry constraints. You can also review how Grift builds estimate rationale.",
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "See how Grift works",
+      "note": "Grift outputs are reference estimates before consultation. Formal price and schedule are confirmed after requirements review."
+    }
+  },
+  "works": {
+    "title": "Our work speaks for itself.",
+    "intro": "We showcase implementation work spanning different domains and different starting points. We show it through code, operations, and numbers — not claims.",
+    "note": "* Contribution rates are commit shares measured via git. For NDA and confidential projects, we withhold client and product names and present the content in abstracted form.",
+    "items": [
+      {
+        "name": "Engineer Cafe Navigator",
+        "tag": "OSS / Publicly named",
+        "description": "Open-source multilingual voice AI reception. 182,368 lines, 8 contributors, our own contribution rate 87.7% (measured via git)."
+      },
+      {
+        "name": "Grift",
+        "tag": "In-house product",
+        "description": "Our in-house AI estimation and evaluation platform that generates explainable reference estimates from GitHub track records and market rates.",
+        "link": "grift"
+      },
+      {
+        "name": "cor-jp.com",
+        "tag": "In-house build",
+        "description": "This corporate site. Built in-house with Astro, 5 languages, AI translation, and fast page loads."
+      },
+      {
+        "name": "Multimodal generative-AI SaaS",
+        "tag": "Contract / Anonymous",
+        "description": "Production development of a generative-AI SaaS handling images, audio, and text (client name undisclosed)."
+      },
+      {
+        "name": "Survey-platform renewal",
+        "tag": "Contract / Anonymous",
+        "description": "Renewed and productionized a handed-over survey platform. Covered migration to an agent platform and setting up testing and CI/CD."
+      },
+      {
+        "name": "Cloud migration of a legacy core system",
+        "tag": "Contract / NDA",
+        "description": "Migrated an education-sector core database to the cloud (details abstracted due to NDA)."
+      },
+      {
+        "name": "Architectural drawing & floor-plan generation AI",
+        "tag": "Contract / NDA",
+        "description": "Rapidly built a suite of AI for architectural drawings and floor plans from zero to one (abstracted; architecture-sector, NDA)."
+      }
+    ]
+  },
+  "services2026": {
+    "title": "Bringing AI — technology that thinks and acts on people's behalf — into the front lines of your business.",
+    "items": [
+      {
+        "name": "AI contract development",
+        "description": "We help build production systems using generative AI, RAG, agents, and image/audio processing — walking with you from requirements through to operation."
+      },
+      {
+        "name": "AI advisory & training",
+        "description": "We work alongside your leadership, development, and frontline teams on AI strategy, tool selection, rolling AI into daily work, and building in-house capability."
+      },
+      {
+        "name": "Local LLM & secure AI",
+        "description": "We help design AI operations that match the sensitivity of your data, without sending confidential information outside when it isn't needed."
+      },
+      {
+        "name": "Grift",
+        "description": "Our in-house AI tool that generates explainable reference estimates from GitHub track records and market rates."
+      }
+    ]
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Cor.Inc.",
+    "products": "Products&Insights",
+    "blog": "Blog",
+    "contact": "Contact",
+    "security": "Security",
+    "works": "Works",
+    "news": "News",
+    "grift": "Grift",
+    "services": "Services",
+    "serviceAssessment": "Confidential-data AI assessment",
+    "serviceLocalLlm": "Local LLM / secure AI PoC",
+    "serviceAiDev": "AI platform & contract development",
+    "industries": "Industries",
+    "consult": "Talk with Cloudia"
+  },
+  "hero": {
+    "title": "Beyond Words, Delivering Feelings.",
+    "subtitle": "Once expressed through trumpet, now through code. A former musician's pursuit of 'communication beyond words.'",
+    "cta": "View Our Work & Products"
+  },
+  "services": {
+    "title": "Services",
+    "items": [
+      {
+        "step": "01",
+        "name": "IT Consulting & Data Analysis",
+        "description": "DX support service that visualizes current status through Python-based scraping and BI analysis, accompanying from strategy planning to implementation."
+      },
+      {
+        "step": "02",
+        "name": "Web & Mobile App Development",
+        "description": "One-stop provision of high-speed, rich UX B2B/B2C apps using the latest frameworks like Flutter and React."
+      },
+      {
+        "step": "03",
+        "name": "AI Solution Development",
+        "description": "Developing intelligent apps and automation tools optimized for customer challenges using generative AI/LLM, image recognition, and voice processing."
+      }
+    ]
+  },
+  "about": {
+    "title": "About Cor.Inc.",
+    "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
+    "cta": "More details",
+    "heading": {
+      "title": "About Cor.Inc.",
+      "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
+    }
+  },
+  "mission": {
+    "title": "Our mission",
+    "subtitle": "What I once pursued with the trumpet - communication beyond words - now through technology.",
+    "paragraphs": [
+      "Our founder has ASD and knows the pain of 'not being understood.'",
+      "That's why we're serious about realizing miscommunication-free communication.",
+      "Through business card exchanges, websites, and AI-mediated conversations. Small moments of 'ah, it got through' in daily life.",
+      "When these accumulate, everyone can properly convey and be understood for their value.",
+      "We use technology to remove the 'word barriers' between people, creating a world where everyone can shine as themselves."
+    ],
+    "stats": [
+      {
+        "name": "Since Founded",
+        "value": "2 years"
+      },
+      {
+        "name": "Languages",
+        "value": "10"
+      },
+      {
+        "name": "Projects",
+        "value": "15"
+      },
+      {
+        "name": "Services",
+        "value": "App Develop & IT/AI Strategy"
+      }
+    ]
+  },
+  "founderStory": {
+    "title": "Founder's Story",
+    "subtitle": "Why does a former musician run a non-music business?",
+    "paragraphs": [
+      "Since childhood, I was 'the kid who couldn't read the room.' With ASD, I've always felt a wall between myself and others.",
+      "In my second year of high school, playing a trumpet solo in a hall filled with 2,000 people, I first experienced the emotion of 'communication beyond words.' Every consciousness in the venue focused on me, and my soul trembled with a sense of unity that needed no words.",
+      "But in the music industry, I never felt that emotion again. Connections, hierarchy, reading between the lines. Expression degraded into mere 'work,' and I became ill.",
+      "During the pandemic, I left music and worked in sales at Recruit. There, I faced 'the limitations of existing tools' and 'the frustration of words not reaching people.'",
+      "Then I discovered technology. Code doesn't betray. AI doesn't get emotional. Most importantly, I could witness how what I created solved someone's problems and enriched their lives.",
+      "That emotion from high school, now in daily life. In business card exchanges, on websites, through AI-mediated communication. Accumulating small moments of 'ah, it got through.'",
+      "That is the origin of Cor.inc."
+    ]
+  },
+  "contact": {
+    "title": "Feel free to contact us!",
+    "description1": "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
+    "description2": "If you do not receive a reply within the above period, there may be a transmission problem. We apologize for the inconvenience, but please contact us again.",
+    "heading": {
+      "title": "Tell us what is stuck.",
+      "description": "No fixed requirements needed. Share the issue, constraints, or idea; we reply within 3 business days."
+    },
+    "form": {
+      "title": "Feel free to contact us!",
+      "description1": "After reviewing your inquiry, our representative will contact you within 3 business days. Please wait a moment.",
+      "description2": "If you do not receive a reply within the above period, there may be a transmission problem. We apologize for the inconvenience, but please contact us again.",
+      "fields": {
+        "name": "Your name",
+        "email": "Email",
+        "consultationType": "Consultation Type",
+        "consultationTypePlaceholder": "Please select consultation type",
+        "consultationOptions": [
+          "Confidential-data AI assessment",
+          "Grift Team Beta",
+          "Local LLM / secure AI",
+          "AI contract development / adoption support",
+          "AI training / speaker request",
+          "Other"
+        ],
+        "message": "Message"
+      },
+      "submit": "Submit",
+      "reset": "Reset",
+      "noticeTitle": "Before you contact us",
+      "noticeBody": "This form is for inquiries and estimate requests about our services. Please refrain from sending sales, marketing, or solicitation messages. We may be unable to respond to solicitations, false statements, or any contact we deem inappropriate; in malicious or persistent cases, we will keep records and respond firmly in accordance with applicable laws."
+    }
+  },
+  "contactConsent": {
+    "purpose": "The information you provide will be used solely to respond to your inquiry and to contact you.",
+    "linkBefore": "For details on how we handle personal information, please review our ",
+    "linkText": "Privacy Policy",
+    "linkAfter": ".",
+    "checkboxLabel": "I agree to the Privacy Policy and submit this form.",
+    "validationMessage": "Please agree to the Privacy Policy before submitting."
+  },
+  "contactChat": {
+    "heading": "Chat with our AI assistant",
+    "intro": "Tell us about your inquiry in the chat. Our AI will help organise the details and connect you with the right person.",
+    "piiNotice": "Please do not enter personal information such as your name or contact details in the chat. We will ask for your contact details only in the final form.",
+    "greeting": "Hello! I'm Cor.inc's AI assistant. How can we help you today? Feel free to describe your inquiry.",
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "sending": "Sending…",
+    "thinking": "Checking with our team…",
+    "youLabel": "You",
+    "assistantLabel": "AI assistant",
+    "chatError": "Something went wrong. Please try sending your message again.",
+    "readyNotice": "Thank you! Please fill in your contact details below and submit.",
+    "consent": {
+      "purpose": "The information you provide will be used solely to respond to your inquiry and to contact you.",
+      "linkBefore": "For details on how we handle personal information, please review our ",
+      "linkText": "Privacy Policy",
+      "linkAfter": ".",
+      "checkboxLabel": "I agree to the Privacy Policy and submit this form.",
+      "validationMessage": "Please agree to the Privacy Policy before submitting."
+    },
+    "form": {
+      "title": "Your contact details",
+      "name": "Name",
+      "email": "Email",
+      "company": "Company (optional)",
+      "message": "Your message",
+      "submit": "Send this inquiry",
+      "submitting": "Sending…",
+      "required": "This field is required"
+    },
+    "success": "Thank you. We've received your inquiry and will get back to you within 3 business days.",
+    "submitError": "Submission failed. Please wait a moment and try again."
+  },
+  "footer": {
+    "title": "Footer",
+    "social": "Social",
+    "company": "Company",
+    "legal": "Legal",
+    "links": {
+      "home": "Home",
+      "about": "About Cor.Inc.",
+      "products": "Products&Insights",
+      "news": "News",
+      "contact": "Contact",
+      "privacy": "Privacy",
+      "security": "Security",
+      "legal": "Legal Notice"
+    },
+    "description": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation.",
+    "copyright": "Cor.inc"
+  },
+  "features": {
+    "title": "Features",
+    "items": [
+      {
+        "id": "uniqueness-1",
+        "name": "Digital Technology Integration",
+        "description": "We can cover all projects spanning multiple technologies and processes, from IT strategy planning based on information collected with Python, to developing MVP web apps and conducting test marketing, all within our single company."
+      },
+      {
+        "id": "uniqueness-2",
+        "name": "One-Stop Service",
+        "description": "We handle everything consistently from planning to development, test release, and service launch. Since the same team is responsible, misunderstandings are less likely to occur, providing more cost-effective and speedy development."
+      },
+      {
+        "id": "uniqueness-3",
+        "name": "Customer-First Development",
+        "description": "What we value most in our development is \"customer resolution.\" Through detailed feedback, test marketing, and milestones, we identify what customers truly seek and build relationships to become Win-Win business partners."
+      },
+      {
+        "id": "uniqueness-4",
+        "name": "Fastest and Smartest Experience",
+        "description": "We constantly and sharply capture new trends and knowledge. We quickly reflect beneficial solutions for all stakeholders in our proposals, providing unprecedented new experiences."
+      },
+      {
+        "id": "uniqueness-5",
+        "name": "Creating New Values",
+        "description": "Without being bound by conventional concepts, we sincerely face new perspectives and ideas. We maximize the startup-specific \"speed\" to give voice to newly born values through technology."
+      },
+      {
+        "id": "uniqueness-6",
+        "name": "Solving Social Issues with Unique Perspective",
+        "description": "Our passion for human progress knows no bounds. We actively work to solve social problems accompanying progress while using technology to bridge gaps and promote meaningful communication."
+      }
+    ]
+  },
+  "header": {
+    "mobileMenuDescription": "Cor.inc's mission is to 'pioneer the future through co-creation rather than competition, realizing a happy society.' We plan, define requirements for, develop, and operate AI solutions, along with associated accounting and financial operations. We emphasize 'co-creation' over 'competition' and leverage the startup strength of 'speed' to provide services full of creativity and innovation."
+  },
+  "aboutPage": {
+    "kicker": "About Cor.Inc.",
+    "title": "Chasing \"Kyousou.\"",
+    "lead": "Cor. is not a company where everyone is forced to get along. It is a company where people who hold their own values come together, don't hide their differences, seek each other's growth, and use AI and technology to give shape to real challenges on the ground.",
+    "kyousouTitle": "What \"Kyousou\" means.",
+    "kyousouLead": "AI and systems create value only when they are used on the ground. That is why we are not simply order-takers who build whatever we are told. We face the challenge alongside our customers as equals, and when systematization is not the best path, we honestly suggest that it may be better not to build yet. We value the spirit of \"Kyousou\" — co-creating essential problem-solving together.",
+    "kyousou": [
+      {
+        "word": "Co-creation",
+        "usage": "Building together with customers, AI, and partners"
+      },
+      {
+        "word": "Ensemble",
+        "usage": "People, AI, and expertise each play a role and resonate"
+      },
+      {
+        "word": "Competition",
+        "usage": "Refusing yes-men and sharpening one another"
+      },
+      {
+        "word": "Fantasy",
+        "usage": "Not fearing ideas that have no shape yet"
+      },
+      {
+        "word": "Fervor",
+        "usage": "The energy generated in the market as a result"
+      }
+    ],
+    "kyousouAxis": "\"Kyousou\" is the implementation mindset that turns differences into outcomes.",
+    "whyFocusTitle": "To go beyond the walls that stall real work.",
+    "whyFocusBody": "Confidential information that is hard to send to external AI, and the invisible assumptions behind estimates that rely on individuals. Real workplaces have walls that generic cloud AI alone cannot solve. To clear this uncertainty and black-boxing, we focus on secure AI infrastructure designed starting from how data is handled, and on Grift, which turns the rationale behind estimates into a company asset.",
+    "mvvTitle": "Mission / Vision / Values",
+    "mission": "Through \"Kyousou,\" unlock the potential of makers and their businesses.",
+    "vision": "Build a society where differences in values lead not to division, but to better implementation.",
+    "values": [
+      {
+        "title": "Co-creation without pandering",
+        "description": "We don't build relationships based only on going along with the other side. We ask candidly, push back when needed, and search for a better answer."
+      },
+      {
+        "title": "Speak through proof",
+        "description": "We don't stop at ideas alone. We show it through code, products, operations, and numbers."
+      },
+      {
+        "title": "Balance freedom and responsibility",
+        "description": "We don't bind people's abilities, and we protect the information that must be protected. We design comfort and trust at the same time."
+      },
+      {
+        "title": "Sharpen our differences together",
+        "description": "We turn differences in cognitive traits, expertise, and values into outcomes rather than compromise."
+      },
+      {
+        "title": "Unlock makers' true ability",
+        "description": "We use AI not as a tool to replace people, but as an extension that lets people bring out their true strength."
+      }
+    ],
+    "founderTitle": "Founder's Story",
+    "founderLead": "Cor.'s \"Kyousou\" grew out of the experience of our founder, Kosuke Terada.",
+    "founderPlaceholder": "The details of the founder's story are being prepared.",
+    "teamTitle": "Meet our team",
+    "teamBody": "From articulating challenges to designing and implementing secure AI infrastructure, to building operational frameworks. Members with distinct expertise engage honestly with the concerns of customers who are not familiar with engineering, supporting them end-to-end.",
+    "founderYoutubeTitle": "From the Founder",
+    "founderYoutubeDescription": "Delivering video content on technology and business strategy. Sharing AI use cases and behind-the-scenes product development insights.",
+    "founderYoutubeMessages": {
+      "apiNotConfigured": "YouTube API is not configured",
+      "watchDirectly": "Please watch directly on the YouTube channel",
+      "loading": "Loading video...",
+      "noVideosFound": "No videos found",
+      "loadFailed": "Failed to load video",
+      "playbackError": "Video playback error occurred",
+      "channelNotFound": "Channel not found",
+      "videosNotFound": "No videos found"
+    }
+  },
+  "values": {
+    "title": "Our Values"
+  },
+  "team": {
+    "title": "Meet our team"
+  },
+  "linkTypes": {
+    "LitLink": "LitLink",
+    "X": "X",
+    "Zenn": "Zenn",
+    "Homepage": "Homepage"
+  },
+  "faq": {
+    "title": "FAQ",
+    "questions": [
+      {
+        "question": "What can we consult Cor.Inc. about?",
+        "answer": "We focus on AI infrastructure for secure data handling, Local LLM/Secure AI, custom AI development, AI implementation support, and our proprietary AI estimation tool 'Grift'. We clarify how to handle sensitive information—such as contracts, minutes, estimates, customer data, and internal knowledge—designing and implementing practical AI systems for your business operations."
+      },
+      {
+        "question": "What is the first step in introducing AI?",
+        "answer": "The first decision is not which AI model to use. It is clarifying which data can be processed, which requires anonymization, and which must be kept in-house or in a local LLM. At Cor.Inc., we design input boundaries, permissions, logs, human approvals, and operational responsibilities first."
+      },
+      {
+        "question": "How do you choose between Cloud AI and Local LLM?",
+        "answer": "Cloud AI is ideal for public data or general writing. However, for sensitive documents like contracts, customer logs, and internal knowledge, we consider secure in-house environments or Local LLMs. Rather than dismissing Cloud AI, we utilize both based on data confidentiality and requirements."
+      },
+      {
+        "question": "What does the Confidential Data AI Assessment include?",
+        "answer": "We conduct workflow interviews, inventory tasks for AI adaptation, classify data, separate cloud vs. local processing, analyze security risks, and draft a PoC strategy. The estimated cost is ¥100k - ¥300k."
+      },
+      {
+        "question": "What is the duration and cost for a Local LLM or AI Infrastructure PoC?",
+        "answer": "As a general guideline, a Local LLM/AI Infrastructure PoC takes about 3 months, starting from ¥3M. This includes workflow organization, data management design, test environment setup, evaluation metrics definition, and post-PoC production viability assessment."
+      },
+      {
+        "question": "How are security and privacy handled?",
+        "answer": "AI implementation requires strict design of input data, access rights, logs, human approvals, and deletion rules. We organize where info is processed, who reviews it, and how logs are stored. We are currently preparing our ISMS operations with the goal of obtaining ISO/IEC 27001 certification. *We never misrepresent an unacquired certification as completed."
+      },
+      {
+        "question": "What is Grift?",
+        "answer": "Grift is an AI estimation support tool that visualizes estimation rationales for custom development. Instead of delegating everything to AI, it aims to enhance verifiable rationales based on past projects, GitHub histories, technical risks, and market benchmarks so that humans can explain quotes responsibly."
+      }
+    ]
+  },
+  "calendar": {
+    "title": "CEO Schedule",
+    "description": "This is the CEO's public schedule. If you would like to schedule a meeting, please check available time slots and contact us.",
+    "ariaLabel": "CEO Schedule Calendar",
+    "note": "* Please contact us through the contact form below for meeting requests."
+  },
+  "testimonials": {
+    "title": "Technical Expertise",
+    "items": [
+      {
+        "name": "JavaScript/TypeScript",
+        "description": "Frontend & Backend Development",
+        "image": "/assets/jsts.avif",
+        "message": "JavaScript was born in 1995 at Netscape and has become the foundation of web development. TypeScript, as its superset, adds static typing to improve maintainability in large-scale projects. It's used in combination with Node.js and React for real-time communication and UI construction. With asynchronous processing and a rich ecosystem, it's ideal for rapid and interactive application development."
+      },
+      {
+        "name": "Python",
+        "description": "AI & Machine Learning",
+        "image": "/assets/python.avif",
+        "message": "Python is a versatile programming language developed in 1991. Known for its simple and readable syntax, it's widely used in machine learning, AI development, and data analysis. By leveraging libraries like TensorFlow and PyTorch, complex AI models can be built rapidly, making it popular from beginners to advanced users."
+      },
+      {
+        "name": "Go",
+        "description": "Backend & High-Performance Systems",
+        "image": "/assets/go.avif",
+        "message": "Go (Golang) is a lightweight and fast programming language developed by Google in 2009. Known for its simple syntax and concurrent processing (goroutines), it's ideal for cloud-native applications and microservices. With fast compilation speed and high memory efficiency, it's optimal for scalable server development."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Need more detailed information?",
+    "description": "Feel free to contact us. If you need more detailed information or have specific questions, our team will support you."
+  },
+  "products": {
+    "heading": {
+      "title": "Products & Insights",
+      "description": "Detailed information about our products, services, and technical insights."
+    }
+  },
+  "homeCta": {
+    "title": "Contact Us",
+    "description": "Feel free to contact us for any questions, consultations, or quote requests.",
+    "button": "Contact us"
+  },
+  "contactInfo": {
+    "address": {
+      "label": "Postal address",
+      "value": "810-0001 Fukuoka Prefecture, Fukuoka City\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
+    },
+    "chat": {
+      "label": "Email",
+      "value": "Chat with AI Cloudia"
+    }
+  },
+  "valuesData": [
+    [
+      {
+        "ref": "01",
+        "name": "Take Action First",
+        "description": "Anyone can just think. Accept that the right answer will be judged by future people, and once decided, act quickly toward the best outcome."
+      },
+      {
+        "ref": "02",
+        "name": "Always Self-Reflect",
+        "description": "The form of happiness is constantly changing. To pursue true happiness, we must always ask ourselves \"Is this the best?\" and continue moving without stopping our thinking."
+      },
+      {
+        "ref": "03",
+        "name": "Make Both Others and Yourself Happy",
+        "description": "Only happy people can make others happy. Always think through actions that create win-win situations for both yourself and others without sacrificing anything."
+      }
+    ],
+    [
+      {
+        "ref": "04",
+        "name": "Express Intentions Clearly",
+        "description": "Indecisive actions are wasteful and benefit no one. Make firm decisions yourself and commit fully to everything."
+      },
+      {
+        "ref": "05",
+        "name": "Flexible Services",
+        "description": "Help as many stakeholders as possible become happy. For this purpose, we deliberately avoid standardized services and build optimal services tailored to individual tasks. (Example) Instantly customize WebAR business cards and AI chatbots according to customer requirements"
+      },
+      {
+        "ref": "06",
+        "name": "Forge Your Own Destiny",
+        "description": "Regardless of success or failure, take responsibility for your own actions. Accept all results and reflections from your actions with a smile."
+      }
+    ]
+  ],
+  "teamData": [
+    {
+      "name": "Kousuke Terada",
+      "image": "/assets/k-terada.avif",
+      "job": "CEO",
+      "description": "Music college graduate → Musical instrument manufacturer sales → Corporate sales at mega-venture → Career change to IT. Leveraging this unique background to challenge \"bridging technology and language.\"",
+      "comingSoon": false,
+      "link": "https://cor-jp.com/about"
+    },
+    {
+      "name": "Cloudia Sorano",
+      "image": "/assets/cloudia.avif",
+      "job": "AI Ambassador",
+      "description": "In-house AI that shares technical topics in Fukuoka dialect. Currently challenging 51 consecutive weeks of Lightning Talks on Zenn and X.",
+      "comingSoon": false,
+      "link": "https://x.com/Cloudia_Cor",
+      "zennLink": "https://zenn.dev/cloudia"
+    },
+    {
+      "name": "Nagisa Terada",
+      "image": "/assets/nagi.avif",
+      "job": "Staff",
+      "description": "After graduating from beauty school, worked at a salon for 7 years. Transitioned to IT after learning programming. Striving daily to turn challenges into possibilities.",
+      "comingSoon": false,
+      "link": "https://digital-studio-c5abe.web.app/"
+    }
+  ],
+  "meta": {
+    "404": {
+      "title": "Not found · Cor.inc",
+      "description": "Page not found. Please check the URL in the address bar and try again."
+    },
+    "industryMedical": {
+      "title": "AI partnership for healthcare | Cor.inc",
+      "description": "The challenges of healthcare — using in-hospital data, patient response, information security, AI strategy, organizing estimates — Cor. helps you move forward together. We walk with you through AI contract development, AI advisory, local LLM, and Grift."
+    },
+    "industryShigyo": {
+      "title": "AI partnership for professional services | Cor.inc",
+      "description": "The challenges of professional services — reviewing contracts, filings and registrations, deadline management, subsidy applications — Cor. helps you move forward together. We walk with you through AI contract development, AI advisory, local LLM, and Grift."
+    },
+    "industryConstruction": {
+      "title": "AI partnership for construction | Cor.inc",
+      "description": "The challenges of construction sites — labor management, design changes, safety checks, passing on know-how — Cor. helps you move forward together. We walk with you through AI contract development, AI advisory, local LLM, and Grift."
+    },
+    "industryManufacturing": {
+      "title": "AI partnership for manufacturing | Cor.inc",
+      "description": "The challenges of manufacturing sites — visual inspection, passing on know-how, equipment maintenance, inventory management — Cor. helps you move forward together. We walk with you through AI contract development, AI advisory, local LLM, and Grift."
+    },
+    "industryEducation": {
+      "title": "AI partnership for education | Cor.inc",
+      "description": "The challenges of education sites — exam tasks, parent communication, survey reports, ICT roster management — Cor. helps you move forward together. We walk with you through AI contract development, AI advisory, local LLM, and Grift."
+    },
+    "home": {
+      "title": "Cor.Inc. | Practical AI Implementation, Local LLM, and Grift",
+      "description": "Cor.Inc. builds robust, operational AI systems tailored to your business, centering on confidential data AI, Local LLMs, and Grift, incorporating essential designs for input boundaries, permissions, logs, and human approval.",
+      "ogTitle": "Cor.Inc. | Practical AI Implementation, Local LLM, and Grift",
+      "ogDescription": "Cor.Inc. builds robust, operational AI systems tailored to your business, centering on confidential data AI, Local LLMs, and Grift, incorporating essential designs for input boundaries, permissions, logs, and human approval."
+    },
+    "about": {
+      "title": "About · Cor.inc",
+      "description": "Find more our history, values, mission and more. We are a group of people who share the same values."
+    },
+    "contact": {
+      "title": "Contact · Cor.inc",
+      "description": "Contact our team to learn more about how we can help you."
+    },
+    "products": {
+      "title": "Products&Insights · Cor.inc",
+      "description": "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions."
+    },
+    "privacy": {
+      "title": "Privacy policy · Cor.inc",
+      "description": "Cor.inc's privacy policy: the personal information we collect and our purposes of use, provision to third parties and outsourcing, overseas transfers, security control measures, requests for disclosure, and our contact point for inquiries."
+    },
+    "security": {
+      "title": "Security | Cor.inc",
+      "description": "Cor. Inc.'s information security: our ISMS roadmap, and a local-first, sensitivity-tiered AI development environment."
+    },
+    "news": {
+      "title": "News | Cor.inc",
+      "description": "Company announcements, service updates, external coverage, and event information from Cor. Inc."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdate": "Effective date: June 13, 2026 (Version 0.1, Draft)",
+    "note": "The Japanese version is the authoritative text. This English translation is provided for convenience.",
+    "intro": "Cor. Inc. (hereinafter referred to as \"the Company\") recognizes the importance of the personal information it handles and, in accordance with the Act on the Protection of Personal Information (hereinafter the \"APPI\") and other relevant laws and regulations and guidelines, as well as the information security management system based on ISO/IEC 27001:2022 (JIS Q 27001:2023), handles the personal information of customers, employees, job applicants, and all other individuals appropriately. The Company protects personal information in accordance with the following policy.",
+    "businessTitle": "1. Business Information",
+    "businessTable": [
+      {
+        "label": "Business name",
+        "value": "Cor. Inc."
+      },
+      {
+        "label": "Location",
+        "value": "Fukuoka Prefecture (Head Office)"
+      },
+      {
+        "label": "Representative",
+        "value": "Representative Director Kosuke Terada"
+      },
+      {
+        "label": "Business activities",
+        "value": "Planning, requirements definition, development, and operation of AI solutions, and the accounting and financial operations incidental thereto"
+      },
+      {
+        "label": "Personal Information Protection Manager",
+        "value": "ISMS Management Officer Nagisa Terada"
+      },
+      {
+        "label": "Inquiries",
+        "value": "Through the contact point set forth in Section 9."
+      }
+    ],
+    "purposeTitle": "2. Personal Information We Collect and Purposes of Use",
+    "purposeLead": "When collecting personal information, the Company specifies the purpose of use as far as possible and collects such information by lawful and fair means. Except where the prior consent of the individual has been obtained, the Company does not handle personal information beyond the scope necessary to achieve the specified purpose of use. The types of personal information handled by the Company and the purposes of use are as follows.",
+    "purposeGroups": [
+      {
+        "title": "(1) Customers (including business partners and prospects)",
+        "lines": [
+          {
+            "label": "Information collected",
+            "value": "Name, company name, department, job title, email address, telephone number, information relating to transactions, and the like"
+          },
+          {
+            "label": "Purpose of use",
+            "value": "Responding to inquiries and requests / concluding and performing contracts, and providing the development, operation, and maintenance of AI solutions / billing, payment, and other accounting and financial processing / communications and notifications regarding services / management of transactions and contracts and the performance of obligations under laws and regulations"
+          }
+        ]
+      },
+      {
+        "title": "(2) Employees (including officers, part-time, fixed-term, and interns)",
+        "lines": [
+          {
+            "label": "Information collected",
+            "value": "Name, contact details, date of birth, address, bank account, My Number (Specific Personal Information), social insurance-related information, personnel evaluations, attendance records, work-related logs, and the like"
+          },
+          {
+            "label": "Purpose of use",
+            "value": "Personnel and labor management (recruitment, placement, evaluation, salary, bonuses, retirement, etc.) / payroll calculation, withholding tax and other tax processing, and procedures for social insurance and labor insurance (including Specific Personal Information; see Section 4) / objective ascertainment of working hours and fulfillment of health management and the duty of care for safety / log collection and monitoring for information security management (detection of and response to unauthorized access, information leakage, malware infection, etc.; the scope of collection is governed by Section 8 and internal regulations) / emergency contact, employee benefits, and other management based on the employment contract"
+          }
+        ]
+      },
+      {
+        "title": "(3) Job Applicants",
+        "lines": [
+          {
+            "label": "Information collected",
+            "value": "Name, contact details, resume, curriculum vitae, interview records, information collected during the selection process, and the like"
+          },
+          {
+            "label": "Purpose of use",
+            "value": "Recruitment selection (receipt of applications, selection, communication, and decisions on acceptance or rejection) / preparation of post-hire onboarding procedures / management of application information for a certain period in the case of rejection (including matters relating to future contact; limited to cases based on the consent of the individual)"
+          }
+        ]
+      }
+    ],
+    "purposeNote": "Note: In addition to being provided by this Policy, internal notification of the purposes of use to employees and job applicants is separately stated through the notice of working conditions, written pledges, and guidance provided at the time of hiring. In particular, the Company states, through this Policy and the \"Notice and Consent Form Regarding Employee Monitoring,\" that the purposes of use include log collection and monitoring for the personnel and labor management and information security management of employees.",
+    "sections": [
+      {
+        "title": "3. Provision to Third Parties and Outsourcing",
+        "body": [
+          "Except where any of the following applies, the Company does not provide personal data to third parties without obtaining the prior consent of the individual."
+        ],
+        "list": [
+          "Where based on laws and regulations.",
+          "Where it is necessary for the protection of the life, body, or property of an individual and it is difficult to obtain the consent of the individual.",
+          "Where it is particularly necessary for improving public health or promoting the sound upbringing of children and it is difficult to obtain the consent of the individual.",
+          "Where it is necessary to cooperate with a state organ or the like in carrying out affairs prescribed by laws and regulations, and obtaining the consent of the individual is likely to impede the performance of such affairs."
+        ],
+        "bodyAfter": [
+          "Within the scope necessary to achieve the purpose of use, the Company may outsource all or part of the handling of personal information to external businesses (outsourcing contractors, cloud service providers, etc.). In such cases, the Company exercises necessary and appropriate supervision over the outsourcing contractor in accordance with the internal rule \"Supplier and Outsourcing Management Regulations.\"",
+          "When the Company has provided personal data to a third party or has received personal data from a third party, the Company records and retains the necessary matters in accordance with Articles 29 and 30 of the APPI."
+        ]
+      },
+      {
+        "title": "4. Use of Cloud Services and Provision to Third Parties Located Overseas (Article 28 of the APPI)",
+        "body": [
+          "The Company handles personal information using cloud services such as Google Workspace (shared drives), Google Cloud (GCP / Secret Manager), GitHub, and Bitwarden.",
+          "In connection with the use of these cloud services, personal data may be handled in foreign countries (cross-border transfer). When the Company provides personal data to a third party located overseas (including cases where data is handled overseas through cloud services), the Company handles such data appropriately in accordance with Article 28 of the APPI, by means such as obtaining the prior consent of the individual, or by confirming that the relevant third party has established a system conforming to the standards prescribed by said Act, or by other means prescribed by laws and regulations.",
+          "When carrying out a cross-border transfer, the Company provides, upon the request of the individual and as prescribed by laws and regulations, information regarding the name of the country in which the transferee is located, the systems for the protection of personal information in that country, and the measures taken by the transferee.",
+          "* With respect to Specific Personal Information (My Number), the Company does not provide it to third parties located overseas, in accordance with the My Number Act."
+        ]
+      },
+      {
+        "title": "5. Security Control Measures",
+        "body": [
+          "In order to prevent the leakage, loss, or damage of the personal information it handles and to otherwise ensure security control, the Company implements the following measures (details are governed by the internal rules \"Personal Information and Specific Personal Information Handling Regulations\" and \"Information Security Management Regulations\")."
+        ],
+        "list": [
+          "Organizational and human security control measures: The Company appoints a Personal Information Protection Manager (ISMS Management Officer) to ascertain and inspect the status of handling. The Company provides education to employees regarding their confidentiality obligations and compliance with relevant laws and regulations.",
+          "Access control: Based on the zero-trust approach, the Company controls access to personal data through multi-factor authentication (MFA), device posture verification, and the principle of least privilege. For Specific Personal Information, access privileges are configured so that only the personnel in charge of the relevant affairs can access it.",
+          "Encryption: Disk encryption (FileVault) is enabled on business devices, and communications are encrypted using TLS or the like. Encryption at rest is enabled for data stored in the cloud.",
+          "Logging and detection: Access to personal data is subject to minimal logs relevant to business operations (which do not collect private content), and is recorded and monitored.",
+          "Disposal: Personal data that is no longer needed is disposed of by a method that renders it irrecoverable."
+        ]
+      },
+      {
+        "title": "6. Requests for Disclosure of Retained Personal Data",
+        "body": [
+          "An individual or their agent (meaning a statutory agent or an agent appointed by the individual) may request the Company, with respect to the retained personal data by which that individual is identified, to provide notification of the purpose of use, to disclose, to correct, add to, or delete the content, to suspend or erase the use, or to suspend provision to third parties.",
+          "The Company accepts such requests by the method prescribed by the Company, accompanied by documents that can confirm the identity of the individual or the agent.",
+          "The Company decides the content of its response and notifies the individual, in principle, within 30 days from the date on which it accepted such a request. If, due to unavoidable circumstances, it cannot respond within that period, the Company notifies the individual of the reason and the expected timing of its response.",
+          "When complying with a request for disclosure, the Company may collect a fee prescribed by the Company within a range deemed reasonable in light of the actual costs.",
+          "In certain cases prescribed by laws and regulations (where there is a risk of harming the rights or interests of the individual or a third party, where there is a risk of significantly impeding the proper execution of the Company's business, where it would result in a violation of other laws and regulations, etc.), the Company may decline to disclose all or part of the data. In such cases, the Company notifies the individual to that effect together with the reason."
+        ]
+      },
+      {
+        "title": "7. Response in the Event of a Data Breach",
+        "body": [
+          "In the event that a situation involving the leakage, loss, or damage of personal data, or otherwise relating to the assurance of security, occurs, and where it falls under a certain situation prescribed in Article 26 of the APPI, the Company promptly reports to the Personal Information Protection Commission (preliminary report) and reports within the prescribed period (final report), and also notifies the individual promptly in accordance with the circumstances of the situation. Where notification to the individual is difficult, the Company takes the necessary alternative measures to protect the rights and interests of the individual. With respect to leakage or the like relating to Specific Personal Information, the Company separately makes the necessary reports and notifications in accordance with the My Number Act and the rules of the Personal Information Protection Commission."
+        ]
+      },
+      {
+        "title": "8. Handling of Log Collection and Monitoring (For Employees)",
+        "body": [
+          "For the purposes of information security management, labor management, and the objective ascertainment of working hours, the Company collects and monitors business-related logs (authentication, process execution, communication metadata, access to internal data, software configuration, and attendance/usage time) on the devices and cloud services used for business. The Company does not collect private content (the content of personal browsing, the content of personal accounts, or keystrokes).",
+          "The purposes, scope, persons responsible, viewing conditions, and retention periods for log collection and monitoring are governed by the internal rules \"Log Collection and Monitoring Regulations\" and the \"Notice and Consent Form Regarding Employee Monitoring.\""
+        ]
+      }
+    ],
+    "inquiryTitle": "9. Contact Point for Inquiries",
+    "inquiryLead": "Requests for the disclosure of retained personal data and complaints or consultations regarding the handling of personal information are accepted at the following contact point.",
+    "inquiryTable": [
+      {
+        "label": "Contact point",
+        "value": "Cor. Inc. Personal Information Protection Manager (ISMS Management Officer Nagisa Terada)"
+      },
+      {
+        "label": "How to contact",
+        "value": "Please contact us via the inquiry form."
+      }
+    ],
+    "inquiryLinkLabel": "inquiry form",
+    "revisionTitle": "10. Revision of This Policy",
+    "revisionBody": [
+      "The Company may revise this Policy due to amendments to laws and regulations, changes in business activities, or other circumstances. When revised, the Company will publish the revised content on the Company's website or by other means. When making important changes, the Company will make them known by appropriate means."
+    ],
+    "securityLinkPrefix": "For our information security framework, see also our ",
+    "securityLinkText": "Security",
+    "securityLinkSuffix": " page.",
+    "footer": "Version 0.1 (Draft) / Effective date: June 13, 2026 / Prepared by: Cor. Inc. / Responsible: Personal Information Protection Manager (ISMS Management Officer, Nagisa Terada)",
+    "footerNote": "* This Policy is a summary and mapping of the internal rule \"Personal Information and Specific Personal Information Handling Regulations\" for the purpose of external publication. Where the content of the two differs, it shall be interpreted in accordance with laws and regulations and the intent of said regulations."
+  },
+  "security": {
+    "title": "Security",
+    "tagline": "Build freely. Protect responsibly.",
+    "lead": "Cor. Inc. is building out its information security program to balance the speed of AI development with the responsibility of protecting our customers' valuable information. While maintaining a local-first environment where developers can be highly productive, we operate a combination of sensitivity-based access controls, approved AI tools, minimal security logging, and an incident response framework.",
+    "basicPolicy": {
+      "title": "Information Security Basic Policy",
+      "note": "The Japanese version is the authoritative text. This English translation is provided for convenience.",
+      "preamble": [
+        "Cor. Inc. (hereinafter, “the Company”), under its management philosophy of “shaping the future and realizing a happy society through co-creation rather than competition,” engages in businesses including contracted AI development and AI adoption support, AI advisory and training, the provision of the AI evaluation platform “Grift,” and support for highly confidential AI operations using local LLMs.",
+        "The scope of this Basic Policy covers all operations related to the entirety of the Company's business at its head office (Fukuoka) — the planning, requirements definition, development, and operation of AI solutions, together with the associated accounting and finance work — as well as the information assets handled in those operations.",
+        "Because these businesses involve handling many information assets — including confidential information, source code, and training data entrusted to us by customers — the Company recognizes ensuring information security as a critical management issue. The Company believes that implementing appropriate safeguards for customer information collected through its operations and for the information assets it handles, and maintaining their confidentiality, integrity, and availability, forms the foundation of the trust it builds with customers and of the sustainable development of its business.",
+        "Through the establishment and operation of an information security management system (ISMS), the Company aims to prevent security incidents such as information leaks and tampering, and to that end establishes the following information security guidelines."
+      ],
+      "guidelinesTitle": "Guidelines",
+      "guidelines": [
+        "The Company will identify information asset risks using defined procedures and implement appropriate risk treatment in order to establish and continually improve its information security management system.",
+        "The Company will clearly define roles and responsibilities for information security and appropriately manage its information assets.",
+        "The Company will conduct education and awareness activities for management, employees, and all related parties so that they recognize their responsibility to maintain information security.",
+        "The Company will monitor and record the implementation of its information security management system, and will improve operational reliability and pursue continual improvement through the setting and achievement of information security objectives and through periodic internal audits and management reviews.",
+        "In the unlikely event of an information security problem, the Company will immediately investigate the cause, minimize the damage, and strive to ensure business continuity.",
+        "The Company will comply with laws and regulations, other social norms, and contracts with customers concerning information assets and their handling.",
+        "The Company will consider climate change and other changes in the business environment as issues relevant to information security and business continuity."
+      ],
+      "signatureDate": "July 1, 2026",
+      "signatureCompany": "Cor. Inc.",
+      "signatureName": "Representative Director Kosuke Terada",
+      "meta": "Established: July 1, 2026 / Version 1"
+    },
+    "pillarsTitle": "Three Pillars",
+    "pillars": [
+      {
+        "title": "Local-First",
+        "description": "We use high-spec, company-issued Macs as the baseline so developers can work comfortably in a local development environment. By combining device encryption, MDM, account management, and necessary security configurations, we aim to balance development speed with information management."
+      },
+      {
+        "title": "Minimal Security Logging, Detection, and Response",
+        "description": "Rather than preventively prohibiting everything, we maintain security visibility to the extent needed for our work and build a framework that can quickly detect and respond when issues arise. The data we collect is limited to work-related security telemetry, and our policy is not to excessively collect private content."
+      },
+      {
+        "title": "Sensitivity Tiers",
+        "description": "Depending on the sensitivity of the information handled, we selectively use company accounts, approved AI tools, access controls, and isolated environments when needed. For non-confidential verification we prioritize speed, while applying stricter handling when dealing with customer confidential data, personal information, source code, and the like."
+      }
+    ],
+    "statusTitle": "Building Our Framework",
+    "status": {
+      "legal": "Since June 2026, in collaboration with our retained legal counsel, we have been building a legal review framework covering contracts, personal information, AI use, and information security operations.",
+      "isms": "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification."
+    },
+    "aiTitle": "AI Usage Policy",
+    "aiDescription": "Cor. actively leverages AI tools for our work. At the same time, when handling customer confidential data, personal information, source code, training data, and the like, we use AI tools under contracts and configurations that prevent training use, company accounts, or approved environments. AI outputs are verified by people and used only after confirming rights, accuracy, and safety.",
+    "tableTitle": "Initiatives",
+    "tableHead": {
+      "area": "Area",
+      "effort": "Initiative",
+      "state": "Status"
+    },
+    "table": [
+      {
+        "area": "Legal Review",
+        "effort": "In collaboration with retained legal counsel, reviewing contracts, personal information, AI use, and ISMS operations",
+        "state": "Building since June 2026"
+      },
+      {
+        "area": "ISMS",
+        "effort": "Targeting ISO/IEC 27001 certification, building risk management, training, policies, and audit framework",
+        "state": "In progress"
+      },
+      {
+        "area": "Device Management",
+        "effort": "Company-issued Macs, device encryption, MDM, and distribution of necessary configurations",
+        "state": "Phased rollout"
+      },
+      {
+        "area": "AI Use",
+        "effort": "Applying approved AI tools, company accounts, and no-training settings according to sensitivity",
+        "state": "Operational readiness in progress"
+      },
+      {
+        "area": "Local LLM",
+        "effort": "Supporting AI use that avoids unnecessarily exposing confidential information externally",
+        "state": "Applied per engagement"
+      },
+      {
+        "area": "Incident Response",
+        "effort": "Codifying reporting lines, initial response, and recurrence prevention into policy",
+        "state": "Being built within ISMS operations"
+      }
+    ],
+    "privacyTitle": "About Privacy",
+    "privacyDescription": "For how we handle personal information, please see our ",
+    "privacyLinkText": "Privacy Policy",
+    "privacySuffix": ".",
+    "privacyLead": "* For legal details on how we handle personal information and customer data, please see our Privacy Policy.",
+    "governanceTitle": "Building Our Framework",
+    "governanceDescription": "Cor. Inc. is advancing the operational readiness of its ISMS (Information Security Management System), targeting ISO/IEC 27001 certification.",
+    "ctas": {
+      "primary": "Discuss a confidential-data AI assessment",
+      "secondary": "Talk to us",
+      "tertiary": "Privacy Policy"
+    }
+  },
+  "nextStep": {
+    "about": {
+      "heading": "Now that you know a little about Cor., shall we talk about your project?",
+      "ctaLabel": "Talk to us"
+    },
+    "contact": {
+      "heading": "Before you reach out",
+      "lead": "Feel free to tell us what you have in mind — we're happy to help.",
+      "ctaLabel": "Get in touch"
+    },
+    "security": {
+      "heading": "If it feels like something you can trust us with, why not start with a conversation?",
+      "ctaLabel": "Discuss a confidential-data AI assessment"
+    }
+  }
+}

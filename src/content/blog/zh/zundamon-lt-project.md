@@ -1,5 +1,5 @@
 ---
-title: "【Marp×VOICEVOX×VTubeStudio】让ずんだもん来做 LT（短演讲）発表的故事"
+title: "【Marp×VOICEVOX×VTubeStudio】让ずんだもん做LT发表"
 description: "这个项目源于“想用 AI 做些无聊的事情！”的纯粹好奇心。作为一项有趣且富有创造性地利用技术的实验，我们构建了一个能让ずんだもん自动进行 LT 発表（短演讲）的系统。"
 pubDate: 2024-01-30
 author: "Terisuke"
@@ -8,7 +8,7 @@ tags: ["Marp", "VOICEVOX", "VTubeStudio", "自動化", "創造的プロジェク
 lang: "zh"
 ---
 
-# 【Marp×VOICEVOX×VTubeStudio】让ずんだもん来做 LT（短演讲）発表的故事
+# 【Marp×VOICEVOX×VTubeStudio】让ずんだもん做LT发表
 
 这个项目源于“想用 AI 做些无聊的事情！”的纯粹好奇心。作为一项有趣且富有创造性地利用技术的实验，我们构建了一个能让ずんだもん自动进行 LT 発表（短演讲）的系统。
 

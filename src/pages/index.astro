@@ -1,11 +1,18 @@
 ---
-import About from '../components/home/About.astro';
-import Cta from '../components/home/Cta.astro';
-import Hero from '../components/home/Hero.astro';
-import Services from '../components/home/Services.astro';
-import Testimonials from '../components/home/Testimonials.astro';
+import ProblemHero from '../components/home/ProblemHero.astro';
+import ChallengeGrid from '../components/home/ChallengeGrid.astro';
+import IndustryTable from '../components/home/IndustryTable.astro';
+import GriftBridge from '../components/home/GriftBridge.astro';
+import ProofHighlights from '../components/home/ProofHighlights.astro';
+import ServicesReframed from '../components/home/ServicesReframed.astro';
+import SecurityTrust from '../components/home/SecurityTrust.astro';
+import KyousouPhilosophy from '../components/home/KyousouPhilosophy.astro';
+import HomeNewsRail from '../components/home/HomeNewsRail.astro';
+import HomeBlog from '../components/home/HomeBlog.astro';
+import Faq from '../components/products/Faq.astro';
+import ServiceCtas from '../components/home/ServiceCtas.astro';
+import FinalCta from '../components/home/FinalCta.astro';
 import Layout from '../layouts/Layout.astro';
-import Expertise from '../components/home/Expertise.astro';
 import { getCurrentLocale, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
@@ -16,11 +23,20 @@ const t = getTranslations(currentLocale);
 <Layout
   description={t.meta.home.description}
   title={t.meta.home.title}
+  ogTitle={t.meta.home.ogTitle || t.meta.home.title}
+  ogDescription={t.meta.home.ogDescription || t.meta.home.description}
 >
-  <Hero />
-  <Services />
-  <Expertise />
-  <About />
-  <Testimonials />
-  <Cta />
+  <ProblemHero />
+  <ChallengeGrid />
+  <IndustryTable />
+  <GriftBridge />
+  <ProofHighlights />
+  <ServicesReframed />
+  <SecurityTrust />
+  <KyousouPhilosophy />
+  <HomeNewsRail />
+  <HomeBlog />
+  <Faq />
+  <ServiceCtas />
+  <FinalCta />
 </Layout>

@@ -1,0 +1,51 @@
+---
+import { BLOG_CATEGORIES, getCategoryLabel } from '../../config/categories';
+import { getCurrentLocale, getLocalizedUrl } from '../../utils/i18n';
+
+interface Props {
+  currentCategory?: string;
+}
+
+const { currentCategory } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
+
+const labels = {
+  ja: { all: 'すべて', nav: 'カテゴリ' },
+  en: { all: 'All', nav: 'Categories' },
+  zh: { all: '全部', nav: '分类' },
+  ko: { all: '전체', nav: '카테고리' },
+  es: { all: 'Todo', nav: 'Categorías' },
+};
+
+const currentLabels = labels[currentLocale] ?? labels.en;
+const allHref = getLocalizedUrl('/blog', currentLocale);
+---
+
+<nav class="mb-8 border-y border-stone-200 py-4 dark:border-stone-800" aria-label={currentLabels.nav}>
+  <div class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-4 sm:flex-wrap sm:justify-center sm:px-0">
+    <a
+      href={allHref}
+      class={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ${
+        !currentCategory
+          ? 'border-stone-950 bg-stone-950 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-950'
+          : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-stone-500'
+      }`}
+      aria-current={!currentCategory ? 'page' : undefined}
+    >
+      {currentLabels.all}
+    </a>
+    {BLOG_CATEGORIES.map((category) => (
+      <a
+        href={getLocalizedUrl(`/blog/category/${category.id}`, currentLocale)}
+        class={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ${
+          category.id === currentCategory
+            ? 'border-stone-950 bg-stone-950 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-950'
+            : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-stone-500'
+        }`}
+        aria-current={category.id === currentCategory ? 'page' : undefined}
+      >
+        {getCategoryLabel(category.id, currentLocale)}
+      </a>
+    ))}
+  </div>
+</nav>

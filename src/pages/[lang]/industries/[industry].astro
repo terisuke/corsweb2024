@@ -1,0 +1,47 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import MedicalBody from '../../../components/industry/MedicalBody.astro';
+import ShigyoBody from '../../../components/industry/ShigyoBody.astro';
+import ConstructionBody from '../../../components/industry/ConstructionBody.astro';
+import ManufacturingBody from '../../../components/industry/ManufacturingBody.astro';
+import EducationBody from '../../../components/industry/EducationBody.astro';
+import { getTranslations, type Locale } from '../../../utils/i18n';
+
+// ja はルート直下 (/industries/*) の薄いページが担当。ここは非ja の言語ルートを生成する。
+export function getStaticPaths() {
+  const langs = ['en', 'zh', 'ko', 'es'];
+  const industries = ['medical', 'shigyo', 'construction', 'manufacturing', 'education'];
+  return langs.flatMap((lang) =>
+    industries.map((industry) => ({ params: { lang, industry } })),
+  );
+}
+
+const { lang, industry } = Astro.params;
+const t = getTranslations(lang as Locale);
+
+const bodies = {
+  medical: MedicalBody,
+  shigyo: ShigyoBody,
+  construction: ConstructionBody,
+  manufacturing: ManufacturingBody,
+  education: EducationBody,
+} as const;
+const metaKeys = {
+  medical: 'industryMedical',
+  shigyo: 'industryShigyo',
+  construction: 'industryConstruction',
+  manufacturing: 'industryManufacturing',
+  education: 'industryEducation',
+} as const;
+
+const Body = bodies[industry as keyof typeof bodies];
+const meta = t.meta[metaKeys[industry as keyof typeof metaKeys]];
+---
+
+<Layout
+  description={meta.description}
+  title={meta.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <Body />
+</Layout>

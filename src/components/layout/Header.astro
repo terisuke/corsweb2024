@@ -1,41 +1,149 @@
 ---
 import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getContactUrl, getGriftUrl } from '../../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+// nav 拡張キー（未翻訳言語向けフォールバック）
+const nav = t.nav as typeof t.nav & {
+  services?: string;
+  serviceAssessment?: string;
+  serviceLocalLlm?: string;
+  serviceAiDev?: string;
+  industries?: string;
+  consult?: string;
+};
 
-const links = [
+// サービス導線（ADR-0011）: LP 未整備のため intent 付き /contact と Grift
+const serviceLinks = [
   {
-    ref: '01',
-    name: t.nav.home,
-    href: getLocalizedUrl('/', currentLocale),
+    name: nav.serviceAssessment || '機密データAI活用診断',
+    href: getContactUrl(currentLocale, {
+      intent: 'confidential-ai-assessment',
+      source: 'header',
+    }),
+    isExternal: false,
   },
   {
-    ref: '02',
-    name: t.nav.about,
-    href: getLocalizedUrl('/about', currentLocale),
+    name: nav.serviceLocalLlm || 'ローカルLLM / セキュアAI PoC',
+    href: getContactUrl(currentLocale, {
+      intent: 'local-llm-poc',
+      source: 'header',
+    }),
+    isExternal: false,
   },
   {
-    ref: '03',
-    name: t.nav.products,
-    href: getLocalizedUrl('/products', currentLocale),
+    name: nav.serviceAiDev || 'AI基盤構築・AI受託',
+    href: getContactUrl(currentLocale, {
+      intent: 'contract-dev',
+      source: 'header-ai-dev',
+    }),
+    isExternal: false,
   },
   {
-    ref: '04',
-    name: t.nav.blog,
-    href: getLocalizedUrl('/blog', currentLocale),
-  },
-  {
-    ref: '05',
-    name: t.nav.contact,
-    href: getLocalizedUrl('/contact', currentLocale),
+    name: nav.grift,
+    href: getGriftUrl('/', { intent: 'grift-team-beta', source: 'header' }),
+    isExternal: true,
   },
 ];
+
+// /works・/news は現状 ja ルートのみ。/industries は [lang] ルートで全言語に存在する。
+const baseLinks = [
+  { name: t.nav.home, href: getLocalizedUrl('/', currentLocale), isExternal: false },
+  ...(currentLocale === 'ja'
+    ? [
+        { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false },
+        { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
+      ]
+    : []),
+  {
+    name: nav.industries || '業種別',
+    href: getLocalizedUrl('/industries/medical', currentLocale),
+    isExternal: false,
+  },
+  { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale), isExternal: false },
+  { name: t.nav.about, href: getLocalizedUrl('/about', currentLocale), isExternal: false },
+  { name: t.nav.blog, href: getLocalizedUrl('/blog', currentLocale), isExternal: false },
+  {
+    name: nav.consult || t.nav.contact,
+    href: getContactUrl(currentLocale, { source: 'header' }),
+    isExternal: false,
+  },
+];
+// 現在地ハイライト判定: Astro.url.pathname と各リンクの href を比較。
+// 末尾スラッシュの揺れを吸収するため正規化してから比較する。トップ(/)も対象。
+// ロジックは全言語共通。外部リンク(Grift 等)は判定対象外。
+const normalizePath = (path: string) => {
+  if (!path) return '/';
+  // query を除いて比較
+  const withoutQuery = path.split('?')[0] || '/';
+  const trimmed = withoutQuery.replace(/\/+$/, '');
+  return trimmed === '' ? '/' : trimmed;
+};
+const currentPath = normalizePath(Astro.url.pathname);
+
+const links = baseLinks.map((link, index) => ({
+  ...link,
+  ref: String(index + 1).padStart(2, '0'),
+  isActive: !link.isExternal && normalizePath(link.href) === currentPath,
+}));
+
+const isCurrentSection = (href: string) => {
+  const normalizedHref = normalizePath(href);
+  return currentPath === normalizedHref || (normalizedHref !== '/' && currentPath.startsWith(`${normalizedHref}/`));
+};
+
+const quickLinks = [
+  ...(currentLocale === 'ja'
+    ? [
+        { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale) },
+        { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale) },
+      ]
+    : []),
+  { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale) },
+  {
+    name: nav.consult || t.nav.contact,
+    href: getContactUrl(currentLocale, { source: 'header-quick' }),
+  },
+].map((link) => ({
+  ...link,
+  isActive: isCurrentSection(link.href),
+}));
+
+const servicesLabel = nav.services || 'サービス';
+
+// 言語切替（プルダウン）: 各言語の遷移先URLを現在パスから算出し、一覧から直接選べるようにする。
+const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'] as const;
+const langNames: Record<string, string> = {
+  ja: '日本語',
+  en: 'English',
+  zh: '中文',
+  ko: '한국어',
+  es: 'Español',
+};
+const langFlags: Record<string, string> = {
+  ja: '🇯🇵',
+  en: '🇺🇸',
+  zh: '🇨🇳',
+  ko: '🇰🇷',
+  es: '🇪🇸',
+};
+// 現在パスから locale プレフィックスを除いた基準パス（例: /en/about → /about）。
+const langBasePath = Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
+const langOptions = localeOrder.map((loc) => ({
+  loc,
+  name: langNames[loc],
+  flag: langFlags[loc],
+  // ja は現在ページを維持。非ja は翻訳済みサブページが未整備のため各言語ホームへ（404回避）。
+  // 5言語展開（#60）後に同一パス遷移へ切り替える。
+  href: loc === 'ja' ? langBasePath : `/${loc}`,
+  isCurrent: loc === currentLocale,
+}));
 ---
 
 <header
-  x-data="{ open: false }"
-  class="transition"
+  x-data="{ open: false, servicesOpen: false }"
+  class="relative z-40 transition"
   :class="{ 'bg-primary-500/10 dark:bg-primary-400/10': open, 'bg-primary-50 dark:bg-primary-950': !(open) }"
 >
   <div
@@ -47,76 +155,200 @@ const links = [
         href={getLocalizedUrl('/', currentLocale)}
         class="rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200"
       >
-        <span class="sr-only">Cor.inc</span>
-        <img class="h-20 w-auto" width="65" height="40" :src="'/assets/logo.avif'" alt="Cor.inc" loading="lazy" />
+        <span class="sr-only">Cor.株式会社</span>
+        <img class="h-20 w-auto" width="65" height="40" :src="'/assets/logo.avif'" alt="Cor.株式会社" loading="lazy" />
       </a>
     </div>
 
+    <nav class="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex" aria-label="主要ページ">
+      {/* サービス ドロップダウン（診断 / PoC / 受託 / Grift） */}
+      <div
+        class="relative"
+        @keydown.escape="servicesOpen = false"
+        @click.outside="servicesOpen = false"
+      >
+        <button
+          type="button"
+          @click="servicesOpen = !servicesOpen"
+          :aria-expanded="servicesOpen.toString()"
+          aria-haspopup="true"
+          class="inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-sm font-medium text-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 dark:text-primary-200 dark:hover:bg-primary-400/10 dark:focus-visible:ring-primary-200 xl:px-4"
+        >
+          {servicesLabel}
+          <svg
+            class="h-4 w-4 transition"
+            :class="{ 'rotate-180': servicesOpen }"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 15L7 10H17L12 15Z"></path>
+          </svg>
+        </button>
+        <ul
+          x-cloak
+          x-show="servicesOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 -translate-y-1"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-1"
+          class="absolute left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl border border-primary-900/10 bg-primary-50 py-1 shadow-lg dark:border-primary-300/10 dark:bg-primary-950"
+        >
+          {
+            serviceLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target={link.isExternal ? '_blank' : undefined}
+                  rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                  class="flex items-center px-4 py-3 text-sm font-medium text-primary-950 transition hover:bg-primary-500/10 dark:text-primary-200 dark:hover:bg-primary-400/10"
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      {
+        quickLinks.map((link) => (
+          <a
+            href={link.href}
+            aria-current={link.isActive ? 'page' : undefined}
+            class:list={[
+              'rounded-full px-2.5 py-2 text-sm font-medium transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 dark:hover:bg-primary-400/10 dark:focus-visible:ring-primary-200 xl:px-4',
+              link.isActive
+                ? 'bg-primary-500/10 text-[#2d4a6b] dark:bg-primary-400/10 dark:text-primary-100'
+                : 'text-primary-950 dark:text-primary-200',
+            ]}
+          >
+            {link.name}
+          </a>
+        ))
+      }
+    </nav>
+
     <!-- Actions -->
     <div class="-mr-2 flex items-center space-x-2 sm:space-x-3">
-      <!-- Toggle theme mode -->
+      <!-- Theme toggle: 一般的なスイッチ式（ノブが現在モードのアイコンを表示してスライド） -->
       <button
         type="button"
-        class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
         x-data
+        role="switch"
+        :aria-checked="($store.theme?.isDark || false).toString()"
         @click="$store.theme?.toggle()"
+        class="relative inline-flex h-8 w-14 shrink-0 items-center rounded-full border border-primary-900/10 bg-primary-500/10 transition focus:outline-none focus-visible:ring-2 ring-primary-950 dark:border-primary-300/10 dark:bg-primary-400/10"
       >
-        <span class="sr-only">Toggle theme mode</span>
-        <svg
-          x-cloak
-          class="h-6 w-6"
-          :class="{ 'hidden': !($store.theme?.isDark) }"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+        <span class="sr-only">ライト / ダークモード切り替え</span>
+        <span
+          class="inline-flex h-6 w-6 transform items-center justify-center rounded-full bg-primary-50 text-primary-950 shadow transition-transform dark:bg-primary-200"
+          :class="{ 'translate-x-7': $store.theme?.isDark, 'translate-x-1': !($store.theme?.isDark) }"
         >
-          <path
-            d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z"
-          ></path>
-        </svg>
-        <svg
-          x-cloak
-          class="h-6 w-6"
-          :class="{ 'hidden': $store.theme?.isDark }"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            d="M10 6C10 10.4183 13.5817 14 18 14C19.4386 14 20.7885 13.6203 21.9549 12.9556C21.4738 18.0302 17.2005 22 12 22C6.47715 22 2 17.5228 2 12C2 6.79948 5.9698 2.52616 11.0444 2.04507C10.3797 3.21152 10 4.56142 10 6ZM4 12C4 16.4183 7.58172 20 12 20C14.9654 20 17.5757 18.3788 18.9571 15.9546C18.6407 15.9848 18.3214 16 18 16C12.4772 16 8 11.5228 8 6C8 5.67863 8.01524 5.35933 8.04536 5.04293C5.62119 6.42426 4 9.03458 4 12ZM18.1642 2.29104L19 2.5V3.5L18.1642 3.70896C17.4476 3.8881 16.8881 4.4476 16.709 5.16417L16.5 6H15.5L15.291 5.16417C15.1119 4.4476 14.5524 3.8881 13.8358 3.70896L13 3.5V2.5L13.8358 2.29104C14.5524 2.1119 15.1119 1.5524 15.291 0.835829L15.5 0H16.5L16.709 0.835829C16.8881 1.5524 17.4476 2.1119 18.1642 2.29104ZM23.1642 7.29104L24 7.5V8.5L23.1642 8.70896C22.4476 8.8881 21.8881 9.4476 21.709 10.1642L21.5 11H20.5L20.291 10.1642C20.1119 9.4476 19.5524 8.8881 18.8358 8.70896L18 8.5V7.5L18.8358 7.29104C19.5524 7.1119 20.1119 6.5524 20.291 5.83583L20.5 5H21.5L21.709 5.83583C21.8881 6.5524 22.4476 7.1119 23.1642 7.29104Z"
-          ></path>
-        </svg>
+          <!-- Moon (dark時) -->
+          <svg
+            x-cloak
+            class="h-4 w-4"
+            :class="{ 'hidden': !($store.theme?.isDark) }"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M10 6C10 10.4183 13.5817 14 18 14C19.4386 14 20.7885 13.6203 21.9549 12.9556C21.4738 18.0302 17.2005 22 12 22C6.47715 22 2 17.5228 2 12C2 6.79948 5.9698 2.52616 11.0444 2.04507C10.3797 3.21152 10 4.56142 10 6ZM4 12C4 16.4183 7.58172 20 12 20C14.9654 20 17.5757 18.3788 18.9571 15.9546C18.6407 15.9848 18.3214 16 18 16C12.4772 16 8 11.5228 8 6C8 5.67863 8.01524 5.35933 8.04536 5.04293C5.62119 6.42426 4 9.03458 4 12Z"
+            ></path>
+          </svg>
+          <!-- Sun (light時) -->
+          <svg
+            x-cloak
+            class="h-4 w-4"
+            :class="{ 'hidden': $store.theme?.isDark }"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z"
+            ></path>
+          </svg>
+        </span>
       </button>
-      <!-- Language switch -->
-      <button
-        @click="$store.lang?.toggle()"
-        class="inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
-        x-data="{
-          get currentLang() { return $store.lang?.current || 'ja'; },
-          get nextLang() {
-            const localeOrder = ['ja', 'en', 'zh', 'ko', 'es'];
-            const currentIndex = localeOrder.indexOf(this.currentLang);
-            const nextIndex = (currentIndex + 1) % localeOrder.length;
-            return localeOrder[nextIndex];
-          },
-          get langDisplay() {
-            const langMap = { 'ja': '🇯🇵', 'en': '🇺🇸', 'zh': '🇨🇳', 'ko': '🇰🇷', 'es': '🇪🇸' };
-            return langMap[this.currentLang] || '🇯🇵';
-          },
-          get nextLangDisplay() {
-            const langMap = { 'ja': '🇯🇵', 'en': '🇺🇸', 'zh': '🇨🇳', 'ko': '🇰🇷', 'es': '🇪🇸' };
-            return langMap[this.nextLang] || '🇺🇸';
+      <!-- Language switch (プルダウン: 5言語を一覧から直接選択) -->
+      <div
+        class="relative"
+        x-data="{ langOpen: false }"
+        @keydown.escape="langOpen = false"
+        @click.outside="langOpen = false"
+      >
+        <button
+          type="button"
+          @click="langOpen = !langOpen"
+          :aria-expanded="langOpen.toString()"
+          aria-haspopup="true"
+          class="inline-flex h-14 items-center justify-center gap-1.5 rounded-full px-4 text-primary-950 ring-primary-950 transition hover:bg-primary-500/10 focus:outline-none focus-visible:ring-2 dark:text-primary-200 dark:hover:bg-primary-400/10"
+        >
+          <span class="sr-only">言語を切り替え / Language</span>
+          <span class="text-2xl leading-none">{langFlags[currentLocale]}</span>
+          <svg
+            class="h-4 w-4 transition"
+            :class="{ 'rotate-180': langOpen }"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 15L7 10H17L12 15Z"></path>
+          </svg>
+        </button>
+        <ul
+          x-cloak
+          x-show="langOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 -translate-y-1"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-1"
+          aria-label="Language"
+          class="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-primary-900/10 bg-primary-50 py-1 shadow-lg dark:border-primary-300/10 dark:bg-primary-950"
+        >
+          {
+            langOptions.map((o) => (
+              <li>
+                <a
+                  href={o.href}
+                  hreflang={o.loc}
+                  aria-current={o.isCurrent ? 'true' : undefined}
+                  class:list={[
+                    'flex items-center gap-3 px-4 py-3 text-base transition hover:bg-primary-500/10 dark:hover:bg-primary-400/10',
+                    o.isCurrent
+                      ? 'font-semibold text-[#2d4a6b] dark:text-primary-100'
+                      : 'text-primary-950 dark:text-primary-200',
+                  ]}
+                >
+                  <span class="text-xl leading-none">{o.flag}</span>
+                  <span class="flex-1">{o.name}</span>
+                  {o.isCurrent && (
+                    <svg
+                      class="h-4 w-4 text-[#2d4a6b] dark:text-primary-100"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z" />
+                    </svg>
+                  )}
+                </a>
+              </li>
+            ))
           }
-        }"
-      >
-        <span class="sr-only">Language switch</span>
-        <div class="flex flex-col items-center justify-center gap-1">
-          <div class="text-2xl leading-none" x-text="langDisplay"></div>
-          <div class="text-xs opacity-50 mt-1" x-text="nextLangDisplay"></div>
-        </div>
-      </button>
+        </ul>
+      </div>
       <!-- Toggle menu -->
       <button
         type="button"
@@ -186,12 +418,19 @@ const links = [
           links.map((link) => (
             <a
               href={link.href}
+              target={link.isExternal ? '_blank' : undefined}
+              rel={link.isExternal ? 'noopener noreferrer' : undefined}
               class="group inline-flex py-6 text-3xl font-medium tracking-tight text-primary-950 transition focus-visible:outline-none dark:text-primary-200 sm:py-8 sm:text-4xl"
             >
               <div class="flex flex-1 items-center justify-between rounded-3xl group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary-950 dark:group-focus-visible:outline-primary-200">
                 <div class="flex items-center gap-6">
                   <span class="text-xs">{link.ref}</span>
-                  <span class="group-hover:underline">{link.name}</span>
+                  <span
+                    class:list={['group-hover:underline', { 'font-semibold text-[#2d4a6b]': link.isActive }]}
+                    aria-current={link.isActive ? 'page' : undefined}
+                  >
+                    {link.name}
+                  </span>
                 </div>
                 <svg
                   class="h-6 w-6 text-primary-600 dark:text-primary-400 sm:h-8 sm:w-8"
@@ -206,6 +445,28 @@ const links = [
             </a>
           ))
         }
+        {/* サービス（モバイル: フラット展開） */}
+        <div class="py-6 sm:py-8">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">
+            {servicesLabel}
+          </p>
+          <ul class="flex flex-col gap-3">
+            {
+              serviceLinks.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    target={link.isExternal ? '_blank' : undefined}
+                    rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                    class="inline-flex min-h-[44px] items-center text-xl font-medium tracking-tight text-primary-950 underline-offset-4 transition hover:underline dark:text-primary-200 sm:text-2xl"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </nav>
     </div>
   </div>

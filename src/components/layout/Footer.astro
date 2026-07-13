@@ -38,11 +38,22 @@ const bottomLinks = [
         href: getLocalizedUrl('/about', currentLocale),
         isExternal: false,
       },
-      {
-        name: t.footer.links.products,
-        href: getLocalizedUrl('/products', currentLocale),
-        isExternal: false,
-      },
+      // /works と /news は現状 ja ルートのみ存在するため、Header と同様に ja 限定で表示し
+      // 非ja言語で /xx/works や /xx/news が 404 になるのを防ぐ。
+      ...(currentLocale === 'ja'
+        ? [
+            {
+              name: t.nav.works,
+              href: getLocalizedUrl('/works', currentLocale),
+              isExternal: false,
+            },
+            {
+              name: t.footer.links.news,
+              href: getLocalizedUrl('/news', currentLocale),
+              isExternal: false,
+            },
+          ]
+        : []),
       {
         name: t.footer.links.contact,
         href: getLocalizedUrl('/contact', currentLocale),
@@ -53,6 +64,11 @@ const bottomLinks = [
   {
     header: t.footer.legal,
     links: [
+      {
+        name: t.footer.links.security,
+        href: getLocalizedUrl('/security', currentLocale),
+        isExternal: false,
+      },
       {
         name: t.footer.links.privacy,
         href: getLocalizedUrl('/privacy', currentLocale),
@@ -66,6 +82,25 @@ const bottomLinks = [
     ],
   },
 ];
+
+// 現在地ハイライト判定: Header と同じく Astro.url.pathname と各リンクの href を
+// 正規化して比較する。末尾スラッシュの揺れを吸収。外部リンク(GitHub 等)は対象外。
+const normalizePath = (path: string) => {
+  if (!path) return '/';
+  const trimmed = path.replace(/\/+$/, '');
+  return trimmed === '' ? '/' : trimmed;
+};
+const currentPath = normalizePath(Astro.url.pathname);
+
+type FooterLink = { name: string; href: string; isExternal: boolean };
+
+const linkGroups = bottomLinks.map((group) => ({
+  ...group,
+  links: group.links.map((link: FooterLink) => ({
+    ...link,
+    isActive: !link.isExternal && normalizePath(link.href) === currentPath,
+  })),
+}));
 ---
 
 <footer
@@ -81,19 +116,20 @@ const bottomLinks = [
           width="65"
           height="40"
           :src="'/assets/logo.avif'"
-          alt="Cor.inc"
+          alt="Cor.株式会社"
           loading="lazy"
         />
-        <p class="text-base text-primary-950/70 dark:text-primary-200/70">
+        <p class="px-5 text-base leading-[1.8] text-primary-950/70 dark:text-primary-200/70 sm:px-0">
           {t.footer.description}
         </p>
-        <p class="text-sm text-primary-950/70 dark:text-primary-200/70">{t.footer.copyright}</p>
+        {/* 年は SSG(output:static) のためビルド時評価で焼き込まれる。年初の定期再ビルド、または #44(SSR化) 後のリクエスト時評価で自動更新される。 */}
+        <p class="text-sm text-primary-950/70 dark:text-primary-200/70">© {new Date().getFullYear()} {t.footer.copyright}</p>
       </div>
 
       <!-- Bottom links -->
       <div class="grid max-w-xl flex-1 grid-cols-1 gap-8 sm:grid-cols-3">
         {
-          bottomLinks.map((group) => (
+          linkGroups.map((group) => (
             <div class="flex flex-col gap-4">
               <p class="text-base font-medium">{group.header}</p>
               <ul role="list" class="flex flex-col gap-3">
@@ -101,7 +137,11 @@ const bottomLinks = [
                   <li>
                     <a
                       href={link.href}
-                      class="inline-flex items-center gap-1 rounded-md text-base hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-950 dark:focus-visible:outline-primary-200"
+                      class:list={[
+                        'inline-flex items-center gap-1 rounded-md text-base hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-950 dark:focus-visible:outline-primary-200',
+                        { 'font-semibold text-[#2d4a6b] dark:text-primary-100': link.isActive },
+                      ]}
+                      aria-current={link.isActive ? 'page' : undefined}
                       target={link.isExternal ? '_blank' : undefined}
                       rel={link.isExternal ? 'noopener' : undefined}
                     >

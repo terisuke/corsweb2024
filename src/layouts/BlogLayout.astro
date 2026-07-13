@@ -3,8 +3,12 @@ import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
+import Analytics from '../components/analytics/Analytics.astro';
 import { getCurrentLocale } from '../utils/i18n';
-import { BLOG_CATEGORIES } from '../config/categories';
+import { generateKeywords, estimateReadingTime } from '../utils/blog-seo';
+import BlogSeoMeta from '../components/blog/seo/BlogSeoMeta.astro';
+import BlogOgp from '../components/blog/seo/BlogOgp.astro';
+import BlogStructuredData from '../components/blog/seo/BlogStructuredData.astro';
 import type { CollectionEntry } from 'astro:content';
 
 type BlogPostData = {
@@ -33,189 +37,17 @@ interface Props {
   prevPost?: BlogPost;
 }
 
-const { post, relatedPosts, nextPost, prevPost } = Astro.props;
+const { post } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
 const { title, description, pubDate, updatedDate, author, category, tags, image, ogImage } = post.data;
 
-// Use auto-generated OGP image if no custom ogImage is set
-const finalOgImage = ogImage || new URL(`/og/${post.slug}.svg`, Astro.site).toString();
+// Use SNS-compatible PNG OGP image if no custom ogImage is set. SVG routes remain available.
+const finalOgImage = ogImage || new URL(`/og/${post.slug}.png`, Astro.site).toString();
+const usesGeneratedOgImage = !ogImage;
 
+const estimatedReadingTime = estimateReadingTime(description);
+const keywords = generateKeywords(tags, category, currentLocale);
 
-// Estimate reading time from description for now
-const estimatedReadingTime = Math.max(1, Math.ceil(description.split(/\s+/).length / 50));
-
-// Generate keywords from title, description, category, and tags
-const generateKeywords = () => {
-  const baseKeywords = tags.slice(); // Copy tags array
-  
-  // Find category configuration
-  const categoryConfig = BLOG_CATEGORIES.find(cat => cat.id === category);
-  
-  // Add category-based keywords dynamically
-  if (categoryConfig) {
-    const categoryKeywords = {
-      'ai': ['AI', '人工知能', 'Artificial Intelligence', 'Machine Learning', 'Deep Learning'],
-      'engineering': ['エンジニアリング', 'Engineering', 'Software Development', '開発', 'プログラミング'],
-      'founder': ['起業', 'Startup', 'Entrepreneur', 'Business', 'スタートアップ'],
-      'lab': ['技術', 'Technology', 'Innovation', '革新', 'Research']
-    };
-    
-    const keywords = categoryKeywords[category as keyof typeof categoryKeywords];
-    if (keywords) {
-      baseKeywords.push(...keywords);
-    }
-  }
-  
-  // Add general tech keywords for all posts
-  baseKeywords.push(...(
-    currentLocale === 'ja' 
-      ? ['技術ブログ', 'テックブログ', 'エンジニア', '開発者', 'プログラマー', 'IT', 'Cor.inc']
-      : ['tech blog', 'technology', 'developer', 'programming', 'software', 'engineering', 'Cor.inc']
-  ));
-  
-  return baseKeywords.flat().slice(0, 15).join(', '); // Limit to 15 keywords
-};
-
-const keywords = generateKeywords();
-
-const formattedPubDate = new Date(pubDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
-
-const formattedUpdatedDate = updatedDate ? new Date(updatedDate).toLocaleDateString(currentLocale === 'ja' ? 'ja-JP' : 'en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-}) : null;
-
-// Enhanced structured data for tech blog
-const articleJsonLd = {
-  "@context": "https://schema.org",
-  "@type": category === 'ai' || category === 'engineering' ? "TechArticle" : "BlogPosting",
-  "headline": title,
-  "description": description,
-  "keywords": keywords,
-  "inLanguage": currentLocale,
-  "author": {
-    "@type": "Person",
-    "@id": "https://cor-jp.com/about#terisuke",
-    "name": author,
-    "url": "https://cor-jp.com/about",
-    "sameAs": [
-      "https://twitter.com/cor_terisuke",
-      "https://github.com/Cor-Incorporated",
-      "https://www.linkedin.com/in/teradakousuke/"
-    ]
-  },
-  "datePublished": pubDate.toISOString(),
-  "dateModified": (updatedDate || pubDate).toISOString(),
-  "publisher": {
-    "@type": "Organization",
-    "@id": "https://cor-jp.com#organization",
-    "name": "Cor.inc",
-    "url": "https://cor-jp.com",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://cor-jp.com/logo.png",
-      "width": 400,
-      "height": 400
-    },
-    "sameAs": [
-      "https://twitter.com/cor_terisuke",
-      "https://github.com/Cor-Incorporated"
-    ]
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": new URL(Astro.url.pathname, Astro.site).toString()
-  },
-  "url": new URL(Astro.url.pathname, Astro.site).toString(),
-  "articleSection": category,
-  "articleBody": description, // This should ideally be the full content
-  "wordCount": estimatedReadingTime * 200, // Estimated based on reading time
-  "commentCount": 0,
-  "isAccessibleForFree": true,
-  "isFamilyFriendly": true,
-  "copyrightHolder": {
-    "@type": "Organization",
-    "@id": "https://cor-jp.com#organization"
-  },
-  "copyrightYear": new Date(pubDate).getFullYear(),
-  "genre": currentLocale === 'ja' ? "技術ブログ" : "Technology Blog",
-  "about": tags.map(tag => ({
-    "@type": "Thing",
-    "name": tag
-  })),
-  ...(image && {
-    "image": {
-      "@type": "ImageObject",
-      "url": new URL(image.url, Astro.site).toString(),
-      "caption": image.alt,
-      "width": 1200,
-      "height": 630
-    }
-  }),
-  "speakable": {
-    "@type": "SpeakableSpecification",
-    "cssSelector": ["h1", "h2", "h3"]
-  }
-};
-
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": currentLocale === 'ja' ? "ホーム" : "Home",
-      "item": `https://cor-jp.com${currentLocale === 'en' ? '/en' : ''}`
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": currentLocale === 'ja' ? "ブログ" : "Blog",
-      "item": `https://cor-jp.com${currentLocale === 'en' ? '/en' : ''}/blog`
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": title
-    }
-  ]
-};
-
-// Website schema with search action for better search engine integration
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://cor-jp.com#website",
-  "name": "Cor.inc",
-  "alternateName": currentLocale === 'ja' ? "コー株式会社" : "Cor Inc",
-  "url": "https://cor-jp.com",
-  "description": currentLocale === 'ja' 
-    ? "AI技術でコミュニケーションの未来を創造する技術ブログ"
-    : "Creating the future of communication with AI technology - Tech Blog",
-  "publisher": {
-    "@type": "Organization",
-    "@id": "https://cor-jp.com#organization"
-  },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": `https://cor-jp.com${currentLocale === 'en' ? '/en' : ''}/blog?search={search_term_string}`
-    },
-    "query-input": "required name=search_term_string"
-  },
-  "inLanguage": [currentLocale],
-  "copyrightHolder": {
-    "@type": "Organization",
-    "@id": "https://cor-jp.com#organization"
-  }
-};
 ---
 
 <!doctype html>
@@ -233,63 +65,41 @@ const websiteJsonLd = {
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
-    <meta name="author" content={author} />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="revisit-after" content="7 days" />
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    
-    <!-- RSS Feeds -->
-    <link rel="alternate" type="application/rss+xml" title="Cor.inc 技術ブログ (日本語)" href="/rss.xml" />
-    <link rel="alternate" type="application/rss+xml" title="Cor.inc Tech Blog (English)" href="/en/rss.xml" />
-    
-    <!-- Article specific meta tags -->
-    <meta property="article:published_time" content={pubDate.toISOString()} />
-    {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
-    <meta property="article:author" content={author} />
-    <meta property="article:section" content={category} />
-    {tags.map(tag => <meta property="article:tag" content={tag} />)}
-    
-    <!-- Hreflang tags for bilingual SEO -->
-    {currentLocale === 'ja' ? (
-      <>
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="ja" />
-        <link rel="alternate" href={new URL(`/en${Astro.url.pathname}`, Astro.site)} hreflang="en" />
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="x-default" />
-      </>
-    ) : (
-      <>
-        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="ja" />
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="en" />
-        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="x-default" />
-      </>
-    )}
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={finalOgImage} />
-    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
-    <meta property="og:site_name" content="Cor.inc Blog" />
-    
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@cor_terisuke" />
-    <meta name="twitter:creator" content="@cor_terisuke" />
-    <meta name="twitter:url" content={Astro.url} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={finalOgImage} />
+    <BlogSeoMeta
+      description={description}
+      keywords={keywords}
+      author={author}
+      pubDate={pubDate}
+      updatedDate={updatedDate}
+      category={category}
+      tags={tags}
+      currentLocale={currentLocale}
+    />
+
+    <BlogOgp
+      title={title}
+      description={description}
+      ogImage={finalOgImage}
+      ogImageAlt={title}
+      ogImageWidth={usesGeneratedOgImage ? 1200 : undefined}
+      ogImageHeight={usesGeneratedOgImage ? 630 : undefined}
+      currentLocale={currentLocale}
+    />
     
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+    <BlogStructuredData
+      title={title}
+      description={description}
+      keywords={keywords}
+      author={author}
+      pubDate={pubDate}
+      updatedDate={updatedDate}
+      category={category}
+      tags={tags}
+      image={image}
+      estimatedReadingTime={estimatedReadingTime}
+      currentLocale={currentLocale}
+    />
     
     <!-- KaTeX CSS for math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
@@ -305,6 +115,45 @@ const websiteJsonLd = {
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* CJK/多言語の改行制御を通常Layoutと揃える。 */
+      h1, h2, h3,
+      .type-heading {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      p, li, dd, figcaption,
+      .type-copy {
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
+      }
+      .type-action {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      /* ブランド語「きょうそう」など、語の途中で折らない範囲に使う。 */
+      .nowrap,
+      .type-keep {
+        white-space: nowrap;
+      }
+      .line-clamp-2,
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .line-clamp-2 {
+        -webkit-line-clamp: 2;
+      }
+      .line-clamp-3 {
+        -webkit-line-clamp: 3;
       }
       
       @font-face {
@@ -332,6 +181,59 @@ const websiteJsonLd = {
       [x-cloak] { display: none !important; }
       
       /* Blog specific styles */
+      .prose {
+        max-width: none;
+      }
+
+      .prose :where(h1, h2, h3) {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+
+      .prose :where(p, li, dd, figcaption) {
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
+        line-height: 1.9;
+      }
+
+      .prose :where(a) {
+        overflow-wrap: anywhere;
+      }
+
+      .prose :where(h2) {
+        border-top: 1px solid #e7e5e4;
+        margin-top: 3rem;
+        padding-top: 2rem;
+      }
+
+      .dark .prose :where(h2) {
+        border-top-color: #44403c;
+      }
+
+      .prose :where(blockquote) {
+        border-left-color: #2563eb;
+        background-color: #fafaf9;
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+      }
+
+      .dark .prose :where(blockquote) {
+        background-color: #1c1917;
+      }
+
+      .prose :where(img) {
+        border-radius: 0.5rem;
+        border: 1px solid #e7e5e4;
+      }
+
+      .dark .prose :where(img) {
+        border-color: #44403c;
+      }
+
       .prose pre {
         background-color: #282a36;
         border-radius: 0.5rem;
@@ -391,9 +293,9 @@ const websiteJsonLd = {
       /* Link Card Styles */
       .remark-link-card-plus__container {
         margin: 1.5rem 0;
-        border-radius: 0.75rem;
+        border-radius: 0.5rem;
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
         background-color: #fafaf9;
         border: 1px solid #e7e5e4;
       }
@@ -415,14 +317,16 @@ const websiteJsonLd = {
       
       .remark-link-card-plus__card {
         display: flex;
+        flex-direction: column;
         text-decoration: none;
         color: inherit;
-        min-height: 120px;
+        min-height: 0;
       }
       
       .remark-link-card-plus__main {
         padding: 1rem;
         flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -430,8 +334,8 @@ const websiteJsonLd = {
       
       .remark-link-card-plus__thumbnail {
         flex-shrink: 0;
-        width: 120px;
-        height: 120px;
+        width: 100%;
+        height: 10rem;
         overflow: hidden;
       }
       
@@ -439,7 +343,7 @@ const websiteJsonLd = {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: transform 0.15s ease;
       }
       
       .remark-link-card-plus__card:hover .remark-link-card-plus__image {
@@ -448,6 +352,7 @@ const websiteJsonLd = {
       
       .remark-link-card-plus__content {
         margin-bottom: 0.75rem;
+        min-width: 0;
       }
       
       .remark-link-card-plus__title {
@@ -456,6 +361,10 @@ const websiteJsonLd = {
         margin-bottom: 0.5rem;
         font-size: 1rem;
         line-height: 1.5;
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
       }
       
       .dark .remark-link-card-plus__title {
@@ -466,6 +375,10 @@ const websiteJsonLd = {
         color: #57534e;
         font-size: 0.875rem;
         line-height: 1.4;
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -479,7 +392,9 @@ const websiteJsonLd = {
       .remark-link-card-plus__meta {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        min-width: 0;
       }
       
       .remark-link-card-plus__favicon {
@@ -492,12 +407,30 @@ const websiteJsonLd = {
         color: #78716c;
         font-size: 0.75rem;
         font-weight: 500;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       
       .dark .remark-link-card-plus__url {
         color: #a8a29e;
       }
+
+      @media (min-width: 640px) {
+        .remark-link-card-plus__card {
+          flex-direction: row;
+          min-height: 120px;
+        }
+
+        .remark-link-card-plus__thumbnail {
+          width: 120px;
+          height: 120px;
+        }
+      }
     </style>
+
+    <Analytics />
   </head>
   <body class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200">
     <Header />

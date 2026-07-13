@@ -1,0 +1,343 @@
+---
+// お問い合わせ AI チャット ウィジェット（機能フラグで切替・src/config/contact.ts）。
+// ChatPanel（チャット UI）と HandoffForm（連絡先フォーム）を組み合わせ、
+// クライアント側の挙動はこのファイル末尾のインラインスクリプトが担う。
+//
+// セキュリティ要件（バックエンド README の必読項目）:
+//   chat の `reply` は攻撃者が誘導しうる LLM 出力のため、必ず textContent で
+//   PLAIN TEXT として描画する。innerHTML / markdown→HTML は使わない。
+//
+// API（本番は同一オリジン cor-jp.com/api/contact/*）:
+//   POST /api/contact/chat   { messages, turnstileToken? } -> { reply, classification, readyForContact }
+//   POST /api/contact/submit { name, email, company?, message, conversationSummary?, turnstileToken?, website } -> { ok: true }
+//
+// 環境変数:
+//   PUBLIC_TURNSTILE_SITEKEY  Cloudflare Turnstile のサイトキー（任意）。
+//                             未設定なら Turnstile ウィジェットは描画しない（開発時）。
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+import ChatPanel from './chat/ChatPanel.astro';
+import HandoffForm from './chat/HandoffForm.astro';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+const c = t.contactChat;
+const privacyHref = getLocalizedUrl('/privacy', currentLocale);
+
+// import.meta.env.DEV は SSG ビルド時に静的に解決される（dev=true / build=false）。
+const isDev = import.meta.env.DEV;
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
+---
+
+{/* Turnstile は明示レンダリング（render=explicit）。自動スキャンを止め、handoff フォームを
+    表示したタイミングで JS から render する（hidden コンテナ内で 0px になるのを防ぐ）。 */}
+{turnstileSiteKey && (
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+    async
+    defer
+    is:inline
+  ></script>
+)}
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-3">
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">{c.heading}</h2>
+      <p class="text-lg text-primary-950/70 dark:text-primary-200/70">{c.intro}</p>
+
+      <!-- PII 注意喚起（常時表示） -->
+      <p
+        class="rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-300/60 dark:bg-amber-950/40 dark:text-amber-200 dark:ring-amber-700/40"
+        role="note"
+      >
+        {c.piiNotice}
+      </p>
+    </div>
+
+    <ChatPanel c={c} isDev={isDev} turnstileSiteKey={turnstileSiteKey} />
+
+    <!-- 連絡先フォーム（readyForContact=true で表示） -->
+    <HandoffForm c={c} privacyHref={privacyHref} turnstileSiteKey={turnstileSiteKey} />
+  </div>
+</section>
+
+<!-- i18n 文字列を JSON でクライアントへ渡す（set:html ではなく define:vars で安全に） -->
+<script is:inline define:vars={{ strings: c }}>
+  (function () {
+    'use strict';
+    var root = document.getElementById('contact-chat');
+    if (!root) return;
+
+    var isDev = root.dataset.dev === 'true';
+    var turnstileSiteKey = root.dataset.turnstileSitekey || '';
+
+    var messagesEl = document.getElementById('chat-messages');
+    var typingEl = document.getElementById('chat-typing');
+    var chatForm = document.getElementById('chat-form');
+    var input = document.getElementById('chat-input');
+    var sendBtn = document.getElementById('chat-send');
+    var handoffWrap = document.getElementById('contact-handoff');
+    var handoffForm = document.getElementById('handoff-form');
+    var handoffSubmit = document.getElementById('handoff-submit');
+    var handoffStatus = document.getElementById('handoff-status');
+
+    // 会話履歴（API へ送る messages）。PII は含めない。
+    var history = [{ role: 'assistant', content: strings.greeting }];
+    var turnstileWidgetId; // handoff フォーム内の Turnstile ウィジェット ID（明示レンダリング時に保持）。
+
+    // Turnstile トークンは /submit（PII送信点）でのみ使用する。
+    // /chat には付与しない（トークンは単回使用で、複数ターン会話では2ターン目以降に
+    // 新しいトークンが無く 403 になるため）。
+    function turnstileToken() {
+      if (!turnstileSiteKey || typeof window.turnstile === 'undefined') return undefined;
+      try {
+        var tok =
+          turnstileWidgetId !== undefined
+            ? window.turnstile.getResponse(turnstileWidgetId)
+            : window.turnstile.getResponse();
+        return tok || undefined;
+      } catch (e) {
+        return undefined;
+      }
+    }
+
+    // メッセージ吹き出しを追加する。content は必ず textContent で描画（XSS 対策・絶対 innerHTML しない）。
+    function appendMessage(role, content) {
+      var wrap = document.createElement('div');
+      wrap.className =
+        'flex flex-col gap-1 ' + (role === 'user' ? 'items-end' : 'items-start');
+
+      var label = document.createElement('span');
+      label.className = 'text-xs font-medium text-primary-950/50 dark:text-primary-200/50';
+      label.textContent = role === 'user' ? strings.youLabel : strings.assistantLabel;
+
+      var bubble = document.createElement('div');
+      bubble.className =
+        'max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-base shadow-sm ' +
+        (role === 'user'
+          ? 'rounded-tr-sm bg-primary-600 text-white dark:bg-primary-400 dark:text-primary-950'
+          : 'rounded-tl-sm bg-white text-primary-950 dark:bg-primary-900 dark:text-primary-100');
+      // 攻撃者が誘導しうる LLM 出力を含むため、PLAIN TEXT としてのみ描画する。
+      bubble.textContent = content;
+
+      wrap.appendChild(label);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function setBusy(busy) {
+      sendBtn.disabled = busy;
+      input.disabled = busy;
+      typingEl.classList.toggle('hidden', !busy);
+      typingEl.setAttribute('aria-hidden', busy ? 'false' : 'true');
+    }
+
+    function autoGrow() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+    }
+    input.addEventListener('input', autoGrow);
+
+    // 開発用モック（DEV のみ）。本番 Worker が無いため /chat /submit が 404 になるので、
+    // UI をデモ・スクショ可能にする最小限のダミー応答を返す。本番（!isDev）では実 fetch を使う。
+    function devMockChat(messages) {
+      var userTurns = messages.filter(function (m) { return m.role === 'user'; }).length;
+      var ready = userTurns >= 2;
+      var reply = ready
+        ? '[DEV モック] ご相談内容を承りました。下のフォームにご連絡先をご記入ください。'
+        : '[DEV モック] ありがとうございます。もう少し詳しくお聞かせいただけますか？';
+      return Promise.resolve({ reply: reply, classification: 'genuine', readyForContact: ready });
+    }
+    function devMockSubmit() {
+      return Promise.resolve({ ok: true });
+    }
+
+    function callChat(messages) {
+      if (isDev) return devMockChat(messages);
+      // /chat には Turnstile トークンを付与しない（単回使用トークンが2ターン目以降に枯れて
+      // 403 になるのを防ぐ）。Turnstile は /submit でのみ使う。
+      var body = { messages: messages };
+      return fetch('/api/contact/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      }).then(function (res) {
+        if (!res.ok) throw new Error('chat ' + res.status);
+        return res.json();
+      });
+    }
+
+    function callSubmit(payload) {
+      if (isDev) return devMockSubmit();
+      return fetch('/api/contact/submit', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).then(function (res) {
+        if (!res.ok) throw new Error('submit ' + res.status);
+        return res.json();
+      });
+    }
+
+    // Turnstile ウィジェットを handoff フォーム内で明示的にレンダリングする。
+    // 自動レンダリングだと hidden コンテナ内（display:none）でサイズが 0 になり実質使えない
+    // ことがあるため、handoff を表示したタイミングで明示 render する。
+    // turnstile スクリプトの読み込みが間に合わない場合に備えてポーリングする。
+    function renderTurnstile() {
+      if (!turnstileSiteKey || turnstileWidgetId !== undefined) return;
+      var el = document.getElementById('handoff-turnstile');
+      if (!el) return;
+      var attempts = 0;
+      (function tryRender() {
+        if (turnstileWidgetId !== undefined) return;
+        if (typeof window.turnstile !== 'undefined' && window.turnstile.render) {
+          try {
+            turnstileWidgetId = window.turnstile.render(el, { sitekey: turnstileSiteKey });
+          } catch (e) {
+            // 既に自動レンダリング済み等。getResponse() の素のフォールバックに任せる。
+            turnstileWidgetId = undefined;
+          }
+          return;
+        }
+        if (attempts++ < 40) setTimeout(tryRender, 100); // 最大 ~4s 待つ
+      })();
+    }
+
+    function revealHandoff(seedMessage) {
+      if (handoffWrap.classList.contains('hidden')) {
+        handoffWrap.classList.remove('hidden');
+        var msgField = document.getElementById('handoff-message');
+        if (msgField && !msgField.value && seedMessage) msgField.value = seedMessage;
+        // 表示後（display:none 解除後）に Turnstile を明示レンダリングして可視・操作可能にする。
+        renderTurnstile();
+        handoffWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var nameField = document.getElementById('handoff-name');
+        if (nameField) nameField.focus();
+      }
+    }
+
+    chatForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var text = (input.value || '').trim();
+      if (!text) return;
+
+      // UI 吹き出しは即座に表示するが、history（API へ送る transcript）には
+      // 成功時のみユーザー発話をコミットする。失敗時に末尾がユーザー発話のまま残ると、
+      // 次回リクエストで「アシスタント応答の無いユーザー発話」が末尾に付いた transcript を
+      // 送ってしまうため（孤立ターン）。送信用配列は history のコピー＋今回の発話で作る。
+      appendMessage('user', text);
+      var userTurn = { role: 'user', content: text };
+      var outgoing = history.slice();
+      outgoing.push(userTurn);
+      input.value = '';
+      autoGrow();
+      setBusy(true);
+
+      callChat(outgoing)
+        .then(function (data) {
+          setBusy(false);
+          // 応答が得られたので、ここで初めてユーザー発話を history に確定する。
+          history.push(userTurn);
+          var reply = data && typeof data.reply === 'string' ? data.reply : '';
+          if (reply) {
+            appendMessage('assistant', reply);
+            history.push({ role: 'assistant', content: reply });
+          }
+          if (data && data.readyForContact) {
+            // 直近のユーザー発話を message 欄の初期値に流用する。
+            var lastUser = '';
+            for (var i = history.length - 1; i >= 0; i--) {
+              if (history[i].role === 'user') { lastUser = history[i].content; break; }
+            }
+            revealHandoff(lastUser);
+          }
+        })
+        .catch(function () {
+          setBusy(false);
+          // 失敗時は userTurn を history に確定しない（孤立ユーザーターンを残さない）。
+          // UI 吹き出しは表示済みのまま、エラーメッセージを追記する。
+          appendMessage('assistant', strings.chatError);
+        });
+    });
+
+    // Enter で送信、Shift+Enter で改行。
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.requestSubmit();
+      }
+    });
+
+    function showStatus(message, ok) {
+      handoffStatus.textContent = message;
+      handoffStatus.classList.remove('hidden');
+      handoffStatus.className =
+        'text-base ' +
+        (ok
+          ? 'text-green-700 dark:text-green-400'
+          : 'text-red-700 dark:text-red-400');
+    }
+
+    handoffForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = (document.getElementById('handoff-name').value || '').trim();
+      var email = (document.getElementById('handoff-email').value || '').trim();
+      var company = (document.getElementById('handoff-company').value || '').trim();
+      var message = (document.getElementById('handoff-message').value || '').trim();
+      var website = (document.getElementById('handoff-website').value || '');
+
+      if (!name || !email || !message) {
+        showStatus(strings.form.required, false);
+        return;
+      }
+
+      // プライバシーポリシー同意チェック（未同意なら送信ブロック）。
+      var consentBox = document.getElementById('handoff-consent');
+      if (!consentBox || !consentBox.checked) {
+        showStatus(strings.consent.validationMessage, false);
+        if (consentBox && typeof consentBox.focus === 'function') consentBox.focus();
+        return;
+      }
+
+      // 会話の書き起こしをサマリとして送る（PII は含まない会話のみ）。
+      var summary = history
+        .map(function (m) {
+          var who = m.role === 'user' ? strings.youLabel : strings.assistantLabel;
+          return who + ': ' + m.content;
+        })
+        .join('\n');
+
+      var payload = {
+        name: name,
+        email: email,
+        company: company,
+        message: message,
+        conversationSummary: summary,
+        website: website,
+      };
+      if (!isDev) {
+        var tok = turnstileToken();
+        if (tok) payload.turnstileToken = tok;
+      }
+
+      handoffSubmit.disabled = true;
+      handoffStatus.classList.add('hidden');
+
+      callSubmit(payload)
+        .then(function (data) {
+          if (data && data.ok) {
+            showStatus(strings.success, true);
+            handoffForm.reset();
+          } else {
+            handoffSubmit.disabled = false;
+            showStatus(strings.submitError, false);
+          }
+        })
+        .catch(function () {
+          handoffSubmit.disabled = false;
+          showStatus(strings.submitError, false);
+        });
+    });
+  })();
+</script>

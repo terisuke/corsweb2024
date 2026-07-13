@@ -1,0 +1,18 @@
+---
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const t = getTranslations(getCurrentLocale(Astro.url));
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="max-w-3xl">
+      <h2 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl">
+        {t.aboutPage.teamTitle}
+      </h2>
+      <p class="type-copy mt-4 text-lg text-primary-950/70 dark:text-primary-200/70">
+        {t.aboutPage.teamBody}
+      </p>
+    </div>
+  </div>
+</section>

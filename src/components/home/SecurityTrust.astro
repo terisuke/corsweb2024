@@ -1,0 +1,42 @@
+---
+import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<section class="py-24 sm:py-32">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col gap-10 sm:gap-12">
+      <div class="flex max-w-3xl flex-col gap-4" data-reveal>
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          {t.securityTrust.title}
+        </h2>
+        <p class="text-lg text-primary-950/70 dark:text-primary-200/70">
+          {t.securityTrust.description}
+        </p>
+      </div>
+      <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        {
+          t.securityTrust.items.map((item, i) => (
+            <li
+              class="rounded-3xl bg-primary-500/10 p-6 text-base dark:bg-primary-400/10"
+              data-reveal
+              style={`--reveal-delay:${(0.1 + i * 0.08).toFixed(2)}s`}
+            >
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+      <div data-reveal style="--reveal-delay:0.3s">
+        <a
+          href={getLocalizedUrl('/security', currentLocale)}
+          class="inline-flex items-center justify-center rounded-full border border-primary-950/20 px-5 py-3 text-base font-medium text-primary-950 transition hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-primary-200/20 dark:text-primary-200 dark:hover:bg-primary-400/10"
+        >
+          {t.securityTrust.cta}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,23 +1,38 @@
 ---
-import Heading from '../components/about/Heading.astro';
-import Mission from '../components/about/Mission.astro';
-import FounderStory from '../components/about/FounderStory.astro';
-import Team from '../components/about/Team.astro';
-import Values from '../components/about/Values.astro';
+import AboutHero from '../components/about/AboutHero.astro';
+import KyousouDefinition from '../components/about/KyousouDefinition.astro';
+import WhyFocus from '../components/about/WhyFocus.astro';
+import MvvSection from '../components/about/MvvSection.astro';
+import FounderNote from '../components/about/FounderNote.astro';
+import TeamIntro from '../components/about/TeamIntro.astro';
+import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
-import { getCurrentLocale, getTranslations } from '../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+
+// About 下部的 CTA“首先咨询课题”在所有语言中均导向各自的咨询页面。
+// /works は ja のみ存在。ja は実績ページへ、非ja は 404 回避のため同言語の相談ページへ誘導する。
+const nextStepHref =
+  currentLocale === 'ja'
+    ? getLocalizedUrl('/works', currentLocale)
+    : getLocalizedUrl('/contact', currentLocale);
 ---
 
 <Layout
   description={t.meta.about.description}
   title={t.meta.about.title}
 >
-  <Heading />
-  <Mission />
-  <FounderStory />
-  <Values />
-  <Team />
+  <AboutHero />
+  <KyousouDefinition />
+  <WhyFocus />
+  <MvvSection />
+  <FounderNote />
+  <TeamIntro />
+
+  <NextStep
+    heading={t.nextStep.about.heading}
+    ctas={[{ label: t.nextStep.about.ctaLabel, href: nextStepHref, primary: true }]}
+  />
 </Layout>

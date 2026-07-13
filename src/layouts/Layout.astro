@@ -2,16 +2,76 @@
 import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
+import CloudiaLauncher from '../components/contact/CloudiaLauncher.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
-import { getCurrentLocale } from '../utils/i18n';
+import Analytics from '../components/analytics/Analytics.astro';
+import { CLOUDIA_LAUNCHER_ENABLED } from '../config/contact';
+import { getCurrentLocale, type Locale } from '../utils/i18n';
+import { getRobotsContent } from '../config/site';
 
 interface Props {
   description: string;
   title: string;
+  // この URL に実在する言語版だけを hreflang に出す（既定は全5言語）。
+  // ja のみのページ（/works, /news, /industries/*）は ['ja'] を渡す。
+  availableLocales?: readonly Locale[];
+  // ページ固有の OG 画像（絶対URL or サイト基準パス）。未指定なら path から自動選択。
+  ogImage?: string;
+  // OGP 種別。記事ページは 'article'。既定 'website'。
+  ogType?: string;
+  // 記事の公開/更新時刻（ISO文字列）。article:published_time / modified_time に出力。
+  publishedTime?: string;
+  modifiedTime?: string;
+  // OGP/Twitter 用タイトル・説明文（SNSカード向け）。未指定なら title / description にフォールバック。
+  // SEO用 <title> と SNS用 og:title を分離したい場合に指定する。
+  ogTitle?: string;
+  ogDescription?: string;
+  // Contactページだけモバイル固定CTAを表示する。PC CTAは全ページ共通。
+  cloudiaMobileLauncher?: boolean;
+  // Cloudiaのfallbackページ自身ではLauncherを重ねない。
+  cloudiaLauncher?: boolean;
 }
 
-const { description, title } = Astro.props;
+const OG_LOCALES: Record<Locale, string> = {
+  ja: 'ja_JP',
+  en: 'en_US',
+  zh: 'zh_CN',
+  ko: 'ko_KR',
+  es: 'es_ES',
+};
+const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
+
+const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp, ogType = 'website', publishedTime, modifiedTime, ogTitle, ogDescription, cloudiaMobileLauncher = false, cloudiaLauncher = true } = Astro.props;
+const socialTitle = ogTitle || title;
+const socialDescription = ogDescription || description;
 const currentLocale = getCurrentLocale(Astro.url);
+// 現在のパスからロケール接頭辞を外した ja 基準パス（hreflang の各ロケールURL生成に使う）
+const basePath =
+  currentLocale === 'ja'
+    ? Astro.url.pathname
+    : Astro.url.pathname.replace(/^\/(en|zh|ko|es)(?=\/|$)/, '') || '/';
+// 通常ページは path から SNS 対応の個別 PNG 画像（/og/page/<slug>.png）を選ぶ。
+// slug は src/utils/og-svg.ts の OG_PAGES と一致させること。SVG ルートも互換用に維持する。
+const OG_PAGE_SLUGS: Record<string, string> = {
+  '/': 'home',
+  '/about': 'about',
+  '/works': 'works',
+  '/news': 'news',
+  '/security': 'security',
+  '/contact': 'contact',
+  '/privacy': 'privacy',
+};
+const ogBaseKey = basePath.replace(/\/+$/, '') || '/';
+const ogPageSlug = OG_PAGE_SLUGS[ogBaseKey] ?? (ogBaseKey.startsWith('/news/') ? 'news' : undefined);
+// ページ固有 OG 画像（ogImage prop）があれば最優先。なければ path 別 → logo.png。
+const ogImage = ogImageProp
+  ? new URL(ogImageProp, Astro.site)
+  : ogPageSlug
+    ? new URL(`/og/page/${ogPageSlug}.png`, Astro.site)
+    : new URL('/logo.png', Astro.site);
+const usesGeneratedOgImage = !ogImageProp && Boolean(ogPageSlug);
+// Preview / develop は noindex（ADR-0010）。canonical は本番向きのままでよい。
+const robotsContent = getRobotsContent();
 ---
 
 <!doctype html>
@@ -22,7 +82,7 @@ const currentLocale = getCurrentLocale(Astro.url);
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Cor.inc" />
+    <meta name="apple-mobile-web-app-title" content="Cor.Inc." />
     <meta name="theme-color" content="#0f172a" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -30,32 +90,34 @@ const currentLocale = getCurrentLocale(Astro.url);
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="robots" content={robotsContent} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     
-    <!-- Hreflang tags for bilingual SEO -->
-    {currentLocale === 'ja' ? (
-      <>
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="ja" />
-        <link rel="alternate" href={new URL(`/en${Astro.url.pathname}`, Astro.site)} hreflang="en" />
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="x-default" />
-      </>
-    ) : (
-      <>
-        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="ja" />
-        <link rel="alternate" href={new URL(Astro.url.pathname, Astro.site)} hreflang="en" />
-        <link rel="alternate" href={new URL(Astro.url.pathname.replace('/en', '') || '/', Astro.site)} hreflang="x-default" />
-      </>
-    )}
+    <!-- Hreflang: この URL に実在する言語版のみ出力（ja基準パスから各ロケールURLを生成） -->
+    {availableLocales.map((loc) => (
+      <link
+        rel="alternate"
+        href={new URL(loc === 'ja' ? basePath : `/${loc}${basePath}`, Astro.site)}
+        hreflang={loc}
+      />
+    ))}
+    <link rel="alternate" href={new URL(basePath, Astro.site)} hreflang="x-default" />
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content="/logo.png" />
-    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
-    <meta property="og:site_name" content="Cor.inc" />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={socialDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    {usesGeneratedOgImage && <meta property="og:image:width" content="1200" />}
+    {usesGeneratedOgImage && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={socialTitle} />
+    <meta property="og:locale" content={OG_LOCALES[currentLocale]} />
+    <meta property="og:site_name" content="Cor.Inc." />
     <meta property="article:author" content="寺田康佑" />
     
     <!-- Twitter -->
@@ -63,22 +125,23 @@ const currentLocale = getCurrentLocale(Astro.url);
     <meta name="twitter:site" content="@cor_terisuke" />
     <meta name="twitter:creator" content="@cor_terisuke" />
     <meta name="twitter:url" content={Astro.url} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/logo.png" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={socialDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={socialTitle} />
     
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Cor.inc",
-        "alternateName": ["Cor株式会社"],
+        "name": "Cor.株式会社",
+        "legalName": "Cor.株式会社",
+        "alternateName": ["Cor.株式会社", "Cor.Inc."],
         "url": "https://cor-jp.com",
         "logo": "https://cor-jp.com/logo.png",
         "contactPoint": {
           "@type": "ContactPoint",
-          "telephone": "+81-70-8561-1659",
           "contactType": "customer service",
           "availableLanguage": ["Japanese", "English"]
         },
@@ -106,7 +169,7 @@ const currentLocale = getCurrentLocale(Astro.url);
           "jobTitle": "代表取締役",
           "worksFor": {
             "@type": "Organization",
-            "name": "Cor.inc"
+            "name": "Cor.株式会社"
           }
         }
       }
@@ -123,7 +186,7 @@ const currentLocale = getCurrentLocale(Astro.url);
             "name": "どのようなサービスを提供していますか？",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "IT戦略コンサルティング、Pythonデータ分析、Web・モバイルアプリ開発、AI・機械学習ソリューションなど、幅広いDX支援サービスを提供しています。"
+              "text": "AI受託開発、AI顧問・AI研修、ローカルLLM・セキュアAI、自社AIツールGriftなど、現場の課題をAIで解決するサービスを提供しています。"
             }
           },
           {
@@ -156,7 +219,12 @@ const currentLocale = getCurrentLocale(Astro.url);
 
     <title>{title}</title>
     <ViewTransitions />
-    
+
+    <!-- JS 有効を早期マーク（reveal の初期非表示を JS 環境のみに限定→JS無効でも即表示=離脱防止） -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
     <!-- Critical inline CSS for fastest initial render - v4 cache bust -->
     <style is:inline>
       /* System font stack for immediate text rendering */
@@ -167,7 +235,46 @@ const currentLocale = getCurrentLocale(Astro.url);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      
+
+      /* CJK/多言語の改行制御をLayout間で揃える。 */
+      h1, h2, h3,
+      .type-heading {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      p, li, dd, figcaption,
+      .type-copy {
+        word-break: auto-phrase;
+        overflow-wrap: break-word;
+        line-break: strict;
+        text-wrap: pretty;
+      }
+      .type-action {
+        word-break: auto-phrase;
+        overflow-wrap: anywhere;
+        line-break: strict;
+        text-wrap: balance;
+      }
+      /* ブランド語「きょうそう」など、語の途中で折らない範囲に使う。 */
+      .nowrap,
+      .type-keep {
+        white-space: nowrap;
+      }
+      .line-clamp-2,
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .line-clamp-2 {
+        -webkit-line-clamp: 2;
+      }
+      .line-clamp-3 {
+        -webkit-line-clamp: 3;
+      }
+
       /* Inter font with optional display - won't block render */
       @font-face {
         font-family: 'Inter';
@@ -194,18 +301,102 @@ const currentLocale = getCurrentLocale(Astro.url);
       
       /* Prevent layout shift */
       [x-cloak] { display: none !important; }
-      
+
+      /* ===== スクロール没入演出（軽量・ライブラリ0） ===== */
+      /* 初期非表示は JS 有効時(html.js)のみ。JS 無効/失敗時は即表示＝離脱防止(北極星)を担保。 */
+      /* 動き（フェード＋浮き上がり）は維持しつつ、描画コストの高い blur は使わず軽量化。 */
+      html.js [data-reveal] {
+        opacity: 0;
+        transform: translateY(2.5rem) scale(0.98);
+        transition:
+          opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        transition-delay: var(--reveal-delay, 0s);
+      }
+      html.js [data-reveal].is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* 抽象モーション背景: ゆっくり動くグラデの光（ダークの重さを軽減・没入） */
+      .motion-bg {
+        position: absolute;
+        inset: -20%;
+        z-index: 0;
+        pointer-events: none;
+        filter: blur(60px);
+        opacity: 0.55;
+        background:
+          radial-gradient(40% 40% at 25% 30%, rgba(120, 113, 108, 0.55), transparent 70%),
+          radial-gradient(35% 35% at 75% 25%, rgba(45, 74, 107, 0.45), transparent 70%),
+          radial-gradient(45% 45% at 60% 80%, rgba(168, 162, 158, 0.40), transparent 70%);
+        animation: gradient-shift 18s ease-in-out infinite;
+      }
+      @keyframes gradient-shift {
+        0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+        50% { transform: translate3d(3%, -4%, 0) scale(1.15); }
+      }
+      /* スマホ8割: 連続アニメの再描画コストを避け、小画面では静止グラデに */
+      @media (max-width: 640px) {
+        .motion-bg { animation: none; }
+      }
+
+      /* スクロール進捗バー（上部・細いnavy） */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        z-index: 60;
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        background: #2d4a6b;
+        pointer-events: none;
+      }
+      .dark .scroll-progress { background: #7c9cbf; }
+
+      /* ファーストビューの「↓」スクロールヒント。少しスクロールしたら消える。 */
+      .scroll-hint {
+        transition: opacity 0.4s ease;
+      }
+      html.scrolled .scroll-hint { opacity: 0; }
+      .scroll-hint-arrow {
+        display: inline-block;
+        animation: hint-bounce 1.6s ease-in-out infinite;
+      }
+      @keyframes hint-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(0.4rem); }
+      }
+
+      /* アクセシビリティ: モーションを抑えたいユーザーには演出を完全無効化（即表示） */
+      @media (prefers-reduced-motion: reduce) {
+        html.js [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+        .motion-bg { animation: none !important; }
+        .scroll-hint-arrow { animation: none !important; }
+        .scroll-hint { transition: none !important; }
+      }
+
       /* TailwindのユーティリティクラスはHTMLのclass属性で指定、または@apply推奨 */
     </style>
+
+    <Analytics />
   </head>
   <body
-    class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200"
+    class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-900 dark:text-primary-200"
   >
+    <div class="scroll-progress" aria-hidden="true"></div>
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
+    {CLOUDIA_LAUNCHER_ENABLED && cloudiaLauncher && <CloudiaLauncher showMobile={cloudiaMobileLauncher} />}
     <WebVitals />
     <script data-cfasync="false">
       // Global store fallback - ストアが未定義の場合のデフォルト値
@@ -254,8 +445,10 @@ const currentLocale = getCurrentLocale(Astro.url);
           }
         });
         
-        // @ts-ignore
-        console.log('Alpine stores initialized:', !!Alpine.store('theme'), !!Alpine.store('lang'));
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          // @ts-ignore
+          console.log('Alpine stores initialized:', !!Alpine.store('theme'), !!Alpine.store('lang'));
+        }
       };
 
       // Alpine.js読み込み前にストア初期化を確実に実行
@@ -319,6 +512,63 @@ const currentLocale = getCurrentLocale(Astro.url);
           document.documentElement.classList.add('font-loaded');
         });
       }
+    </script>
+
+    <!-- スクロール没入演出: IntersectionObserver で [data-reveal] に .is-visible を付与（軽量・ライブラリ0） -->
+    <script>
+      let revealObserver = null;
+      function initScrollReveal() {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = document.querySelectorAll('[data-reveal]');
+        // 再初期化(ページ遷移)時は前の observer を破棄して重複監視を防ぐ
+        if (revealObserver) { revealObserver.disconnect(); revealObserver = null; }
+        if (prefersReduced || !('IntersectionObserver' in window)) {
+          // 演出オフ: 即表示（北極星=離脱防止）
+          targets.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              // 双方向: viewport に入れば表示、出れば元に戻す（上下どちらのスクロールでも毎回アニメ）
+              entry.target.classList.toggle('is-visible', entry.isIntersecting);
+            });
+          },
+          // threshold 0 + 下 12% マージンで、上端が入った時点で発火（早すぎ防止）
+          { threshold: 0, rootMargin: '0px 0px -12% 0px' }
+        );
+        targets.forEach((el) => revealObserver.observe(el));
+      }
+      // 初回 + View Transitions のページ遷移後にも再バインド
+      document.addEventListener('astro:page-load', initScrollReveal);
+    </script>
+
+    <!-- スクロール進捗バー + 「↓」ヒントの表示制御（rAF スロットル・軽量） -->
+    <script>
+      let chromeBound = false;
+      function updateScrollChrome() {
+        // bar は View Transition で body ごと差し替わるため毎回取得する
+        const bar = document.querySelector('.scroll-progress');
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+        if (bar instanceof HTMLElement) bar.style.transform = 'scaleX(' + progress + ')';
+        document.documentElement.classList.toggle('scrolled', window.scrollY > 40);
+      }
+      function initScrollChrome() {
+        updateScrollChrome(); // ページ遷移ごとに新しいページ高さで進捗を再計算
+        if (chromeBound) return; // window は VT で破棄されないため listener は一度だけ（多重バインド防止）
+        let ticking = false;
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => { ticking = false; updateScrollChrome(); });
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        chromeBound = true;
+      }
+      document.addEventListener('astro:page-load', initScrollChrome);
     </script>
   </body>
 </html>

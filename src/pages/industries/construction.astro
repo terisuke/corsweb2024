@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ConstructionBody from '../../components/industry/ConstructionBody.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<Layout
+  description={t.meta.industryConstruction.description}
+  title={t.meta.industryConstruction.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <ConstructionBody />
+</Layout>

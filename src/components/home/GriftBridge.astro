@@ -1,0 +1,75 @@
+---
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getGriftUrl } from '../../config/site';
+
+const t = getTranslations(getCurrentLocale(Astro.url));
+
+const griftUrl = getGriftUrl('/', {
+  intent: 'grift-team-beta',
+  source: 'grift-bridge',
+});
+const mock = t.griftBridge.mock;
+---
+
+<section class="py-24 sm:py-32">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div class="flex flex-col gap-4 sm:gap-6" data-reveal>
+        <p
+          class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
+        >
+          {t.griftBridge.eyebrow}
+        </p>
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">
+          {t.griftBridge.title}
+        </h2>
+        <p class="text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70">
+          {t.griftBridge.description}
+        </p>
+        <div>
+          <a
+            href={griftUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-transparent bg-[#2d4a6b] px-5 py-3 text-base font-medium text-white transition hover:bg-[#1e3350] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d4a6b]"
+          >
+            {t.griftBridge.cta}
+          </a>
+        </div>
+        <p class="text-sm text-primary-950/70 dark:text-primary-200/70">
+          {t.griftBridge.note}
+        </p>
+      </div>
+
+      <!-- ミニモック -->
+      <div class="rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10 sm:p-8">
+        <div class="flex flex-col gap-5">
+          <div
+            class="rounded-2xl bg-primary-50 p-4 text-base text-primary-950 dark:bg-primary-950 dark:text-primary-200"
+            data-reveal
+            style="--reveal-delay:0.15s"
+          >
+            {mock.input}
+          </div>
+          <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950" data-reveal style="--reveal-delay:0.4s">
+              <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.costLabel}</dt>
+              <dd class="text-xl font-medium tracking-tight">{mock.cost}</dd>
+            </div>
+            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950" data-reveal style="--reveal-delay:0.55s">
+              <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.durationLabel}</dt>
+              <dd class="text-xl font-medium tracking-tight">{mock.duration}</dd>
+            </div>
+            <div class="flex flex-col gap-1 rounded-2xl bg-primary-50 p-4 dark:bg-primary-950" data-reveal style="--reveal-delay:0.7s">
+              <dt class="text-sm text-primary-950/70 dark:text-primary-200/70">{mock.similarLabel}</dt>
+              <dd class="text-xl font-medium tracking-tight">{mock.similar}</dd>
+              {mock.similarNote && (
+                <dd class="text-xs text-primary-950/60 dark:text-primary-200/60">{mock.similarNote}</dd>
+              )}
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

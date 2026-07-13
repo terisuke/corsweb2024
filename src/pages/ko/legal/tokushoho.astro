@@ -8,9 +8,10 @@ import Layout from '../../../layouts/Layout.astro';
   description="일본 특정상거래법에 따라 요구되는 법적 공시. 판매자 정보, 결제 조건, 배송 및 반품 정책을 포함합니다."
 >
   <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <h1 class="mb-10 text-4xl font-medium tracking-tight sm:text-5xl">법적 고지</h1>
+    <h1 class="type-heading mb-10 text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">법적 고지</h1>
 
-    <table class="w-full table-auto border-collapse text-left">
+    <div class="overflow-x-auto">
+    <table class="min-w-[42rem] table-auto border-collapse text-left">
       <caption class="sr-only">일본 특정상거래법에 따라 요구되는 판매자 정보</caption>
       <tbody class="divide-y divide-primary-200 dark:divide-primary-800">
         <tr><th class="py-4 pr-6 align-top font-medium">판매자</th><td class="py-4">Cor Inc. (Cor.inc)</td></tr>
@@ -38,5 +39,6 @@ import Layout from '../../../layouts/Layout.astro';
         <tr><th class="py-4 pr-6 align-top font-medium">중고품 영업법 허가번호</th><td class="py-4">해당 없음</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
 </Layout>

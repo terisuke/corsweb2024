@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ShigyoBody from '../../components/industry/ShigyoBody.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<Layout
+  description={t.meta.industryShigyo.description}
+  title={t.meta.industryShigyo.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <ShigyoBody />
+</Layout>

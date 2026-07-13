@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import EducationBody from '../../components/industry/EducationBody.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<Layout
+  description={t.meta.industryEducation.description}
+  title={t.meta.industryEducation.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <EducationBody />
+</Layout>

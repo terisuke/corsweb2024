@@ -10,16 +10,106 @@
     "redirects": [
       {
         "source": "/pricing",
-        "destination": "/products",
+        "destination": "/works",
         "type": 301
       },
       {
         "source": "/pricing/",
-        "destination": "/products",
+        "destination": "/works",
+        "type": 301
+      },
+      {
+        "source": "/products",
+        "destination": "/works",
+        "type": 301
+      },
+      {
+        "source": "/products/",
+        "destination": "/works",
+        "type": 301
+      },
+      {
+        "source": "/en/products{,/}",
+        "destination": "/en",
+        "type": 301
+      },
+      {
+        "source": "/zh/products{,/}",
+        "destination": "/zh",
+        "type": 301
+      },
+      {
+        "source": "/ko/products{,/}",
+        "destination": "/ko",
+        "type": 301
+      },
+      {
+        "source": "/es/products{,/}",
+        "destination": "/es",
         "type": 301
       }
     ],
     "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "source": "**/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "source": "/images/blog/uploads/**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          }
+        ]
+      },
       {
         "source": "**/*.@(js|css)",
         "headers": [
@@ -61,15 +151,6 @@
           {
             "key": "Cache-Control",
             "value": "public, max-age=86400"
-          }
-        ]
-      },
-      {
-        "source": "**",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=3600"
           }
         ]
       }

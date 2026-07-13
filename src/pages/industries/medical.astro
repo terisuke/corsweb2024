@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MedicalBody from '../../components/industry/MedicalBody.astro';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+---
+
+<Layout
+  description={t.meta.industryMedical.description}
+  title={t.meta.industryMedical.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <MedicalBody />
+</Layout>

@@ -1,0 +1,338 @@
+---
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  bubble: string[];
+  locale: Locale;
+}
+
+const { bubble, locale } = Astro.props;
+
+// マスコットの aria-label（ページ言語に合わせる）。吹き出しとは別に軽量に持つ。
+const ARIA: Record<string, string> = {
+  ja: 'マスコットのペンギン。タップすると飛び立ちます',
+  en: 'Mascot penguin. Tap to make it fly',
+  zh: '吉祥物企鹅。点击后会飞起来',
+  ko: '마스코트 펭귄. 탭하면 날아오릅니다',
+  es: 'Pingüino mascota. Tócalo para hacerlo volar',
+};
+const ariaLabel = ARIA[locale] ?? ARIA.ja;
+
+// ── ドット絵ペンギン（左向き 14x17 グリッド）を SVG rect で描き起こす ──
+const PX: Record<string, string> = {
+  D: '#3f4658', // 背・輪郭（濃）
+  M: '#767d8f', // 中間グレー
+  B: '#c8ccd6', // お腹（明）
+  W: '#ffffff', // 白目
+  P: '#20283a', // 瞳
+  K: '#39404f', // くちばし・足
+};
+const BODY = [
+  '     DDDD     ', '    DMMMMDD   ', '   DMMMMMMD   ', '   DMWWWMMD   ',
+  '  DKWWWPWMD   ', '  DKWWWWWMDD  ', '   DMMMMMMMD  ', '   DMMMMMMMD  ',
+  '   DBBBMMMMD  ', '  DBBBBBMMMD  ', '  DBBBBBMMMD  ', '  DBBBBBBMMD  ',
+  '  DBBBBBBMMD  ', '  DBBBBBMMMD  ', '   DBBBMMMDD  ', '   DDMMMDD    ',
+];
+const FEET_A = '   KK  KK     ';
+const FEET_B = '  KK    KK    ';
+function sprite(feet: string): string {
+  const rows = [...BODY, feet];
+  let rects = '';
+  for (let y = 0; y < rows.length; y++) {
+    const row = rows[y];
+    for (let x = 0; x < row.length; x++) {
+      const c = row[x];
+      if (c === ' ' || !PX[c]) continue;
+      rects += `<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${PX[c]}"/>`;
+    }
+  }
+  return `<svg viewBox="0 0 14 17" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${rects}</svg>`;
+}
+const SPRITE_A = sprite(FEET_A);
+const SPRITE_B = sprite(FEET_B);
+const COUNT = 4;
+// キーボード/スクリーンリーダー向けにフォーカス可能にするのは中央の1匹だけ（装飾4匹が同一 button として並ぶノイズを避ける）。他はマウスクリックのみ有効。
+const SPEAKER = Math.floor((COUNT - 1) / 2);
+---
+
+{/* ロゴのペンギン隊列がヒーロー下部を歩く演出（装飾）。動画不使用・SVG＋CSS＋軽量JSのみ。 */}
+<div class="pw-layer" data-pw-layer>
+  {
+    Array.from({ length: COUNT }).map((_, i) => (
+      <div
+        class="pw"
+        data-i={i}
+        role={i === SPEAKER ? 'button' : undefined}
+        tabindex={i === SPEAKER ? 0 : undefined}
+        aria-label={i === SPEAKER ? ariaLabel : undefined}
+        aria-hidden={i === SPEAKER ? undefined : 'true'}
+      >
+        <span class="pw-shadow" aria-hidden="true" />
+        <span class="pw-fa" aria-hidden="true" set:html={SPRITE_A} />
+        <span class="pw-fb" aria-hidden="true" set:html={SPRITE_B} />
+      </div>
+    ))
+  }
+  <div class="pw-bubble" data-bubble={JSON.stringify(bubble)} aria-hidden="true"><span class="pw-btxt"></span></div>
+</div>
+
+<style>
+  .pw-layer { position: absolute; inset: 0; z-index: 14; overflow: hidden; pointer-events: none; }
+
+  .pw {
+    position: absolute; left: 0; top: 0;
+    width: clamp(34px, 5vw, 44px); aspect-ratio: 14 / 17;
+    cursor: pointer; pointer-events: auto; will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate3d(0, 0, 0);
+  }
+  .pw:focus-visible { outline: 3px solid #5b6172; outline-offset: 5px; border-radius: 10px; }
+  .pw-fa, .pw-fb { position: absolute; inset: 0; }
+  .pw-fa svg, .pw-fb svg { width: 100%; height: 100%; display: block; }
+  .pw-fb { opacity: 0; }
+  .pw[data-frame="1"] .pw-fa { opacity: 0; }
+  .pw[data-frame="1"] .pw-fb { opacity: 1; }
+  .pw-shadow {
+    position: absolute; left: 14%; right: 14%; bottom: -3px; height: 15%;
+    background: rgba(20, 26, 40, .18); border-radius: 50%; filter: blur(1px); z-index: -1;
+  }
+  :global(html.dark) .pw-shadow { background: rgba(0, 0, 0, .34); }
+
+  /* 吹き出し */
+  .pw-bubble {
+    position: absolute; left: 0; top: 0; z-index: 16; pointer-events: none;
+    background: #ffffff; color: #1c1917; border: 1px solid rgba(29, 26, 23, .12);
+    border-radius: 15px; padding: 9px 16px; font-size: 15px; font-weight: 650; line-height: 1.45;
+    white-space: nowrap; box-shadow: 0 8px 22px rgba(10, 20, 35, .2);
+    transform: translate(-50%, -100%); opacity: 0; transition: opacity .3s ease;
+  }
+  .pw-bubble::after {
+    content: ""; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px;
+    background: #ffffff; border-right: 1px solid rgba(29, 26, 23, .12); border-bottom: 1px solid rgba(29, 26, 23, .12);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  :global(html.dark) .pw-bubble { background: #201e18; color: #f4f2ee; border-color: rgba(244, 242, 238, .14); }
+  :global(html.dark) .pw-bubble::after { background: #201e18; border-color: rgba(244, 242, 238, .14); }
+  .pw-btxt { display: inline-block; transition: opacity .22s ease, transform .22s ease; }
+  .pw-bubble.pw-swap .pw-btxt { opacity: 0; transform: translateY(-3px); }
+  .pw-layer.pw-tight .pw-bubble { opacity: 0 !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pw, .pw *, .pw-bubble { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<script>
+  function initPenguins() {
+    const layer = document.querySelector('[data-pw-layer]') as HTMLElement | null;
+    if (!layer || layer.dataset.pwReady) return;
+    layer.dataset.pwReady = '1';
+
+    // 前ページの残存ループ／リスナを止める（View Transitions 対策）
+    const w = window as any;
+    if (w.__pwRaf) cancelAnimationFrame(w.__pwRaf);
+    if (w.__pwTimer) clearInterval(w.__pwTimer);
+    if (w.__pwRO) { try { w.__pwRO.disconnect(); } catch (e) { /* noop */ } }
+    if (w.__pwAC) { try { w.__pwAC.abort(); } catch (e) { /* noop */ } }
+    const ac = new AbortController();
+    w.__pwAC = ac;
+
+    const els = Array.from(layer.querySelectorAll('.pw')) as HTMLElement[];
+    const bubbleEl = layer.querySelector('.pw-bubble') as HTMLElement;
+    const btxt = layer.querySelector('.pw-btxt') as HTMLElement;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const N = els.length;
+    if (!N) return;
+    const speaker = Math.floor((N - 1) / 2); // 中央のペンギンが喋る（端で隠れにくい）
+
+    let messages: string[] = ['ようこそ！', 'タップしてみてね！'];
+    try {
+      const parsed = JSON.parse(bubbleEl.dataset.bubble || '[]');
+      if (Array.isArray(parsed) && parsed.length) messages = parsed;
+    } catch (e) { /* keep default */ }
+
+    let W = 0, H = 0, PW = 0, PH = 0, floorY = 0, margin = 28, spacing = 48, travel = 0, contentBottom = 0;
+    let formX = 30, dir = 1, phase = 0, lastTs = 0, bi = 0, bubbleHalf = 70;
+
+    type P = { el: HTMLElement; i: number; shadow: HTMLElement; state: string;
+      x: number; y: number; facing: number; rot: number; opacity: number; shadowOn: number;
+      vy: number; vx: number; timer: number; };
+    const peng: P[] = els.map((el, i) => ({
+      el, i, shadow: el.querySelector('.pw-shadow') as HTMLElement, state: 'walk',
+      x: 0, y: 0, facing: -1, rot: 0, opacity: 1, shadowOn: 1, vy: 0, vx: 0, timer: 0,
+    }));
+
+    function clamp(v: number, a: number, b: number) { return v < a ? a : (v > b ? b : v); }
+    function tri(t: number) { const m = ((t % 1) + 1) % 1; return m < 0.5 ? m * 2 : 2 - m * 2; }
+
+    function measure() {
+      const r = layer.getBoundingClientRect();
+      W = r.width; H = r.height;
+      PW = els[0].offsetWidth; PH = els[0].offsetHeight || Math.round(PW * 17 / 14);
+      spacing = Math.round(PW * 1.18);
+      margin = Math.min(28, W * 0.06);
+      const formationW = (N - 1) * spacing + PW;
+      const hi = H - PH - 6;
+      // 本文（テキスト）の下端より下＝空きスペースにだけ立つ（文字被り防止）。
+      contentBottom = H * 0.6;
+      const content = document.querySelector('[data-hero-content]');
+      if (content) contentBottom = content.getBoundingClientRect().bottom - r.top;
+      // ペンギンの頭上に出る吹き出しが本文に被らないよう、吹き出しの高さ分の余白を確保して床位置を決める。
+      const bubbleH = bubbleEl.offsetHeight || 42;
+      floorY = clamp(contentBottom + bubbleH + 12, Math.min(H * 0.5, hi), hi);
+      // 余白が足りず吹き出しが本文に届いてしまう狭い画面では、吹き出しを隠して文字被りを防ぐ。
+      layer.classList.toggle('pw-tight', (floorY - contentBottom) < bubbleH + 6);
+      travel = Math.max(0, W - formationW - margin * 2);
+      formX = clamp(formX, margin, margin + travel);
+      // 吹き出し幅はフレーム毎に変わらないためここでキャッシュ（毎フレームの offsetWidth 読取でのレイアウトスラッシング回避）。
+      bubbleHalf = (bubbleEl.offsetWidth / 2) || 70;
+    }
+
+    function apply(p: P) {
+      p.el.style.opacity = String(p.opacity);
+      p.el.style.transform = 'translate3d(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px,0) scaleX(' + p.facing + ')'
+        + (p.rot ? ' rotate(' + p.rot.toFixed(1) + 'deg)' : '');
+      p.shadow.style.opacity = String(p.shadowOn);
+    }
+    function setFrame(p: P, v: number) {
+      const s = String(v);
+      if (p.el.dataset.frame !== s) p.el.setAttribute('data-frame', s);
+    }
+
+    function frame(ts: number) {
+      if (!lastTs) lastTs = ts;
+      const dt = Math.min(48, ts - lastTs); lastTs = ts;
+
+      const period = 12000 + N * 1100; // ゆっくり往復（1往復あたり ms）
+      phase += dt / period;
+      const fx = margin + tri(phase) * travel;
+      const walkDir = ((phase % 1) + 1) % 1 < 0.5 ? -1 : 1;
+      const wobbleUp = Math.sin(ts / 220) > 0;
+      const waddle = Math.floor(ts / 230) % 2;
+
+      for (const p of peng) {
+        const slotX = fx + p.i * spacing;
+        if (p.state === 'walk') {
+          p.x = slotX; p.y = floorY + (wobbleUp ? -1.5 : 0); p.facing = walkDir;
+          p.rot = 0; p.opacity = 1; p.shadowOn = 1;
+          setFrame(p, waddle);
+        } else if (p.state === 'launch') {
+          p.timer += dt; const k = Math.min(1, p.timer / 160);
+          p.y = floorY + 6 * Math.sin(k * Math.PI);
+          if (p.timer >= 160) { p.state = 'fly'; p.vy = -0.62; p.vx = p.facing * 0.06 + (Math.random() - 0.5) * 0.12; p.timer = 0; p.shadowOn = 0; }
+        } else if (p.state === 'fly') {
+          p.timer += dt; p.vy += 0.0002 * dt; p.y += p.vy * dt; p.x += p.vx * dt; p.rot += dt * 0.5;
+          if (p.y < -PH - 20) p.opacity = 0;
+          // 画面上部に抜けて余韻をおいたら再登場。高解像度で上端に届かない場合も timer 上限で必ず復帰させる。
+          if ((p.y < -PH - 20 && p.timer > 950) || p.timer > 4000) {
+            p.opacity = 0; p.state = 'reappear'; p.timer = 0;
+            const rx = clamp(slotX + (Math.random() - 0.5) * 150, margin, W - PW - margin);
+            p.x = rx; p.y = H + 24; p.rot = 0; p.shadowOn = 0; p.facing = (slotX >= p.x) ? -1 : 1;
+          }
+        } else if (p.state === 'reappear') {
+          p.opacity = 1; p.timer += dt;
+          p.y += (floorY - p.y) * Math.min(1, dt / 90);
+          setFrame(p, Math.floor(ts / 90) % 2);
+          if (Math.abs(p.y - floorY) < 2) { p.y = floorY; p.state = 'run'; p.shadowOn = 1; }
+        } else if (p.state === 'run') {
+          p.y = floorY + (Math.sin(ts / 70) > 0 ? -2.5 : 0); p.facing = (slotX >= p.x) ? -1 : 1;
+          const d = slotX - p.x, s = Math.sign(d) * Math.min(Math.abs(d), 0.42 * dt);
+          p.x += s; setFrame(p, Math.floor(ts / 80) % 2);
+          if (Math.abs(slotX - p.x) < 2.5) { p.x = slotX; p.state = 'walk'; }
+        }
+        apply(p);
+      }
+
+      // 吹き出し（中央ペンギンが歩行中のみ表示、端では隠す）
+      const sp = peng[speaker];
+      if (sp.state === 'walk') {
+        const cx = sp.x + PW / 2;
+        const half = bubbleHalf;
+        const nearEdge = (cx - half < 2) || (cx + half > W - 2);
+        bubbleEl.style.left = cx + 'px';
+        bubbleEl.style.top = (sp.y - 4 + Math.sin(ts / 500) * 2) + 'px';
+        bubbleEl.style.opacity = nearEdge ? '0' : '1';
+      } else {
+        bubbleEl.style.opacity = '0';
+      }
+
+      w.__pwRaf = requestAnimationFrame(frame);
+    }
+
+    // rAF の起動は必ずこの一箇所を通す（隠しタブで初回 rAF が保留→表示時に visibilitychange と二重起動するのを防ぐ）。
+    function startLoop() {
+      if (reduce.matches) return;
+      if (w.__pwRaf) cancelAnimationFrame(w.__pwRaf);
+      lastTs = 0;
+      w.__pwRaf = requestAnimationFrame(frame);
+    }
+
+    function launch(p: P) {
+      if (p.state !== 'walk') return;
+      p.state = 'launch'; p.timer = 0;
+    }
+    els.forEach((el, i) => {
+      el.addEventListener('click', () => launch(peng[i]));
+      el.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); launch(peng[i]); }
+      });
+    });
+
+    function swapBubble() {
+      if (reduce.matches) return;
+      if (peng[speaker].state !== 'walk') return;
+      bi = 1 - bi;
+      bubbleEl.classList.add('pw-swap');
+      setTimeout(() => { btxt.textContent = messages[bi] || ''; bubbleEl.classList.remove('pw-swap'); }, 220);
+    }
+
+    function layoutStatic() {
+      measure();
+      const formationW = (N - 1) * spacing + PW;
+      const startX = clamp((W - formationW) / 2, margin, W - formationW - margin < margin ? margin : W - formationW - margin);
+      peng.forEach((p) => {
+        p.state = 'walk'; p.x = startX + p.i * spacing; p.y = floorY; p.facing = -1; p.rot = 0; p.opacity = 1; p.shadowOn = 1;
+        p.el.setAttribute('data-frame', '0'); apply(p);
+      });
+      btxt.textContent = messages[1] || messages[0] || '';
+      const sp = peng[speaker], cx = sp.x + PW / 2;
+      bubbleEl.style.left = cx + 'px'; bubbleEl.style.top = (sp.y - 4) + 'px';
+      bubbleEl.style.opacity = layer.classList.contains('pw-tight') ? '0' : '1';
+    }
+
+    // リサイズは軽くデバウンス（歩行値は phase 基準なので位置は自動追従）
+    let rT: number | undefined;
+    window.addEventListener('resize', () => {
+      clearTimeout(rT);
+      rT = window.setTimeout(() => { if (reduce.matches) layoutStatic(); else measure(); }, 150);
+    }, { signal: ac.signal });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { if (w.__pwRaf) cancelAnimationFrame(w.__pwRaf); }
+      else startLoop();
+    }, { signal: ac.signal });
+
+    // init
+    btxt.textContent = messages[0] || '';
+
+    // レイアウト確定後にサイズを取り直し、床位置ズレを防ぐ（初回描画・フォント適用に追従）。
+    function reflow() { if (reduce.matches) layoutStatic(); else measure(); }
+    try {
+      w.__pwRO = new ResizeObserver(reflow);
+      w.__pwRO.observe(layer);
+      const cEl = document.querySelector('[data-hero-content]');
+      if (cEl) w.__pwRO.observe(cEl);
+    } catch (e) { /* RO 無しでも下記で動く */ }
+    window.addEventListener('load', reflow, { signal: ac.signal });
+    setTimeout(reflow, 500);
+
+    requestAnimationFrame(() => {
+      if (reduce.matches) { layoutStatic(); return; }
+      measure();
+      startLoop();
+      w.__pwTimer = window.setInterval(swapBubble, 3200);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initPenguins);
+  if (document.readyState !== 'loading') initPenguins();
+</script>
