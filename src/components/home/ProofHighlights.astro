@@ -33,7 +33,10 @@ const stats: ProofStat[] = t.proof.stats;
         {
           stats.map((stat, i) => (
             <div
-              class="relative flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 transition duration-200 has-[a:hover]:-translate-y-1 has-[a:hover]:shadow-lg dark:bg-primary-400/10"
+              class:list={[
+                'relative flex flex-col gap-2 rounded-3xl bg-primary-500/10 p-6 transition duration-200 dark:bg-primary-400/10',
+                stat.href && 'hover:-translate-y-1 hover:shadow-lg',
+              ]}
               data-reveal
               style={`--reveal-delay:${(cardBaseDelay + i * cardStep).toFixed(2)}s`}
             >

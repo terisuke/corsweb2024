@@ -792,12 +792,14 @@
       {
         "label": "中核事業",
         "value": "3領域",
-        "note": "Grift・ローカルLLM・AI受託"
+        "note": "Grift・ローカルLLM・AI受託",
+        "href": "/works"
       },
       {
         "label": "AI運用設計",
         "value": "4設計",
-        "note": "入力境界・権限・ログ・人間承認"
+        "note": "入力境界・権限・ログ・人間承認",
+        "href": "/security"
       },
       {
         "label": "入口診断",
