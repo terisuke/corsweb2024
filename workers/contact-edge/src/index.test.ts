@@ -1,0 +1,95 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { fetchContactEdge, type Env } from './index';
+
+afterEach(() => vi.unstubAllGlobals());
+
+const request = (path: string) => new Request(`https://cor-jp.com${path}`);
+
+describe('cor-contact-edge', () => {
+  it('keeps the Firebase origin as the safe default', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('firebase', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/contact/chat/'), {});
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('firebase');
+    expect(fetchMock).toHaveBeenCalledWith(expect.objectContaining({ url: 'https://cor-jp-main.web.app/contact/chat/' }));
+  });
+
+  it('proxies only the Cloudia chat path when Pages is enabled', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('cloudia', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const env: Env = {
+      CONTACT_ORIGIN: 'pages',
+      CLOUDIA_PAGES_ORIGIN: 'https://cloudia.example',
+    };
+
+    const response = await fetchContactEdge(request('/contact/chat/assets/app.js?rev=1'), env);
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('cloudia');
+    expect(fetchMock).toHaveBeenCalledWith(expect.objectContaining({ url: 'https://cloudia.example/assets/app.js?rev=1' }));
+  });
+
+  it('falls back to Firebase when Pages is unavailable', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response('pages down', { status: 503 }))
+      .mockResolvedValueOnce(new Response('firebase fallback', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/contact/chat/'), { CONTACT_ORIGIN: 'pages' });
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('firebase fallback');
+    expect(fetchMock).toHaveBeenNthCalledWith(2, expect.objectContaining({ url: 'https://cor-jp-main.web.app/contact/chat/' }));
+  });
+
+  it('falls back to Firebase when Pages does not contain the requested asset', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response('not found', { status: 404 }))
+      .mockResolvedValueOnce(new Response('firebase fallback', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/contact/chat/'), { CONTACT_ORIGIN: 'pages' });
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('firebase fallback');
+    expect(fetchMock).toHaveBeenNthCalledWith(2, expect.objectContaining({ url: 'https://cor-jp-main.web.app/contact/chat/' }));
+  });
+
+  it('does not intercept other paths', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('site', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/about/'), {});
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('site');
+    expect(fetchMock).toHaveBeenCalledWith(expect.objectContaining({ url: 'https://cor-jp.com/about/' }));
+  });
+
+  it('redirects the bare chat path to the canonical trailing slash', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/contact/chat'), {});
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get('location')).toBe('https://cor-jp.com/contact/chat/');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('uses the same canonical redirect for HEAD requests', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(new Request('https://cor-jp.com/contact/chat', { method: 'HEAD' }), {});
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get('location')).toBe('https://cor-jp.com/contact/chat/');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});

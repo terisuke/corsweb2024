@@ -12,6 +12,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_GCAL_ID?: string;
   readonly PUBLIC_GCAL_TZ?: string;
   readonly PUBLIC_GCAL_PARAMS?: string;
+  readonly PUBLIC_CLOUDIA_LAUNCHER_ENABLED?: string;
 }
 
 declare global {

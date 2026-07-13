@@ -1,0 +1,16 @@
+{
+  "name": "cor-contact-edge",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "deploy:dry": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8",
+    "wrangler": "^3.107.0"
+  }
+}

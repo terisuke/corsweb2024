@@ -1,0 +1,91 @@
+export interface Env {
+  CONTACT_ORIGIN?: string;
+  CLOUDIA_PAGES_ORIGIN?: string;
+  FIREBASE_ORIGIN?: string;
+}
+
+const CHAT_PREFIX = '/contact/chat';
+
+function originUrl(value: string | undefined, fallback: string): URL {
+  try {
+    const url = new URL(value || fallback);
+    url.pathname = url.pathname.replace(/\/+$/, '');
+    return url;
+  } catch {
+    return new URL(fallback);
+  }
+}
+
+function responseHeaders(response: Response, isHtml: boolean): Headers {
+  const headers = new Headers(response.headers);
+  headers.set('x-content-type-options', 'nosniff');
+  headers.set('referrer-policy', 'strict-origin-when-cross-origin');
+  headers.set('content-security-policy', "frame-ancestors 'self'; object-src 'none'; base-uri 'self'");
+  headers.set('x-frame-options', 'SAMEORIGIN');
+  if (isHtml) {
+    headers.set('cache-control', 'no-store');
+  } else if (response.ok) {
+    headers.set('cache-control', 'public, max-age=31536000, immutable');
+  }
+  return headers;
+}
+
+async function fetchOrigin(request: Request, origin: URL, stripPrefix: boolean): Promise<Response> {
+  const incoming = new URL(request.url);
+  const target = new URL(origin.toString());
+  const path = stripPrefix
+    ? incoming.pathname.slice(CHAT_PREFIX.length) || '/'
+    : incoming.pathname;
+  target.pathname = path.startsWith('/') ? path : `/${path}`;
+  target.search = incoming.search;
+
+  const headers = new Headers(request.headers);
+  headers.delete('host');
+  const response = await fetch(new Request(target, { method: request.method, headers, redirect: 'manual' }));
+  const isHtml = (response.headers.get('content-type') || '').includes('text/html');
+  return new Response(response.body, { status: response.status, headers: responseHeaders(response, isHtml) });
+}
+
+function isSuccessfulStatic(response: Response): boolean {
+  return response.status >= 200 && response.status < 400;
+}
+
+export async function fetchContactEdge(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  if (url.pathname === CHAT_PREFIX && (request.method === 'GET' || request.method === 'HEAD')) {
+    url.pathname = `${CHAT_PREFIX}/`;
+    return Response.redirect(url.toString(), 301);
+  }
+  if (url.pathname !== `${CHAT_PREFIX}/` && !url.pathname.startsWith(`${CHAT_PREFIX}/`)) {
+    return fetch(request);
+  }
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return fetch(request);
+  }
+
+  const firebase = originUrl(env.FIREBASE_ORIGIN, 'https://cor-jp-main.web.app');
+  const pages = originUrl(env.CLOUDIA_PAGES_ORIGIN, 'https://cloudia-contact.pages.dev');
+  const usePages = (env.CONTACT_ORIGIN || 'firebase').toLowerCase() === 'pages';
+
+  if (usePages) {
+    try {
+      const pagesResponse = await fetchOrigin(request, pages, true);
+      if (isSuccessfulStatic(pagesResponse)) return pagesResponse;
+    } catch {
+      // Fall through to the Firebase fallback origin once.
+    }
+  }
+
+  try {
+    return await fetchOrigin(request, firebase, false);
+  } catch {
+    return new Response('Cloudia is temporarily unavailable.', {
+      status: 503,
+      headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' },
+    });
+  }
+}
+
+export default {
+  fetch: fetchContactEdge,
+};

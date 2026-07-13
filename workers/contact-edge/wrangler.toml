@@ -1,0 +1,25 @@
+name = "cor-contact-edge"
+main = "src/index.ts"
+compatibility_date = "2026-07-13"
+account_id = "9973f2d2304b58a1f90d4d9409e9f8cc"
+
+# This Worker owns only the Cloudia chat path. The existing Firebase HP and
+# cor-contact-chat API routes remain independent.
+routes = [
+  { pattern = "cor-jp.com/contact/chat", zone_name = "cor-jp.com" },
+  { pattern = "cor-jp.com/contact/chat/*", zone_name = "cor-jp.com" },
+]
+
+[vars]
+CONTACT_ORIGIN = "pages"
+CLOUDIA_PAGES_ORIGIN = "https://cloudia-contact.pages.dev"
+FIREBASE_ORIGIN = "https://cor-jp-main.web.app"
+
+[env.preview]
+name = "cor-contact-edge-preview"
+routes = []
+
+[env.preview.vars]
+CONTACT_ORIGIN = "pages"
+CLOUDIA_PAGES_ORIGIN = "https://cloudia-contact.pages.dev"
+FIREBASE_ORIGIN = "https://cor-jp-main.web.app"

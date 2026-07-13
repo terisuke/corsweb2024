@@ -3,6 +3,8 @@ import { getCurrentLocale, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
+const cloudiaHref = new URL('/contact/chat/', Astro.url);
+cloudiaHref.searchParams.set('locale', currentLocale);
 ---
 
 <section class="py-16 sm:py-20">
@@ -52,8 +54,7 @@ const t = getTranslations(currentLocale);
             ></path>
           </svg>
           <a
-            href="https://3d-emotional-chat.netlify.app/"
-            target="_blank"
+            href={`${cloudiaHref.pathname}${cloudiaHref.search}`}
             class="block no-underline"
           >
             <p class="text-base font-medium">{t.contactInfo.chat.value}</p>

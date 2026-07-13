@@ -2,8 +2,10 @@
 import { ViewTransitions } from 'astro:transitions';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
+import CloudiaLauncher from '../components/contact/CloudiaLauncher.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
 import Analytics from '../components/analytics/Analytics.astro';
+import { CLOUDIA_LAUNCHER_ENABLED } from '../config/contact';
 import { getCurrentLocale, type Locale } from '../utils/i18n';
 import { getRobotsContent } from '../config/site';
 
@@ -24,6 +26,10 @@ interface Props {
   // SEO用 <title> と SNS用 og:title を分離したい場合に指定する。
   ogTitle?: string;
   ogDescription?: string;
+  // Contactページだけモバイル固定CTAを表示する。PC CTAは全ページ共通。
+  cloudiaMobileLauncher?: boolean;
+  // Cloudiaのfallbackページ自身ではLauncherを重ねない。
+  cloudiaLauncher?: boolean;
 }
 
 const OG_LOCALES: Record<Locale, string> = {
@@ -35,7 +41,7 @@ const OG_LOCALES: Record<Locale, string> = {
 };
 const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
 
-const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp, ogType = 'website', publishedTime, modifiedTime, ogTitle, ogDescription } = Astro.props;
+const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp, ogType = 'website', publishedTime, modifiedTime, ogTitle, ogDescription, cloudiaMobileLauncher = false, cloudiaLauncher = true } = Astro.props;
 const socialTitle = ogTitle || title;
 const socialDescription = ogDescription || description;
 const currentLocale = getCurrentLocale(Astro.url);
@@ -390,6 +396,7 @@ const robotsContent = getRobotsContent();
       <slot />
     </main>
     <Footer />
+    {CLOUDIA_LAUNCHER_ENABLED && cloudiaLauncher && <CloudiaLauncher showMobile={cloudiaMobileLauncher} />}
     <WebVitals />
     <script data-cfasync="false">
       // Global store fallback - ストアが未定義の場合のデフォルト値
