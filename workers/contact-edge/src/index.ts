@@ -50,6 +50,18 @@ function isSuccessfulStatic(response: Response): boolean {
   return response.status >= 200 && response.status < 400;
 }
 
+function fallbackResponse(request: Request, response: Response): Response {
+  if (response.status < 400) return response;
+  const url = new URL(request.url);
+  if (url.pathname === `${CHAT_PREFIX}/`) {
+    return Response.redirect(new URL('/contact/', url).toString(), 302);
+  }
+  return new Response('Cloudia is temporarily unavailable.', {
+    status: 503,
+    headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' },
+  });
+}
+
 export async function fetchContactEdge(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   if (url.pathname === CHAT_PREFIX && (request.method === 'GET' || request.method === 'HEAD')) {
@@ -77,8 +89,11 @@ export async function fetchContactEdge(request: Request, env: Env): Promise<Resp
   }
 
   try {
-    return await fetchOrigin(request, firebase, false);
+    return fallbackResponse(request, await fetchOrigin(request, firebase, false));
   } catch {
+    if (new URL(request.url).pathname === `${CHAT_PREFIX}/`) {
+      return Response.redirect(new URL('/contact/', request.url).toString(), 302);
+    }
     return new Response('Cloudia is temporarily unavailable.', {
       status: 503,
       headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' },

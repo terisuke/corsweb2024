@@ -60,6 +60,19 @@ describe('cor-contact-edge', () => {
     expect(fetchMock).toHaveBeenNthCalledWith(2, expect.objectContaining({ url: 'https://cor-jp-main.web.app/contact/chat/' }));
   });
 
+  it('redirects the chat entry to the existing form when both origins miss it', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response('pages down', { status: 503 }))
+      .mockResolvedValueOnce(new Response('not found', { status: 404 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/contact/chat/'), { CONTACT_ORIGIN: 'pages' });
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get('location')).toBe('https://cor-jp.com/contact/');
+  });
+
   it('does not intercept other paths', async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response('site', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
