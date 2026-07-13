@@ -5,6 +5,7 @@ export interface Env {
 }
 
 const CHAT_PREFIX = '/contact/chat';
+const AMBASSADOR_PATH = `${CHAT_PREFIX}/ambassador/`;
 
 function originUrl(value: string | undefined, fallback: string): URL {
   try {
@@ -75,13 +76,24 @@ export async function fetchContactEdge(request: Request, env: Env): Promise<Resp
     return fetch(request);
   }
 
+  // The ambassador mode is a distinct public entry path, while Pages hosts a
+  // single SPA at the Cloudia root. Rewrite only the document request and keep
+  // the mode as a query parameter understood by the app.
+  const isAmbassador = url.pathname === AMBASSADOR_PATH;
+  const pagesRequest = (() => {
+    if (!isAmbassador) return request;
+    const ambassadorUrl = new URL(`${CHAT_PREFIX}/`, url);
+    ambassadorUrl.searchParams.set('mode', 'ambassador');
+    return new Request(ambassadorUrl, request);
+  })();
+
   const firebase = originUrl(env.FIREBASE_ORIGIN, 'https://cor-jp-main.web.app');
   const pages = originUrl(env.CLOUDIA_PAGES_ORIGIN, 'https://cloudia-contact.pages.dev');
   const usePages = (env.CONTACT_ORIGIN || 'firebase').toLowerCase() === 'pages';
 
   if (usePages) {
     try {
-      const pagesResponse = await fetchOrigin(request, pages, true);
+      const pagesResponse = await fetchOrigin(pagesRequest, pages, true);
       if (isSuccessfulStatic(pagesResponse)) return pagesResponse;
     } catch {
       // Fall through to the Firebase fallback origin once.
@@ -89,7 +101,7 @@ export async function fetchContactEdge(request: Request, env: Env): Promise<Resp
   }
 
   try {
-    return fallbackResponse(request, await fetchOrigin(request, firebase, false));
+    return fallbackResponse(request, await fetchOrigin(pagesRequest, firebase, false));
   } catch {
     if (new URL(request.url).pathname === `${CHAT_PREFIX}/`) {
       return Response.redirect(new URL('/contact/', request.url).toString(), 302);

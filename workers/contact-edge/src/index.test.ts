@@ -32,6 +32,22 @@ describe('cor-contact-edge', () => {
     expect(fetchMock).toHaveBeenCalledWith(expect.objectContaining({ url: 'https://cloudia.example/assets/app.js?rev=1' }));
   });
 
+  it('rewrites the ambassador entry to the Cloudia SPA with its mode', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('cloudia ambassador', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await fetchContactEdge(request('/contact/chat/ambassador/'), {
+      CONTACT_ORIGIN: 'pages',
+      CLOUDIA_PAGES_ORIGIN: 'https://cloudia.example',
+    });
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('cloudia ambassador');
+    expect(fetchMock).toHaveBeenCalledWith(expect.objectContaining({
+      url: 'https://cloudia.example/?mode=ambassador',
+    }));
+  });
+
   it('falls back to Firebase when Pages is unavailable', async () => {
     const fetchMock = vi
       .fn()
