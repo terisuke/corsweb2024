@@ -109,6 +109,43 @@ describe('parseChatResult', () => {
     const r = parseChatResult('{"reply":"x","classification":"evil","readyForContact":false}');
     expect(r.classification).toBe('genuine');
   });
+
+  it('非PII summaryを返し、生トランスクリプトやPII summaryはfallbackに落とす', () => {
+    const ok = parseChatResult('{"reply":"確認しました","summary":"目的と時期を確認済み","readyForContact":true}');
+    expect(ok.summary).toBe('目的と時期を確認済み');
+    const transcript = parseChatResult('{"reply":"確認しました","summary":"User: 090-1234-5678\\n続き","readyForContact":true}');
+    expect(transcript.summary).not.toContain('090-1234-5678');
+    const pii = parseChatResult('{"reply":"確認しました","summary":"user@example.comへ連絡","readyForContact":true}');
+    expect(pii.summary).not.toContain('user@example.com');
+  });
+
+  it('空または1500文字超のsummaryは固定fallbackへ落とす', () => {
+    const empty = parseChatResult('{"reply":"確認しました","summary":"   ","readyForContact":true}');
+    expect(empty.summary).toContain('分類: genuine');
+    const oversized = parseChatResult(JSON.stringify({
+      reply: '確認しました',
+      summary: 'a'.repeat(1501),
+      readyForContact: true,
+    }));
+    expect(oversized.summary).toContain('分類: genuine');
+    expect(oversized.summary.length).toBeLessThanOrEqual(1500);
+  });
+
+  it('structuredLeadにPIIが混入してもsummaryへ再出力しない', () => {
+    const result = parseChatResult(JSON.stringify({
+      reply: '確認しました',
+      structuredLead: { purpose: 'user@example.comへ連絡' },
+      readyForContact: false,
+    }));
+    expect(result.summary).not.toContain('user@example.com');
+  });
+
+  it('dash区切りのロール転記とAPIキー形式もsummaryへ採用しない', () => {
+    const transcript = parseChatResult('{"reply":"確認しました","summary":"User - 目的を確認\nAssistant - 次の質問","readyForContact":true}');
+    expect(transcript.summary).not.toContain('User -');
+    const secret = parseChatResult('{"reply":"確認しました","summary":"AIzaSyA123456789012345678901234567890","readyForContact":true}');
+    expect(secret.summary).not.toContain('AIzaSyA');
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -131,6 +168,29 @@ const post = (path: string, body: unknown, headers: Record<string, string> = {})
   });
 
 describe('worker.fetch — ハンドラレベル', () => {
+  it('VertexリクエストへPIIをそのまま渡さない', async () => {
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: '{"reply":"ok","readyForContact":false}' }] } }],
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const env = {
+      ...ENV,
+      LLM_PROVIDER: 'vertex-gemini',
+      VERTEX_GATEWAY_URL: 'https://gateway.example/generateContent',
+      VERTEX_GATEWAY_SECRET: 'secret',
+    } as Env;
+    const res = await worker.fetch(post('/api/contact/chat', {
+      messages: [{ role: 'user', content: '連絡先 user@example.com / 090-1234-5678 / OTP 123456' }],
+    }), env);
+    expect(res.status).toBe(200);
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit | undefined;
+    const body = String(init?.body || '');
+    expect(body).not.toContain('user@example.com');
+    expect(body).not.toContain('090-1234-5678');
+    expect(body).not.toContain('123456');
+    expect(body).toContain('[redacted-email]');
+  });
+
   it('health は 200', async () => {
     const res = await worker.fetch(
       new Request('https://cor-jp.com/api/contact/health'),
@@ -267,6 +327,42 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as { ok?: boolean };
     expect(body.ok).toBe(true);
+  });
+
+  it('submit: D1なしの互換経路でも社内通知と本人確認を別送する', async () => {
+    const responses = [
+      JSON.stringify({ id: 're_internal_1' }),
+      JSON.stringify({ id: 're_receipt_1' }),
+    ];
+    const fetchMock = vi.fn(async () => new Response(responses.shift() || '{"id":"re_fallback"}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const env = {
+      ...ENV,
+      RESEND_API_KEY: 're_test',
+      CONTACT_CC_EMAILS: 'company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com',
+    } as unknown as Env;
+    const res = await worker.fetch(
+      post('/api/contact/submit', {
+        name: '太郎',
+        email: 'taro@example.com',
+        message: '相談です',
+        conversationSummary: '要約',
+      }, { 'cf-connecting-ip': '198.51.100.12' }),
+      env,
+    );
+    expect(res.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const firstCall = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const secondCall = fetchMock.mock.calls[1] as unknown as [string, RequestInit];
+    const first = JSON.parse(firstCall[1].body as string);
+    const second = JSON.parse(secondCall[1].body as string);
+    expect(first.to).toBe('info@cor-jp.com');
+    expect(first.cc).toEqual(['company@cor-jp.com', 'k.isayama@cor-jp.com', 'nagisa.terada@cor-jp.com']);
+    expect(second.to).toBe('taro@example.com');
+    expect(second.cc).toBeUndefined();
+    expect(second.reply_to).toBeUndefined();
+    expect(second.text).toContain('相談です');
+    expect((await res.json() as { receiptId?: string }).receiptId).toMatch(/^COR-/);
   });
 });
 

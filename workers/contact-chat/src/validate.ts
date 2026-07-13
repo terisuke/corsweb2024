@@ -1,7 +1,9 @@
 import type {
   ChatMessage,
   ChatRole,
+  ChatLocale,
   Classification,
+  ConversationSummaryV1,
   ContactIntent,
   InquiryInput,
   NormalizedInquiry,
@@ -73,6 +75,30 @@ export function normalizeMessages(input: unknown): ChatValidation {
     messages.push({ role: role as ChatRole, content: clean });
   }
   return { ok: true, messages };
+}
+
+// PII is not supposed to be entered in /chat, but a browser cannot enforce that
+// contract. Mask common contact/credential patterns before any external LLM call.
+const PII_EMAIL_RE = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+const PII_PHONE_RE = /(?<!\d)(?:\+?\d{1,3}[ -]?)?(?:0\d{1,4}[-ー－ ]?)?\d{2,4}[-ー－ ]?\d{3,4}[-ー－ ]?\d{3,4}(?!\d)/g;
+const PII_POSTAL_RE = /(?:〒\s*)?\d{3}[-ー－ ]?\d{4}/g;
+const PII_CARD_RE = /(?<!\d)(?:\d[ -]?){13,19}(?!\d)/g;
+const PII_OTP_RE = /(?:otp|one[- ]time|認証コード|確認コード|ワンタイム)[^\d]{0,20}\d{4,8}/gi;
+
+export function maskSensitiveContent(content: string): string {
+  return content
+    .replace(PII_EMAIL_RE, '[redacted-email]')
+    .replace(PII_OTP_RE, '[redacted-code]')
+    .replace(PII_POSTAL_RE, '[redacted-postal]')
+    .replace(PII_PHONE_RE, '[redacted-phone]')
+    .replace(PII_CARD_RE, '[redacted-number]');
+}
+
+export function maskMessagesForLlm(messages: ChatMessage[]): ChatMessage[] {
+  return messages.map((message) => ({
+    role: message.role,
+    content: maskSensitiveContent(message.content),
+  }));
 }
 
 // --- /submit 問い合わせの検証 ---
@@ -147,6 +173,94 @@ export function normalizeUtm(raw: unknown): Record<string, string> {
   return out;
 }
 
+export type SummaryValidation =
+  | { ok: true; text: string; schema?: ConversationSummaryV1 }
+  | { ok: false; error: string; status: number };
+
+// summaryText は会話全文ではなく、Cloudiaが確定した要約だけを受け付ける。
+// 旧クライアントの文字列入力を壊さないため、明らかな role ラベル行だけを除去し、
+// 全文トランスクリプトが渡された場合は空文字へ落として決定的fallbackへ進める。
+const TRANSCRIPT_ROLE_LINE = /^(?:user|assistant|system|human|ユーザー|あなた|アシスタント|クラウディア)\s*(?:[:：]|[-—])\s*/i;
+const SUMMARY_PREFIX_LINE = /^(?:you|ai\s+assistant|AI\s*アシスタント)\s*(?:[:：]|[-—])\s*/i;
+
+export function canonicalizeSummaryText(raw: string): string {
+  const clean = sanitizeMessage(raw, MAX_SUMMARY_LEN);
+  if (!clean) return '';
+  const lines = clean.split('\n').map((line) => line.trim()).filter(Boolean);
+  // A transcript is not made safe by deleting only its role labels: continuation
+  // lines can still contain the visitor's raw text. Reject the whole value and
+  // let the deterministic structured fallback be used instead.
+  if (lines.some((line) => TRANSCRIPT_ROLE_LINE.test(line))) return '';
+  return lines.filter((line) => !SUMMARY_PREFIX_LINE.test(line)).join('\n').slice(0, MAX_SUMMARY_LEN).trim();
+}
+
+/** LLM要約が欠落・不正なときの正本。PIIや生本文を含めず、同じ入力から常に同じ値を作る。 */
+export function buildDeterministicSummary(
+  input: Pick<NormalizedInquiry, 'classification' | 'intent'> & { structuredLead?: StructuredLead },
+): string {
+  const parts: string[] = [];
+  if (input.intent) parts.push(`相談目的: ${input.intent}`);
+  if (input.classification) parts.push(`分類: ${input.classification}`);
+  const lead = input.structuredLead || {};
+  const safeLead = (value: string): string => maskSensitiveContent(value);
+  if (lead.purpose) parts.push(`目的: ${safeLead(lead.purpose)}`);
+  if (lead.industryRole) parts.push(`業種・役割: ${safeLead(lead.industryRole)}`);
+  if (lead.dataSensitivity) parts.push(`データ感度: ${safeLead(lead.dataSensitivity)}`);
+  if (lead.stage) parts.push(`進捗段階: ${safeLead(lead.stage)}`);
+  if (lead.timingBudget) parts.push(`時期・予算: ${safeLead(lead.timingBudget)}`);
+  return parts.length ? parts.join(' / ') : '要約未生成（受付内容を担当者が確認します）';
+}
+
+/**
+ * Accept the legacy plain-text transcript while validating the versioned summary
+ * envelope used by newer clients. Unknown fields are ignored; invalid enums and
+ * oversized turns are rejected rather than silently persisting malformed JSON.
+ */
+export function normalizeConversationSummary(raw: unknown): SummaryValidation {
+  if (raw === undefined || raw === null || raw === '') return { ok: true, text: '' };
+  if (typeof raw === 'string') {
+    return { ok: true, text: canonicalizeSummaryText(raw) };
+  }
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { ok: false, error: 'conversationSummary は文字列またはversion 1のオブジェクトが必要です', status: 400 };
+  }
+  const input = raw as Record<string, unknown>;
+  if (input.version !== 1) {
+    return { ok: false, error: 'conversationSummary.version は1のみ許可されます', status: 400 };
+  }
+  const locale: ChatLocale = input.locale === 'en' ? 'en' : 'ja';
+  if (input.locale !== undefined && input.locale !== 'ja' && input.locale !== 'en') {
+    return { ok: false, error: 'conversationSummary.locale はjaかenのみ許可されます', status: 400 };
+  }
+  const classification = normalizeClassification(input.classification);
+  if (input.classification !== undefined && input.classification !== '' && !classification) {
+    return { ok: false, error: 'conversationSummary.classification が不正です', status: 400 };
+  }
+  const intent = normalizeIntent(input.intent);
+  if (typeof input.intent === 'string' && input.intent && !intent) {
+    return { ok: false, error: 'conversationSummary.intent が不正です', status: 400 };
+  }
+  const rawText = input.summaryText ?? input.text;
+  if (typeof rawText !== 'string') {
+    return { ok: false, error: 'conversationSummary.text は文字列である必要があります', status: 400 };
+  }
+  const text = canonicalizeSummaryText(rawText);
+  if (!text) return { ok: false, error: 'conversationSummary.text は必須です', status: 400 };
+  const stage = sanitizeLine(input.stage, 80);
+  const structuredLead = normalizeStructuredLead(input.structuredLead);
+  const schema: ConversationSummaryV1 = {
+    version: 1,
+    locale,
+    intent,
+    classification,
+    readyForContact: input.readyForContact === true,
+    stage,
+    structuredLead,
+    text,
+  };
+  return { ok: true, text, schema };
+}
+
 export type InquiryValidation =
   | { ok: true; inquiry: NormalizedInquiry }
   | { ok: false; error: string; status: number; honeypot?: boolean };
@@ -168,12 +282,15 @@ export function normalizeInquiry(input: InquiryInput | undefined): InquiryValida
   const email = sanitizeLine(input.email, MAX_EMAIL_LEN);
   const company = sanitizeLine(input.company, MAX_COMPANY_LEN);
   const message = sanitizeMessage(input.message, MAX_INQUIRY_MESSAGE_LEN);
-  const conversationSummary = sanitizeMessage(input.conversationSummary, MAX_SUMMARY_LEN);
+  // summaryText が正本。conversationSummary は段階移行中の旧クライアント専用。
+  const summary = normalizeConversationSummary(input.summaryText ?? input.conversationSummary);
+  if (!summary.ok) return summary;
   const classification = normalizeClassification(input.classification);
   const intent = normalizeIntent(input.intent);
   const source = normalizeSource(input.source);
   const structuredLead = normalizeStructuredLead(input.structuredLead);
   const utm = normalizeUtm(input.utm);
+  const conversationSummary = summary.text || buildDeterministicSummary({ classification, intent, structuredLead });
 
   if (!name) {
     return { ok: false, error: 'お名前は必須です', status: 400 };
@@ -192,6 +309,7 @@ export function normalizeInquiry(input: InquiryInput | undefined): InquiryValida
       email,
       company,
       message,
+      summaryText: conversationSummary,
       conversationSummary,
       classification,
       intent,

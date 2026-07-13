@@ -22,17 +22,20 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
   - `source`: 導線タグ（例: `header-ai-dev`）。メール本文に載る。
   - `mode`: `intake` はB2B受付、`ambassador` は公開会社情報に基づく会話調。未指定は `intake`。
   - `locale`: `ja` または `en`。未指定は `ja`。不正値は400。
-- レスポンス: `{ "reply": string, "classification": "genuine"|"sales"|"spam", "readyForContact": boolean, "intent"?: string, "structuredLead"?: object }`
+- レスポンス: `{ "reply": string, "summary": string, "classification": "genuine"|"sales"|"spam", "readyForContact": boolean, "intent"?: string, "structuredLead"?: object }`
+  - `summary` はPIIを含まない短い正本要約。LLM出力が不正・PII含有・過大な場合は決定的fallbackへ置換する。
 - メッセージ数は最大20件、各2000字まで。制御文字は除去。**PIIは要求も保存もしない（会話のみ）。**
 - **Turnstile は検証しない。** Turnstile トークンは単回使用のため、複数ターン会話では2ターン目以降に
   新しいトークンが無く 403 になる。`/chat` のコスト濫用対策は同一オリジン＋IPレート制限＋
   **必須の Cloudflare WAF レート制限ルール（`cor-jp.com/api/contact/*`）** で担保する（下記チェックリスト参照）。
 
 ### POST /api/contact/submit
-- リクエスト: `{ "name", "email", "company"?, "message", "conversationSummary"?, "classification"?, "intent"?, "source"?, "structuredLead"?, "utm"?, "turnstileToken"?, "website"? }`
+- リクエスト: `{ "name", "email", "company"?, "message", "summaryText"?, "conversationSummary"?, "classification"?, "intent"?, "source"?, "structuredLead"?, "utm"?, "turnstileToken"?, "website"? }`
+  - 新規クライアントは `summaryText` を正本として送る。形式は `{ version: 1, locale: "ja"|"en", intent, classification, readyForContact, stage, structuredLead, text }`（`text` はPIIなしの要約本文）。`summaryText` が無い場合のみ旧 `conversationSummary` を受理する。
+  - roleラベル付き会話全文やPIIを含む要約は保存・メール本文への採用を拒否し、構造化フィールドから決定的fallbackを生成する。
   - `intent` / `source` / `structuredLead` / `utm`: 構造化リード（非PII）。メール件名・本文に載る。PII ではない。
   - `website` は **ハニーポット**。人間は空のまま。値が入っていれば bot とみなし、200を返して握り潰す（送信しない）。
-- レスポンス: `{ "ok": true }`
+- レスポンス: `{ "ok": true, "receiptId": string, "status": "queued"|"sent", "duplicate"?: boolean }`
 - 検証: name 必須 / email 形式チェック / message 必須 / 各長さ上限 / サニタイズ。
 - **PII（name/email/company/message）はメール本文にのみ載り、LLM には一切渡らない。**
 - `RESEND_API_KEY` 未設定なら **503（fail closed）**。本物の問い合わせをサイレントに握り潰さない。
@@ -44,7 +47,8 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
 |------|------|------|
 | `LLM_PROVIDER` | `vertex-gemini` | Cloud Run Gateway経由のVertex Gemini。`anthropic`でロールバック可能 |
 | `CONTACT_TO_EMAIL` | `cloudia@cor-jp.com` | 問い合わせメールの宛先 |
-| `CONTACT_CC_EMAIL` | `company@cor-jp.com` | 問い合わせメールのCC |
+| `CONTACT_CC_EMAILS` | `company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com` | 社内通知のCC（カンマ区切りで配列化） |
+| `CONTACT_CC_EMAIL` | （旧互換） | 旧単一CC。`CONTACT_CC_EMAILS` 未設定時のみ利用 |
 | `CONTACT_FROM_EMAIL` | `noreply@cor-jp.com` | 問い合わせメールの差出人 |
 
 ### secrets（`wrangler secret put <NAME>`・コード/gitに残らない）
@@ -55,6 +59,10 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
 | `ANTHROPIC_API_KEY` | Anthropic時必須 | ロールバック用Claude API key |
 | `RESEND_API_KEY` | `/submit` で必須 | Resend のAPIキー。未設定なら `/submit` を **503（fail closed）** |
 | `TURNSTILE_SECRET` | 任意 | Cloudflare Turnstile。**`/submit` のみで検証**（`/chat` では検証しない＝トークン単回使用のため）。**未設定なら検証スキップ（turnstileのみ fail open）** |
+
+### 通知Outbox
+
+`/submit` はD1に `internal`（社内通知）と `receipt`（問い合わせ者本人向け受付確認）の2行を作り、Queueへ種別だけを送る。Queue payloadに氏名・メール・本文は含めない。各行にはResendの `provider_message_id` と `delivery_status`（`queued` → `sending` → `accepted`、失敗時 `failed`）を保存する。`accepted` はResend API受付済みを意味し、最終配信確認にはResendの配信イベント連携が必要。
 
 ## デプロイ手順（初回）
 

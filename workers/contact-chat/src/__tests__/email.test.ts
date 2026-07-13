@@ -1,5 +1,13 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { buildBody, buildSubject, getEmailProvider, sendInquiryEmail } from '../email';
+import {
+  buildBody,
+  buildReceiptBody,
+  buildSubject,
+  getEmailProvider,
+  getInternalCcRecipients,
+  sendInquiryEmail,
+  sendReceiptEmail,
+} from '../email';
 import type { Env, NormalizedInquiry } from '../types';
 
 afterEach(() => vi.restoreAllMocks());
@@ -49,8 +57,21 @@ describe('buildBody — 構造化本文（PIIはここにのみ載る）', () =>
   it('company 未記入なら (未記入) と表示', () => {
     expect(buildBody({ ...inquiry, company: '' })).toContain('(未記入)');
   });
-  it('会話サマリが無ければサマリ節を出さない', () => {
-    expect(buildBody({ ...inquiry, conversationSummary: '' })).not.toContain('会話サマリ');
+  it('会話サマリが無ければ決定的fallbackを使う', () => {
+    expect(buildBody({ ...inquiry, conversationSummary: '', summaryText: '' })).toContain('要約未生成');
+  });
+  it('旧クライアントの全文トランスクリプトは本文へ出さない', () => {
+    const body = buildBody({
+      ...inquiry,
+      conversationSummary: 'User: 秘密の会話\n続きの本文',
+      summaryText: '',
+    });
+    expect(body).not.toContain('秘密の会話');
+    expect(body).not.toContain('続きの本文');
+  });
+  it('要約にPIIが混入してもメール要約へ再出力しない', () => {
+    const body = buildBody({ ...inquiry, conversationSummary: 'user@example.comへ連絡', summaryText: '' });
+    expect(body).not.toContain('user@example.com');
   });
 });
 
@@ -70,23 +91,26 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
   const env = {
     RESEND_API_KEY: 're_test',
     CONTACT_TO_EMAIL: 'info@cor-jp.com',
-    CONTACT_CC_EMAIL: 'company@cor-jp.com',
+    CONTACT_CC_EMAILS: 'company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com',
     CONTACT_FROM_EMAIL: 'noreply@cor-jp.com',
   } as unknown as Env;
 
   it('to/from と本文を正しく送る', async () => {
-    const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
+    const fetchMock = vi.fn(async () => new Response('{"id":"re_msg_123"}', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const r = getEmailProvider(env);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    await sendInquiryEmail(env, r.provider, inquiry);
+    await expect(sendInquiryEmail(env, r.provider, inquiry)).resolves.toEqual({
+      messageId: 're_msg_123',
+      deliveryStatus: 'accepted',
+    });
     expect(fetchMock).toHaveBeenCalledOnce();
     const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     const payload = JSON.parse(init.body as string);
     expect(payload.to).toBe('info@cor-jp.com');
     expect(payload.from).toBe('noreply@cor-jp.com');
-    expect(payload.cc).toBe('company@cor-jp.com');
+    expect(payload.cc).toEqual(['company@cor-jp.com', 'k.isayama@cor-jp.com', 'nagisa.terada@cor-jp.com']);
     expect(payload.text).toContain('taro@example.com');
     // reply_to に問い合わせ者のメールが入る（担当者の返信が顧客へ届く）
     expect(payload.reply_to).toBe('taro@example.com');
@@ -103,6 +127,66 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
     const r = getEmailProvider(env);
     if (!r.ok) throw new Error('provider should be ok');
     await expect(sendInquiryEmail(env, r.provider, inquiry)).rejects.toThrow(/500/);
+  });
+
+  it('Resend応答にIDがなければ送信成功扱いにしない', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{"id":""}', { status: 200 })));
+    const r = getEmailProvider(env);
+    if (!r.ok) throw new Error('provider should be ok');
+    await expect(sendInquiryEmail(env, r.provider, inquiry)).rejects.toThrow(/受付応答/);
+  });
+  it('Resend IDにメールアドレス等が混入したら保存しない', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{"id":"user@example.com"}', { status: 200 })));
+    const r = getEmailProvider(env);
+    if (!r.ok) throw new Error('provider should be ok');
+    await expect(sendInquiryEmail(env, r.provider, inquiry)).rejects.toThrow(/受付応答/);
+  });
+
+  it('本人向け受付確認は社内CC・reply_to・分類を含めない', async () => {
+    const fetchMock = vi.fn(async () => new Response('{"id":"re_receipt_1"}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const r = getEmailProvider(env);
+    if (!r.ok) throw new Error('provider should be ok');
+    await expect(sendReceiptEmail(env, r.provider, inquiry, 'COR-20260713-ABCD1234')).resolves.toEqual({
+      messageId: 're_receipt_1',
+      deliveryStatus: 'accepted',
+    });
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const payload = JSON.parse(init.body as string);
+    expect(payload.to).toBe('taro@example.com');
+    expect(payload.cc).toBeUndefined();
+    expect(payload.reply_to).toBeUndefined();
+    expect(payload.text).toContain('COR-20260713-ABCD1234');
+    expect(payload.text).not.toContain('genuine');
+    expect(payload.text).not.toContain('company@cor-jp.com');
+  });
+
+  it('CC設定は重複・不正値を除去し、旧単一値にも対応する', () => {
+    expect(getInternalCcRecipients({
+      CONTACT_CC_EMAILS: 'Company@cor-jp.com, bad, company@cor-jp.com, k.isayama@cor-jp.com',
+    } as unknown as Env)).toEqual(['company@cor-jp.com', 'k.isayama@cor-jp.com']);
+    expect(getInternalCcRecipients({ CONTACT_CC_EMAIL: 'company@cor-jp.com' } as unknown as Env)).toEqual(['company@cor-jp.com']);
+  });
+
+  it('受付確認本文は要約・補足・受付番号・返信目安を含む', () => {
+    const body = buildReceiptBody(inquiry, 'COR-20260713-ABCD1234');
+    expect(body).toContain('ご相談の要約');
+    expect(body).toContain('ご入力の補足');
+    expect(body).toContain(inquiry.message);
+    expect(body).toContain('返信目安: 2営業日以内');
+    expect(body).toContain('COR-20260713-ABCD1234');
+  });
+
+  it('本人向け要約から社内分類・intentを除外する', () => {
+    const body = buildReceiptBody({
+      ...inquiry,
+      summaryText: 'classification: genuine / intent: contract-dev',
+      conversationSummary: '',
+    }, 'COR-20260713-ABCD1234');
+    expect(body).not.toContain('classification');
+    expect(body).not.toContain('genuine');
+    expect(body).not.toContain('contract-dev');
+    expect(body).toContain('受託で業務システム開発');
   });
 });
 

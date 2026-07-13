@@ -4,7 +4,10 @@ import {
   MAX_MESSAGE_LEN,
   MAX_MESSAGES,
   normalizeInquiry,
+  normalizeConversationSummary,
   normalizeIntent,
+  maskMessagesForLlm,
+  maskSensitiveContent,
   normalizeMessages,
   normalizeSource,
   normalizeStructuredLead,
@@ -92,6 +95,21 @@ describe('normalizeMessages — /chat メッセージ検証', () => {
   });
 });
 
+describe('Vertex直前PIIマスキング', () => {
+  it('メール・電話・郵便番号・OTPを伏せ字にする', () => {
+    const masked = maskSensitiveContent('mail me at user@example.com, 090-1234-5678, 〒100-0001, OTP 123456');
+    expect(masked).not.toContain('user@example.com');
+    expect(masked).not.toContain('090-1234-5678');
+    expect(masked).not.toContain('100-0001');
+    expect(masked).not.toContain('123456');
+  });
+  it('メッセージのroleを維持して本文だけをマスクする', () => {
+    expect(maskMessagesForLlm([{ role: 'user', content: 'user@example.com' }])).toEqual([
+      { role: 'user', content: '[redacted-email]' },
+    ]);
+  });
+});
+
 describe('isValidEmail', () => {
   it.each(['a@b.co', 'john.doe@example.com', 'user+tag@cor-jp.com'])('有効: %s', (e) => {
     expect(isValidEmail(e)).toBe(true);
@@ -158,6 +176,88 @@ describe('normalizeInquiry — /submit 検証＋ハニーポット', () => {
     const r = normalizeInquiry({ ...base, company: '' });
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.inquiry.company).toBe('');
+  });
+
+  it('version 1 summary envelopeを検証してtextだけを保存値にする', () => {
+    const r = normalizeInquiry({
+      ...base,
+      conversationSummary: {
+        version: 1,
+        locale: 'ja',
+        intent: 'contract-dev',
+        classification: 'genuine',
+        readyForContact: true,
+        stage: 'ready',
+        structuredLead: { purpose: '業務改善' },
+        text: '目的と時期を確認済み',
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.inquiry.conversationSummary).toBe('目的と時期を確認済み');
+  });
+
+  it('summaryText が旧conversationSummaryより優先される', () => {
+    const r = normalizeInquiry({
+      ...base,
+      summaryText: {
+        version: 1,
+        locale: 'ja',
+        intent: 'contract-dev',
+        classification: 'genuine',
+        readyForContact: false,
+        stage: 'qualifying',
+        structuredLead: {},
+        text: '正本化された要約',
+      },
+      conversationSummary: '旧トランスクリプト',
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.inquiry.summaryText).toBe('正本化された要約');
+  });
+  it('version 1 summaryの不正enumは400', () => {
+    const r = normalizeConversationSummary({ version: 1, locale: 'ja', intent: 'unknown', text: 'x' });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(400);
+  });
+  it('version 1 summaryのtext非文字列は400', () => {
+    const r = normalizeConversationSummary({ version: 1, locale: 'ja', text: 123 });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(400);
+  });
+
+  it('生トランスクリプトのroleラベルをsummaryTextへ持ち込まない', () => {
+    const r = normalizeConversationSummary('user: メールは user@example.com\nassistant: 受付します');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.text).toBe('');
+  });
+
+  it('要約欠落時はPIIを含まない決定的fallbackを保存する', () => {
+    const r = normalizeInquiry({ ...base, conversationSummary: undefined, message: '秘密の相談本文' });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.inquiry.summaryText).toContain('分類: genuine');
+      expect(r.inquiry.summaryText).not.toContain('秘密の相談本文');
+      expect(r.inquiry.conversationSummary).toBe(r.inquiry.summaryText);
+    }
+  });
+  it('構造化リードに混入したPIIも決定的fallbackへ再出力しない', () => {
+    const r = normalizeInquiry({
+      ...base,
+      conversationSummary: undefined,
+      structuredLead: { purpose: 'user@example.comへ連絡' },
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.inquiry.summaryText).not.toContain('user@example.com');
+  });
+  it('既知のUIロールラベル付き全文は要約本文から除外する', () => {
+    const r = normalizeConversationSummary('You: hello\nAI assistant: hi\n目的: 業務改善');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.text).toBe('目的: 業務改善');
+  });
+  it('生トランスクリプトは要約として採用しない', () => {
+    const r = normalizeConversationSummary('Cloudia: こんにちは\nUser: 機密ではない相談です\n続きの本文');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.text).toBe('');
   });
 });
 

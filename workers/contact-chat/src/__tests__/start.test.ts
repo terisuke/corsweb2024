@@ -28,4 +28,20 @@ describe('chat start contract', () => {
     expect(body.sessionId).toEqual(expect.any(String));
     expect(body.missingFields).toEqual(['purpose']);
   });
+
+  it('ambassador start uses a conversational company-information greeting', async () => {
+    const response = await worker.fetch(new Request('https://cor-jp.com/api/contact/chat/start', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ start: true, mode: 'ambassador', locale: 'ja' }),
+    }), env);
+    expect(response.status).toBe(200);
+    const body = await response.json() as Record<string, unknown>;
+    expect(body.reply).toContain('Cor.株式会社');
+    expect(body.reply).toContain('コー株式会社');
+    expect(body.reply).toContain('ご質問があればお聞かせください');
+    expect(body.reply).not.toContain('おっす');
+    expect(body.reply).not.toContain('全部知っとう');
+    expect(body.missingFields).toEqual(['purpose']);
+  });
 });

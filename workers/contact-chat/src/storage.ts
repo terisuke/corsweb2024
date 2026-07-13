@@ -1,4 +1,14 @@
-import type { Env, NormalizedInquiry, StructuredLead, Classification, ContactIntent, ChatMode, ChatLocale, NotificationMessage } from './types';
+import type {
+  Env,
+  NormalizedInquiry,
+  StructuredLead,
+  Classification,
+  ContactIntent,
+  ChatMode,
+  ChatLocale,
+  NotificationMessage,
+  NotificationType,
+} from './types';
 
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SUBMISSION_TTL_SECONDS = 90 * 24 * 60 * 60;
@@ -16,12 +26,15 @@ export interface SessionState {
   structuredLead: StructuredLead;
   missingFields: string[];
   classification: Classification;
+  summary: string;
 }
 
 export interface StoredSubmission {
   inquiry: NormalizedInquiry;
   submissionId: string;
   receiptId: string;
+  outboxId: string;
+  messageType: NotificationType;
 }
 
 export interface CreateSubmissionResult {
@@ -52,6 +65,10 @@ function redactStructuredLead(lead: StructuredLead | undefined): StructuredLead 
 
 export function newSessionId(): string {
   return crypto.randomUUID();
+}
+
+export function newReceiptId(): string {
+  return `COR-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 }
 
 function asSafeId(value: unknown, max = 128): string | null {
@@ -131,15 +148,15 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
   await env.DB.prepare(`
     INSERT INTO contact_sessions
       (session_id, intent, mode, locale, source, stage, turn_count,
-       structured_lead_json, missing_fields_json, classification, status,
+       structured_lead_json, missing_fields_json, classification, summary_text, status,
        created_at, updated_at, expires_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?)
     ON CONFLICT(session_id) DO UPDATE SET
       intent=excluded.intent, mode=excluded.mode, locale=excluded.locale,
       source=excluded.source, stage=excluded.stage, turn_count=excluded.turn_count,
       structured_lead_json=excluded.structured_lead_json,
       missing_fields_json=excluded.missing_fields_json,
-      classification=excluded.classification, status='active',
+      classification=excluded.classification, summary_text=excluded.summary_text, status='active',
       updated_at=excluded.updated_at, expires_at=excluded.expires_at
   `).bind(
     state.sessionId,
@@ -152,6 +169,7 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
     JSON.stringify(redactStructuredLead(state.structuredLead)),
     JSON.stringify(state.missingFields),
     state.classification,
+    state.summary.slice(0, 1500),
     now,
     now,
     now + SESSION_TTL_SECONDS,
@@ -170,7 +188,7 @@ export async function createSubmission(
   if (existing) return { submissionId: existing.submission_id, receiptId: existing.receipt_id, duplicate: true };
 
   const submissionId = crypto.randomUUID();
-  const receiptId = `COR-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${submissionId.slice(0, 8).toUpperCase()}`;
+  const receiptId = newReceiptId();
   const now = nowSeconds();
   const pii = await Promise.all([
     encryptText(env.PII_ENCRYPTION_KEY, inquiry.name),
@@ -220,9 +238,16 @@ export async function createSubmission(
     ),
     env.DB.prepare(`
       INSERT INTO notification_outbox
-        (outbox_id, submission_id, status, attempts, available_at, created_at, updated_at)
-      VALUES (?, ?, 'pending', 0, ?, ?, ?)
+        (outbox_id, submission_id, message_type, status, attempts, available_at,
+         delivery_status, created_at, updated_at)
+      VALUES (?, ?, 'internal', 'pending', 0, ?, 'queued', ?, ?)
     `).bind(outboxId, submissionId, now, now, now),
+    env.DB.prepare(`
+      INSERT INTO notification_outbox
+        (outbox_id, submission_id, message_type, status, attempts, available_at,
+         delivery_status, created_at, updated_at)
+      VALUES (?, ?, 'receipt', 'pending', 0, ?, 'queued', ?, ?)
+    `).bind(crypto.randomUUID(), submissionId, now, now, now),
     env.DB.prepare(`
       INSERT INTO audit_events (event_id, event_type, submission_id, session_id, metadata_json, created_at)
       VALUES (?, 'submission_queued', ?, ?, '{}', ?)
@@ -242,8 +267,10 @@ export async function createSubmission(
 }
 
 interface SubmissionRow {
+  outbox_id: string;
   submission_id: string;
   receipt_id: string;
+  message_type: NotificationType;
   name_ciphertext: string;
   email_ciphertext: string;
   company_ciphertext: string;
@@ -256,17 +283,22 @@ interface SubmissionRow {
   classification: Classification | '';
 }
 
-export async function getSubmissionForNotification(env: Env, submissionId: string): Promise<StoredSubmission | null> {
+export async function getSubmissionForNotification(
+  env: Env,
+  submissionId: string,
+  messageType: NotificationType = 'internal',
+): Promise<StoredSubmission | null> {
   if (!env.DB) return null;
   const row = await env.DB.prepare(`
-    SELECT s.submission_id, s.receipt_id, s.name_ciphertext, s.email_ciphertext,
+    SELECT o.outbox_id, o.message_type, s.submission_id, s.receipt_id,
+      s.name_ciphertext, s.email_ciphertext,
       s.company_ciphertext, s.message_ciphertext, s.summary_ciphertext,
       s.intent, s.source, s.structured_lead_json, s.utm_json, s.classification
     FROM submission_intake s
     JOIN notification_outbox o ON o.submission_id = s.submission_id
-    WHERE s.submission_id = ? AND o.status IN ('pending', 'processing')
+    WHERE s.submission_id = ? AND o.message_type = ? AND o.status IN ('pending', 'processing')
     LIMIT 1
-  `).bind(submissionId).first<SubmissionRow>();
+  `).bind(submissionId, messageType).first<SubmissionRow>();
   if (!row) return null;
   const [name, email, company, message, conversationSummary] = await Promise.all([
     decryptText(env.PII_ENCRYPTION_KEY, row.name_ciphertext),
@@ -282,37 +314,73 @@ export async function getSubmissionForNotification(env: Env, submissionId: strin
   return {
     submissionId: row.submission_id,
     receiptId: row.receipt_id,
-    inquiry: { name, email, company, message, conversationSummary, classification: row.classification, intent: row.intent, source: row.source, structuredLead, utm },
+    outboxId: row.outbox_id,
+    messageType: row.message_type,
+    inquiry: {
+      name,
+      email,
+      company,
+      message,
+      summaryText: conversationSummary,
+      conversationSummary,
+      classification: row.classification,
+      intent: row.intent,
+      source: row.source,
+      structuredLead,
+      utm,
+    },
   };
 }
 
-export async function markOutboxProcessing(env: Env, submissionId: string): Promise<void> {
+export async function markOutboxProcessing(env: Env, submissionId: string, messageType: NotificationType = 'internal'): Promise<void> {
   if (!env.DB) return;
-  await env.DB.prepare(`UPDATE notification_outbox SET status='processing', attempts=attempts+1, updated_at=? WHERE submission_id=? AND status IN ('pending','processing')`).bind(nowSeconds(), submissionId).run();
+  await env.DB.prepare(`UPDATE notification_outbox SET status='processing', delivery_status='sending', attempts=attempts+1, updated_at=? WHERE submission_id=? AND message_type=? AND status IN ('pending','processing')`).bind(nowSeconds(), submissionId, messageType).run();
 }
 
 /** Atomically claims a pending message so duplicate queue deliveries cannot send twice. */
-export async function claimOutbox(env: Env, submissionId: string): Promise<boolean> {
+export async function claimOutbox(env: Env, submissionId: string, messageType: NotificationType = 'internal'): Promise<boolean> {
   if (!env.DB) return false;
   const result = await env.DB.prepare(
-    "UPDATE notification_outbox SET status='processing', attempts=attempts+1, updated_at=? WHERE submission_id=? AND status='pending'",
-  ).bind(nowSeconds(), submissionId).run();
+    "UPDATE notification_outbox SET status='processing', delivery_status='sending', attempts=attempts+1, updated_at=? WHERE submission_id=? AND message_type=? AND status='pending'",
+  ).bind(nowSeconds(), submissionId, messageType).run();
   return (result.meta?.changes || 0) > 0;
 }
 
-export async function markOutboxSent(env: Env, submissionId: string): Promise<void> {
+export async function markOutboxSent(
+  env: Env,
+  submissionId: string,
+  messageType: NotificationType = 'internal',
+  providerMessageId = '',
+  deliveryStatus = 'accepted',
+): Promise<void> {
   if (!env.DB) return;
   const now = nowSeconds();
   await env.DB.batch([
-    env.DB.prepare("UPDATE notification_outbox SET status='sent', sent_at=?, updated_at=? WHERE submission_id=?").bind(now, now, submissionId),
-    env.DB.prepare("UPDATE submission_intake SET status='sent', updated_at=? WHERE submission_id=?").bind(now, submissionId),
+    env.DB.prepare("UPDATE notification_outbox SET status='sent', delivery_status=?, provider_message_id=?, sent_at=?, updated_at=? WHERE submission_id=? AND message_type=?").bind(deliveryStatus, providerMessageId, now, now, submissionId, messageType),
+    // 既存のsubmission statusは「社内通知が送れた」ことを意味するため、本人確認メールの
+    // 成否で上書きしない。本人向けOutboxの状態は同じ行に保存する。
+    ...(messageType === 'internal'
+      ? [env.DB.prepare("UPDATE submission_intake SET status='sent', updated_at=? WHERE submission_id=?").bind(now, submissionId)]
+      : []),
   ]);
 }
 
-export async function markOutboxFailed(env: Env, submissionId: string, errorMessage: string): Promise<void> {
+export function markOutboxFailed(env: Env, submissionId: string, errorMessage: string): Promise<void>;
+export function markOutboxFailed(env: Env, submissionId: string, messageType: NotificationType, errorMessage: string): Promise<void>;
+export async function markOutboxFailed(
+  env: Env,
+  submissionId: string,
+  messageTypeOrError: NotificationType | string,
+  maybeErrorMessage?: string,
+): Promise<void> {
   if (!env.DB) return;
-  const safeError = errorMessage.slice(0, 200).replace(/[\r\n]/g, ' ');
-  await env.DB.prepare("UPDATE notification_outbox SET status='pending', last_error=?, updated_at=? WHERE submission_id=?").bind(safeError, nowSeconds(), submissionId).run();
+  const messageType: NotificationType = messageTypeOrError === 'receipt' ? 'receipt' : 'internal';
+  const errorMessage = maybeErrorMessage ?? messageTypeOrError;
+  // エラー本文はプロバイダや入力値を含み得るため保存しない。運用に必要なHTTP statusだけを
+  // 固定形式で残し、PII/秘密情報のD1・ログへの混入を防ぐ。
+  const status = /status\s+(\d{3})/.exec(errorMessage)?.[1];
+  const safeError = status ? `provider_status_${status}` : 'notification_failed';
+  await env.DB.prepare("UPDATE notification_outbox SET status='pending', delivery_status='failed', last_error=?, updated_at=? WHERE submission_id=? AND message_type=?").bind(safeError, nowSeconds(), submissionId, messageType).run();
 }
 
 export async function purgeExpiredData(env: Env): Promise<void> {
@@ -329,6 +397,8 @@ export async function purgeExpiredData(env: Env): Promise<void> {
   ]);
 }
 
-export function queueMessage(submissionId: string): NotificationMessage {
-  return { submissionId };
+export function queueMessage(submissionId: string, messageType?: NotificationType): NotificationMessage {
+  // No type preserves old Queue payloads; all newly created rows pass the type
+  // explicitly so internal and receipt notifications remain observable.
+  return messageType ? { submissionId, messageType } : { submissionId };
 }

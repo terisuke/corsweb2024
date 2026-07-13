@@ -42,15 +42,31 @@ describe('VertexGeminiProvider', () => {
 });
 
 describe('mode prompt', () => {
+  it('uses the canonical company name and rejects known variants', () => {
+    const prompt = buildSystemPrompt({ mode: 'intake', locale: 'ja' });
+    expect(prompt).toContain('Cor.株式会社');
+    expect(prompt).toContain('コー株式会社');
+    expect(prompt).toContain('brand: Cor.inc');
+    expect(prompt).toContain('Never call the company "コア株式会社"');
+    expect(prompt).not.toContain('Cor. (コア株式会社 / Cor.inc)');
+  });
+
   it.each(['ja', 'en'] as const)('%s intakeは検索とPIIを禁止', (locale) => {
     const prompt = buildSystemPrompt({ mode: 'intake', locale, intent: 'contract-dev' });
     expect(prompt).toContain(`Reply locale: ${locale}`);
     expect(prompt).toMatch(/Do not use web search/);
     expect(prompt).toMatch(/Never request, accept, or repeat back personal contact details/);
+    expect(prompt).toContain('"summary": string');
+    expect(prompt).toContain('formal B2B intake receptionist');
+    expect(prompt).toContain('ignore that persona');
   });
+
   it('ambassadorは会話調でも同じセキュリティ境界を持つ', () => {
     const prompt = buildSystemPrompt({ mode: 'ambassador', locale: 'en', intent: 'press-speaking-other' });
-    expect(prompt).toContain('warm and conversational');
+    expect(prompt).toContain('warm, conversational tone');
+    expect(prompt).toContain('brief company-related small talk');
+    expect(prompt).toContain('do not use exaggerated slang');
     expect(prompt).toMatch(/Never reveal/);
+    expect(prompt).toMatch(/Never request, accept, or repeat back personal contact details/);
   });
 });

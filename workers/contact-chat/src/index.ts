@@ -6,12 +6,18 @@ import type {
   ContactIntent,
   Env,
   InquiryInput,
+  NotificationMessage,
+  NotificationType,
   StructuredLead,
 } from './types';
 import {
   normalizeInquiry,
   normalizeIntent,
   normalizeMessages,
+  buildDeterministicSummary,
+  canonicalizeSummaryText,
+  maskMessagesForLlm,
+  maskSensitiveContent,
   normalizeSource,
   normalizeStructuredLead,
 } from './validate';
@@ -24,7 +30,7 @@ import {
   verifyTurnstile,
 } from './security';
 import { buildSystemPrompt, getProvider } from './llm';
-import { getEmailProvider, sendInquiryEmail } from './email';
+import { getEmailProvider, sendInquiryEmail, sendReceiptEmail } from './email';
 import {
   claimOutbox,
   createSubmission,
@@ -34,6 +40,7 @@ import {
   newSessionId,
   normalizeIdempotencyKey,
   normalizeSessionId,
+  newReceiptId,
   purgeExpiredData,
   queueMessage,
   upsertContactSession,
@@ -81,6 +88,21 @@ async function readJsonBody(req: Request): Promise<Record<string, unknown> | nul
 // LLM の出力（JSON文字列のはず）を厳格にパースし、ChatResult へ正規化する。
 // 形式が崩れていても安全側に倒す（reply はテキストとして扱い、分類は genuine 既定）。
 const VALID_CLASS: readonly Classification[] = ['genuine', 'sales', 'spam'];
+const MAX_CHAT_SUMMARY_LEN = 1500;
+const EMPTY_SUMMARY = {
+  ja: '要約未生成（受付内容を担当者が確認します）',
+  en: 'Summary unavailable; the team will review the inquiry.',
+} as const;
+const SUMMARY_ROLE_LINE = /(?:^|\n)\s*(?:user|assistant|system|human|you|ai\s+assistant|ユーザー|あなた|アシスタント|AI\s*アシスタント|クラウディア)\s*(?:[:：]|[-—])\s*/im;
+const SUMMARY_SECRET_RE = /(?:AIza[0-9A-Za-z_-]{20,}|(?:sk|ghp|xox[baprs]?)-[A-Za-z0-9_-]{16,}|-----BEGIN(?: [A-Z]+)* PRIVATE KEY-----)/;
+
+function isSafeChatSummary(candidate: string): boolean {
+  return candidate.length > 0
+    && candidate.length <= MAX_CHAT_SUMMARY_LEN
+    && !SUMMARY_ROLE_LINE.test(candidate)
+    && !SUMMARY_SECRET_RE.test(candidate)
+    && candidate === maskSensitiveContent(candidate);
+}
 
 // 文字列リテラルを尊重しながら、最初のトップレベル `{...}` を抜き出す。
 // 散文に包まれた JSON（"Sure!\n{...}"）や、reply 値に ``` を含むケースでも、
@@ -115,6 +137,7 @@ export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' 
   let readyForContact = false;
   let intent: ContactIntent | '' = fallbackIntent;
   let structuredLead: StructuredLead | undefined;
+  let summary = '';
 
   // 候補を優先順で構築（最初に parse 成功したものを採用）。
   const candidates: string[] = [];
@@ -137,6 +160,15 @@ export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' 
         classification = o.classification;
       }
       if (typeof o.readyForContact === 'boolean') readyForContact = o.readyForContact;
+      if (typeof o.summary === 'string') {
+        const candidate = canonicalizeSummaryText(o.summary);
+        // A model-produced summary containing detected PII is discarded rather
+        // than partially redacted; the deterministic structured fallback is safer.
+        // Oversized and role-labelled values are rejected as untrusted transcripts.
+        if (isSafeChatSummary(candidate)) {
+          summary = candidate;
+        }
+      }
       // LLM が返した intent を正規化。空ならクライアント初期値を維持。
       const llmIntent = normalizeIntent(o.intent);
       // URL/UI で明示された intent はルーティングの正本。モデル推定で上書きしない。
@@ -156,9 +188,22 @@ export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' 
   if (!reply) reply = locale === 'en'
     ? 'Sorry, could you please tell me that again?'
     : '申し訳ありません、もう一度お聞かせいただけますか？';
-  const result: ChatResult = { reply, classification, readyForContact };
+  const result: ChatResult = { reply, classification, readyForContact, summary: '' };
   if (intent) result.intent = intent;
   if (structuredLead) result.structuredLead = structuredLead;
+  if (summary) {
+    result.summary = summary;
+  } else {
+    // Structured fields are model output too. Refuse a fallback that would
+    // re-introduce PII or a transcript, and use a fixed non-sensitive message.
+    const deterministic = canonicalizeSummaryText(buildDeterministicSummary({ classification, intent, structuredLead: structuredLead || {} }));
+    const fallbackSummary = deterministic.startsWith('要約未生成')
+      ? deterministic
+      : `要約未生成（決定的fallback）: ${deterministic}`;
+    result.summary = isSafeChatSummary(deterministic)
+      ? fallbackSummary
+      : EMPTY_SUMMARY[locale];
+  }
   return result;
 }
 
@@ -170,6 +215,17 @@ function leadMissingFields(lead: StructuredLead | undefined): string[] {
 function resultStage(result: ChatResult): string {
   if (result.readyForContact) return 'ready';
   return result.structuredLead && Object.keys(result.structuredLead).length > 0 ? 'qualifying' : 'intent';
+}
+
+function startReply(mode: ChatMode, locale: ChatLocale): string {
+  if (mode === 'ambassador') {
+    return locale === 'en'
+      ? 'Hello. I am Cloudia from Cor.株式会社 (brand: Cor.inc). This is the casual conversation mode. Please ask about our services or technology, and I can guide you to the formal inquiry flow when a concrete project comes up.'
+      : 'こんにちは。Cor.株式会社（読み：コー株式会社、ブランド名：Cor.inc）のCloudiaです。こちらは雑談モードです。会社やAI技術についてご質問があればお聞かせください。具体的なご相談になった場合は、受付モードへご案内します。';
+  }
+  return locale === 'en'
+    ? 'Thank you. I will ask a few quick questions so we can understand your request. What would you like to achieve?'
+    : 'ありがとうございます。ご相談内容を正確に把握するため、いくつか質問します。まず、今回実現したいことを教えてください。';
 }
 
 // POST /api/contact/chat — 会話による問い合わせの絞り込み。PIIは扱わない。
@@ -199,14 +255,15 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
   // /chat 経路へ入る。外部プロバイダ障害でもヒアリング導線を止めない。
   const isStart = forceStart || body.start === true || body.event === 'intent_selected';
   if (isStart) {
-    const reply = locale === 'en'
-      ? 'Thank you. I will ask a few quick questions so we can understand your request. What would you like to achieve?'
-      : 'ありがとうございます。ご相談内容を正確に把握するため、いくつか質問します。まず、今回実現したいことを教えてください。';
+    const reply = startReply(mode, locale);
     const sessionId = normalizeSessionId(body.sessionId) || newSessionId();
     const result: ChatResult = {
       reply,
       classification: 'genuine',
       readyForContact: false,
+      summary: initialIntent
+        ? (locale === 'en' ? `Inquiry intent: ${initialIntent}` : `相談目的: ${initialIntent}`)
+        : EMPTY_SUMMARY[locale],
       ...(initialIntent ? { intent: initialIntent } : {}),
       sessionId,
       stage: 'intent',
@@ -224,6 +281,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
         structuredLead: {},
         missingFields: ['purpose'],
         classification: 'genuine',
+        summary: result.summary,
       });
     } catch (error) {
       console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
@@ -247,7 +305,10 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
 
   let raw: string;
   try {
-    raw = await provider.chat(system, norm.messages);
+    // The UI warns against PII, but the server remains the final boundary. Send
+    // only masked messages to Vertex/Anthropic; the original browser transcript
+    // is never persisted by the chat endpoint.
+    raw = await provider.chat(system, maskMessagesForLlm(norm.messages));
   } catch (e) {
     console.error('contact-chat llm error:', e instanceof Error ? e.message : String(e));
     return json({ error: 'AIが一時的に利用できません。時間をおいて再試行してください', fallback: true }, 503);
@@ -270,6 +331,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
       structuredLead: result.structuredLead || {},
       missingFields: result.missingFields,
       classification: result.classification,
+      summary: result.summary,
     });
   } catch (error) {
     console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
@@ -302,6 +364,29 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
     return json({ error: emailProvider.error }, emailProvider.status);
   }
 
+  // The server-side session summary is the email source of truth. Do not let a
+  // stale or forged browser payload replace it; when the session is unavailable,
+  // fall back to structured fields only.
+  let inquiry = norm.inquiry;
+  if (env.DB) {
+    const sessionId = normalizeSessionId(body.sessionId);
+    let trustedSummary = '';
+    if (sessionId) {
+      const session = await env.DB.prepare(
+        'SELECT summary_text FROM contact_sessions WHERE session_id = ? AND status = \'active\' LIMIT 1',
+      ).bind(sessionId).first<{ summary_text?: string }>();
+      trustedSummary = typeof session?.summary_text === 'string' ? session.summary_text.trim() : '';
+    }
+    if (!trustedSummary) {
+      trustedSummary = buildDeterministicSummary({
+        classification: norm.inquiry.classification,
+        intent: norm.inquiry.intent,
+        structuredLead: norm.inquiry.structuredLead,
+      });
+    }
+    inquiry = { ...norm.inquiry, summaryText: trustedSummary, conversationSummary: trustedSummary };
+  }
+
   // 本番（D1 bindingあり）は、PIIを暗号化してD1へ保存し、QueueのID payload
   // だけを発行する。メール送信はqueue consumerだけが行う。
   if (env.DB) {
@@ -309,7 +394,7 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
     const idempotencyKey = normalizeIdempotencyKey(body.idempotencyKey);
     let created;
     try {
-      created = await createSubmission(env, norm.inquiry, { idempotencyKey, sessionId });
+      created = await createSubmission(env, inquiry, { idempotencyKey, sessionId });
     } catch (error) {
       console.error('contact-chat submission storage error:', error instanceof Error ? error.message : 'unknown');
       return json({ error: 'お問い合わせを受け付けられません。時間をおいて再試行してください' }, 503);
@@ -320,7 +405,11 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
     }
     try {
       // 重複リクエストも同じIDを再送する。consumer側のclaimで送信済みを無害化する。
-      await env.CONTACT_NOTIFICATIONS.send(queueMessage(created.submissionId));
+      // queue payload は submission ID と種別だけで、名前・メール・本文は含めない。
+      await Promise.all([
+        env.CONTACT_NOTIFICATIONS.send(queueMessage(created.submissionId, 'internal')),
+        env.CONTACT_NOTIFICATIONS.send(queueMessage(created.submissionId, 'receipt')),
+      ]);
     } catch (error) {
       console.error('contact-chat notification enqueue error:', error instanceof Error ? error.message : 'unknown');
       return json({ error: 'お問い合わせをキューへ登録できません。時間をおいて再試行してください' }, 503);
@@ -329,7 +418,10 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
   }
 
   try {
-    await sendInquiryEmail(env, emailProvider.provider, norm.inquiry);
+    await sendInquiryEmail(env, emailProvider.provider, inquiry);
+    const receiptId = newReceiptId();
+    await sendReceiptEmail(env, emailProvider.provider, inquiry, receiptId);
+    return json({ ok: true, receiptId, status: 'sent' });
   } catch (e) {
     console.error('contact-chat email send error:', e instanceof Error ? e.message : String(e));
     return json({ error: 'お問い合わせの送信に失敗しました。時間をおいて再試行してください' }, 502);
@@ -378,7 +470,7 @@ export default {
     }
   },
 
-  async queue(batch: MessageBatch<{ submissionId?: unknown }>, env: Env): Promise<void> {
+  async queue(batch: MessageBatch<NotificationMessage>, env: Env): Promise<void> {
     for (const message of batch.messages) {
       const submissionId = typeof message.body?.submissionId === 'string'
         ? normalizeSessionId(message.body.submissionId)
@@ -387,23 +479,31 @@ export default {
         message.ack();
         continue;
       }
+      const messageType: NotificationType = message.body?.messageType === 'receipt' ? 'receipt' : 'internal';
       try {
-        if (!await claimOutbox(env, submissionId)) {
+        if (!await claimOutbox(env, submissionId, messageType)) {
           message.ack();
           continue;
         }
-        const stored = await getSubmissionForNotification(env, submissionId);
+        const stored = await getSubmissionForNotification(env, submissionId, messageType);
         if (!stored) {
           message.ack();
           continue;
         }
         const emailProvider = getEmailProvider(env);
         if (!emailProvider.ok) throw new Error('email provider unavailable');
-        await sendInquiryEmail(env, emailProvider.provider, stored.inquiry);
-        await markOutboxSent(env, submissionId);
+        const sent = messageType === 'receipt'
+          ? await sendReceiptEmail(env, emailProvider.provider, stored.inquiry, stored.receiptId)
+          : await sendInquiryEmail(env, emailProvider.provider, stored.inquiry);
+        await markOutboxSent(env, submissionId, messageType, sent.messageId, sent.deliveryStatus);
         message.ack();
       } catch (error) {
-        await markOutboxFailed(env, submissionId, error instanceof Error ? error.message : 'notification failed');
+        await markOutboxFailed(
+          env,
+          submissionId,
+          messageType,
+          error instanceof Error ? error.message : 'notification failed',
+        );
         // Queue controls exponential retry and eventually routes to the configured DLQ.
         message.retry();
       }

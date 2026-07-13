@@ -6,7 +6,10 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "knowledge:sync": "node scripts/sync-public-knowledge.mjs",
+    "knowledge:sync:dry-run": "node scripts/sync-public-knowledge.mjs --dry-run",
+    "knowledge:test": "node --test scripts/sync-public-knowledge.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0"

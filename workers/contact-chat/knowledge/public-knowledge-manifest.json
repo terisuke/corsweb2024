@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "project": "cor-jp-web",
+  "entries": [
+    {
+      "id": "REPLACE_WITH_APPROVED_PUBLIC_DOC_ID_JA",
+      "locale": "ja",
+      "label": "Cor public FAQ (Japanese)",
+      "mimeType": "application/vnd.google-apps.document",
+      "public": true,
+      "enabled": false
+    },
+    {
+      "id": "REPLACE_WITH_APPROVED_PUBLIC_DOC_ID_EN",
+      "locale": "en",
+      "label": "Cor public FAQ (English)",
+      "mimeType": "application/vnd.google-apps.document",
+      "public": true,
+      "enabled": false
+    }
+  ]
+}

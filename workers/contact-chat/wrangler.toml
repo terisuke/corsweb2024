@@ -14,14 +14,14 @@ crons = ["*/15 * * * *"]
 
 # 公開可能な設定値（非シークレット）。
 [vars]
-# LLM プロバイダ。既定は 'anthropic'。将来 'openai' / 'self-hosted' を追加できる抽象化済み。
+# LLM プロバイダ。既定は 'vertex-gemini'。将来 'anthropic' / 'self-hosted' を追加できる抽象化済み。
 LLM_PROVIDER = "vertex-gemini"
 GOOGLE_CLOUD_PROJECT = "cor-jp-web"
 GOOGLE_CLOUD_LOCATION = "global"
 VERTEX_MODEL = "gemini-3.5-flash"
 # 問い合わせメールの宛先/差出人（PIIではなく運用設定。シークレットにしてもよい）。
 CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
-CONTACT_CC_EMAIL = "company@cor-jp.com"
+CONTACT_CC_EMAILS = "company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
 
 # D1 stores redacted session metadata and encrypted, short-lived submit data.
@@ -56,7 +56,7 @@ GOOGLE_CLOUD_PROJECT = "cor-jp-web"
 GOOGLE_CLOUD_LOCATION = "global"
 VERTEX_MODEL = "gemini-3.5-flash"
 CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
-CONTACT_CC_EMAIL = "company@cor-jp.com"
+CONTACT_CC_EMAILS = "company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
 
 [[env.preview.d1_databases]]
@@ -82,5 +82,5 @@ dead_letter_queue = "cor-contact-notifications-preview-dlq"
 #   VERTEX_GATEWAY_SECRET ... Gatewayと共有するHMAC secret
 #   RESEND_API_KEY      ... Resend のAPIキー（/submit の送信に必須。未設定なら 503 fail closed）
 #   TURNSTILE_SECRET    ... Cloudflare Turnstile のシークレット（任意。未設定なら検証スキップ＝fail open）
-# ↑ ANTHROPIC_API_KEY 未設定だと /chat を拒否（fail closed）。
+# ↑ 選択したプロバイダの認証情報が未設定だと /chat を拒否（fail closed）。
 #   RESEND_API_KEY 未設定だと /submit を 503（本物の問い合わせを握り潰さない）。
