@@ -9,16 +9,77 @@ account_id = "9973f2d2304b58a1f90d4d9409e9f8cc"
 # 問い合わせウィジェットは cor-jp.com 上に置かれ、同一オリジンで叩く（CORSなし）。
 routes = [{ pattern = "cor-jp.com/api/contact/*", zone_name = "cor-jp.com" }]
 
+[triggers]
+crons = ["*/15 * * * *"]
+
 # 公開可能な設定値（非シークレット）。
 [vars]
 # LLM プロバイダ。既定は 'anthropic'。将来 'openai' / 'self-hosted' を追加できる抽象化済み。
-LLM_PROVIDER = "anthropic"
+LLM_PROVIDER = "vertex-gemini"
+GOOGLE_CLOUD_PROJECT = "cor-jp-web"
+GOOGLE_CLOUD_LOCATION = "global"
+VERTEX_MODEL = "gemini-3.5-flash"
 # 問い合わせメールの宛先/差出人（PIIではなく運用設定。シークレットにしてもよい）。
-CONTACT_TO_EMAIL = "info@cor-jp.com"
+CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
+CONTACT_CC_EMAIL = "company@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
+
+# D1 stores redacted session metadata and encrypted, short-lived submit data.
+[[d1_databases]]
+binding = "DB"
+database_name = "cor-contact-chat-prod"
+database_id = "f6a1c052-9dac-46e4-9547-ecf0bc3236ef"
+migrations_dir = "migrations"
+
+# Queue payloads contain only a submission ID; PII remains encrypted in D1.
+[[queues.producers]]
+binding = "CONTACT_NOTIFICATIONS"
+queue = "cor-contact-notifications"
+
+[[queues.consumers]]
+queue = "cor-contact-notifications"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 5
+dead_letter_queue = "cor-contact-notifications-dlq"
+
+[env.preview]
+name = "cor-contact-chat-preview"
+routes = []
+
+[env.preview.triggers]
+crons = ["*/15 * * * *"]
+
+[env.preview.vars]
+LLM_PROVIDER = "vertex-gemini"
+GOOGLE_CLOUD_PROJECT = "cor-jp-web"
+GOOGLE_CLOUD_LOCATION = "global"
+VERTEX_MODEL = "gemini-3.5-flash"
+CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
+CONTACT_CC_EMAIL = "company@cor-jp.com"
+CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "cor-contact-chat-preview"
+database_id = "644573b2-1dd4-4f8d-988e-de581270fb45"
+migrations_dir = "migrations"
+
+[[env.preview.queues.producers]]
+binding = "CONTACT_NOTIFICATIONS"
+queue = "cor-contact-notifications-preview"
+
+[[env.preview.queues.consumers]]
+queue = "cor-contact-notifications-preview"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 5
+dead_letter_queue = "cor-contact-notifications-preview-dlq"
 
 # シークレットは `wrangler secret put <NAME>` で登録（値はコードに出ない）:
 #   ANTHROPIC_API_KEY   ... Claude（LLM_PROVIDER=anthropic のとき必須。未設定なら fail closed）
+#   VERTEX_GATEWAY_URL  ... Cloud Run Gatewayの /generateContent URL
+#   VERTEX_GATEWAY_SECRET ... Gatewayと共有するHMAC secret
 #   RESEND_API_KEY      ... Resend のAPIキー（/submit の送信に必須。未設定なら 503 fail closed）
 #   TURNSTILE_SECRET    ... Cloudflare Turnstile のシークレット（任意。未設定なら検証スキップ＝fail open）
 # ↑ ANTHROPIC_API_KEY 未設定だと /chat を拒否（fail closed）。

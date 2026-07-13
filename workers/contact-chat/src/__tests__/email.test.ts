@@ -70,6 +70,7 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
   const env = {
     RESEND_API_KEY: 're_test',
     CONTACT_TO_EMAIL: 'info@cor-jp.com',
+    CONTACT_CC_EMAIL: 'company@cor-jp.com',
     CONTACT_FROM_EMAIL: 'noreply@cor-jp.com',
   } as unknown as Env;
 
@@ -85,6 +86,7 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
     const payload = JSON.parse(init.body as string);
     expect(payload.to).toBe('info@cor-jp.com');
     expect(payload.from).toBe('noreply@cor-jp.com');
+    expect(payload.cc).toBe('company@cor-jp.com');
     expect(payload.text).toContain('taro@example.com');
     // reply_to に問い合わせ者のメールが入る（担当者の返信が顧客へ届く）
     expect(payload.reply_to).toBe('taro@example.com');

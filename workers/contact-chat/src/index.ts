@@ -1,4 +1,6 @@
 import type {
+  ChatLocale,
+  ChatMode,
   ChatResult,
   Classification,
   ContactIntent,
@@ -23,6 +25,19 @@ import {
 } from './security';
 import { buildSystemPrompt, getProvider } from './llm';
 import { getEmailProvider, sendInquiryEmail } from './email';
+import {
+  claimOutbox,
+  createSubmission,
+  getSubmissionForNotification,
+  markOutboxFailed,
+  markOutboxSent,
+  newSessionId,
+  normalizeIdempotencyKey,
+  normalizeSessionId,
+  purgeExpiredData,
+  queueMessage,
+  upsertContactSession,
+} from './storage';
 
 // 最大リクエストボディサイズ（DoS/暴走入力対策）。会話＋サマリでも十分な余裕。
 const MAX_BODY_BYTES = 64 * 1024;
@@ -93,7 +108,8 @@ export function extractJsonObject(s: string): string | null {
 // 形式が崩れていても安全側に倒す（生のモデル出力を reply として漏らさない）。
 // 試行順: (a) フェンスブロック → (b) trim 全体 → (c) extractJsonObject。
 // 全て失敗したときのみ素のテキストへフォールバックする。
-export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' = ''): ChatResult {
+export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' = '', locale: ChatLocale = 'ja'): ChatResult {
+  if (new TextEncoder().encode(raw).length > 16 * 1024) raw = '';
   const trimmed = raw.trim();
   let classification: Classification = 'genuine';
   let readyForContact = false;
@@ -123,7 +139,8 @@ export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' 
       if (typeof o.readyForContact === 'boolean') readyForContact = o.readyForContact;
       // LLM が返した intent を正規化。空ならクライアント初期値を維持。
       const llmIntent = normalizeIntent(o.intent);
-      if (llmIntent) intent = llmIntent;
+      // URL/UI で明示された intent はルーティングの正本。モデル推定で上書きしない。
+      if (!fallbackIntent && llmIntent) intent = llmIntent;
       const lead = normalizeStructuredLead(o.structuredLead);
       if (Object.keys(lead).length > 0) structuredLead = lead;
       parsedOk = true;
@@ -135,12 +152,24 @@ export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' 
 
   // どの候補も object として parse できなければ、素の文章を reply とする（会話を止めない）。
   // ただし生の JSON ブロブをそのまま返さないよう、parse 成功時は reply のみを使う。
-  if (!parsedOk) reply = trimmed;
-  if (!reply) reply = '申し訳ありません、もう一度お聞かせいただけますか？';
+  if (!parsedOk) reply = '';
+  if (!reply) reply = locale === 'en'
+    ? 'Sorry, could you please tell me that again?'
+    : '申し訳ありません、もう一度お聞かせいただけますか？';
   const result: ChatResult = { reply, classification, readyForContact };
   if (intent) result.intent = intent;
   if (structuredLead) result.structuredLead = structuredLead;
   return result;
+}
+
+function leadMissingFields(lead: StructuredLead | undefined): string[] {
+  const fields: Array<keyof StructuredLead> = ['purpose', 'industryRole', 'dataSensitivity', 'stage', 'timingBudget'];
+  return fields.filter((field) => !lead?.[field]);
+}
+
+function resultStage(result: ChatResult): string {
+  if (result.readyForContact) return 'ready';
+  return result.structuredLead && Object.keys(result.structuredLead).length > 0 ? 'qualifying' : 'intent';
 }
 
 // POST /api/contact/chat — 会話による問い合わせの絞り込み。PIIは扱わない。
@@ -148,17 +177,63 @@ export function parseChatResult(raw: string, fallbackIntent: ContactIntent | '' 
 // 新しいトークンが無く 403 になってしまうため）。/chat の悪用対策は
 // レート制限＋同一オリジン＋（必須の）Cloudflare WAF レート制限ルールで担保する。
 // PII を扱う本命の濫用点である /submit でのみ Turnstile を要求する。
-async function handleChat(req: Request, env: Env): Promise<Response> {
+async function handleChat(req: Request, env: Env, forceStart = false): Promise<Response> {
   const body = await readJsonBody(req);
   if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-
-  const norm = normalizeMessages(body.messages);
-  if (!norm.ok) return json({ error: norm.error }, norm.status);
 
   // intent/source はサーバ側で正規化して system に注入（messages は改ざんしない）。
   // 未知キーは空に落とす（400 にしない = 後方互換）。
   const initialIntent = normalizeIntent(body.intent);
   const source = normalizeSource(body.source);
+  const mode: ChatMode = body.mode === 'ambassador' ? 'ambassador' : 'intake';
+  if (body.mode !== undefined && body.mode !== 'intake' && body.mode !== 'ambassador') {
+    return json({ error: 'mode は intake か ambassador のみ許可されます' }, 400);
+  }
+  const locale: ChatLocale = body.locale === 'en' ? 'en' : 'ja';
+  if (body.locale !== undefined && body.locale !== 'ja' && body.locale !== 'en') {
+    return json({ error: 'locale は ja か en のみ許可されます' }, 400);
+  }
+
+  // Intent選択直後は、まだユーザー発話がないため空の会話をLLMへ送らない。
+  // UIがこの応答を最初のCloudiaメッセージとして表示し、続く発話から通常の
+  // /chat 経路へ入る。外部プロバイダ障害でもヒアリング導線を止めない。
+  const isStart = forceStart || body.start === true || body.event === 'intent_selected';
+  if (isStart) {
+    const reply = locale === 'en'
+      ? 'Thank you. I will ask a few quick questions so we can understand your request. What would you like to achieve?'
+      : 'ありがとうございます。ご相談内容を正確に把握するため、いくつか質問します。まず、今回実現したいことを教えてください。';
+    const sessionId = normalizeSessionId(body.sessionId) || newSessionId();
+    const result: ChatResult = {
+      reply,
+      classification: 'genuine',
+      readyForContact: false,
+      ...(initialIntent ? { intent: initialIntent } : {}),
+      sessionId,
+      stage: 'intent',
+      missingFields: ['purpose'],
+    };
+    try {
+      await upsertContactSession(env, {
+        sessionId,
+        intent: initialIntent,
+        mode,
+        locale,
+        source,
+        stage: 'intent',
+        turnCount: 0,
+        structuredLead: {},
+        missingFields: ['purpose'],
+        classification: 'genuine',
+      });
+    } catch (error) {
+      console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
+      if (env.DB) return json({ error: 'チャットを開始できません。時間をおいて再試行してください' }, 503);
+    }
+    return json(result);
+  }
+
+  const norm = normalizeMessages(body.messages);
+  if (!norm.ok) return json({ error: norm.error }, norm.status);
 
   // fail closed: LLM 未設定なら 503（getProvider が投げる）。
   let provider;
@@ -168,17 +243,39 @@ async function handleChat(req: Request, env: Env): Promise<Response> {
     return json({ error: 'AIが一時的に利用できません。時間をおいて再試行してください' }, 503);
   }
 
-  const system = buildSystemPrompt({ intent: initialIntent, source });
+  const system = buildSystemPrompt({ intent: initialIntent, source, mode, locale });
 
   let raw: string;
   try {
     raw = await provider.chat(system, norm.messages);
   } catch (e) {
     console.error('contact-chat llm error:', e instanceof Error ? e.message : String(e));
-    return json({ error: 'AIの応答に失敗しました。時間をおいて再試行してください' }, 502);
+    return json({ error: 'AIが一時的に利用できません。時間をおいて再試行してください', fallback: true }, 503);
   }
 
-  return json(parseChatResult(raw, initialIntent));
+  const result = parseChatResult(raw, initialIntent, locale);
+  const sessionId = normalizeSessionId(body.sessionId) || newSessionId();
+  result.sessionId = sessionId;
+  result.stage = resultStage(result);
+  result.missingFields = leadMissingFields(result.structuredLead);
+  try {
+    await upsertContactSession(env, {
+      sessionId,
+      intent: initialIntent,
+      mode,
+      locale,
+      source,
+      stage: result.stage,
+      turnCount: norm.messages.length,
+      structuredLead: result.structuredLead || {},
+      missingFields: result.missingFields,
+      classification: result.classification,
+    });
+  } catch (error) {
+    console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
+    if (env.DB) return json({ error: 'チャットを保存できません。時間をおいて再試行してください' }, 503);
+  }
+  return json(result);
 }
 
 // POST /api/contact/submit — 最終送信。PIIはここで扱い、LLMには絶対渡さずメールにのみ送る。
@@ -203,6 +300,32 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
   if (!emailProvider.ok) {
     console.error('contact-chat email not configured (RESEND_API_KEY unset)');
     return json({ error: emailProvider.error }, emailProvider.status);
+  }
+
+  // 本番（D1 bindingあり）は、PIIを暗号化してD1へ保存し、QueueのID payload
+  // だけを発行する。メール送信はqueue consumerだけが行う。
+  if (env.DB) {
+    const sessionId = normalizeSessionId(body.sessionId);
+    const idempotencyKey = normalizeIdempotencyKey(body.idempotencyKey);
+    let created;
+    try {
+      created = await createSubmission(env, norm.inquiry, { idempotencyKey, sessionId });
+    } catch (error) {
+      console.error('contact-chat submission storage error:', error instanceof Error ? error.message : 'unknown');
+      return json({ error: 'お問い合わせを受け付けられません。時間をおいて再試行してください' }, 503);
+    }
+    if (!env.CONTACT_NOTIFICATIONS) {
+      console.error('contact-chat notification queue not configured');
+      return json({ error: 'お問い合わせを受け付けられません。時間をおいて再試行してください' }, 503);
+    }
+    try {
+      // 重複リクエストも同じIDを再送する。consumer側のclaimで送信済みを無害化する。
+      await env.CONTACT_NOTIFICATIONS.send(queueMessage(created.submissionId));
+    } catch (error) {
+      console.error('contact-chat notification enqueue error:', error instanceof Error ? error.message : 'unknown');
+      return json({ error: 'お問い合わせをキューへ登録できません。時間をおいて再試行してください' }, 503);
+    }
+    return json({ ok: true, receiptId: created.receiptId, status: 'queued', duplicate: created.duplicate });
   }
 
   try {
@@ -231,12 +354,12 @@ export default {
         return json({ error: 'origin not allowed' }, 403);
       }
 
-      if (req.method === 'POST' && path === '/api/contact/chat') {
+      if (req.method === 'POST' && (path === '/api/contact/chat' || path === '/api/contact/chat/start')) {
         const ip = clientIp(req);
         if (isRateLimited(`chat:${ip}`, CHAT_LIMIT)) {
           return json({ error: 'リクエストが多すぎます。少し待ってから再試行してください' }, 429);
         }
-        return await handleChat(req, env);
+        return await handleChat(req, env, path === '/api/contact/chat/start');
       }
 
       if (req.method === 'POST' && path === '/api/contact/submit') {
@@ -252,6 +375,46 @@ export default {
       // 詳細はサーバー側ログのみ。クライアントには汎用メッセージ（内部情報の漏洩防止）。
       console.error('contact-chat error:', e instanceof Error ? e.message : String(e));
       return json({ error: '処理中にエラーが発生しました' }, 500);
+    }
+  },
+
+  async queue(batch: MessageBatch<{ submissionId?: unknown }>, env: Env): Promise<void> {
+    for (const message of batch.messages) {
+      const submissionId = typeof message.body?.submissionId === 'string'
+        ? normalizeSessionId(message.body.submissionId)
+        : null;
+      if (!submissionId || !env.DB) {
+        message.ack();
+        continue;
+      }
+      try {
+        if (!await claimOutbox(env, submissionId)) {
+          message.ack();
+          continue;
+        }
+        const stored = await getSubmissionForNotification(env, submissionId);
+        if (!stored) {
+          message.ack();
+          continue;
+        }
+        const emailProvider = getEmailProvider(env);
+        if (!emailProvider.ok) throw new Error('email provider unavailable');
+        await sendInquiryEmail(env, emailProvider.provider, stored.inquiry);
+        await markOutboxSent(env, submissionId);
+        message.ack();
+      } catch (error) {
+        await markOutboxFailed(env, submissionId, error instanceof Error ? error.message : 'notification failed');
+        // Queue controls exponential retry and eventually routes to the configured DLQ.
+        message.retry();
+      }
+    }
+  },
+
+  async scheduled(_event: ScheduledEvent, env: Env): Promise<void> {
+    try {
+      await purgeExpiredData(env);
+    } catch (error) {
+      console.error('contact-chat retention cleanup error:', error instanceof Error ? error.message : 'unknown');
     }
   },
 };

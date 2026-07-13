@@ -1,9 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
-import type { ChatMessage, ContactIntent, Env } from './types';
+import type { ChatLocale, ChatMessage, ChatMode, ContactIntent, Env } from './types';
 import { CONTACT_INTENTS } from './types';
+import { COMPANY_KNOWLEDGE } from './company-knowledge';
 
 // コスト重視で Sonnet を既定にする（会話のみ・短文応答のため軽量モデルで十分）。
 export const DEFAULT_MODEL = 'claude-sonnet-4-6';
+export const DEFAULT_VERTEX_MODEL = 'gemini-3.5-flash';
+export const DEFAULT_VERTEX_PROJECT = 'cor-jp-web';
+export const DEFAULT_VERTEX_LOCATION = 'global';
 const MAX_TOKENS = 1024;
 
 // --- プロバイダ抽象化 ---
@@ -33,11 +37,51 @@ class AnthropicProvider implements LlmProvider {
   }
 }
 
+const hex = (bytes: ArrayBuffer) => [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
+async function signGateway(secret: string, timestamp: string, nonce: string, body: string): Promise<string> {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return hex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(`${timestamp}.${nonce}.${body}`)));
+}
+
+class VertexGeminiProvider implements LlmProvider {
+  constructor(private readonly env: Env) {}
+  async chat(system: string, messages: ChatMessage[]): Promise<string> {
+    const gatewayUrl = this.env.VERTEX_GATEWAY_URL?.trim();
+    const gatewaySecret = this.env.VERTEX_GATEWAY_SECRET?.trim();
+    if (!gatewayUrl || !gatewaySecret) throw new Error('Vertex gateway is not configured');
+    const body = JSON.stringify({
+      project: this.env.GOOGLE_CLOUD_PROJECT || DEFAULT_VERTEX_PROJECT,
+      location: this.env.GOOGLE_CLOUD_LOCATION || DEFAULT_VERTEX_LOCATION,
+      model: this.env.VERTEX_MODEL || DEFAULT_VERTEX_MODEL,
+      systemInstruction: { parts: [{ text: system }] },
+      contents: messages.map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+      generationConfig: { maxOutputTokens: MAX_TOKENS, temperature: 0.3, responseMimeType: 'application/json' },
+    });
+    const timestamp = String(Date.now());
+    const nonce = crypto.randomUUID();
+    const response = await fetch(gatewayUrl, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-cloudia-timestamp': timestamp,
+        'x-cloudia-nonce': nonce,
+        'x-cloudia-signature': await signGateway(gatewaySecret, timestamp, nonce, body),
+      },
+      body,
+    });
+    if (!response.ok) throw new Error(`Vertex gateway failed (${response.status})`);
+    const data = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+    return (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || '').join('').trim();
+  }
+}
+
 // LLM_PROVIDER（既定 'anthropic'）でプロバイダを選ぶ。
 // fail closed: anthropic 選択時に ANTHROPIC_API_KEY が無ければ例外（呼び出し側で 503）。
 export function getProvider(env: Env): LlmProvider {
-  const provider = (env.LLM_PROVIDER || 'anthropic').toLowerCase();
+  const provider = (env.LLM_PROVIDER || 'vertex-gemini').toLowerCase();
   switch (provider) {
+    case 'vertex-gemini':
+      return new VertexGeminiProvider(env);
     case 'anthropic':
       if (!env.ANTHROPIC_API_KEY) {
         throw new Error('LLM が未設定です（ANTHROPIC_API_KEY）');
@@ -106,15 +150,26 @@ export const SYSTEM_PROMPT = [
 export function buildSystemPrompt(opts: {
   intent?: ContactIntent | '';
   source?: string;
+  mode?: ChatMode;
+  locale?: ChatLocale;
 } = {}): string {
   const parts = [SYSTEM_PROMPT];
+  const mode = opts.mode || 'intake';
+  const locale = opts.locale || 'ja';
+  parts.push('', '# Runtime context (server-provided, trusted)', `Mode: ${mode}. Reply locale: ${locale}.`);
+  parts.push(mode === 'ambassador'
+    ? 'Be warm and conversational, with an upbeat tone, while remaining a company representative. In Japanese, use friendly but respectful casual phrasing instead of formal reception language.'
+    : 'Be concise, polite, and professional for B2B intake.');
+  parts.push('Do not use web search, external tools, or function calling.');
+  parts.push('', '# Approved public company knowledge', COMPANY_KNOWLEDGE,
+    'Answer company questions only from the approved knowledge above. If it is insufficient, say so and offer the formal inquiry flow.');
   if (opts.intent) {
     const label = INTENT_LABELS[opts.intent] || opts.intent;
     parts.push(
       '',
       '# Initial context (server-provided, trusted)',
       `The visitor arrived with intent="${opts.intent}" (${label}).`,
-      'Start the conversation under that assumption, but update "intent" in your JSON if the conversation clearly indicates a different official key.',
+      'Treat this intent as authoritative routing context. Return the same intent key and never replace it with another key.',
       'Do not invent keys outside the official list.',
     );
   }

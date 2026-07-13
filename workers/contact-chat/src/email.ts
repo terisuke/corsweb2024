@@ -4,7 +4,7 @@ import type { Env, NormalizedInquiry } from './types';
 // 既定実装は Resend API。将来 SendGrid / SES 等を足すときは EmailProvider を実装するだけ。
 // replyTo: 問い合わせ者のメール（担当者が「返信」で直接顧客に届くようにする）。
 export interface EmailProvider {
-  send(to: string, from: string, subject: string, text: string, replyTo?: string): Promise<void>;
+  send(to: string, from: string, subject: string, text: string, replyTo?: string, cc?: string): Promise<void>;
 }
 
 const RESEND_URL = 'https://api.resend.com/emails';
@@ -17,7 +17,7 @@ class ResendProvider implements EmailProvider {
     from: string,
     subject: string,
     text: string,
-    replyTo?: string,
+    replyTo?: string, cc?: string,
   ): Promise<void> {
     // 重要(セキュリティ): 本文は必ず `text` のみで送る。`html` は使わない。
     // reply は LLM 出力ではないが（ここは /submit のPII本文）、staff の webmail での
@@ -25,6 +25,7 @@ class ResendProvider implements EmailProvider {
     const payload: Record<string, unknown> = { from, to, subject, text };
     // reply_to は isValidEmail 済み（単一アドレス・CRLFなし）なのでヘッダ注入の心配なし。
     if (replyTo) payload.reply_to = replyTo;
+    if (cc) payload.cc = cc;
     const res = await fetch(RESEND_URL, {
       method: 'POST',
       headers: {
@@ -118,10 +119,11 @@ export async function sendInquiryEmail(
   inquiry: NormalizedInquiry,
 ): Promise<void> {
   await provider.send(
-    env.CONTACT_TO_EMAIL,
+    env.CONTACT_TO_EMAIL || 'cloudia@cor-jp.com',
     env.CONTACT_FROM_EMAIL,
     buildSubject(inquiry),
     buildBody(inquiry),
     inquiry.email, // reply_to: isValidEmail 済みの単一アドレス
+    env.CONTACT_CC_EMAIL || 'company@cor-jp.com',
   );
 }

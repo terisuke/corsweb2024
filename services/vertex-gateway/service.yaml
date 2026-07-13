@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: cloudia-vertex-gateway
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
+    spec:
+      serviceAccountName: cloudia-vertex-gateway@cor-jp-web.iam.gserviceaccount.com
+      containerConcurrency: 40
+      timeoutSeconds: 30
+      containers:
+        - image: asia-northeast1-docker.pkg.dev/cor-jp-web/cloudia/vertex-gateway:latest
+          env:
+            - name: VERTEX_GATEWAY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cloudia-gateway-hmac
+                  key: latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: 256Mi

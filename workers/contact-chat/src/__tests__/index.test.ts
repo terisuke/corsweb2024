@@ -73,16 +73,16 @@ describe('parseChatResult', () => {
     expect(r.reply).not.toContain('"classification"');
   });
 
-  it('プレーンな散文（JSONなし）はそのまま reply にフォールバック', () => {
+  it('プレーンな散文（JSONなし）は生出力を漏らさない', () => {
     const r = parseChatResult('ただのテキストです');
-    expect(r.reply).toBe('ただのテキストです');
+    expect(r.reply).toContain('もう一度');
     expect(r.classification).toBe('genuine');
     expect(r.readyForContact).toBe(false);
   });
 
-  it('壊れたJSONはフォールバック（生テキスト）', () => {
+  it('壊れたJSONは安全な定型文へフォールバック', () => {
     const r = parseChatResult('{"reply":"x", broken');
-    expect(r.reply).toBe('{"reply":"x", broken');
+    expect(r.reply).toContain('もう一度');
     expect(r.classification).toBe('genuine');
   });
 
@@ -92,14 +92,17 @@ describe('parseChatResult', () => {
     ['数値', '42'],
   ])('object でない JSON(%s)はフォールバック扱い', (_n, raw) => {
     const r = parseChatResult(raw);
-    // object でないので構造化されず、生テキストが reply になる
-    expect(r.reply).toBe(raw);
+    expect(r.reply).toContain('もう一度');
     expect(r.classification).toBe('genuine');
   });
 
   it('空白のみ → 日本語フォールバック文言', () => {
     const r = parseChatResult('   ');
     expect(r.reply).toContain('もう一度');
+  });
+
+  it('英語localeの不正応答は英語定型文', () => {
+    expect(parseChatResult('not json', '', 'en').reply).toContain('Sorry');
   });
 
   it('無効な classification は genuine に正規化', () => {
@@ -204,6 +207,17 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(res.status).toBe(503);
   });
 
+  it.each([
+    [{ mode: 'admin' }, 'mode'],
+    [{ locale: 'fr' }, 'locale'],
+  ])('不正な会話コンテキスを400で拒否: %s', async (extra, field) => {
+    const res = await worker.fetch(post('/api/contact/chat', {
+      messages: [{ role: 'user', content: 'hello' }], ...extra,
+    }), ENV);
+    expect(res.status).toBe(400);
+    expect(JSON.stringify(await res.json())).toContain(field);
+  });
+
   it('chat: TURNSTILE_SECRET 設定済みでもトークン無しで 403 にならない（Turnstileは/chatでは検証しない）', async () => {
     // Turnstile トークンは単回使用のため /chat では検証しない（複数ターン会話が壊れるのを防ぐ）。
     // TURNSTILE_SECRET を設定しても、トークン無しの /chat が 403 にならないことを保証する。
@@ -274,6 +288,17 @@ describe('parseChatResult — intent / structuredLead (#250)', () => {
     const raw = '{"reply":"x","classification":"genuine","readyForContact":false,"intent":"evil"}';
     const r = parseChatResult(raw, 'local-llm-poc');
     expect(r.intent).toBe('local-llm-poc');
+  });
+
+  it('明示済み intent はモデル出力で上書きしない', () => {
+    const raw = JSON.stringify({
+      reply: '承知しました',
+      classification: 'genuine',
+      readyForContact: false,
+      intent: 'contract-dev',
+    });
+    const result = parseChatResult(raw, 'grift-paid-trial');
+    expect(result.intent).toBe('grift-paid-trial');
   });
   it('intent なし JSON では fallback を使う', () => {
     const raw = '{"reply":"x","classification":"genuine","readyForContact":false}';

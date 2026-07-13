@@ -17,9 +17,11 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
 | POST | `/api/contact/submit` | 最終問い合わせ送信（PIIをメール通知） | 同一オリジン＋任意Turnstile |
 
 ### POST /api/contact/chat
-- リクエスト: `{ "messages": [{ "role": "user"|"assistant", "content": string }], "intent"?: string, "source"?: string }`
+- リクエスト: `{ "messages": [{ "role": "user"|"assistant", "content": string }], "intent"?: string, "source"?: string, "mode"?: "intake"|"ambassador", "locale"?: "ja"|"en" }`
   - `intent`: ADR-0014 の 7 キー（未知は無視して従来フロー）。初期文脈として system に注入。
   - `source`: 導線タグ（例: `header-ai-dev`）。メール本文に載る。
+  - `mode`: `intake` はB2B受付、`ambassador` は公開会社情報に基づく会話調。未指定は `intake`。
+  - `locale`: `ja` または `en`。未指定は `ja`。不正値は400。
 - レスポンス: `{ "reply": string, "classification": "genuine"|"sales"|"spam", "readyForContact": boolean, "intent"?: string, "structuredLead"?: object }`
 - メッセージ数は最大20件、各2000字まで。制御文字は除去。**PIIは要求も保存もしない（会話のみ）。**
 - **Turnstile は検証しない。** Turnstile トークンは単回使用のため、複数ターン会話では2ターン目以降に
@@ -40,14 +42,17 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
 ### vars（`wrangler.toml` の `[vars]`・非シークレット）
 | 名前 | 既定 | 説明 |
 |------|------|------|
-| `LLM_PROVIDER` | `anthropic` | LLMプロバイダ。将来 `openai` / 自前ホストを追加可能（`src/llm.ts` の抽象化） |
-| `CONTACT_TO_EMAIL` | `info@cor-jp.com` | 問い合わせメールの宛先（社内インボックス） |
+| `LLM_PROVIDER` | `vertex-gemini` | Cloud Run Gateway経由のVertex Gemini。`anthropic`でロールバック可能 |
+| `CONTACT_TO_EMAIL` | `cloudia@cor-jp.com` | 問い合わせメールの宛先 |
+| `CONTACT_CC_EMAIL` | `company@cor-jp.com` | 問い合わせメールのCC |
 | `CONTACT_FROM_EMAIL` | `noreply@cor-jp.com` | 問い合わせメールの差出人 |
 
 ### secrets（`wrangler secret put <NAME>`・コード/gitに残らない）
 | 名前 | 必須 | 説明 |
 |------|------|------|
-| `ANTHROPIC_API_KEY` | `/chat` で必須 | Claude（`claude-sonnet-4-6`）。未設定なら `/chat` を **503（fail closed）** |
+| `VERTEX_GATEWAY_URL` | Vertex時必須 | Cloud Run Gatewayの `/generateContent` URL |
+| `VERTEX_GATEWAY_SECRET` | Vertex時必須 | Gatewayリクエスト署名用HMAC secret |
+| `ANTHROPIC_API_KEY` | Anthropic時必須 | ロールバック用Claude API key |
 | `RESEND_API_KEY` | `/submit` で必須 | Resend のAPIキー。未設定なら `/submit` を **503（fail closed）** |
 | `TURNSTILE_SECRET` | 任意 | Cloudflare Turnstile。**`/submit` のみで検証**（`/chat` では検証しない＝トークン単回使用のため）。**未設定なら検証スキップ（turnstileのみ fail open）** |
 
@@ -59,7 +64,9 @@ npm install
 npx wrangler login        # 初回のみ（Cloudflareアカウントでブラウザ認証）
 
 # シークレット登録（値は対話で入力。コード/gitには残らない）
-npx wrangler secret put ANTHROPIC_API_KEY   # Claude（既存 yomimono と同じキーでOK）
+npx wrangler secret put VERTEX_GATEWAY_URL
+npx wrangler secret put VERTEX_GATEWAY_SECRET
+npx wrangler secret put ANTHROPIC_API_KEY   # ロールバック用
 npx wrangler secret put RESEND_API_KEY      # Resend のAPIキー
 npx wrangler secret put TURNSTILE_SECRET    # 任意（Turnstile を使う場合のみ）
 
