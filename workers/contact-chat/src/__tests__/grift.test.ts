@@ -12,6 +12,7 @@ import {
   decryptText,
   encryptText,
   getSubmissionForNotification,
+  type ContactSessionStorageSnapshot,
   type TrustedContactSession,
 } from '../storage';
 import { resetRateLimits } from '../security';
@@ -62,6 +63,22 @@ const INQUIRY: NormalizedInquiry = {
   conversationExcerpt: '訪問者: 生会話全文をGriftへ送ってはいけない',
 };
 
+const SESSION_STORAGE_SNAPSHOT: ContactSessionStorageSnapshot = {
+  intent: 'contract-dev',
+  mode: 'intake',
+  locale: 'ja',
+  source: 'cloudia',
+  stage: 'ready',
+  turnCount: 2,
+  structuredLeadJson: JSON.stringify(INQUIRY.structuredLead),
+  missingFieldsJson: '[]',
+  classification: 'genuine',
+  summaryText: 'D1で検証済みの相談要約',
+  conversationExcerptCiphertext: '',
+  updatedAt: 1_700_000_000,
+  expiresAt: 4_000_000_000,
+};
+
 const SESSION: TrustedContactSession = {
   sessionId: 'session-1',
   intent: 'contract-dev',
@@ -70,6 +87,7 @@ const SESSION: TrustedContactSession = {
   classification: 'genuine',
   summary: 'D1で検証済みの相談要約',
   structuredLead: INQUIRY.structuredLead,
+  storageSnapshot: SESSION_STORAGE_SNAPSHOT,
 };
 
 const CONSENT = {
@@ -817,6 +835,7 @@ interface CreateDbOptions {
   restoredSessionId?: string;
   excerptSessionId?: string;
   excerptReadError?: boolean;
+  concurrentSessionUpdate?: boolean;
   events?: string[];
 }
 
@@ -825,6 +844,12 @@ async function createDb(options: CreateDbOptions = {}) {
   const calls: Array<{ sql: string; bindings: unknown[] }> = [];
   let submissionBindings: unknown[] | null = null;
   let auditMetadata = '{}';
+  let pendingExisting: {
+    submission_id: string;
+    receipt_id: string;
+    payload_fingerprint: string;
+    metadata_json: string | null;
+  } | null = null;
   let existing: {
     submission_id: string;
     receipt_id: string;
@@ -839,40 +864,40 @@ async function createDb(options: CreateDbOptions = {}) {
           calls.push({ sql, bindings });
           if (sql.includes('INSERT INTO submission_intake')) {
             submissionBindings = bindings;
-            existing = {
+            pendingExisting = {
               submission_id: String(bindings[0]),
               receipt_id: String(bindings[4]),
               payload_fingerprint: String(bindings[2]),
               metadata_json: null,
             };
           }
-          if (sql.includes('INSERT INTO audit_events') && existing) {
-            existing.metadata_json = String(bindings[3]);
+          if (sql.includes('INSERT INTO audit_events') && pendingExisting) {
+            pendingExisting.metadata_json = String(bindings[3]);
             auditMetadata = String(bindings[3]);
           }
           return {
+            __sql: sql,
             first: async <T>() => {
               if (sql.includes('FROM contact_sessions') && sql.includes("status = 'active'")) {
                 options.events?.push('session-read');
                 if (options.active === false) return null as T;
-                if (sql.includes('conversation_excerpt_ciphertext')) {
-                  if (options.excerptReadError)
-                    throw new Error('synthetic D1 excerpt read failure');
-                  return {
-                    session_id: options.excerptSessionId || 'session-1',
-                    conversation_excerpt_ciphertext: excerpt,
-                  } as T;
-                }
                 if (options.restoreError)
                   throw new Error('synthetic D1 read failure with private detail');
                 return {
                   session_id: options.restoredSessionId || 'session-1',
                   intent: options.intent || 'contract-dev',
+                  mode: 'intake',
                   locale: 'ja',
                   source: 'cloudia',
+                  stage: 'ready',
+                  turn_count: 2,
                   classification: options.classification || 'genuine',
                   summary_text: 'D1で検証済みの相談要約',
                   structured_lead_json: JSON.stringify(INQUIRY.structuredLead),
+                  missing_fields_json: '[]',
+                  conversation_excerpt_ciphertext: excerpt,
+                  updated_at: 1_700_000_000,
+                  expires_at: 4_000_000_000,
                 } as T;
               }
               if (sql.includes('SELECT o.outbox_id') && submissionBindings) {
@@ -903,9 +928,20 @@ async function createDb(options: CreateDbOptions = {}) {
         },
       };
     },
-    batch: async () => {
+    batch: async (statements: Array<{ __sql?: string }>) => {
       options.events?.push('storage-batch');
-      return undefined;
+      const trustedInsert = statements[0]?.__sql?.includes('FROM contact_sessions') === true;
+      if (trustedInsert && options.excerptReadError) {
+        options.excerptReadError = false;
+        throw new Error('synthetic D1 CAS read failure');
+      }
+      const casMiss = trustedInsert && (
+        options.concurrentSessionUpdate === true
+        || (options.excerptSessionId !== undefined && options.excerptSessionId !== 'session-1')
+      );
+      const changes = casMiss ? 0 : 1;
+      if (changes > 0 && pendingExisting) existing = { ...pendingExisting };
+      return statements.map(() => ({ meta: { changes } }));
     },
   } as unknown as D1Database & { calls: Array<{ sql: string; bindings: unknown[] }> };
 }
@@ -961,7 +997,7 @@ describe('POST /api/contact/submit Grift integration', () => {
     );
     expect(outboxInserts).toHaveLength(2);
     expect(JSON.stringify(outboxInserts)).not.toContain('ブラウザで捏造した');
-    const insert = db.calls.find((call) => call.sql.includes('INSERT INTO submission_intake'));
+    const insert = db.calls.filter((call) => call.sql.includes('INSERT INTO submission_intake')).at(-1);
     expect(insert).toBeDefined();
     await expect(decryptText('storage-secret', String(insert?.bindings[9]))).resolves.toBe(
       'D1で検証済みの相談要約'
@@ -1680,12 +1716,48 @@ describe('POST /api/contact/submit Grift integration', () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ handoff: { status: 'fallback' } });
-    const insert = db.calls.find((call) => call.sql.includes('INSERT INTO submission_intake'));
+    const insert = db.calls.filter((call) => call.sql.includes('INSERT INTO submission_intake')).at(-1);
     await expect(decryptText('storage-secret', String(insert?.bindings[9]))).resolves.toBe(
       '相談目的: contract-dev / 分類: genuine / 目的: 受発注の効率化 / 業種・役割: 製造業の情報システム担当 / データ感度: 社外秘 / 進捗段階: 要件整理中 / 時期・予算: 3か月以内 / 流入経路: 検索 / 連絡理由: 開発相談'
     );
     expect(String(insert?.bindings[3])).toBe('null');
-    const audit = db.calls.find((call) => call.sql.includes('INSERT INTO audit_events'));
+    const audit = db.calls.filter((call) => call.sql.includes('INSERT INTO audit_events')).at(-1);
+    expect(JSON.parse(String(audit?.bindings[3]))).toEqual({});
+    expect(queueSend).toHaveBeenCalledTimes(2);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('session復元後に同じIDの内容が並行更新されたら正本snapshotを保存せずfallbackしてGriftを呼ばない', async () => {
+    const db = await createDb({ concurrentSessionUpdate: true });
+    const queueSend = vi.fn(async () => undefined);
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    const response = await worker.fetch(
+      post(
+        {
+          sessionId: 'session-1',
+          idempotencyKey: 'storage-race-session-content-update',
+          name: INQUIRY.name,
+          email: INQUIRY.email,
+          message: INQUIRY.message,
+          ...confirmedHandoffFields(),
+          classification: 'genuine',
+          structuredLead: { purpose: '受託開発相談' },
+        },
+        '198.51.100.82'
+      ),
+      submitEnv(db, queueSend)
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({ handoff: { status: 'fallback' } });
+    const insert = db.calls.filter((call) => call.sql.includes('INSERT INTO submission_intake')).at(-1);
+    await expect(decryptText('storage-secret', String(insert?.bindings[9]))).resolves.toBe(
+      '相談目的: contract-dev / 分類: genuine / 目的: 受発注の効率化 / 業種・役割: 製造業の情報システム担当 / データ感度: 社外秘 / 進捗段階: 要件整理中 / 時期・予算: 3か月以内 / 流入経路: 検索 / 連絡理由: 開発相談'
+    );
+    await expect(decryptText('storage-secret', String(insert?.bindings[10]))).resolves.toBe('');
+    expect(String(insert?.bindings[3])).toBe('null');
+    const audit = db.calls.filter((call) => call.sql.includes('INSERT INTO audit_events')).at(-1);
     expect(JSON.parse(String(audit?.bindings[3]))).toEqual({});
     expect(queueSend).toHaveBeenCalledTimes(2);
     expect(fetchMock).not.toHaveBeenCalled();
@@ -1713,12 +1785,12 @@ describe('POST /api/contact/submit Grift integration', () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ handoff: { status: 'fallback' } });
-    const insert = db.calls.find((call) => call.sql.includes('INSERT INTO submission_intake'));
+    const insert = db.calls.filter((call) => call.sql.includes('INSERT INTO submission_intake')).at(-1);
     await expect(decryptText('storage-secret', String(insert?.bindings[9]))).resolves.toBe(
       '相談目的: contract-dev / 分類: genuine / 目的: 受発注の効率化 / 業種・役割: 製造業の情報システム担当 / データ感度: 社外秘 / 進捗段階: 要件整理中 / 時期・予算: 3か月以内 / 流入経路: 検索 / 連絡理由: 開発相談'
     );
     expect(String(insert?.bindings[3])).toBe('null');
-    const audit = db.calls.find((call) => call.sql.includes('INSERT INTO audit_events'));
+    const audit = db.calls.filter((call) => call.sql.includes('INSERT INTO audit_events')).at(-1);
     expect(JSON.parse(String(audit?.bindings[3]))).toEqual({});
     expect(queueSend).toHaveBeenCalledTimes(2);
     expect(fetchMock).not.toHaveBeenCalled();

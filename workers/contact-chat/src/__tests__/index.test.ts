@@ -633,11 +633,18 @@ describe('worker.fetch — ハンドラレベル', () => {
                   return {
                     session_id: 'session-1',
                     intent: 'contract-dev',
+                    mode: 'intake',
                     locale: 'ja',
                     source: 'cloudia',
+                    stage: 'ready',
+                    turn_count: 2,
                     classification: 'genuine',
                     summary_text: 'server summary',
                     structured_lead_json: JSON.stringify(trustedLead),
+                    missing_fields_json: '[]',
+                    conversation_excerpt_ciphertext: encryptedEmptyExcerpt,
+                    updated_at: 1_700_000_000,
+                    expires_at: 4_000_000_000,
                   } as T;
                 }
                 if (sql.includes('SELECT session_id, conversation_excerpt_ciphertext')) {
@@ -650,7 +657,7 @@ describe('worker.fetch — ハンドラレベル', () => {
           },
         };
       },
-      batch: async () => undefined,
+      batch: async (statements: D1PreparedStatement[]) => statements.map(() => ({ meta: { changes: 1 } })),
     };
     const queueSend = vi.fn(async () => undefined);
     const env = {

@@ -495,6 +495,8 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
       summaryConfirmed: true as const,
     } : {}),
   };
+  // Intentionally browser-intent only: this controls the fallback response
+  // shape when D1 trust is later lost; it never authorizes a Grift call.
   const handoffRequested = handoffConsent !== null
     && (AUTO_HANDOFF_INTENTS as readonly string[]).includes(inquiry.intent);
   let effectiveHandoffConsent = handoffConsent;

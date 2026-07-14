@@ -14,12 +14,32 @@ import {
   upsertContactSession,
 } from '../storage';
 import type { Env, NormalizedInquiry } from '../types';
-import type { SessionState, TrustedContactSession } from '../storage';
+import type {
+  ContactSessionStorageSnapshot,
+  SessionState,
+  TrustedContactSession,
+} from '../storage';
 
 interface DbCall {
   sql: string;
   bindings: unknown[];
 }
+
+const TEST_STORAGE_SNAPSHOT: ContactSessionStorageSnapshot = {
+  intent: 'contract-dev',
+  mode: 'intake',
+  locale: 'ja',
+  source: 'cloudia',
+  stage: 'ready',
+  turnCount: 2,
+  structuredLeadJson: '{}',
+  missingFieldsJson: '[]',
+  classification: 'genuine',
+  summaryText: 'D1で確認済みの正本要約',
+  conversationExcerptCiphertext: '',
+  updatedAt: 1_700_000_000,
+  expiresAt: 4_000_000_000,
+};
 
 function mockDb(first: (sql: string, bindings: unknown[]) => unknown = () => null) {
   const calls: DbCall[] = [];
@@ -36,7 +56,7 @@ function mockDb(first: (sql: string, bindings: unknown[]) => unknown = () => nul
         },
       };
     },
-    batch: async () => undefined,
+    batch: async (statements: D1PreparedStatement[]) => statements.map(() => ({ meta: { changes: 1 } })),
   };
   return db as unknown as D1Database & { calls: DbCall[] };
 }
@@ -153,6 +173,7 @@ describe('encrypted contact storage primitives', () => {
       classification: 'genuine',
       summary: 'D1で確認済みの正本要約',
       structuredLead: inquiry.structuredLead,
+      storageSnapshot: { ...TEST_STORAGE_SNAPSHOT, conversationExcerptCiphertext: excerpt },
     };
     await createSubmission(
       { DB: db, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
@@ -161,6 +182,14 @@ describe('encrypted contact storage primitives', () => {
     );
     const call = db.calls.find((entry) => entry.sql.includes('INSERT INTO submission_intake'));
     expect(call).toBeDefined();
+    expect(call?.sql).toContain('FROM contact_sessions');
+    expect(call?.sql).toContain("status = 'active'");
+    expect(call?.sql).toContain('structured_lead_json = ?');
+    expect(call?.sql).toContain('classification = ?');
+    expect(call?.sql).toContain('summary_text = ?');
+    expect(call?.sql).toContain('conversation_excerpt_ciphertext = ?');
+    expect(call?.sql).toContain('updated_at = ?');
+    expect(call?.sql).toContain('expires_at = ?');
     expect(call?.bindings[2]).toMatch(/^[a-f0-9]{64}$/);
     expect(String(call?.bindings[2])).not.toContain(inquiry.email);
     await expect(decryptText('secret', String(call?.bindings[9])))
@@ -170,6 +199,26 @@ describe('encrypted contact storage primitives', () => {
       discoverySource: '紹介',
       contactReason: 'PoCの相談',
     });
+    expect(call?.bindings.slice(-13)).toEqual([
+      TEST_STORAGE_SNAPSHOT.intent,
+      TEST_STORAGE_SNAPSHOT.mode,
+      TEST_STORAGE_SNAPSHOT.locale,
+      TEST_STORAGE_SNAPSHOT.source,
+      TEST_STORAGE_SNAPSHOT.stage,
+      TEST_STORAGE_SNAPSHOT.turnCount,
+      TEST_STORAGE_SNAPSHOT.structuredLeadJson,
+      TEST_STORAGE_SNAPSHOT.missingFieldsJson,
+      TEST_STORAGE_SNAPSHOT.classification,
+      TEST_STORAGE_SNAPSHOT.summaryText,
+      excerpt,
+      TEST_STORAGE_SNAPSHOT.updatedAt,
+      TEST_STORAGE_SNAPSHOT.expiresAt,
+    ]);
+    const dependentWrites = db.calls.filter((entry) =>
+      entry.sql.includes('INSERT INTO notification_outbox') || entry.sql.includes('INSERT INTO audit_events')
+    );
+    expect(dependentWrites).toHaveLength(3);
+    expect(dependentWrites.every((entry) => entry.sql.includes('WHERE EXISTS'))).toBe(true);
   });
 
   it('trusted sessionが同じならbrowser要約の差分は冪等fingerprintを変えない', async () => {
@@ -181,6 +230,7 @@ describe('encrypted contact storage primitives', () => {
       classification: 'genuine',
       summary: 'D1で確認済みの正本要約',
       structuredLead: { purpose: '受託開発相談' },
+      storageSnapshot: TEST_STORAGE_SNAPSHOT,
     };
     const baseInquiry: NormalizedInquiry = {
       name: '山田太郎',
@@ -252,6 +302,7 @@ describe('encrypted contact storage primitives', () => {
       classification: 'genuine',
       summary: '要約',
       structuredLead: {},
+      storageSnapshot: TEST_STORAGE_SNAPSHOT,
     };
     await createSubmission(
       { DB: db, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
@@ -310,6 +361,7 @@ describe('encrypted contact storage primitives', () => {
       classification: 'genuine',
       summary: inquiry.conversationSummary,
       structuredLead: {},
+      storageSnapshot: TEST_STORAGE_SNAPSHOT,
     };
     const firstDb = mockDb((sql) => sql.includes('SELECT session_id, conversation_excerpt_ciphertext')
       ? { session_id: trustedSession.sessionId, conversation_excerpt_ciphertext: '' }
@@ -383,6 +435,7 @@ describe('encrypted contact storage primitives', () => {
         classification: 'genuine',
         summary: inquiry.conversationSummary,
         structuredLead: {},
+        storageSnapshot: TEST_STORAGE_SNAPSHOT,
       };
       const firstDb = mockDb((sql) => sql.includes('SELECT session_id, conversation_excerpt_ciphertext')
         ? { session_id: baseTrustedSession.sessionId, conversation_excerpt_ciphertext: '' }
@@ -413,6 +466,7 @@ describe('encrypted contact storage primitives', () => {
         classification: 'genuine',
         summary: 'unused session summary',
         structuredLead: {},
+        storageSnapshot: TEST_STORAGE_SNAPSHOT,
       };
       const replayDb = mockDb((sql) => {
         if (sql.includes('SELECT session_id, conversation_excerpt_ciphertext')) {

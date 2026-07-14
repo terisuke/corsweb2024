@@ -40,6 +40,27 @@ export interface SessionState {
   conversationExcerpt: string;
 }
 
+/**
+ * Raw non-plaintext D1 values used only as an optimistic-concurrency token.
+ * Keeping every mutable column makes the submission INSERT a full-row CAS,
+ * including same-second updates that an updated_at-only check could miss.
+ */
+export interface ContactSessionStorageSnapshot {
+  intent: string;
+  mode: string;
+  locale: string;
+  source: string;
+  stage: string;
+  turnCount: number;
+  structuredLeadJson: string;
+  missingFieldsJson: string;
+  classification: string;
+  summaryText: string;
+  conversationExcerptCiphertext: string;
+  updatedAt: number;
+  expiresAt: number;
+}
+
 /** Active D1 state restored at submit time; browser session fields are never authoritative. */
 export interface TrustedContactSession {
   sessionId: string;
@@ -49,6 +70,7 @@ export interface TrustedContactSession {
   classification: Classification;
   summary: string;
   structuredLead: StructuredLead;
+  storageSnapshot: ContactSessionStorageSnapshot;
 }
 
 export interface StoredSubmission {
@@ -334,11 +356,18 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
 interface TrustedContactSessionRow {
   session_id: string;
   intent: string;
+  mode: string;
   locale: string;
   source: string;
+  stage: string;
+  turn_count: number;
   classification: string;
   summary_text: string;
   structured_lead_json: string;
+  missing_fields_json: string;
+  conversation_excerpt_ciphertext: string;
+  updated_at: number;
+  expires_at: number;
 }
 
 export async function getTrustedContactSession(
@@ -347,17 +376,31 @@ export async function getTrustedContactSession(
 ): Promise<TrustedContactSession | null> {
   if (!env.DB || !sessionId) return null;
   const row = await env.DB.prepare(`
-    SELECT session_id, intent, locale, source, classification,
-      summary_text, structured_lead_json
+    SELECT session_id, intent, mode, locale, source, stage, turn_count,
+      structured_lead_json, missing_fields_json, classification, summary_text,
+      conversation_excerpt_ciphertext, updated_at, expires_at
     FROM contact_sessions
     WHERE session_id = ? AND status = 'active' AND expires_at > ?
     LIMIT 1
   `).bind(sessionId, nowSeconds()).first<TrustedContactSessionRow>();
   if (!row || row.session_id !== sessionId) return null;
+  if (row.mode !== 'intake' && row.mode !== 'ambassador') return null;
   if (row.locale !== 'ja' && row.locale !== 'en') return null;
   if (row.classification !== 'genuine' && row.classification !== 'sales' && row.classification !== 'spam') {
     return null;
   }
+  if (
+    typeof row.intent !== 'string'
+    || typeof row.source !== 'string'
+    || typeof row.stage !== 'string'
+    || !Number.isSafeInteger(row.turn_count)
+    || typeof row.structured_lead_json !== 'string'
+    || typeof row.missing_fields_json !== 'string'
+    || typeof row.summary_text !== 'string'
+    || typeof row.conversation_excerpt_ciphertext !== 'string'
+    || !Number.isSafeInteger(row.updated_at)
+    || !Number.isSafeInteger(row.expires_at)
+  ) return null;
   const intent = normalizeIntent(row.intent);
   if (row.intent && !intent) return null;
   const structuredLead = normalizeStructuredLeadJson(row.structured_lead_json);
@@ -373,6 +416,21 @@ export async function getTrustedContactSession(
     classification: row.classification,
     summary,
     structuredLead,
+    storageSnapshot: {
+      intent: row.intent,
+      mode: row.mode,
+      locale: row.locale,
+      source: row.source,
+      stage: row.stage,
+      turnCount: row.turn_count,
+      structuredLeadJson: row.structured_lead_json,
+      missingFieldsJson: row.missing_fields_json,
+      classification: row.classification,
+      summaryText: row.summary_text,
+      conversationExcerptCiphertext: row.conversation_excerpt_ciphertext,
+      updatedAt: row.updated_at,
+      expiresAt: row.expires_at,
+    },
   };
 }
 
@@ -443,6 +501,177 @@ function replayResult(existing: ExistingSubmissionRow, fingerprint: string): Cre
   };
 }
 
+interface SubmissionCandidate {
+  inquiry: NormalizedInquiry;
+  sessionId: string | null;
+  trustedSession: TrustedContactSession | null;
+  handoffConsent: HandoffConsent | null;
+}
+
+async function persistSubmissionCandidate(
+  env: Env,
+  idempotencyKey: string,
+  candidate: SubmissionCandidate,
+): Promise<CreateSubmissionResult | null> {
+  if (!env.DB) throw new Error('D1 is not configured');
+  const now = nowSeconds();
+  const fingerprint = await submissionPayloadFingerprint(
+    env.PII_HMAC_KEY,
+    candidate.inquiry,
+    candidate.sessionId,
+    candidate.trustedSession,
+    candidate.handoffConsent,
+  );
+  const existing = await findExistingSubmission(env, idempotencyKey);
+  if (existing) return replayResult(existing, fingerprint);
+
+  const submissionId = crypto.randomUUID();
+  const receiptId = newReceiptId();
+  // A trusted submission copies only the ciphertext captured by its D1
+  // snapshot. Empty legacy values become encrypted empty text; browser
+  // excerpts never fill a missing server value.
+  const conversationExcerptCiphertext = candidate.trustedSession?.storageSnapshot.conversationExcerptCiphertext
+    || await encryptText(env.PII_ENCRYPTION_KEY, '');
+  const pii = await Promise.all([
+    encryptText(env.PII_ENCRYPTION_KEY, candidate.inquiry.name),
+    encryptText(env.PII_ENCRYPTION_KEY, candidate.inquiry.email),
+    encryptText(env.PII_ENCRYPTION_KEY, candidate.inquiry.company),
+    encryptText(env.PII_ENCRYPTION_KEY, candidate.inquiry.message),
+    encryptText(env.PII_ENCRYPTION_KEY, candidate.inquiry.conversationSummary),
+    emailHmac(env.PII_HMAC_KEY, candidate.inquiry.email),
+  ]);
+  const [name, email, company, message, summary, emailHash] = pii;
+  const outboxId = crypto.randomUUID();
+  const auditMetadata = candidate.handoffConsent
+    ? {
+        handoff_consent: {
+          accepted: true,
+          version: candidate.handoffConsent.version,
+          accepted_at: candidate.handoffConsent.acceptedAt,
+          browser_accepted_at: candidate.handoffConsent.browserAcceptedAt,
+          summary_confirmed: candidate.handoffConsent.summaryConfirmed,
+        },
+      }
+    : {};
+  const submissionBindings = [
+    submissionId,
+    idempotencyKey,
+    fingerprint,
+    candidate.sessionId,
+    receiptId,
+    name,
+    email,
+    company,
+    message,
+    summary,
+    conversationExcerptCiphertext,
+    emailHash,
+    candidate.inquiry.intent,
+    candidate.inquiry.source,
+    JSON.stringify(redactStructuredLead(candidate.inquiry.structuredLead)),
+    JSON.stringify(candidate.inquiry.utm),
+    candidate.inquiry.classification,
+    now,
+    now,
+    now + SUBMISSION_TTL_SECONDS,
+  ];
+  const submissionInsert = candidate.trustedSession
+    ? env.DB.prepare(`
+      INSERT INTO submission_intake
+        (submission_id, idempotency_key, payload_fingerprint, session_id, receipt_id,
+         name_ciphertext, email_ciphertext, company_ciphertext,
+         message_ciphertext, summary_ciphertext, conversation_excerpt_ciphertext,
+         email_hmac, intent, source,
+         structured_lead_json, utm_json, classification, status,
+         created_at, updated_at, expires_at)
+      SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?
+      FROM contact_sessions
+      WHERE session_id = ? AND status = 'active' AND expires_at > ?
+        AND intent = ? AND mode = ? AND locale = ? AND source = ?
+        AND stage = ? AND turn_count = ?
+        AND structured_lead_json = ? AND missing_fields_json = ?
+        AND classification = ? AND summary_text = ?
+        AND conversation_excerpt_ciphertext = ?
+        AND updated_at = ? AND expires_at = ?
+      LIMIT 1
+    `).bind(
+      ...submissionBindings,
+      candidate.trustedSession.sessionId,
+      nowSeconds(),
+      candidate.trustedSession.storageSnapshot.intent,
+      candidate.trustedSession.storageSnapshot.mode,
+      candidate.trustedSession.storageSnapshot.locale,
+      candidate.trustedSession.storageSnapshot.source,
+      candidate.trustedSession.storageSnapshot.stage,
+      candidate.trustedSession.storageSnapshot.turnCount,
+      candidate.trustedSession.storageSnapshot.structuredLeadJson,
+      candidate.trustedSession.storageSnapshot.missingFieldsJson,
+      candidate.trustedSession.storageSnapshot.classification,
+      candidate.trustedSession.storageSnapshot.summaryText,
+      candidate.trustedSession.storageSnapshot.conversationExcerptCiphertext,
+      candidate.trustedSession.storageSnapshot.updatedAt,
+      candidate.trustedSession.storageSnapshot.expiresAt,
+    )
+    : env.DB.prepare(`
+      INSERT INTO submission_intake
+        (submission_id, idempotency_key, payload_fingerprint, session_id, receipt_id,
+         name_ciphertext, email_ciphertext, company_ciphertext,
+         message_ciphertext, summary_ciphertext, conversation_excerpt_ciphertext,
+         email_hmac, intent, source,
+         structured_lead_json, utm_json, classification, status,
+         created_at, updated_at, expires_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?)
+    `).bind(...submissionBindings);
+  const statements = [
+    submissionInsert,
+    env.DB.prepare(`
+      INSERT INTO notification_outbox
+        (outbox_id, submission_id, message_type, status, attempts, available_at,
+         delivery_status, created_at, updated_at)
+      SELECT ?, ?, 'internal', 'pending', 0, ?, 'queued', ?, ?
+      WHERE EXISTS (SELECT 1 FROM submission_intake WHERE submission_id = ?)
+    `).bind(outboxId, submissionId, now, now, now, submissionId),
+    env.DB.prepare(`
+      INSERT INTO notification_outbox
+        (outbox_id, submission_id, message_type, status, attempts, available_at,
+         delivery_status, created_at, updated_at)
+      SELECT ?, ?, 'receipt', 'pending', 0, ?, 'queued', ?, ?
+      WHERE EXISTS (SELECT 1 FROM submission_intake WHERE submission_id = ?)
+    `).bind(crypto.randomUUID(), submissionId, now, now, now, submissionId),
+    env.DB.prepare(`
+      INSERT INTO audit_events (event_id, event_type, submission_id, session_id, metadata_json, created_at)
+      SELECT ?, 'submission_queued', ?, ?, ?, ?
+      WHERE EXISTS (SELECT 1 FROM submission_intake WHERE submission_id = ?)
+    `).bind(
+      crypto.randomUUID(),
+      submissionId,
+      candidate.sessionId,
+      JSON.stringify(auditMetadata),
+      now,
+      submissionId,
+    ),
+  ];
+  try {
+    const results = await env.DB.batch(statements);
+    if ((results[0]?.meta?.changes || 0) < 1) {
+      // The trusted row changed, expired, or became inactive in the same D1
+      // transaction that attempted the INSERT. No dependent row was written.
+      return null;
+    }
+  } catch (error) {
+    // A concurrent retry may have won the unique idempotency key race.
+    const raced = await findExistingSubmission(env, idempotencyKey);
+    if (raced) return replayResult(raced, fingerprint);
+    throw error;
+  }
+  return {
+    submissionId,
+    receiptId,
+    duplicate: false,
+    handoffConsent: candidate.handoffConsent,
+  };
+}
+
 export async function createSubmission(
   env: Env,
   inquiry: NormalizedInquiry,
@@ -454,143 +683,38 @@ export async function createSubmission(
   },
 ): Promise<CreateSubmissionResult> {
   if (!env.DB) throw new Error('D1 is not configured');
-  const now = nowSeconds();
-  // Copy the already encrypted session excerpt into the submission row. This
-  // avoids decrypting/re-encrypting chat content during handoff and prevents a
-  // browser from injecting an arbitrary transcript at submit time.
-  let trustedSession: TrustedContactSession | null = options.trustedSession?.sessionId === options.sessionId
+  const trustedSession = options.trustedSession?.sessionId === options.sessionId
     ? (options.trustedSession ?? null)
     : null;
-  let sessionId = trustedSession?.sessionId || null;
-  let effectiveHandoffConsent = options.handoffConsent || null;
-  let conversationExcerptCiphertext = '';
-  if (sessionId) {
-    let session: { session_id: string; conversation_excerpt_ciphertext?: string } | null = null;
-    try {
-      session = await env.DB.prepare(
-        "SELECT session_id, conversation_excerpt_ciphertext FROM contact_sessions WHERE session_id = ? AND status = 'active' AND expires_at > ? LIMIT 1",
-      ).bind(sessionId, now).first<{ session_id: string; conversation_excerpt_ciphertext?: string }>();
-    } catch {
-      // Losing the session read must not lose the contact request. Continue with
-      // the same deterministic no-consent fallback used for missing/expired
-      // rows; subsequent D1 writes still fail closed if storage itself is down.
-    }
-    if (!session || session.session_id !== sessionId) {
-      sessionId = null;
-      trustedSession = null;
-      effectiveHandoffConsent = null;
-    } else {
-      conversationExcerptCiphertext = session.conversation_excerpt_ciphertext || '';
-    }
-  }
-  const authoritativeInquiry = trustedSession
-    ? applyTrustedContactSession(inquiry, trustedSession, inquiry.summaryConfirmed === true)
-    : applyUntrustedContactSessionFallback(inquiry);
-  if (!trustedSession) {
-    effectiveHandoffConsent = null;
-  }
-  const fingerprint = await submissionPayloadFingerprint(
-    env.PII_HMAC_KEY,
-    authoritativeInquiry,
-    sessionId,
-    trustedSession,
-    effectiveHandoffConsent,
-  );
-  const existing = await findExistingSubmission(env, options.idempotencyKey);
-  if (existing) return replayResult(existing, fingerprint);
-
-  const submissionId = crypto.randomUUID();
-  const receiptId = newReceiptId();
-  if (!conversationExcerptCiphertext) {
-    conversationExcerptCiphertext = await encryptText(
-      env.PII_ENCRYPTION_KEY,
-      (authoritativeInquiry.conversationExcerpt || '').slice(0, MAX_CONVERSATION_EXCERPT_LEN),
+  if (trustedSession) {
+    const trustedInquiry = applyTrustedContactSession(
+      inquiry,
+      trustedSession,
+      inquiry.summaryConfirmed === true,
     );
+    try {
+      const trustedResult = await persistSubmissionCandidate(env, options.idempotencyKey, {
+        inquiry: trustedInquiry,
+        sessionId: trustedSession.sessionId,
+        trustedSession,
+        handoffConsent: options.handoffConsent || null,
+      });
+      if (trustedResult) return trustedResult;
+    } catch (error) {
+      // Changed payloads stay a stable 409. A failed trusted-row CAS/read uses
+      // the existing deterministic fallback so the contact itself is not lost.
+      if (error instanceof SubmissionConflictError) throw error;
+    }
   }
-  const pii = await Promise.all([
-    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.name),
-    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.email),
-    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.company),
-    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.message),
-    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.conversationSummary),
-    emailHmac(env.PII_HMAC_KEY, authoritativeInquiry.email),
-  ]);
-  const [name, email, company, message, summary, emailHash] = pii;
-  const outboxId = crypto.randomUUID();
-  const auditMetadata = effectiveHandoffConsent
-    ? {
-        handoff_consent: {
-          accepted: true,
-          version: effectiveHandoffConsent.version,
-          accepted_at: effectiveHandoffConsent.acceptedAt,
-          browser_accepted_at: effectiveHandoffConsent.browserAcceptedAt,
-          summary_confirmed: effectiveHandoffConsent.summaryConfirmed,
-        },
-      }
-    : {};
-  const statements = [
-    env.DB.prepare(`
-      INSERT INTO submission_intake
-        (submission_id, idempotency_key, payload_fingerprint, session_id, receipt_id,
-         name_ciphertext, email_ciphertext, company_ciphertext,
-         message_ciphertext, summary_ciphertext, conversation_excerpt_ciphertext,
-         email_hmac, intent, source,
-         structured_lead_json, utm_json, classification, status,
-         created_at, updated_at, expires_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?)
-    `).bind(
-      submissionId,
-      options.idempotencyKey,
-      fingerprint,
-      sessionId,
-      receiptId,
-      name,
-      email,
-      company,
-      message,
-      summary,
-      conversationExcerptCiphertext,
-      emailHash,
-      authoritativeInquiry.intent,
-      authoritativeInquiry.source,
-      JSON.stringify(redactStructuredLead(authoritativeInquiry.structuredLead)),
-      JSON.stringify(authoritativeInquiry.utm),
-      authoritativeInquiry.classification,
-      now,
-      now,
-      now + SUBMISSION_TTL_SECONDS,
-    ),
-    env.DB.prepare(`
-      INSERT INTO notification_outbox
-        (outbox_id, submission_id, message_type, status, attempts, available_at,
-         delivery_status, created_at, updated_at)
-      VALUES (?, ?, 'internal', 'pending', 0, ?, 'queued', ?, ?)
-    `).bind(outboxId, submissionId, now, now, now),
-    env.DB.prepare(`
-      INSERT INTO notification_outbox
-        (outbox_id, submission_id, message_type, status, attempts, available_at,
-         delivery_status, created_at, updated_at)
-      VALUES (?, ?, 'receipt', 'pending', 0, ?, 'queued', ?, ?)
-    `).bind(crypto.randomUUID(), submissionId, now, now, now),
-    env.DB.prepare(`
-      INSERT INTO audit_events (event_id, event_type, submission_id, session_id, metadata_json, created_at)
-      VALUES (?, 'submission_queued', ?, ?, ?, ?)
-    `).bind(crypto.randomUUID(), submissionId, sessionId, JSON.stringify(auditMetadata), now),
-  ];
-  try {
-    await env.DB.batch(statements);
-  } catch (error) {
-    // A concurrent retry may have won the unique idempotency key race.
-    const raced = await findExistingSubmission(env, options.idempotencyKey);
-    if (raced) return replayResult(raced, fingerprint);
-    throw error;
-  }
-  return {
-    submissionId,
-    receiptId,
-    duplicate: false,
-    handoffConsent: effectiveHandoffConsent,
-  };
+
+  const fallbackResult = await persistSubmissionCandidate(env, options.idempotencyKey, {
+    inquiry: applyUntrustedContactSessionFallback(inquiry),
+    sessionId: null,
+    trustedSession: null,
+    handoffConsent: null,
+  });
+  if (!fallbackResult) throw new Error('submission persistence failed');
+  return fallbackResult;
 }
 
 interface SubmissionRow {

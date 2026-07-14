@@ -239,7 +239,9 @@ describe('verifyTurnstile', () => {
   });
 
   it('許容clock skewを超える未来の challenge_ts は 503', async () => {
-    respond(successPayload({ challenge_ts: new Date(Date.now() + 60_001).toISOString() }));
+    // Keep a deterministic margin beyond the 60s boundary. A 1ms margin can
+    // be consumed by the mocked fetch and make this release-gate test flaky.
+    respond(successPayload({ challenge_ts: new Date(Date.now() + 61_000).toISOString() }));
     const r = await verifyTurnstile(requiredEnv, 'token', '1.2.3.4');
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.status).toBe(503);
