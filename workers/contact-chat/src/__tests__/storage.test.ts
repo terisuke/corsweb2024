@@ -1,5 +1,42 @@
 import { describe, expect, it } from 'vitest';
-import { decryptText, encryptText, newReceiptId, newSessionId, normalizeIdempotencyKey, queueMessage } from '../storage';
+import {
+  createSubmission,
+  decryptText,
+  encryptText,
+  getSubmissionForNotification,
+  newReceiptId,
+  newSessionId,
+  normalizeIdempotencyKey,
+  queueMessage,
+  upsertContactSession,
+} from '../storage';
+import type { Env, NormalizedInquiry } from '../types';
+import type { SessionState } from '../storage';
+
+interface DbCall {
+  sql: string;
+  bindings: unknown[];
+}
+
+function mockDb(first: (sql: string, bindings: unknown[]) => unknown = () => null) {
+  const calls: DbCall[] = [];
+  const db = {
+    calls,
+    prepare(sql: string) {
+      return {
+        bind(...bindings: unknown[]) {
+          calls.push({ sql, bindings });
+          return {
+            first: async <T>() => first(sql, bindings) as T,
+            run: async () => ({ meta: { changes: 1 } }),
+          };
+        },
+      };
+    },
+    batch: async () => undefined,
+  };
+  return db as unknown as D1Database & { calls: DbCall[] };
+}
 
 describe('encrypted contact storage primitives', () => {
   it('encrypts and decrypts PII without retaining plaintext', async () => {
@@ -22,5 +59,92 @@ describe('encrypted contact storage primitives', () => {
 
   it('creates a non-PII receipt identifier', () => {
     expect(newReceiptId()).toMatch(/^COR-\d{8}-[A-F0-9]{8}$/);
+  });
+
+  it('session excerpt is encrypted before the D1 write', async () => {
+    const db = mockDb();
+    const state: SessionState = {
+      sessionId: 'session-1',
+      intent: 'contract-dev',
+      mode: 'intake',
+      locale: 'ja',
+      source: 'cloudia',
+      stage: 'qualifying',
+      turnCount: 2,
+      structuredLead: {},
+      missingFields: [],
+      classification: 'genuine',
+      summary: '相談目的: contract-dev',
+      conversationExcerpt: '訪問者: 相談です [redacted-email]',
+    };
+    await upsertContactSession({ DB: db, PII_ENCRYPTION_KEY: 'secret' } as unknown as Env, state);
+    const call = db.calls[0];
+    expect(call.sql).toContain('conversation_excerpt_ciphertext');
+    await expect(decryptText('secret', String(call.bindings[11]))).resolves.toBe(state.conversationExcerpt);
+  });
+
+  it('submit copies encrypted session excerpt into submission storage', async () => {
+    const excerpt = await encryptText('secret', '訪問者: 相談です');
+    const db = mockDb((sql) => {
+      if (sql.includes('SELECT session_id, conversation_excerpt_ciphertext')) {
+        return { session_id: 'session-1', conversation_excerpt_ciphertext: excerpt };
+      }
+      return null;
+    });
+    const inquiry: NormalizedInquiry = {
+      name: '山田太郎',
+      email: 'taro@example.com',
+      company: '',
+      message: '相談です',
+      conversationSummary: '要約',
+      classification: 'genuine',
+      intent: 'contract-dev',
+      source: 'cloudia',
+      structuredLead: {},
+      utm: {},
+    };
+    await createSubmission(
+      { DB: db, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
+      inquiry,
+      { idempotencyKey: 'idempotency-1', sessionId: 'session-1' },
+    );
+    const call = db.calls.find((entry) => entry.sql.includes('INSERT INTO submission_intake'));
+    expect(call).toBeDefined();
+    await expect(decryptText('secret', String(call?.bindings[9]))).resolves.toBe('訪問者: 相談です');
+  });
+
+  it('internal通知だけ会話抜粋を復号し、receiptでは復号しない', async () => {
+    const secret = 'secret';
+    const encrypted = {
+      name: await encryptText(secret, '山田太郎'),
+      email: await encryptText(secret, 'taro@example.com'),
+      company: await encryptText(secret, ''),
+      message: await encryptText(secret, '補足'),
+      summary: await encryptText(secret, '要約'),
+      excerpt: await encryptText(secret, '訪問者: 相談です'),
+    };
+    const row = {
+      outbox_id: 'outbox-1',
+      submission_id: 'submission-1',
+      receipt_id: 'COR-20260713-ABCD1234',
+      message_type: 'internal',
+      name_ciphertext: encrypted.name,
+      email_ciphertext: encrypted.email,
+      company_ciphertext: encrypted.company,
+      message_ciphertext: encrypted.message,
+      summary_ciphertext: encrypted.summary,
+      conversation_excerpt_ciphertext: encrypted.excerpt,
+      intent: 'contract-dev',
+      source: 'cloudia',
+      structured_lead_json: '{}',
+      utm_json: '{}',
+      classification: 'genuine',
+    };
+    const db = mockDb((sql) => sql.includes('SELECT o.outbox_id') ? row : null);
+    const env = { DB: db, PII_ENCRYPTION_KEY: secret } as unknown as Env;
+    const internal = await getSubmissionForNotification(env, 'submission-1', 'internal');
+    expect(internal?.inquiry.conversationExcerpt).toBe('訪問者: 相談です');
+    const receipt = await getSubmissionForNotification(env, 'submission-1', 'receipt');
+    expect(receipt?.inquiry.conversationExcerpt).toBeUndefined();
   });
 });

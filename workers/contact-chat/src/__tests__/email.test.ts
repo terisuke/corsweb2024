@@ -4,6 +4,7 @@ import {
   buildReceiptBody,
   buildSubject,
   getEmailProvider,
+  getConversationExcerptText,
   getInternalCcRecipients,
   sendInquiryEmail,
   sendReceiptEmail,
@@ -72,6 +73,19 @@ describe('buildBody — 構造化本文（PIIはここにのみ載る）', () =>
   it('要約にPIIが混入してもメール要約へ再出力しない', () => {
     const body = buildBody({ ...inquiry, conversationSummary: 'user@example.comへ連絡', summaryText: '' });
     expect(body).not.toContain('user@example.com');
+  });
+  it('社内通知だけに安全化会話抜粋を含め、PIIは再度マスクする', () => {
+    const withExcerpt = {
+      ...inquiry,
+      conversationExcerpt: '訪問者: 相談です user@example.com\nCloudia: 確認しました',
+    };
+    const body = buildBody(withExcerpt);
+    expect(body).toContain('安全化会話抜粋（社内通知のみ）');
+    expect(body).toContain('訪問者: 相談です [redacted-email]');
+    expect(body).not.toContain('訪問者: 相談です user@example.com');
+    expect(getConversationExcerptText(withExcerpt)).not.toContain('user@example.com');
+    expect(buildReceiptBody(withExcerpt, 'COR-20260713-ABCD1234')).not.toContain('安全化会話抜粋');
+    expect(buildReceiptBody(withExcerpt, 'COR-20260713-ABCD1234')).not.toContain('相談です [redacted-email]');
   });
 });
 
@@ -166,6 +180,11 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
       CONTACT_CC_EMAILS: 'Company@cor-jp.com, bad, company@cor-jp.com, k.isayama@cor-jp.com',
     } as unknown as Env)).toEqual(['company@cor-jp.com', 'k.isayama@cor-jp.com']);
     expect(getInternalCcRecipients({ CONTACT_CC_EMAIL: 'company@cor-jp.com' } as unknown as Env)).toEqual(['company@cor-jp.com']);
+    expect(getInternalCcRecipients({} as unknown as Env)).toEqual([
+      'company@cor-jp.com',
+      'k.isayama@cor-jp.com',
+      'nagisa.terada@cor-jp.com',
+    ]);
   });
 
   it('受付確認本文は要約・補足・受付番号・返信目安を含む', () => {

@@ -2,6 +2,7 @@ import { afterEach, describe, it, expect, vi } from 'vitest';
 import worker, { extractJsonObject, parseChatResult } from '../index';
 import { resetRateLimits } from '../security';
 import type { Env } from '../types';
+import { PRESS_FIXTURES, PRESS_INTENT } from './press-fixtures';
 
 afterEach(() => {
   resetRateLimits();
@@ -168,6 +169,36 @@ const post = (path: string, body: unknown, headers: Record<string, string> = {})
   });
 
 describe('worker.fetch — ハンドラレベル', () => {
+  it('press chat returns the non-PII summary and ready stage contract', async () => {
+    const fixture = PRESS_FIXTURES.find((candidate) => candidate.name === 'ja speaking ready');
+    if (!fixture) throw new Error('press speaking fixture missing');
+    const gatewayFetch = vi.fn(async () => new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: fixture.raw }] } }],
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', gatewayFetch);
+    const env = {
+      ...ENV,
+      LLM_PROVIDER: 'vertex-gemini',
+      VERTEX_GATEWAY_URL: 'https://gateway.example/generateContent',
+      VERTEX_GATEWAY_SECRET: 'secret',
+    } as Env;
+
+    const res = await worker.fetch(post('/api/contact/chat', {
+      mode: 'intake',
+      locale: fixture.locale,
+      intent: PRESS_INTENT,
+      messages: [{ role: 'user', content: '登壇依頼の内容を整理しました。' }],
+    }), env);
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.intent).toBe(PRESS_INTENT);
+    expect(body.readyForContact).toBe(true);
+    expect(body.stage).toBe('ready');
+    expect(body.summary).toContain('生成AI');
+    expect(body.missingFields).toEqual([]);
+    expect(gatewayFetch).toHaveBeenCalledTimes(1);
+  });
+
   it('VertexリクエストへPIIをそのまま渡さない', async () => {
     const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: '{"reply":"ok","readyForContact":false}' }] } }],
@@ -361,6 +392,7 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(second.to).toBe('taro@example.com');
     expect(second.cc).toBeUndefined();
     expect(second.reply_to).toBeUndefined();
+    expect(second.text).toContain('要約');
     expect(second.text).toContain('相談です');
     expect((await res.json() as { receiptId?: string }).receiptId).toMatch(/^COR-/);
   });

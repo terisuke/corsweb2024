@@ -1,5 +1,11 @@
 import type { Env, NormalizedInquiry } from './types';
-import { buildDeterministicSummary, canonicalizeSummaryText, isValidEmail, maskSensitiveContent } from './validate';
+import {
+  buildDeterministicSummary,
+  canonicalizeSummaryText,
+  isValidEmail,
+  maskSensitiveContent,
+  MAX_CONVERSATION_EXCERPT_LEN,
+} from './validate';
 
 // --- メール送信プロバイダ抽象化 ---
 // 既定実装は Resend API。将来 SendGrid / SES 等を足すときは EmailProvider を実装するだけ。
@@ -134,6 +140,14 @@ export function getReceiptSummaryText(inquiry: NormalizedInquiry): string {
   return parts.length ? parts.join(' / ') : '要約未生成（受付内容を担当者が確認します）';
 }
 
+/** Internal-only context. Apply a final mask at the email boundary as defense in depth. */
+export function getConversationExcerptText(inquiry: NormalizedInquiry): string {
+  const raw = typeof inquiry.conversationExcerpt === 'string' ? inquiry.conversationExcerpt : '';
+  return maskSensitiveContent(raw.replace(/\r\n?/g, '\n').trim())
+    .slice(0, MAX_CONVERSATION_EXCERPT_LEN)
+    .trim();
+}
+
 // 本文: 構造化した問い合わせ＋会話サマリ＋分類メモ。
 // PII（name/email/company/message）はこのメール本文にのみ載る。LLM には絶対に渡さない。
 export function buildBody(inquiry: NormalizedInquiry): string {
@@ -164,6 +178,15 @@ export function buildBody(inquiry: NormalizedInquiry): string {
   if (utmEntries.length) {
     lines.push('', '── UTM ──');
     for (const [k, v] of utmEntries) lines.push(`${k}: ${v}`);
+  }
+  const conversationExcerpt = getConversationExcerptText(inquiry);
+  if (conversationExcerpt) {
+    lines.push(
+      '',
+      '── 安全化会話抜粋（社内通知のみ） ──',
+      conversationExcerpt,
+      '※会話抜粋はサーバー側でマスキング・文字数制限済みです。',
+    );
   }
   lines.push('', '── AI要約（AIチャットの会話サマリ / summaryText） ──', getSummaryText(inquiry));
   lines.push(
