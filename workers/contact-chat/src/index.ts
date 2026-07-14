@@ -78,7 +78,7 @@ function logWorkerFailure(event: WorkerFailureEvent): void {
   console.error(JSON.stringify({ event }));
 }
 
-const json = (data: unknown, status = 200): Response =>
+const json = (data: unknown, status = 200, additionalHeaders: Record<string, string> = {}): Response =>
   new Response(JSON.stringify(data), {
     status,
     headers: {
@@ -87,8 +87,46 @@ const json = (data: unknown, status = 200): Response =>
       'referrer-policy': 'no-referrer',
       // 認証なしの公開エンドポイントだがキャッシュさせない（応答に分類等が含まれるため）。
       'cache-control': 'no-store',
+      ...additionalHeaders,
     },
   });
+
+const CANDIDATE_SHA_PATTERN = /^[0-9a-f]{40}$/;
+const RELEASE_ID_PATTERN = /^[A-Za-z0-9._:-]{1,100}$/;
+const WORKER_VERSION_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function healthResponse(env: Env): Response {
+  if (env.GRIFT_HANDOFF_ENABLED !== 'true') return json({ ok: true });
+
+  const candidateSha = env.CLOUDIA_CANDIDATE_SHA || '';
+  const releaseId = env.CLOUDIA_RELEASE_ID || '';
+  const revision = env.CF_VERSION_METADATA?.id || '';
+  const timestamp = env.CF_VERSION_METADATA?.timestamp || '';
+  const parsedTimestamp = Date.parse(timestamp);
+  if (
+    !CANDIDATE_SHA_PATTERN.test(candidateSha)
+    || !RELEASE_ID_PATTERN.test(releaseId)
+    || !WORKER_VERSION_PATTERN.test(revision)
+    || !Number.isFinite(parsedTimestamp)
+  ) {
+    return json({ error: 'release metadata unavailable' }, 503);
+  }
+
+  const generatedAt = new Date(parsedTimestamp).toISOString();
+  return json({
+    status: 'ok',
+    service: 'contact-chat',
+    generated_at: generatedAt,
+    candidate_sha: candidateSha,
+    revision,
+    release_id: releaseId,
+  }, 200, {
+    'x-cloudia-grift-candidate-sha': candidateSha,
+    'x-cloudia-grift-revision': revision,
+    'x-cloudia-grift-generated-at': generatedAt,
+    'x-cloudia-grift-release-id': releaseId,
+  });
+}
 
 // JSON ボディを上限つきで読む。Content-Type が JSON でない／不正JSON／過大は null。
 async function readJsonBody(req: Request): Promise<Record<string, unknown> | null> {
@@ -605,7 +643,7 @@ export default {
 
     // 死活確認（認証不要・PIIなし）。
     if (req.method === 'GET' && path === '/api/contact/health') {
-      return json({ ok: true });
+      return healthResponse(env);
     }
 
     try {

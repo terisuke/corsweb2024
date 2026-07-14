@@ -22,6 +22,9 @@ export interface Env {
   GRIFT_HANDOFF_ENABLED?: string; // 'true' のときだけ対象4 intentの同期handoffを試行する。
   GRIFT_API_ORIGIN?: string; // Grift内部APIのHTTPS origin。pathや認証情報は含めない。
   GRIFT_PUBLIC_URL_ORIGINS?: string; // browserへ返せる公開portal originのカンマ区切りallowlist。
+  CLOUDIA_RELEASE_ID?: string; // UAT release bundleの公開識別子。secretではない。
+  CLOUDIA_CANDIDATE_SHA?: string; // このWorker artifactを生成したcorswebのfull commit SHA。
+  CF_VERSION_METADATA?: { id: string; tag?: string; timestamp: string }; // Cloudflareが付与する実配信version metadata。
   // D1/Queue は本番・Previewで別バインディングを設定する。未設定時は従来の直送経路を維持。
   DB?: D1Database;
   CONTACT_NOTIFICATIONS?: Queue<NotificationMessage>;

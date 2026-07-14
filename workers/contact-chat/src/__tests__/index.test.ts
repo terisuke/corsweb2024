@@ -272,6 +272,60 @@ describe('worker.fetch — ハンドラレベル', () => {
       ENV,
     );
     expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toEqual({ ok: true });
+  });
+
+  it('handoff有効時のhealthはcorsweb candidateと実Worker versionをbody/headerで一致させる', async () => {
+    const env = {
+      ...ENV,
+      GRIFT_HANDOFF_ENABLED: 'true',
+      CLOUDIA_CANDIDATE_SHA: '1e76662e149d448babe59c4353317bf3dbdf8e13',
+      CLOUDIA_RELEASE_ID: 'cloudia-uat-20260714-r1',
+      CF_VERSION_METADATA: {
+        id: '72d7c891-dde3-4df6-9f40-d7f7ed950a77',
+        timestamp: '2026-07-14T10:59:43.055Z',
+      },
+    } as Env;
+    const res = await worker.fetch(new Request('https://cor-jp.com/api/contact/health'), env);
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(Object.keys(body).sort()).toEqual([
+      'candidate_sha', 'generated_at', 'release_id', 'revision', 'service', 'status',
+    ]);
+    expect(body).toMatchObject({
+      status: 'ok',
+      service: 'contact-chat',
+      candidate_sha: env.CLOUDIA_CANDIDATE_SHA,
+      revision: env.CF_VERSION_METADATA?.id,
+      release_id: env.CLOUDIA_RELEASE_ID,
+      generated_at: env.CF_VERSION_METADATA?.timestamp,
+    });
+    expect(res.headers.get('x-cloudia-grift-candidate-sha')).toBe(body.candidate_sha);
+    expect(res.headers.get('x-cloudia-grift-revision')).toBe(body.revision);
+    expect(res.headers.get('x-cloudia-grift-generated-at')).toBe(body.generated_at);
+    expect(res.headers.get('x-cloudia-grift-release-id')).toBe(body.release_id);
+  });
+
+  it.each([
+    ['candidate SHA', { CLOUDIA_CANDIDATE_SHA: 'short' }],
+    ['release ID', { CLOUDIA_RELEASE_ID: 'contains whitespace' }],
+    ['version metadata', { CF_VERSION_METADATA: { id: 'not-a-version', timestamp: 'invalid' } }],
+  ])('handoff有効時のhealthは不正な%sで503 fail-closed', async (_label, override) => {
+    const env = {
+      ...ENV,
+      GRIFT_HANDOFF_ENABLED: 'true',
+      CLOUDIA_CANDIDATE_SHA: '1e76662e149d448babe59c4353317bf3dbdf8e13',
+      CLOUDIA_RELEASE_ID: 'cloudia-uat-20260714-r1',
+      CF_VERSION_METADATA: {
+        id: '72d7c891-dde3-4df6-9f40-d7f7ed950a77',
+        timestamp: '2026-07-14T10:59:43.055Z',
+      },
+      ...override,
+    } as Env;
+    const res = await worker.fetch(new Request('https://cor-jp.com/api/contact/health'), env);
+    expect(res.status).toBe(503);
+    await expect(res.json()).resolves.toEqual({ error: 'release metadata unavailable' });
+    expect(res.headers.get('x-cloudia-grift-candidate-sha')).toBeNull();
   });
 
   it('JSON でない content-type は 400', async () => {

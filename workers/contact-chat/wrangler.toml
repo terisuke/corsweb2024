@@ -13,6 +13,9 @@ routes = [{ pattern = "cor-jp.com/api/contact/*", zone_name = "cor-jp.com" }]
 enabled = true
 head_sampling_rate = 1
 
+[version_metadata]
+binding = "CF_VERSION_METADATA"
+
 [triggers]
 crons = ["*/15 * * * *"]
 
@@ -35,6 +38,8 @@ TURNSTILE_ALLOWED_HOSTNAMES = "cor-jp.com,www.cor-jp.com"
 GRIFT_HANDOFF_ENABLED = "false"
 GRIFT_API_ORIGIN = ""
 GRIFT_PUBLIC_URL_ORIGINS = "https://app.griftai.org"
+CLOUDIA_RELEASE_ID = ""
+CLOUDIA_CANDIDATE_SHA = ""
 
 # D1 stores redacted session metadata and encrypted, short-lived submit data.
 [[d1_databases]]
@@ -63,6 +68,9 @@ routes = []
 enabled = true
 head_sampling_rate = 1
 
+[env.preview.version_metadata]
+binding = "CF_VERSION_METADATA"
+
 [env.preview.triggers]
 crons = ["*/15 * * * *"]
 
@@ -79,6 +87,8 @@ TURNSTILE_ALLOWED_HOSTNAMES = "cloudia-contact.pages.dev"
 GRIFT_HANDOFF_ENABLED = "false"
 GRIFT_API_ORIGIN = ""
 GRIFT_PUBLIC_URL_ORIGINS = "https://app.griftai.org"
+CLOUDIA_RELEASE_ID = ""
+CLOUDIA_CANDIDATE_SHA = ""
 
 [[env.preview.d1_databases]]
 binding = "DB"

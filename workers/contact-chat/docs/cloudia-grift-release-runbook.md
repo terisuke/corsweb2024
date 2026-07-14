@@ -183,6 +183,35 @@ deploy 後、read-only script に Preview URL を渡し、deployment / version /
 
 feature-off E2E と positive E2E を同じ「E2E済み」にまとめない。前者は安全停止、後者は実際の handoff を証明する。
 
+Previewを有効化するversionには、Griftのcommitではなく、このWorker artifactを生成した
+**corswebのfull commit SHA**と、Grift側と共有する非秘密のrelease IDを明示する。Workerの
+実配信revisionは`CF_VERSION_METADATA.id`を正本とし、ブラウザ入力や日時から推測しない。
+
+```bash
+export WORKER_CANDIDATE_SHA="$(git rev-parse HEAD)"
+export CLOUDIA_RELEASE_ID="<reviewed-release-id>"
+test "$(printf '%s' "$WORKER_CANDIDATE_SHA" | wc -c | tr -d ' ')" = 40
+
+npm exec -- wrangler deploy --env preview --dry-run \
+  --var "CLOUDIA_CANDIDATE_SHA:${WORKER_CANDIDATE_SHA}" \
+  --var "CLOUDIA_RELEASE_ID:${CLOUDIA_RELEASE_ID}" \
+  --var "GRIFT_HANDOFF_ENABLED:true"
+
+# Grift側のhealth、固定tenant、secret version、portal originが先に合格した後だけ変更する。
+npm exec -- wrangler deploy --env preview --strict \
+  --message "cloudia-grift preview enabled ${WORKER_CANDIDATE_SHA}" \
+  --var "CLOUDIA_CANDIDATE_SHA:${WORKER_CANDIDATE_SHA}" \
+  --var "CLOUDIA_RELEASE_ID:${CLOUDIA_RELEASE_ID}" \
+  --var "GRIFT_HANDOFF_ENABLED:true"
+```
+
+有効化後の`GET /api/contact/health`はexact 6-key JSON
+（`status`、`service`、`generated_at`、`candidate_sha`、`revision`、`release_id`）と、
+同値の`x-cloudia-grift-*` headerを返さなければならない。`candidate_sha`はcorsweb commit、
+`revision`は100%配信中のCloudflare Worker version IDである。metadata欠落・不正時の503、
+header/body不一致、control-planeの100% version不一致はUAT開始を停止する。feature-offでは
+後方互換の`{"ok":true}`を維持する。
+
 ### 6. Preview E2E matrix
 
 実在人物の情報を使わず、予約済み synthetic alias を使う。receipt ID、exchange code、内部 case / tenant ID は記録しない。
