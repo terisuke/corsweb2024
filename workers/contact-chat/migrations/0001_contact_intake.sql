@@ -1,5 +1,7 @@
--- Contact intake state is intentionally metadata-only. Raw transcripts and PII are
--- never written to D1; encrypted submit fields are short-lived and purged by TTL.
+-- Contact intake state is intentionally metadata-only. Raw transcripts and direct
+-- PII are never written to D1; encrypted submit fields are short-lived and purged
+-- by TTL. A later migration may add a bounded, server-masked excerpt for internal
+-- triage, but the browser transcript is never stored verbatim.
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS contact_sessions (

@@ -16,6 +16,7 @@ import {
   normalizeMessages,
   buildDeterministicSummary,
   canonicalizeSummaryText,
+  buildConversationExcerpt,
   maskMessagesForLlm,
   maskSensitiveContent,
   normalizeSource,
@@ -217,7 +218,12 @@ function resultStage(result: ChatResult): string {
   return result.structuredLead && Object.keys(result.structuredLead).length > 0 ? 'qualifying' : 'intent';
 }
 
-function startReply(mode: ChatMode, locale: ChatLocale): string {
+function startReply(mode: ChatMode, locale: ChatLocale, intent: ContactIntent | '' = ''): string {
+  if (intent === 'press-speaking-other') {
+    return locale === 'en'
+      ? 'Thanks. This is a press, speaking, or other public-outreach request. What type of opportunity (interview, article, speaking, event participation, or something else) and topic would you like to discuss?'
+      : 'ありがとうございます。取材・登壇・その他の対外相談ですね。まず、ご希望の種類（取材・記事、登壇、イベント参加など）とテーマを教えてください。';
+  }
   if (mode === 'ambassador') {
     return locale === 'en'
       ? 'Hello. I am Cloudia from Cor.株式会社 (brand: Cor.inc). This is the casual conversation mode. Please ask about our services or technology, and I can guide you to the formal inquiry flow when a concrete project comes up.'
@@ -255,7 +261,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
   // /chat 経路へ入る。外部プロバイダ障害でもヒアリング導線を止めない。
   const isStart = forceStart || body.start === true || body.event === 'intent_selected';
   if (isStart) {
-    const reply = startReply(mode, locale);
+    const reply = startReply(mode, locale, initialIntent);
     const sessionId = normalizeSessionId(body.sessionId) || newSessionId();
     const result: ChatResult = {
       reply,
@@ -282,6 +288,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
         missingFields: ['purpose'],
         classification: 'genuine',
         summary: result.summary,
+        conversationExcerpt: '',
       });
     } catch (error) {
       console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
@@ -332,6 +339,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
       missingFields: result.missingFields,
       classification: result.classification,
       summary: result.summary,
+      conversationExcerpt: buildConversationExcerpt(norm.messages),
     });
   } catch (error) {
     console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');

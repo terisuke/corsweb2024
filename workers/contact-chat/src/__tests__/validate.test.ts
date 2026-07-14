@@ -12,6 +12,7 @@ import {
   normalizeSource,
   normalizeStructuredLead,
   normalizeUtm,
+  buildConversationExcerpt,
   sanitizeLine,
   sanitizeMessage,
 } from '../validate';
@@ -107,6 +108,23 @@ describe('Vertex直前PIIマスキング', () => {
     expect(maskMessagesForLlm([{ role: 'user', content: 'user@example.com' }])).toEqual([
       { role: 'user', content: '[redacted-email]' },
     ]);
+  });
+  it('会話抜粋は役割を付け、PII/秘密をマスクして上限内に収める', () => {
+    const excerpt = buildConversationExcerpt([
+      { role: 'user', content: 'user@example.com / 090-1234-5678 / OTP 123456' },
+      { role: 'assistant', content: 'AIzaSyA123456789012345678901234567890' },
+    ]);
+    expect(excerpt).toContain('訪問者:');
+    expect(excerpt).toContain('Cloudia:');
+    expect(excerpt).not.toContain('user@example.com');
+    expect(excerpt).not.toContain('090-1234-5678');
+    expect(excerpt).not.toContain('123456');
+    expect(excerpt).not.toContain('AIzaSyA');
+    expect(excerpt.length).toBeLessThanOrEqual(6000);
+  });
+  it('会話抜粋は各ターンを短く切り詰める', () => {
+    const excerpt = buildConversationExcerpt([{ role: 'user', content: 'x'.repeat(2000) }]);
+    expect(excerpt.length).toBeLessThanOrEqual(700);
   });
 });
 

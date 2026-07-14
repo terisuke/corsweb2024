@@ -137,4 +137,6 @@ export interface NormalizedInquiry {
   source: string;
   structuredLead: StructuredLead;
   utm: Record<string, string>;
+  /** サーバー生成・マスキング済みの社内通知用会話抜粋。receiptには使用しない。 */
+  conversationExcerpt?: string;
 }

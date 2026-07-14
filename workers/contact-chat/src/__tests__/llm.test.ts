@@ -69,4 +69,22 @@ describe('mode prompt', () => {
     expect(prompt).toMatch(/Never reveal/);
     expect(prompt).toMatch(/Never request, accept, or repeat back personal contact details/);
   });
+
+  it('press intent uses an outreach-specific flow and does not invent commitments', () => {
+    const prompt = buildSystemPrompt({ mode: 'intake', locale: 'en', intent: 'press-speaking-other' });
+    expect(prompt).toContain('press, speaking, event, or other public-outreach inquiry');
+    expect(prompt).toContain('publication, outlet, organizer type');
+    expect(prompt).toContain('Do not ask about a budget unless');
+    expect(prompt).toContain('must not block handoff');
+    expect(prompt).toContain('Do not imply that the request is accepted');
+    expect(prompt).toContain('Never promise that Cor. accepts an interview');
+  });
+
+  it('press intent Japanese policy asks for public scope and deadline without generic budget pressure', () => {
+    const prompt = buildSystemPrompt({ mode: 'intake', locale: 'ja', intent: 'press-speaking-other' });
+    expect(prompt).toContain('取材・登壇・イベント参加・その他の対外相談');
+    expect(prompt).toContain('希望日または掲載締切');
+    expect(prompt).toContain('有料スポンサー、謝礼、制作費、業務発注');
+    expect(prompt).toContain('依頼を受諾したとは断定しません');
+  });
 });

@@ -9,6 +9,7 @@ import type {
   NotificationMessage,
   NotificationType,
 } from './types';
+import { MAX_CONVERSATION_EXCERPT_LEN } from './validate';
 
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SUBMISSION_TTL_SECONDS = 90 * 24 * 60 * 60;
@@ -27,6 +28,7 @@ export interface SessionState {
   missingFields: string[];
   classification: Classification;
   summary: string;
+  conversationExcerpt: string;
 }
 
 export interface StoredSubmission {
@@ -145,18 +147,24 @@ async function emailHmac(secret: string | undefined, email: string): Promise<str
 export async function upsertContactSession(env: Env, state: SessionState): Promise<void> {
   if (!env.DB) return;
   const now = nowSeconds();
+  const conversationExcerpt = await encryptText(
+    env.PII_ENCRYPTION_KEY,
+    state.conversationExcerpt.slice(0, MAX_CONVERSATION_EXCERPT_LEN),
+  );
   await env.DB.prepare(`
     INSERT INTO contact_sessions
       (session_id, intent, mode, locale, source, stage, turn_count,
-       structured_lead_json, missing_fields_json, classification, summary_text, status,
+       structured_lead_json, missing_fields_json, classification, summary_text,
+       conversation_excerpt_ciphertext, status,
        created_at, updated_at, expires_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?)
     ON CONFLICT(session_id) DO UPDATE SET
       intent=excluded.intent, mode=excluded.mode, locale=excluded.locale,
       source=excluded.source, stage=excluded.stage, turn_count=excluded.turn_count,
       structured_lead_json=excluded.structured_lead_json,
       missing_fields_json=excluded.missing_fields_json,
-      classification=excluded.classification, summary_text=excluded.summary_text, status='active',
+      classification=excluded.classification, summary_text=excluded.summary_text,
+      conversation_excerpt_ciphertext=excluded.conversation_excerpt_ciphertext, status='active',
       updated_at=excluded.updated_at, expires_at=excluded.expires_at
   `).bind(
     state.sessionId,
@@ -170,6 +178,7 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
     JSON.stringify(state.missingFields),
     state.classification,
     state.summary.slice(0, 1500),
+    conversationExcerpt,
     now,
     now,
     now + SESSION_TTL_SECONDS,
@@ -190,6 +199,27 @@ export async function createSubmission(
   const submissionId = crypto.randomUUID();
   const receiptId = newReceiptId();
   const now = nowSeconds();
+  // Copy the already encrypted session excerpt into the submission row. This
+  // avoids decrypting/re-encrypting chat content during handoff and prevents a
+  // browser from injecting an arbitrary transcript at submit time.
+  let sessionId = options.sessionId || null;
+  let conversationExcerptCiphertext = '';
+  if (sessionId) {
+    const session = await env.DB.prepare(
+      'SELECT session_id, conversation_excerpt_ciphertext FROM contact_sessions WHERE session_id = ? LIMIT 1',
+    ).bind(sessionId).first<{ session_id: string; conversation_excerpt_ciphertext?: string }>();
+    if (!session) {
+      sessionId = null;
+    } else {
+      conversationExcerptCiphertext = session.conversation_excerpt_ciphertext || '';
+    }
+  }
+  if (!conversationExcerptCiphertext) {
+    conversationExcerptCiphertext = await encryptText(
+      env.PII_ENCRYPTION_KEY,
+      (inquiry.conversationExcerpt || '').slice(0, MAX_CONVERSATION_EXCERPT_LEN),
+    );
+  }
   const pii = await Promise.all([
     encryptText(env.PII_ENCRYPTION_KEY, inquiry.name),
     encryptText(env.PII_ENCRYPTION_KEY, inquiry.email),
@@ -200,22 +230,16 @@ export async function createSubmission(
   ]);
   const [name, email, company, message, summary, emailHash] = pii;
   const outboxId = crypto.randomUUID();
-  // A submit may arrive from a stale browser tab. Keep the inquiry durable even
-  // when its optional session row has already expired rather than violating the FK.
-  let sessionId = options.sessionId || null;
-  if (sessionId) {
-    const session = await env.DB.prepare('SELECT session_id FROM contact_sessions WHERE session_id = ? LIMIT 1').bind(sessionId).first<{ session_id: string }>();
-    if (!session) sessionId = null;
-  }
   const statements = [
     env.DB.prepare(`
       INSERT INTO submission_intake
         (submission_id, idempotency_key, session_id, receipt_id,
          name_ciphertext, email_ciphertext, company_ciphertext,
-         message_ciphertext, summary_ciphertext, email_hmac, intent, source,
+         message_ciphertext, summary_ciphertext, conversation_excerpt_ciphertext,
+         email_hmac, intent, source,
          structured_lead_json, utm_json, classification, status,
          created_at, updated_at, expires_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?)
     `).bind(
       submissionId,
       options.idempotencyKey,
@@ -226,6 +250,7 @@ export async function createSubmission(
       company,
       message,
       summary,
+      conversationExcerptCiphertext,
       emailHash,
       inquiry.intent,
       inquiry.source,
@@ -276,6 +301,7 @@ interface SubmissionRow {
   company_ciphertext: string;
   message_ciphertext: string;
   summary_ciphertext: string;
+  conversation_excerpt_ciphertext: string;
   intent: ContactIntent | '';
   source: string;
   structured_lead_json: string;
@@ -293,6 +319,7 @@ export async function getSubmissionForNotification(
     SELECT o.outbox_id, o.message_type, s.submission_id, s.receipt_id,
       s.name_ciphertext, s.email_ciphertext,
       s.company_ciphertext, s.message_ciphertext, s.summary_ciphertext,
+      s.conversation_excerpt_ciphertext,
       s.intent, s.source, s.structured_lead_json, s.utm_json, s.classification
     FROM submission_intake s
     JOIN notification_outbox o ON o.submission_id = s.submission_id
@@ -300,12 +327,15 @@ export async function getSubmissionForNotification(
     LIMIT 1
   `).bind(submissionId, messageType).first<SubmissionRow>();
   if (!row) return null;
-  const [name, email, company, message, conversationSummary] = await Promise.all([
+  const [name, email, company, message, conversationSummary, conversationExcerpt] = await Promise.all([
     decryptText(env.PII_ENCRYPTION_KEY, row.name_ciphertext),
     decryptText(env.PII_ENCRYPTION_KEY, row.email_ciphertext),
     decryptText(env.PII_ENCRYPTION_KEY, row.company_ciphertext),
     decryptText(env.PII_ENCRYPTION_KEY, row.message_ciphertext),
     decryptText(env.PII_ENCRYPTION_KEY, row.summary_ciphertext),
+    messageType === 'internal' && row.conversation_excerpt_ciphertext
+      ? decryptText(env.PII_ENCRYPTION_KEY, row.conversation_excerpt_ciphertext)
+      : Promise.resolve(''),
   ]);
   let structuredLead: StructuredLead = {};
   let utm: Record<string, string> = {};
@@ -328,6 +358,7 @@ export async function getSubmissionForNotification(
       source: row.source,
       structuredLead,
       utm,
+      ...(messageType === 'internal' && conversationExcerpt ? { conversationExcerpt } : {}),
     },
   };
 }

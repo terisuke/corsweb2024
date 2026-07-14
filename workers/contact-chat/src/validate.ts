@@ -84,9 +84,11 @@ const PII_PHONE_RE = /(?<!\d)(?:\+?\d{1,3}[ -]?)?(?:0\d{1,4}[-ー－ ]?)?\d{2,4}
 const PII_POSTAL_RE = /(?:〒\s*)?\d{3}[-ー－ ]?\d{4}/g;
 const PII_CARD_RE = /(?<!\d)(?:\d[ -]?){13,19}(?!\d)/g;
 const PII_OTP_RE = /(?:otp|one[- ]time|認証コード|確認コード|ワンタイム)[^\d]{0,20}\d{4,8}/gi;
+const SECRET_TOKEN_RE = /(?:AIza[0-9A-Za-z_-]{20,}|(?:sk|ghp|xox[baprs]?)-[A-Za-z0-9_-]{16,}|-----BEGIN(?: [A-Z]+)* PRIVATE KEY-----)/g;
 
 export function maskSensitiveContent(content: string): string {
   return content
+    .replace(SECRET_TOKEN_RE, '[redacted-secret]')
     .replace(PII_EMAIL_RE, '[redacted-email]')
     .replace(PII_OTP_RE, '[redacted-code]')
     .replace(PII_POSTAL_RE, '[redacted-postal]')
@@ -99,6 +101,28 @@ export function maskMessagesForLlm(messages: ChatMessage[]): ChatMessage[] {
     role: message.role,
     content: maskSensitiveContent(message.content),
   }));
+}
+
+// Internal notifications may include a short conversation context, but never the
+// browser transcript verbatim. Build it from already validated turns, mask common
+// PII/credentials, and bound both each turn and the complete excerpt.
+export const MAX_CONVERSATION_TURN_LEN = 600;
+export const MAX_CONVERSATION_EXCERPT_LEN = 6000;
+
+export function buildConversationExcerpt(messages: ChatMessage[]): string {
+  let excerpt = '';
+  for (const message of messages.slice(-MAX_MESSAGES)) {
+    const content = sanitizeLine(maskSensitiveContent(message.content), MAX_CONVERSATION_TURN_LEN);
+    if (!content) continue;
+    const label = message.role === 'user' ? '訪問者' : 'Cloudia';
+    const line = `${label}: ${content}`;
+    const prefix = excerpt ? '\n' : '';
+    const remaining = MAX_CONVERSATION_EXCERPT_LEN - excerpt.length - prefix.length;
+    if (remaining <= 0) break;
+    excerpt += prefix + line.slice(0, remaining);
+    if (line.length > remaining) break;
+  }
+  return excerpt;
 }
 
 // --- /submit 問い合わせの検証 ---

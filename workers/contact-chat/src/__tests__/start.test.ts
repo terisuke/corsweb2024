@@ -44,4 +44,22 @@ describe('chat start contract', () => {
     expect(body.reply).not.toContain('全部知っとう');
     expect(body.missingFields).toEqual(['purpose']);
   });
+
+  it.each([
+    ['ja', '取材・登壇・その他', '取材・記事、登壇、イベント参加'],
+    ['en', 'press, speaking, or other', 'interview, article, speaking'],
+  ] as const)('%s press intent starts with an outreach-specific question', async (locale, intentLabel, typeLabel) => {
+    const response = await worker.fetch(new Request('https://cor-jp.com/api/contact/chat/start', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ start: true, mode: 'intake', locale, intent: 'press-speaking-other' }),
+    }), env);
+    expect(response.status).toBe(200);
+    const body = await response.json() as Record<string, unknown>;
+    expect(body.reply).toContain(intentLabel);
+    expect(body.reply).toContain(typeLabel);
+    expect(body.intent).toBe('press-speaking-other');
+    expect(body.readyForContact).toBe(false);
+    expect(body.missingFields).toEqual(['purpose']);
+  });
 });
