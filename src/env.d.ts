@@ -14,6 +14,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_GCAL_PARAMS?: string;
   readonly PUBLIC_CLOUDIA_LAUNCHER_ENABLED?: string;
   readonly PUBLIC_CLOUDIA_CONTACT_PRIMARY_ENABLED?: string;
+  readonly PUBLIC_GRIFT_HANDOFF_ALLOWED_ORIGINS?: string;
 }
 
 declare global {
