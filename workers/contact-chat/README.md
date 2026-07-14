@@ -24,7 +24,7 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
   - `locale`: `ja` または `en`。未指定は `ja`。不正値は400。
 - レスポンス: `{ "reply": string, "summary": string, "classification": "genuine"|"sales"|"spam", "readyForContact": boolean, "intent"?: string, "structuredLead"?: object }`
   - `summary` はPIIを含まない短い正本要約。LLM出力が不正・PII含有・過大な場合は決定的fallbackへ置換する。
-- メッセージ数は最大20件、各2000字まで。制御文字は除去。**PIIは要求も保存もしない（会話のみ）。**
+- メッセージ数は最大20件、各2000字まで。制御文字は除去。LLMへはPII/秘密をマスクして送る。会話は生のまま保存せず、社内通知用にサーバー生成の安全化抜粋（最大6,000文字、1ターン600文字）だけを暗号化・短期保存する。
 - **Turnstile は検証しない。** Turnstile トークンは単回使用のため、複数ターン会話では2ターン目以降に
   新しいトークンが無く 403 になる。`/chat` のコスト濫用対策は同一オリジン＋IPレート制限＋
   **必須の Cloudflare WAF レート制限ルール（`cor-jp.com/api/contact/*`）** で担保する（下記チェックリスト参照）。
@@ -37,7 +37,7 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
   - `website` は **ハニーポット**。人間は空のまま。値が入っていれば bot とみなし、200を返して握り潰す（送信しない）。
 - レスポンス: `{ "ok": true, "receiptId": string, "status": "queued"|"sent", "duplicate"?: boolean }`
 - 検証: name 必須 / email 形式チェック / message 必須 / 各長さ上限 / サニタイズ。
-- **PII（name/email/company/message）はメール本文にのみ載り、LLM には一切渡らない。**
+- **PII（name/email/company/message）はメール本文にのみ載り、LLM には一切渡さない。** 会話抜粋はinternal通知だけに載せ、receiptには載せない。
 - `RESEND_API_KEY` 未設定なら **503（fail closed）**。本物の問い合わせをサイレントに握り潰さない。
 
 ## 環境変数・シークレット
@@ -62,7 +62,7 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
 
 ### 通知Outbox
 
-`/submit` はD1に `internal`（社内通知）と `receipt`（問い合わせ者本人向け受付確認）の2行を作り、Queueへ種別だけを送る。Queue payloadに氏名・メール・本文は含めない。各行にはResendの `provider_message_id` と `delivery_status`（`queued` → `sending` → `accepted`、失敗時 `failed`）を保存する。`accepted` はResend API受付済みを意味し、最終配信確認にはResendの配信イベント連携が必要。
+`/submit` はD1に `internal`（社内通知）と `receipt`（問い合わせ者本人向け受付確認）の2行を作り、Queueへ種別だけを送る。Queue payloadに氏名・メール・本文・会話抜粋は含めない。D1ではセッションの暗号化済み安全化抜粋をsubmissionへ引き継ぎ、Queue consumerがinternal通知時だけ復号する。receiptでは復号せず、メールにも載せない。各行にはResendの `provider_message_id` と `delivery_status`（`queued` → `sending` → `accepted`、失敗時 `failed`）を保存する。`accepted` はResend API受付済みを意味し、最終配信確認にはResendの配信イベント連携が必要。
 
 ## デプロイ手順（初回）
 
