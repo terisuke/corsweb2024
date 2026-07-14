@@ -5,6 +5,8 @@ const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 const consent = t.contactConsent;
 const privacyHref = getLocalizedUrl('/privacy', currentLocale);
+const incomingIntent = Astro.url.searchParams.get('intent') || '';
+const incomingSource = Astro.url.searchParams.get('source') || 'corsweb-contact-form';
 ---
 
 <section class="py-16 sm:py-20">
@@ -30,6 +32,9 @@ const privacyHref = getLocalizedUrl('/privacy', currentLocale);
         method="post"
         class="mt-3 flex flex-col gap-y-6"
       >
+        <input type="hidden" name="intent" value={incomingIntent} data-contact-query-field />
+        <input type="hidden" name="source" value={incomingSource} data-contact-query-field />
+        <input type="hidden" name="locale" value={currentLocale} data-contact-query-field />
         <!-- Full name input -->
         <div>
           <label for="your-name" class="sr-only">{t.contact.form.fields.name}</label>
@@ -156,6 +161,12 @@ const privacyHref = getLocalizedUrl('/privacy', currentLocale);
   //   (2) onSubmit でも安全網として再チェック
   // の二段構えにする。reCAPTCHA が解決し かつ 同意済みのときのみ form.submit() に到達する。
   (function () {
+    var query = new URLSearchParams(window.location.search);
+    document.querySelectorAll("[data-contact-query-field]").forEach(function (field) {
+      var name = field.getAttribute("name");
+      if (name && query.has(name)) field.value = query.get(name) || "";
+    });
+
     function isConsented() {
       var cb = document.getElementById("privacy-consent");
       return !!(cb && cb.checked);
