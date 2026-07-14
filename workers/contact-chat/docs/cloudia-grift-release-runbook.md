@@ -2,7 +2,7 @@
 
 対象は Cloudflare Worker `cor-contact-chat` と `cor-contact-chat-preview` の Cloudia–Grift handoff だけである。通常のメール受付、D1、通知 Queue、Turnstile、WAF を壊さず、Preview から production へ段階的に昇格する。
 
-この文書の「変更あり」コマンドは、承認されたリリース時間帯に担当者が実行する手順である。read-only 監査では実行しない。secret 値、Authorization header、PII、portal token、内部 tenant ID、D1 のデータ行、Queue message body を画面・ログ・Issue・PR に出してはならない。
+この文書の「変更あり」コマンドは、承認されたリリース時間帯に担当者が実行する手順である。read-only 監査では実行しない。secret 値、Authorization header、PII、exchange code、内部 tenant ID、D1 のデータ行、Queue message body を画面・ログ・Issue・PR に出してはならない。
 
 ## 絶対条件
 
@@ -40,7 +40,7 @@
 | D1 0005                   | pending、列なし                         | pending、列なし                         |
 | handoff secret            | missing                                 | missing                                 |
 | Turnstile secret          | missing                                 | missing                                 |
-| deployed Turnstile vars   | absent（sourceはrequired=false）         | absent（sourceはrequired=false）         |
+| deployed Turnstile vars   | absent（sourceはrequired=false）        | absent（sourceはrequired=false）        |
 | Vertex / Resend secrets   | names present                           | names present                           |
 | Anthropic rollback secret | missing                                 | missing                                 |
 | Queue / DLQ               | 2つとも存在                             | 2つとも存在                             |
@@ -178,28 +178,31 @@ deploy 後、read-only script に Preview URL を渡し、deployment / version /
 3. **Grift staging だけ ready**: Worker は false のまま、Grift staging の tenant固定、route-scoped Bearer、intake endpoint、public URL を Grift の integration test で確認する。誤 token は 401/403、正 token は Cor tenant にだけ作成する。
 4. **Grift staging を true**: Grift 側だけ `CLOUDIA_HANDOFF_ENABLED=true` にする。Worker false のため public traffic からの handoff はまだ発生しない。
 5. **Worker Preview を true**: 承認済み release change で Preview の `GRIFT_HANDOFF_ENABLED=true` にして dry-run 後に deploy する。
-6. **positive browser E2E**: 4 intent を synthetic data で実行し、`ready`、許可 origin、正確な `/chat/portal/<opaque-token>`、24時間以内 expiry、Grift portal 継続を確認する。
+6. **positive browser E2E**: 4 intent を synthetic data で実行し、`ready`、許可済み exact HTTPS origin、正確な `/chat/portal#exchange_code=<43 canonical base64url characters>`、未来かつ発行から最大5分のexchange expiry、Grift portal 継続を確認する。case / case-bound share link 自体の24時間契約をexchange codeのTTLとして扱わない。
 7. 1件でも失敗したら Worker を先に false へ戻し、その後 Grift staging を false に戻す。
 
 feature-off E2E と positive E2E を同じ「E2E済み」にまとめない。前者は安全停止、後者は実際の handoff を証明する。
 
 ### 6. Preview E2E matrix
 
-実在人物の情報を使わず、予約済み synthetic alias を使う。receipt ID、portal token、内部 case / tenant ID は記録しない。
+実在人物の情報を使わず、予約済み synthetic alias を使う。receipt ID、exchange code、内部 case / tenant ID は記録しない。
 
-| ケース                                                               | 期待                                                                           |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| 4つの対象 intent、genuine、active D1 session、確認済み要約、同意あり | `handoff.status=ready`、同一 Cor tenant、同じ idempotency key で case 増加なし |
-| 同意なし                                                             | `handoff` なし、メール受付継続                                                 |
-| sessionなし / intent不一致 / sales / spam                            | `fallback` または非handoff、Grift caseなし                                     |
-| feature off / auth不一致 / Grift 4xx・5xx・timeout / URL契約違反     | HTTP 200 の `fallback`、メール・Queue 継続                                     |
-| 同じ idempotency key、同じ payload                                   | duplicate replay、case増加なし                                                 |
-| 同じ idempotency key、異なる payload                                 | 409、Grift未呼出し                                                             |
-| Turnstile success＋exact `contact-submit`＋allowlisted hostname＋fresh timestamp | `/submit` 成功。メール/Queue完了後だけGrift判定へ進む                   |
-| Turnstile token/secret欠落、失敗、action/hostname不一致               | `/submit` 拒否。D1・Queue・メール・Griftへ進まない                              |
-| 2049文字、malformed/HTTP error/8秒timeout                             | 400または503でfail closed。token/secret/IPをログへ出さない                     |
-| 300秒超過・同じtoken再利用（`timeout-or-duplicate`）                  | `/submit` 拒否。widgetをresetし、送信ごとに新tokenを発行                        |
-| Queue consumer 一時失敗                                              | retry 後に送信、上限超過時は DLQ。本文は見ない                                 |
+| ケース                                                                           | 期待                                                                                                                  |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 4つの対象 intent、genuine、active D1 session、確認済み要約、同意あり             | `handoff.status=ready`、同一 Cor tenant、同じ idempotency key で case 増加なし                                        |
+| ready browser response                                                           | URL credentialは単一fragmentのexchange codeだけ。内部submission/case/tenant ID、share-link bearer、session cookieなし |
+| path credential / query / 未知・追加fragment / 非canonical code / 5分超expiry    | `fallback`、browser遷移なし、内部ID・credential非公開                                                                 |
+| session missing / expired / ID不一致 / read error / 保存直前race                 | browser summary・consent・session ID・excerptを破棄。決定的fallbackを保存・両通知、Grift未呼出し                      |
+| 同意なし                                                                         | `handoff` なし、メール受付継続                                                                                        |
+| sessionなし / intent不一致 / sales / spam                                        | `fallback` または非handoff、Grift caseなし                                                                            |
+| feature off / auth不一致 / Grift 4xx・5xx・timeout / URL契約違反                 | HTTP 200 の `fallback`、メール・Queue 継続                                                                            |
+| 同じ idempotency key、同じ payload                                               | duplicate replay、case増加なし                                                                                        |
+| 同じ idempotency key、異なる payload                                             | 409、Grift未呼出し                                                                                                    |
+| Turnstile success＋exact `contact-submit`＋allowlisted hostname＋fresh timestamp | `/submit` 成功。メール/Queue完了後だけGrift判定へ進む                                                                 |
+| Turnstile token/secret欠落、失敗、action/hostname不一致                          | `/submit` 拒否。D1・Queue・メール・Griftへ進まない                                                                    |
+| 2049文字、malformed/HTTP error/8秒timeout                                        | 400または503でfail closed。token/secret/IPをログへ出さない                                                            |
+| 300秒超過・同じtoken再利用（`timeout-or-duplicate`）                             | `/submit` 拒否。widgetをresetし、送信ごとに新tokenを発行                                                              |
+| Queue consumer 一時失敗                                                          | retry 後に送信、上限超過時は DLQ。本文は見ない                                                                        |
 
 ## production の明示ゲート
 
@@ -230,22 +233,23 @@ feature-off E2E と positive E2E を同じ「E2E済み」にまとめない。�
 
 - production `GRIFT_API_ORIGIN` は Grift internal API の plain HTTPS origin だけである。
 - `GRIFT_PUBLIC_URL_ORIGINS` は承認済み public portal origin と一致する。現契約では `https://app.griftai.org`。
-- E2E の `chat_url` は allowlist origin、exact `/chat/portal/<safe-token>`、query / fragment / userinfo なし、expiry は未来かつ24時間以内である。
-- URL 全体や opaque token を証跡へ貼らず、origin / path-contract / TTL の PASS だけを記録する。
+- E2E の `chat_url` は allowlist上のexact HTTPS origin、exact path `/chat/portal`、queryなし、fragmentは単一の`exchange_code=<43 canonical base64url characters>`だけである。userinfo、明示port、path credential、未知・追加fragment parameter、percent-encodingを拒否し、expiryは未来かつ発行から最大5分である。
+- case / case-bound share linkの24時間契約と、一回限りexchange codeの最大5分を別項目として検証する。24時間のcase/share-link expiryをbrowser handoffの`expiresAt`へ流用しない。
+- browser responseは`handoff.status`、交換URL、交換期限だけを公開し、内部submission / case / tenant ID、share-link bearer、session cookieを含めない。URL全体やexchange codeを証跡へ貼らず、origin / path / fragment-shape / TTL / browser-field allowlistのPASSだけを記録する。
 
 ### Cor tenant / intake link
 
 - Grift `CLOUDIA_HANDOFF_TENANT_ID` が Cor tenant に固定され、request body の tenant 値を受理しない。
 - Cloudia route token は intake endpoint 以外の internal API を操作できない。
-- 作成された intake / case / portal session は Cor tenant から参照でき、別 tenant から読めない。
-- 同一 payload replay は同一 submission / case / portal session を返し、異なる payload は 409 になる。
+- 作成された intake / case / case-bound share link は Cor tenant から参照でき、別 tenant から読めない。share link bearerはbrowser URLへ出さない。
+- 同一 payload replay は同一 submission / case / case-bound share link を再利用する。未消費exchange codeは同じcodeと期限、消費済み・失効済みcodeは同じcase/share link用の新generationを返し、異なるpayloadは409になる。
 - Grift portal で追加ヒアリングと概算確認へ継続できる。
 
 ### Nagi UAT
 
 - Preview の対象 deployment / version を固定して Nagi が実ブラウザで確認する。
 - 4 intent、要約編集後の同意解除・再確認、Turnstile、ready 遷移、fallback 表示、メール受付継続を確認する。
-- screenshot は氏名、メール、本文、receipt ID、portal token、内部 ID をマスクする。
+- screenshot は氏名、メール、本文、receipt ID、exchange code、内部 ID をマスクする。
 - 証跡には UAT 実施者、日時、environment、deployment ID、version ID、各 case の PASS / BLOCK だけを残す。
 - Nagi の明示 sign-off がない、または sign-off 後に version が変わった場合は production gate を閉じる。
 
@@ -307,17 +311,17 @@ health、deployment/version、D1、Queue/DLQ、secret names を read-only script
 
 ## fail-closed / feature-off の判定
 
-| 異常                                                                        | 外向き挙動                         | リリース判断                                              |
-| --------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------- |
-| Resend 未設定、D1保存失敗、Queue未設定/登録失敗                             | `/submit` を 5xx、成功を装わない   | fail closed、即停止                                       |
+| 異常                                                                             | 外向き挙動                         | リリース判断                                              |
+| -------------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------- |
+| Resend 未設定、D1保存失敗、Queue未設定/登録失敗                                  | `/submit` を 5xx、成功を装わない   | fail closed、即停止                                       |
 | `TURNSTILE_REQUIRED=true`でsecret不在 / 設定不正 / Siteverify timeout・malformed | `/submit`を503、後続処理なし       | fail closed、原因解消まで公開・enable禁止                 |
-| token欠落・2049文字・invalid・expired・duplicate                             | `/submit`を400、後続処理なし       | widget reset後のfresh tokenだけ再試行                     |
-| action / hostname不一致                                                      | `/submit`を403、後続処理なし       | frontend/widget/config parityを復旧するまで停止            |
-| `TURNSTILE_REQUIRED=false`                                                   | secret不在時は互換skip             | code-only移行用。production readinessはBLOCK              |
-| Grift flag false、config/secret不足、auth/network/4xx/5xx/timeout、不正応答 | メール受付を維持し `fallback`      | handoff feature-off、原因解消まで再enable禁止             |
-| public URL origin/path/expiry/submission相関違反                            | `fallback`、URL非公開              | security incident として停止                              |
-| Queue retry 増加 / DLQ backlog                                              | handoffとは独立して通知遅延        | Worker false、通知復旧を優先                              |
-| WAF誤検知                                                                   | `/chat` / `/submit` が edge で拒否 | ruleを安全な前状態へ戻す。Worker rollbackだけでは直らない |
+| token欠落・2049文字・invalid・expired・duplicate                                 | `/submit`を400、後続処理なし       | widget reset後のfresh tokenだけ再試行                     |
+| action / hostname不一致                                                          | `/submit`を403、後続処理なし       | frontend/widget/config parityを復旧するまで停止           |
+| `TURNSTILE_REQUIRED=false`                                                       | secret不在時は互換skip             | code-only移行用。production readinessはBLOCK              |
+| Grift flag false、config/secret不足、auth/network/4xx/5xx/timeout、不正応答      | メール受付を維持し `fallback`      | handoff feature-off、原因解消まで再enable禁止             |
+| public URL origin/path/expiry/submission相関違反                                 | `fallback`、URL非公開              | security incident として停止                              |
+| Queue retry 増加 / DLQ backlog                                                   | handoffとは独立して通知遅延        | Worker false、通知復旧を優先                              |
+| WAF誤検知                                                                        | `/chat` / `/submit` が edge で拒否 | ruleを安全な前状態へ戻す。Worker rollbackだけでは直らない |
 
 ## rollback
 

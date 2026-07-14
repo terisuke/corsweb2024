@@ -614,7 +614,7 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect((await res.json() as { receiptId?: string }).receiptId).toMatch(/^COR-/);
   });
 
-  it('submit: D1 sessionのstructuredLeadは正本にするがbody summaryは上書きしない', async () => {
+  it('submit: 同意なしでもD1 sessionの要約・routing・structuredLeadを正本にする', async () => {
     const calls: Array<{ sql: string; bindings: unknown[] }> = [];
     const trustedLead = {
       purpose: '社内AI基盤のPoC',
@@ -667,6 +667,8 @@ describe('worker.fetch — ハンドラレベル', () => {
       name: '太郎',
       email: 'taro@example.com',
       message: '相談です',
+      intent: 'press-speaking-other',
+      source: 'browser-forged-source',
       summaryText: 'browser confirmed summary',
       structuredLead: { discoverySource: 'browser', contactReason: 'forged' },
     }, { 'cf-connecting-ip': '198.51.100.21' }), env);
@@ -674,8 +676,11 @@ describe('worker.fetch — ハンドラレベル', () => {
     const insert = calls.find((call) => call.sql.includes('INSERT INTO submission_intake'));
     expect(insert).toBeDefined();
     expect(JSON.parse(String(insert?.bindings[14]))).toEqual(trustedLead);
+    expect(insert?.bindings[12]).toBe('contract-dev');
+    expect(insert?.bindings[13]).toBe('cloudia');
+    expect(insert?.bindings[16]).toBe('genuine');
     await expect(decryptText('storage-secret', String(insert?.bindings[9])))
-      .resolves.toBe('browser confirmed summary');
+      .resolves.toBe('server summary');
     expect(queueSend).toHaveBeenCalledTimes(2);
   });
 });

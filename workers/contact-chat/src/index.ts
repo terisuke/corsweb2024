@@ -42,6 +42,8 @@ import {
   createSubmission,
   getSubmissionForNotification,
   getTrustedContactSession,
+  applyTrustedContactSession,
+  applyUntrustedContactSessionFallback,
   markOutboxFailed,
   markOutboxSent,
   newSessionId,
@@ -481,9 +483,10 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
     return json({ error: emailProvider.error }, emailProvider.status);
   }
 
-  // The exact visitor-confirmed summaryText.text is canonical for D1, both
-  // emails, and Grift. Active D1 state is authoritative only for routing,
-  // locale/classification and structured lead fields; it never replaces it.
+  // Browser content is normalized before comparison, but an active D1 contact
+  // session remains authoritative for routing, lead fields, and summary text.
+  // This keeps encrypted storage, both notification paths, and Grift on one
+  // server-confirmed structured summary.
   let inquiry: NormalizedInquiry = {
     ...norm.inquiry,
     ...(confirmedSummaryText ? {
@@ -492,6 +495,9 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
       summaryConfirmed: true as const,
     } : {}),
   };
+  const handoffRequested = handoffConsent !== null
+    && (AUTO_HANDOFF_INTENTS as readonly string[]).includes(inquiry.intent);
+  let effectiveHandoffConsent = handoffConsent;
   let trustedSession: TrustedContactSession | null = null;
   if (env.DB) {
     const sessionId = normalizeSessionId(body.sessionId);
@@ -502,11 +508,21 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
       logWorkerFailure('contact_chat_session_restore_failed');
     }
     if (trustedSession) {
-      inquiry = {
-        ...inquiry,
-        classification: trustedSession.classification,
-        structuredLead: trustedSession.structuredLead,
-      };
+      if (confirmedSummaryText !== null && confirmedSummaryText !== trustedSession.summary) {
+        return json({
+          error: '確認済み要約が現在のセッション内容と一致しません。画面を更新して再確認してください',
+          code: 'CONTACT_SESSION_SUMMARY_MISMATCH',
+        }, 409);
+      }
+      inquiry = applyTrustedContactSession(inquiry, trustedSession, handoffConsent !== null);
+    } else {
+      // Browser summary text is authoritative only while its active D1 session
+      // can be restored, regardless of whether the consent envelope itself was
+      // valid. Email/queue acceptance continues with a deterministic structured
+      // fallback, but consent and transcript are removed so neither storage nor
+      // Grift can treat browser text as trusted.
+      inquiry = applyUntrustedContactSessionFallback(inquiry);
+      effectiveHandoffConsent = null;
     }
   }
 
@@ -520,7 +536,7 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
         idempotencyKey,
         sessionId: trustedSession?.sessionId || null,
         trustedSession,
-        handoffConsent,
+        handoffConsent: effectiveHandoffConsent,
       });
     } catch (error) {
       if (error instanceof SubmissionConflictError) {
@@ -546,12 +562,14 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
       logWorkerFailure('contact_chat_notification_enqueue_failed');
       return json({ error: 'お問い合わせをキューへ登録できません。時間をおいて再試行してください' }, 503);
     }
-    const handoff = await safeGriftHandoff(env, {
-      submissionId: created.submissionId,
-      inquiry,
-      session: trustedSession,
-      consent: created.handoffConsent,
-    });
+    const handoff: BrowserHandoff | null = !created.handoffConsent
+      ? (handoffRequested ? { status: 'fallback' } : null)
+      : await safeGriftHandoff(env, {
+          submissionId: created.submissionId,
+          inquiry,
+          session: trustedSession,
+          consent: created.handoffConsent,
+        });
     return json({
       ok: true,
       receiptId: created.receiptId,

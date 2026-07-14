@@ -7,14 +7,18 @@ export type { HandoffConsent } from './types';
 
 export const GRIFT_TIMEOUT_MS = 8_000;
 export const GRIFT_MAX_RESPONSE_BYTES = 32 * 1024;
-export const GRIFT_MAX_PORTAL_TTL_MS = 24 * 60 * 60 * 1000;
+export const GRIFT_MAX_PORTAL_TTL_MS = 5 * 60 * 1000;
 
 const GRIFT_INTAKE_PATH = '/v1/internal/cloudia/intake-sessions';
 const HANDOFF_SCHEMA_VERSION = 'cloudia-grift-handoff.v1';
 const CONSENT_VERSION = 'cloudia-grift-v1';
 const MAX_URL_LENGTH = 2_048;
 const SAFE_OPAQUE_ID = /^[A-Za-z0-9._:-]{1,256}$/;
-const SAFE_PORTAL_PATH = /^\/chat\/portal\/[A-Za-z0-9._~-]{8,512}$/;
+const GRIFT_PORTAL_PATH = '/chat/portal';
+const GRIFT_EXCHANGE_FRAGMENT = /^#exchange_code=([A-Za-z0-9_-]{43})$/;
+// A canonical no-padding base64url encoding of 32 bytes has 43 characters;
+// its final character carries four data bits and two zero padding bits.
+const GRIFT_32_BYTE_BASE64URL = /^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$/;
 
 export type BrowserHandoff =
   | { status: 'ready'; url: string; expiresAt: string }
@@ -151,8 +155,17 @@ function parseAllowedOrigins(raw: string | undefined): Set<string> | null {
   if (values.length < 1 || values.length > 16) return null;
   const origins = new Set<string>();
   for (const value of values) {
+    if (value.includes('*')) return null;
     const origin = parseHttpsOrigin(value);
-    if (!origin) return null;
+    let hasExplicitPort = false;
+    try {
+      hasExplicitPort = Boolean(new URL(value).port);
+    } catch {
+      return null;
+    }
+    // Public origins are exact configuration values. Equality rejects a
+    // trailing slash, explicit default port, path aliases, and normalization.
+    if (!origin || hasExplicitPort || value !== origin) return null;
     origins.add(origin);
   }
   return origins;
@@ -190,9 +203,9 @@ function buildPayload(input: GriftHandoffInput): Record<string, unknown> {
     },
     inquiry: {
       message: input.inquiry.message,
-      // The visitor-confirmed summaryText.text is the single canonical summary.
-      // D1 session state remains authoritative only for routing and lead fields.
-      summary: input.inquiry.summaryText,
+      // Use the D1-restored session value directly. The inquiry copy is checked
+      // below as defense in depth, but it is never the authority for handoff.
+      summary: session.summary,
       structured_lead: buildStructuredLead(session.structuredLead),
     },
     consent: {
@@ -288,14 +301,18 @@ function parseSuccessResponse(
       portalUrl.protocol !== 'https:'
       || portalUrl.username
       || portalUrl.password
+      || portalUrl.port
       || portalUrl.search
-      || portalUrl.hash
       || !allowedOrigins.has(portalUrl.origin)
-      || !SAFE_PORTAL_PATH.test(portalUrl.pathname)
+      || portalUrl.pathname !== GRIFT_PORTAL_PATH
     ) {
       return 'url_not_allowed';
     }
-    return { status: 'ready', url: portalUrl.toString(), expiresAt };
+    const fragment = GRIFT_EXCHANGE_FRAGMENT.exec(portalUrl.hash);
+    if (!fragment || !GRIFT_32_BYTE_BASE64URL.test(fragment[1])) return 'url_not_allowed';
+    const canonical = `${portalUrl.origin}${GRIFT_PORTAL_PATH}#exchange_code=${fragment[1]}`;
+    if (value.chat_url !== canonical) return 'url_not_allowed';
+    return { status: 'ready', url: value.chat_url, expiresAt };
   } catch {
     return 'response_invalid';
   }
@@ -311,8 +328,10 @@ export async function handoffToGrift(env: Env, input: GriftHandoffInput): Promis
     || !(AUTO_HANDOFF_INTENTS as readonly string[]).includes(input.session.intent)
     || input.session.intent !== input.inquiry.intent
     || input.session.classification !== 'genuine'
+    || !input.session.summary
     || !input.inquiry.summaryText
     || input.inquiry.summaryText !== input.inquiry.conversationSummary
+    || input.inquiry.summaryText !== input.session.summary
   ) {
     return fallback();
   }

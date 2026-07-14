@@ -67,6 +67,54 @@ export interface CreateSubmissionResult {
   handoffConsent: HandoffConsent | null;
 }
 
+/**
+ * Restore every server-owned contact-session field before persistence or
+ * handoff. Browser values are useful only for validating that the visitor saw
+ * the current session state; they must never replace the D1-confirmed summary.
+ */
+export function applyTrustedContactSession(
+  inquiry: NormalizedInquiry,
+  session: TrustedContactSession,
+  summaryConfirmed = false,
+): NormalizedInquiry {
+  return {
+    ...inquiry,
+    intent: session.intent,
+    source: session.source,
+    classification: session.classification,
+    structuredLead: session.structuredLead,
+    summaryText: session.summary,
+    conversationSummary: session.summary,
+    ...(summaryConfirmed ? { summaryConfirmed: true as const } : {}),
+  };
+}
+
+/**
+ * Fail-safe for any submit request whose D1 session cannot be restored. Keep
+ * only the already-normalized intake fields, derive a stable non-conversation
+ * summary, and remove every marker or excerpt that could make browser content
+ * look server-confirmed.
+ */
+export function applyUntrustedContactSessionFallback(
+  inquiry: NormalizedInquiry,
+): NormalizedInquiry {
+  const {
+    summaryConfirmed: _summaryConfirmed,
+    conversationExcerpt: _conversationExcerpt,
+    ...normalizedFields
+  } = inquiry;
+  const fallbackSummary = canonicalizeSummaryText(buildDeterministicSummary({
+    classification: normalizedFields.classification,
+    intent: normalizedFields.intent,
+    structuredLead: normalizedFields.structuredLead,
+  })) || '要約未生成（受付内容を担当者が確認します）';
+  return {
+    ...normalizedFields,
+    summaryText: fallbackSummary,
+    conversationSummary: fallbackSummary,
+  };
+}
+
 export class SubmissionConflictError extends Error {
   readonly code = 'IDEMPOTENCY_PAYLOAD_CONFLICT';
 
@@ -414,24 +462,39 @@ export async function createSubmission(
     ? (options.trustedSession ?? null)
     : null;
   let sessionId = trustedSession?.sessionId || null;
+  let effectiveHandoffConsent = options.handoffConsent || null;
   let conversationExcerptCiphertext = '';
   if (sessionId) {
-    const session = await env.DB.prepare(
-      "SELECT session_id, conversation_excerpt_ciphertext FROM contact_sessions WHERE session_id = ? AND status = 'active' AND expires_at > ? LIMIT 1",
-    ).bind(sessionId, now).first<{ session_id: string; conversation_excerpt_ciphertext?: string }>();
-    if (!session) {
+    let session: { session_id: string; conversation_excerpt_ciphertext?: string } | null = null;
+    try {
+      session = await env.DB.prepare(
+        "SELECT session_id, conversation_excerpt_ciphertext FROM contact_sessions WHERE session_id = ? AND status = 'active' AND expires_at > ? LIMIT 1",
+      ).bind(sessionId, now).first<{ session_id: string; conversation_excerpt_ciphertext?: string }>();
+    } catch {
+      // Losing the session read must not lose the contact request. Continue with
+      // the same deterministic no-consent fallback used for missing/expired
+      // rows; subsequent D1 writes still fail closed if storage itself is down.
+    }
+    if (!session || session.session_id !== sessionId) {
       sessionId = null;
       trustedSession = null;
+      effectiveHandoffConsent = null;
     } else {
       conversationExcerptCiphertext = session.conversation_excerpt_ciphertext || '';
     }
   }
+  const authoritativeInquiry = trustedSession
+    ? applyTrustedContactSession(inquiry, trustedSession, inquiry.summaryConfirmed === true)
+    : applyUntrustedContactSessionFallback(inquiry);
+  if (!trustedSession) {
+    effectiveHandoffConsent = null;
+  }
   const fingerprint = await submissionPayloadFingerprint(
     env.PII_HMAC_KEY,
-    inquiry,
+    authoritativeInquiry,
     sessionId,
     trustedSession,
-    options.handoffConsent || null,
+    effectiveHandoffConsent,
   );
   const existing = await findExistingSubmission(env, options.idempotencyKey);
   if (existing) return replayResult(existing, fingerprint);
@@ -441,27 +504,27 @@ export async function createSubmission(
   if (!conversationExcerptCiphertext) {
     conversationExcerptCiphertext = await encryptText(
       env.PII_ENCRYPTION_KEY,
-      (inquiry.conversationExcerpt || '').slice(0, MAX_CONVERSATION_EXCERPT_LEN),
+      (authoritativeInquiry.conversationExcerpt || '').slice(0, MAX_CONVERSATION_EXCERPT_LEN),
     );
   }
   const pii = await Promise.all([
-    encryptText(env.PII_ENCRYPTION_KEY, inquiry.name),
-    encryptText(env.PII_ENCRYPTION_KEY, inquiry.email),
-    encryptText(env.PII_ENCRYPTION_KEY, inquiry.company),
-    encryptText(env.PII_ENCRYPTION_KEY, inquiry.message),
-    encryptText(env.PII_ENCRYPTION_KEY, inquiry.conversationSummary),
-    emailHmac(env.PII_HMAC_KEY, inquiry.email),
+    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.name),
+    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.email),
+    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.company),
+    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.message),
+    encryptText(env.PII_ENCRYPTION_KEY, authoritativeInquiry.conversationSummary),
+    emailHmac(env.PII_HMAC_KEY, authoritativeInquiry.email),
   ]);
   const [name, email, company, message, summary, emailHash] = pii;
   const outboxId = crypto.randomUUID();
-  const auditMetadata = options.handoffConsent
+  const auditMetadata = effectiveHandoffConsent
     ? {
         handoff_consent: {
           accepted: true,
-          version: options.handoffConsent.version,
-          accepted_at: options.handoffConsent.acceptedAt,
-          browser_accepted_at: options.handoffConsent.browserAcceptedAt,
-          summary_confirmed: options.handoffConsent.summaryConfirmed,
+          version: effectiveHandoffConsent.version,
+          accepted_at: effectiveHandoffConsent.acceptedAt,
+          browser_accepted_at: effectiveHandoffConsent.browserAcceptedAt,
+          summary_confirmed: effectiveHandoffConsent.summaryConfirmed,
         },
       }
     : {};
@@ -488,11 +551,11 @@ export async function createSubmission(
       summary,
       conversationExcerptCiphertext,
       emailHash,
-      inquiry.intent,
-      inquiry.source,
-      JSON.stringify(redactStructuredLead(inquiry.structuredLead)),
-      JSON.stringify(inquiry.utm),
-      inquiry.classification,
+      authoritativeInquiry.intent,
+      authoritativeInquiry.source,
+      JSON.stringify(redactStructuredLead(authoritativeInquiry.structuredLead)),
+      JSON.stringify(authoritativeInquiry.utm),
+      authoritativeInquiry.classification,
       now,
       now,
       now + SUBMISSION_TTL_SECONDS,
@@ -526,7 +589,7 @@ export async function createSubmission(
     submissionId,
     receiptId,
     duplicate: false,
-    handoffConsent: options.handoffConsent || null,
+    handoffConsent: effectiveHandoffConsent,
   };
 }
 

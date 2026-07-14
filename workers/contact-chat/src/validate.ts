@@ -206,7 +206,7 @@ export type SummaryValidation =
 // summaryText は会話全文ではなく、Cloudiaが確定した要約だけを受け付ける。
 // 旧クライアントの文字列入力を壊さないため、明らかな role ラベル行だけを除去し、
 // 全文トランスクリプトが渡された場合は空文字へ落として決定的fallbackへ進める。
-const TRANSCRIPT_ROLE_LINE = /^(?:user|assistant|system|human|ユーザー|あなた|アシスタント|クラウディア)\s*(?:[:：]|[-—])\s*/i;
+const TRANSCRIPT_ROLE_LINE = /^(?:user|assistant|system|human|visitor|cloudia|ユーザー|あなた|訪問者|アシスタント|クラウディア)\s*(?:[:：]|[-—])\s*/i;
 const SUMMARY_PREFIX_LINE = /^(?:you|ai\s+assistant|AI\s*アシスタント)\s*(?:[:：]|[-—])\s*/i;
 
 export function canonicalizeSummaryText(raw: string): string {
