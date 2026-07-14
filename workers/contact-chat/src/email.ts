@@ -134,7 +134,7 @@ export function getReceiptSummaryText(inquiry: NormalizedInquiry): string {
   const containsInternalLabel = /\b(?:genuine|sales|spam|classification|intent|source|utm)\b|(?:分類|相談目的)\s*[:：]/i.test(canonical);
   if (canonical && !containsInternalLabel && canonical === maskSensitiveContent(canonical)) return canonical;
   const lead = inquiry.structuredLead || {};
-  const parts = [lead.purpose, lead.industryRole, lead.stage, lead.timingBudget]
+  const parts = [lead.purpose, lead.contactReason, lead.industryRole, lead.stage, lead.timingBudget, lead.discoverySource]
     .filter((value): value is string => Boolean(value))
     .map(maskSensitiveContent);
   return parts.length ? parts.join(' / ') : '要約未生成（受付内容を担当者が確認します）';
@@ -171,6 +171,8 @@ export function buildBody(inquiry: NormalizedInquiry): string {
   if (lead.dataSensitivity) leadLines.push(`データ感度: ${lead.dataSensitivity}`);
   if (lead.stage) leadLines.push(`進捗段階: ${lead.stage}`);
   if (lead.timingBudget) leadLines.push(`時期・予算: ${lead.timingBudget}`);
+  if (lead.discoverySource) leadLines.push(`流入経路: ${lead.discoverySource}`);
+  if (lead.contactReason) leadLines.push(`連絡理由: ${lead.contactReason}`);
   if (leadLines.length) {
     lines.push('', '── 構造化リード（非PII） ──', ...leadLines);
   }

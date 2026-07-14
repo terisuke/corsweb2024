@@ -28,6 +28,8 @@ const inquiry: NormalizedInquiry = {
     dataSensitivity: 'internal',
     stage: 'exploring',
     timingBudget: '3ヶ月以内 / 未定',
+    discoverySource: '検索',
+    contactReason: '業務改善の相談',
   },
   utm: { utm_source: 'cor' },
 };
@@ -54,6 +56,8 @@ describe('buildBody — 構造化本文（PIIはここにのみ載る）', () =>
     expect(body).toContain('AIチャットの会話サマリ');
     expect(body).toContain('受発注の効率化');
     expect(body).toContain('genuine');
+    expect(body).toContain('流入経路: 検索');
+    expect(body).toContain('連絡理由: 業務改善の相談');
   });
   it('company 未記入なら (未記入) と表示', () => {
     expect(buildBody({ ...inquiry, company: '' })).toContain('(未記入)');
@@ -206,6 +210,20 @@ describe('sendInquiryEmail — Resend 呼び出し（fetchモック）', () => {
     expect(body).not.toContain('genuine');
     expect(body).not.toContain('contract-dev');
     expect(body).toContain('受託で業務システム開発');
+  });
+
+  it('本人向け受付確認は流入経路・連絡理由を表示できるが内部タグは含めない', () => {
+    const body = buildReceiptBody({
+      ...inquiry,
+      summaryText: 'classification: genuine / source: internal / intent: contract-dev',
+      conversationSummary: '',
+    }, 'COR-20260713-ABCD1234');
+    expect(body).toContain('業務改善の相談');
+    expect(body).toContain('検索');
+    expect(body).not.toContain('classification');
+    expect(body).not.toContain('genuine');
+    expect(body).not.toContain('source: internal');
+    expect(body).not.toContain('contract-dev');
   });
 });
 

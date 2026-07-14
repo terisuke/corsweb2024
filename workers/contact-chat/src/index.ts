@@ -226,8 +226,8 @@ function startReply(mode: ChatMode, locale: ChatLocale, intent: ContactIntent | 
   }
   if (mode === 'ambassador') {
     return locale === 'en'
-      ? 'Hello. I am Cloudia from Cor.株式会社 (brand: Cor.inc). This is the casual conversation mode. Please ask about our services or technology, and I can guide you to the formal inquiry flow when a concrete project comes up.'
-      : 'こんにちは。Cor.株式会社（読み：コー株式会社、ブランド名：Cor.inc）のCloudiaです。こちらは雑談モードです。会社やAI技術についてご質問があればお聞かせください。具体的なご相談になった場合は、受付モードへご案内します。';
+      ? 'Hello. I am Cloudia from Cor. This is the casual conversation mode. Please ask about our services or technology, and I can guide you to the formal inquiry flow when a concrete project comes up.'
+      : 'こんにちは。Cor.株式会社のCloudiaです。こちらは雑談モードです。会社やAI技術についてご質問があればお聞かせください。具体的なご相談になった場合は、受付モードへご案内します。';
   }
   return locale === 'en'
     ? 'Thank you. I will ask a few quick questions so we can understand your request. What would you like to achieve?'
@@ -347,7 +347,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
       source,
       stage: result.stage,
       turnCount: norm.messages.length,
-      structuredLead: result.structuredLead || {},
+    structuredLead: result.structuredLead || {},
       missingFields: result.missingFields,
       classification: result.classification,
       summary: result.summary,
@@ -386,16 +386,26 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
 
   // The server-side session summary is the email source of truth. Do not let a
   // stale or forged browser payload replace it; when the session is unavailable,
-  // fall back to structured fields only.
+  // fall back to structured fields only. Structured lead fields are restored
+  // from the same server-side session so the browser cannot replace them at
+  // submit time (including discoverySource/contactReason).
   let inquiry = norm.inquiry;
   if (env.DB) {
     const sessionId = normalizeSessionId(body.sessionId);
     let trustedSummary = '';
+    let trustedStructuredLead: StructuredLead | undefined;
     if (sessionId) {
       const session = await env.DB.prepare(
-        'SELECT summary_text FROM contact_sessions WHERE session_id = ? AND status = \'active\' LIMIT 1',
-      ).bind(sessionId).first<{ summary_text?: string }>();
+        'SELECT summary_text, structured_lead_json FROM contact_sessions WHERE session_id = ? AND status = \'active\' LIMIT 1',
+      ).bind(sessionId).first<{ summary_text?: string; structured_lead_json?: string }>();
       trustedSummary = typeof session?.summary_text === 'string' ? session.summary_text.trim() : '';
+      if (typeof session?.structured_lead_json === 'string') {
+        try {
+          trustedStructuredLead = normalizeStructuredLead(JSON.parse(session.structured_lead_json));
+        } catch {
+          trustedStructuredLead = {};
+        }
+      }
     }
     if (!trustedSummary) {
       trustedSummary = buildDeterministicSummary({
@@ -404,7 +414,12 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
         structuredLead: norm.inquiry.structuredLead,
       });
     }
-    inquiry = { ...norm.inquiry, summaryText: trustedSummary, conversationSummary: trustedSummary };
+    inquiry = {
+      ...norm.inquiry,
+      summaryText: trustedSummary,
+      conversationSummary: trustedSummary,
+      ...(trustedStructuredLead ? { structuredLead: trustedStructuredLead } : {}),
+    };
   }
 
   // 本番（D1 bindingあり）は、PIIを暗号化してD1へ保存し、QueueのID payload

@@ -83,6 +83,10 @@ export interface StructuredLead {
   dataSensitivity?: string;
   stage?: string;
   timingBudget?: string;
+  /** サイトを知った経路（検索、紹介、SNS等）。内部タグsourceとは別物。 */
+  discoverySource?: string;
+  /** 今回連絡する理由・期待する支援。 */
+  contactReason?: string;
 }
 
 // /chat のレスポンス。PII は一切含まない（会話のみ）。

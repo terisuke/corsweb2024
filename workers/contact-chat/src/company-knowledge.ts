@@ -1,7 +1,8 @@
 // Public, versioned facts mirrored from src/i18n/locales/{ja,en}.json.
 // Do not add private customer, contract, calendar, or credential data here.
 export const COMPANY_KNOWLEDGE = [
-  'Cor.株式会社 (read as コー株式会社; brand: Cor.inc) is a Fukuoka-based AI implementation company that supports clients from problem discovery through design, implementation, and operations.',
+  'Cor.株式会社 is a Fukuoka-based AI implementation company that supports clients from problem discovery through design, implementation, and operations.',
+  'When asked how the company name is read, explain that Cor.株式会社 is read as コー株式会社. The company brand is Cor.inc; do not volunteer this detail in a normal greeting.',
   'Core offerings: confidential-data AI assessment; local LLM / secure AI PoC; AI solution and contract development; Grift.',
   'Confidential-data AI assessment guideline price: JPY 100,000-300,000.',
   'Local LLM / AI platform PoC guideline: from JPY 3,000,000 for about three months. Production and operations are quoted individually.',
