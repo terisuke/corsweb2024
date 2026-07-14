@@ -199,6 +199,49 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(gatewayFetch).toHaveBeenCalledTimes(1);
   });
 
+  it('all structured intake fields trigger the contact step even if the model under-reports readiness', async () => {
+    const gatewayFetch = vi.fn(async () => new Response(JSON.stringify({
+      candidates: [{
+        content: {
+          parts: [{
+            text: JSON.stringify({
+              reply: '内容を確認しました。連絡先入力へ進めます。',
+              summary: '社内向けAI基盤のPoCについて、目的・体制・機密性・時期を確認済み',
+              classification: 'genuine',
+              readyForContact: false,
+              intent: 'local-llm-poc',
+              structuredLead: {
+                purpose: '社内向けAI基盤のPoC',
+                industryRole: '広告会社の企画担当',
+                dataSensitivity: '機密',
+                stage: 'exploring',
+                timingBudget: '3か月以内',
+              },
+            }),
+          }],
+        },
+      }],
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', gatewayFetch);
+    const env = {
+      ...ENV,
+      LLM_PROVIDER: 'vertex-gemini',
+      VERTEX_GATEWAY_URL: 'https://gateway.example/generateContent',
+      VERTEX_GATEWAY_SECRET: 'secret',
+    } as Env;
+    const res = await worker.fetch(post('/api/contact/chat', {
+      mode: 'intake',
+      locale: 'ja',
+      intent: 'local-llm-poc',
+      messages: [{ role: 'user', content: '必要な情報はまとめてお伝えします。' }],
+    }), env);
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.readyForContact).toBe(true);
+    expect(body.stage).toBe('ready');
+    expect(body.missingFields).toEqual([]);
+  });
+
   it('VertexリクエストへPIIをそのまま渡さない', async () => {
     const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: '{"reply":"ok","readyForContact":false}' }] } }],
