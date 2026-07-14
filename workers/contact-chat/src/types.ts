@@ -17,6 +17,7 @@ export interface Env {
   /** カンマ区切りの社内CC宛先。コード側で配列へ正規化する。 */
   CONTACT_CC_EMAILS?: string;
   CONTACT_FROM_EMAIL: string; // 問い合わせメールの差出人。
+  CONTACT_SITE_ENV: string; // exact 'production' / 'preview'。未知値は問い合わせAPIをfail closed。
   TURNSTILE_REQUIRED?: string; // 'true' で /submit を fail closed。未設定/'false' は後方互換。
   TURNSTILE_ALLOWED_HOSTNAMES?: string; // Siteverify hostname のカンマ区切り exact allowlist。
   GRIFT_HANDOFF_ENABLED?: string; // 'true' のときだけ対象4 intentの同期handoffを試行する。

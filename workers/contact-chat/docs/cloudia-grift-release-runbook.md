@@ -13,6 +13,7 @@
 - Worker は Grift に `tenant_id` を送らない。Grift の `CLOUDIA_HANDOFF_TENANT_ID` が Cor tenant を固定する。
 - Grift 障害や設定不一致はメール受付を維持して `handoff.status=fallback` にする。成功表示へ読み替えない。
 - Cloudia explicit widget と Worker のTurnstile actionはexact `contact-submit`の1値だけを正本とする。旧actionや複数action許容で移行しない。
+- productionはCor同一originのままCORSを返さない。Preview CORSは`CONTACT_SITE_ENV=preview`とchecked-in exact origin `https://codex-cloudia-grift-uat.cloudia-contact.pages.dev`が同時に一致する場合だけ有効とし、runtime allowlistやwildcardへ広げない。
 - production の Turnstile / WAF / Grift public URL / Cor tenant isolation / Nagi UAT のいずれかが未確認なら production handoff を有効化しない。
 - Worker rollback は D1 migration、Queue、WAF、Turnstile、Grift の状態を巻き戻さない。各面を別々に扱う。
 
@@ -46,7 +47,7 @@
 | Queue / DLQ               | 2つとも存在                             | 2つとも存在                             |
 | deployed Grift vars       | handoff var は absent、実質 feature-off | handoff var は absent、実質 feature-off |
 
-production / Preview の primary Queue は各 Worker の producer / consumer を持つ。DLQ は存在し、consumer なしである。sourceのserver-side allowlistはproduction `cor-jp.com,www.cor-jp.com`、Preview `cloudia-contact.pages.dev`、actionはexact `contact-submit` だが未deployである。widget側hostname制限、secret、WAF rule、Grift tenant/public URL、Nagi UAT は未確認のため、現 snapshotではproduction gate未達である。
+production / Preview の primary Queue は各 Worker の producer / consumer を持つ。DLQ は存在し、consumer なしである。Turnstileのsource server-side allowlistはproduction `cor-jp.com,www.cor-jp.com`、Preview `cloudia-contact.pages.dev`、actionはexact `contact-submit` だが未deployである。Issue #283のPreview browser CORSは別境界で、`CONTACT_SITE_ENV=preview`とexact origin `https://codex-cloudia-grift-uat.cloudia-contact.pages.dev`だけを許可する。widget側hostname制限、secret、WAF rule、Grift tenant/public URL、Nagi UAT は未確認のため、現 snapshotではproduction gate未達である。
 
 ## 安全な自動確認
 
@@ -83,7 +84,8 @@ child command の生出力は表示しない。source actionがexact `contact-su
 3. Preview の `GRIFT_API_ORIGIN` は Grift dev/staging の HTTPS origin のみ、`GRIFT_PUBLIC_URL_ORIGINS` は Preview で実際に返す public portal origin のみとする。path、query、fragment、userinfo、IP literal を含めない。
 4. code-only段階では`TURNSTILE_REQUIRED="false"`、Preview server allowlistはexact `cloudia-contact.pages.dev`であることを確認する。widget/secretを別の承認作業で整合させるまでtrueへ変更しない。
 5. `GRIFT_HANDOFF_ENABLED="false"` を確認する。production vars はこの段階で変更しない。
-6. dry-run と通常テストを実行する。
+6. `CONTACT_SITE_ENV="preview"`、Cloudia UAT origin `https://codex-cloudia-grift-uat.cloudia-contact.pages.dev`、Cloudia `VITE_CONTACT_API_BASE`のPreview Worker origin、Pages CSP `connect-src`が一致することを確認する。UAT runnerはこのPages originから実行し、localhostや別branch URLを代用しない。
+7. dry-run と通常テストを実行する。
 
 ```bash
 cd workers/contact-chat
@@ -232,10 +234,21 @@ header/body不一致、control-planeの100% version不一致はUAT開始を停�
 | 2049文字、malformed/HTTP error/8秒timeout                                        | 400または503でfail closed。token/secret/IPをログへ出さない                                                            |
 | 300秒超過・同じtoken再利用（`timeout-or-duplicate`）                             | `/submit` 拒否。widgetをresetし、送信ごとに新tokenを発行                                                              |
 | Queue consumer 一時失敗                                                          | retry 後に送信、上限超過時は DLQ。本文は見ない                                                                        |
+| exact Cloudia UAT originから3 POST / OPTIONS                                    | exact ACAO、`Vary: Origin`、固定method/header/max-age。credentialsなし。error / 409 / fallbackも同一CORS              |
+| HTTP / userinfo / port / path / query / fragment / wildcard / null / suffix類似 | 403、CORS headerなし、LLM・D1・Queue・メール・Griftへ進まない                                                         |
+| unknown `CONTACT_SITE_ENV`                                                       | 保護対象APIを403でfail closed。health GETだけは公開継続                                                               |
 
 ## production の明示ゲート
 
 すべて `PASS` になるまで production handoff を有効化しない。
+
+### Origin / CORS
+
+- production artifactは`CONTACT_SITE_ENV="production"`であり、Preview exact originからのPOST/OPTIONSを403にして`Access-Control-Allow-*`を返さない。
+- Preview artifactだけが`CONTACT_SITE_ENV="preview"`を持ち、`https://codex-cloudia-grift-uat.cloudia-contact.pages.dev`をソースコードのexact値として許可する。configやdeploy時`--var`でorigin allowlistを差し替えない。
+- Preview preflightは`POST`と`Content-Type`だけを許可し、`Access-Control-Allow-Credentials`を返さない。private-network、追加method/header、wildcardを拒否する。
+- Cloudia Previewはbrowser API baseをPreview Worker originに固定し、CSP `connect-src`へ同じoriginだけを追加する。UAT runnerのtop-level origin、Cloudia commit、Worker commit/versionを同じ証跡で確認する。
+- `GET /api/contact/health`は公開を維持するがCORS headerは付けない。health成功を3つのbrowser POST成功と読み替えない。
 
 ### Turnstile
 

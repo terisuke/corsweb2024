@@ -15,7 +15,7 @@ import {
   type ContactSessionStorageSnapshot,
   type TrustedContactSession,
 } from '../storage';
-import { resetRateLimits } from '../security';
+import { PREVIEW_CONTACT_ORIGIN, resetRateLimits } from '../security';
 import type { ContactIntent, Env, NormalizedInquiry } from '../types';
 
 const GRIFT_ORIGIN = 'https://internal.grift.example';
@@ -32,6 +32,7 @@ const ENV: Env = {
   RESEND_API_KEY: 're_test',
   TURNSTILE_SECRET: '',
   LLM_PROVIDER: 'anthropic',
+  CONTACT_SITE_ENV: 'production',
   CONTACT_TO_EMAIL: 'cloudia@cor-jp.com',
   CONTACT_FROM_EMAIL: 'noreply@cor-jp.com',
   GRIFT_HANDOFF_ENABLED: 'true',
@@ -794,12 +795,13 @@ describe('handoffToGrift', () => {
   });
 });
 
-function post(body: Record<string, unknown>, ip: string): Request {
+function post(body: Record<string, unknown>, ip: string, origin?: string): Request {
   return new Request('https://cor-jp.com/api/contact/submit', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       'cf-connecting-ip': ip,
+      ...(origin ? { origin } : {}),
     },
     body: JSON.stringify(body),
   });
@@ -1096,11 +1098,18 @@ describe('POST /api/contact/submit Grift integration', () => {
           message: '実際の問い合わせ本文を変更',
           summaryText: '再送時に別のbrowser要約へ改ざん',
         },
-        '198.51.100.75'
+        '198.51.100.75',
+        PREVIEW_CONTACT_ORIGIN
       ),
-      submitEnv(db, queueSend)
+      { ...submitEnv(db, queueSend), CONTACT_SITE_ENV: 'preview' }
     );
     expect(changedPayload.status).toBe(409);
+    expect(changedPayload.headers.get('access-control-allow-origin')).toBe(PREVIEW_CONTACT_ORIGIN);
+    expect(changedPayload.headers.get('vary')).toBe('Origin');
+    expect(changedPayload.headers.get('access-control-allow-methods')).toBe('POST');
+    expect(changedPayload.headers.get('access-control-allow-headers')).toBe('Content-Type');
+    expect(changedPayload.headers.get('access-control-max-age')).toBe('600');
+    expect(changedPayload.headers.get('access-control-allow-credentials')).toBeNull();
     await expect(changedPayload.json()).resolves.toMatchObject({
       code: 'IDEMPOTENCY_PAYLOAD_CONFLICT',
     });

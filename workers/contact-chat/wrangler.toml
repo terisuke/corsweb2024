@@ -30,6 +30,8 @@ VERTEX_MODEL = "gemini-3.5-flash"
 CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
 CONTACT_CC_EMAILS = "company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
+# productionはCor同一originだけを許可し、Preview用CORS定数を参照しない。
+CONTACT_SITE_ENV = "production"
 # コード先行リリース中は false。widget hostname制限・secret・WAF・E2E完了後の承認変更でのみ true にする。
 TURNSTILE_REQUIRED = "false"
 # Siteverify response の hostname をこの値と完全一致で照合する（wildcard/suffix matchなし）。
@@ -82,6 +84,8 @@ VERTEX_MODEL = "gemini-3.5-flash"
 CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
 CONTACT_CC_EMAILS = "company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
+# src/security.tsのchecked-in exact Pages originを許可する唯一の環境。
+CONTACT_SITE_ENV = "preview"
 TURNSTILE_REQUIRED = "false"
 TURNSTILE_ALLOWED_HOSTNAMES = "cloudia-contact.pages.dev"
 GRIFT_HANDOFF_ENABLED = "false"

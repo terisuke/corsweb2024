@@ -31,7 +31,9 @@ import {
   SUBMIT_LIMIT,
   clientIp,
   isRateLimited,
-  isSameOrigin,
+  isContactOriginAllowed,
+  isValidPreviewContactPreflight,
+  previewContactCorsHeaders,
   verifyTurnstile,
 } from './security';
 import { buildSystemPrompt, getProvider } from './llm';
@@ -90,6 +92,26 @@ const json = (data: unknown, status = 200, additionalHeaders: Record<string, str
       ...additionalHeaders,
     },
   });
+
+const CONTACT_BROWSER_API_PATHS = new Set([
+  '/api/contact/chat',
+  '/api/contact/chat/start',
+  '/api/contact/submit',
+]);
+
+function withContactCors(
+  response: Response,
+  corsHeaders: Readonly<Record<string, string>> | null,
+): Response {
+  if (!corsHeaders) return response;
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
 
 const CANDIDATE_SHA_PATTERN = /^[0-9a-f]{40}$/;
 const RELEASE_ID_PATTERN = /^[A-Za-z0-9._:-]{1,100}$/;
@@ -646,33 +668,52 @@ export default {
       return healthResponse(env);
     }
 
+    const corsEligible = CONTACT_BROWSER_API_PATHS.has(path)
+      && (req.method === 'POST' || req.method === 'OPTIONS');
+    const corsHeaders = corsEligible ? previewContactCorsHeaders(req, env) : null;
+    const respond = (response: Response): Response => withContactCors(response, corsHeaders);
+
+    if (req.method === 'OPTIONS' && CONTACT_BROWSER_API_PATHS.has(path)) {
+      if (!isValidPreviewContactPreflight(req, env)) {
+        return json({ error: 'preflight not allowed' }, 403);
+      }
+      return respond(new Response(null, {
+        status: 204,
+        headers: {
+          'cache-control': 'no-store',
+          'x-content-type-options': 'nosniff',
+          'referrer-policy': 'no-referrer',
+        },
+      }));
+    }
+
     try {
-      // 同一オリジン強制（CORSは開けない。cor-jp.com 上のウィジェットのみ）。
-      if (!isSameOrigin(req)) {
+      // productionはCor同一originのみ。Previewだけchecked-in exact originへCORSを返す。
+      if (!isContactOriginAllowed(req, env)) {
         return json({ error: 'origin not allowed' }, 403);
       }
 
       if (req.method === 'POST' && (path === '/api/contact/chat' || path === '/api/contact/chat/start')) {
         const ip = clientIp(req);
         if (isRateLimited(`chat:${ip}`, CHAT_LIMIT)) {
-          return json({ error: 'リクエストが多すぎます。少し待ってから再試行してください' }, 429);
+          return respond(json({ error: 'リクエストが多すぎます。少し待ってから再試行してください' }, 429));
         }
-        return await handleChat(req, env, path === '/api/contact/chat/start');
+        return respond(await handleChat(req, env, path === '/api/contact/chat/start'));
       }
 
       if (req.method === 'POST' && path === '/api/contact/submit') {
         const ip = clientIp(req);
         if (isRateLimited(`submit:${ip}`, SUBMIT_LIMIT)) {
-          return json({ error: 'リクエストが多すぎます。少し待ってから再試行してください' }, 429);
+          return respond(json({ error: 'リクエストが多すぎます。少し待ってから再試行してください' }, 429));
         }
-        return await handleSubmit(req, env);
+        return respond(await handleSubmit(req, env));
       }
 
       return json({ error: 'Not Found' }, 404);
     } catch {
       // 詳細はサーバー側ログのみ。クライアントには汎用メッセージ（内部情報の漏洩防止）。
       logWorkerFailure('contact_chat_request_failed');
-      return json({ error: '処理中にエラーが発生しました' }, 500);
+      return respond(json({ error: '処理中にエラーが発生しました' }, 500));
     }
   },
 

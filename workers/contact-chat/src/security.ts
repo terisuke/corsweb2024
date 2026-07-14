@@ -203,14 +203,67 @@ export async function verifyTurnstile(
   return { ok: true, skipped: false };
 }
 
-// --- 同一オリジンチェック（CORSを開けず、cor-jp.com 上のウィジェットのみ許可） ---
-// Origin ヘッダが付いていて別オリジンなら拒否。同一オリジン fetch は Origin が無いか自オリジン。
-const ALLOWED_ORIGINS = new Set(['https://cor-jp.com', 'https://www.cor-jp.com']);
+// --- 問い合わせAPIのOrigin / Preview CORS境界 ---
+// productionは従来どおりCor.の同一originだけを許可し、CORS応答を返さない。
+// PreviewだけはUAT用Pages originをソースに固定し、runtime変数からallowlistを注入しない。
+const PRODUCTION_CONTACT_ORIGINS = new Set(['https://cor-jp.com', 'https://www.cor-jp.com']);
+export const PREVIEW_CONTACT_ORIGIN = 'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev';
 
-export function isSameOrigin(req: Request): boolean {
+export const PREVIEW_CONTACT_CORS_HEADERS = Object.freeze({
+  'access-control-allow-origin': PREVIEW_CONTACT_ORIGIN,
+  vary: 'Origin',
+  'access-control-allow-methods': 'POST',
+  'access-control-allow-headers': 'Content-Type',
+  'access-control-max-age': '600',
+} as const);
+
+type ContactSiteEnvironment = 'production' | 'preview';
+
+function contactSiteEnvironment(value: string | undefined): ContactSiteEnvironment | null {
+  if (value === 'production' || value === 'preview') return value;
+  return null;
+}
+
+/**
+ * Origin is a serialized origin, not a general URL. Direct exact comparison
+ * rejects HTTP, ports, userinfo, paths, queries, fragments, wildcard, null,
+ * suffix confusion and multiple-origin values without parser normalization.
+ */
+export function isContactOriginAllowed(req: Request, env: Env): boolean {
+  const siteEnvironment = contactSiteEnvironment(env.CONTACT_SITE_ENV);
+  if (!siteEnvironment) return false;
+
   const origin = req.headers.get('Origin');
-  if (!origin) return true; // 同一オリジンの fetch は Origin を付けない場合がある（許可）
-  // Origin is a serialized origin, not a general URL. Exact matching rejects
-  // HTTP, custom ports, userinfo and parser-confusion variants fail closed.
-  return ALLOWED_ORIGINS.has(origin);
+  // Origin is not an authentication mechanism. Origin-less non-browser calls
+  // remain compatible, while an unknown runtime environment still fails closed.
+  if (!origin) return true;
+  if (siteEnvironment === 'production') return PRODUCTION_CONTACT_ORIGINS.has(origin);
+  return origin === PREVIEW_CONTACT_ORIGIN;
+}
+
+/** CORS is emitted only for the checked-in Preview origin and exact Preview mode. */
+export function previewContactCorsHeaders(
+  req: Request,
+  env: Env,
+): Readonly<Record<string, string>> | null {
+  if (env.CONTACT_SITE_ENV !== 'preview') return null;
+  if (req.headers.get('Origin') !== PREVIEW_CONTACT_ORIGIN) return null;
+  return PREVIEW_CONTACT_CORS_HEADERS;
+}
+
+/** Validate the browser preflight contract without accepting extra capabilities. */
+export function isValidPreviewContactPreflight(req: Request, env: Env): boolean {
+  if (req.method !== 'OPTIONS') return false;
+  if (!isContactOriginAllowed(req, env) || !previewContactCorsHeaders(req, env)) return false;
+  if (req.headers.get('Access-Control-Request-Method') !== 'POST') return false;
+  if (req.headers.has('Access-Control-Request-Private-Network')) return false;
+
+  const requestedHeaders = req.headers.get('Access-Control-Request-Headers');
+  if (requestedHeaders === null) return true;
+  const normalizedHeaders = requestedHeaders
+    .split(',')
+    .map((header) => header.trim().toLowerCase());
+  return normalizedHeaders.length > 0
+    && normalizedHeaders.every((header) => header === 'content-type')
+    && new Set(normalizedHeaders).size === normalizedHeaders.length;
 }

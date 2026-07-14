@@ -158,6 +158,7 @@ const ENV = {
   ANTHROPIC_API_KEY: '',
   RESEND_API_KEY: '',
   TURNSTILE_SECRET: '',
+  CONTACT_SITE_ENV: 'production',
   CONTACT_TO_EMAIL: 'info@cor-jp.com',
   CONTACT_FROM_EMAIL: 'noreply@cor-jp.com',
 } as unknown as Env;

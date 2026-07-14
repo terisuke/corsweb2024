@@ -2,9 +2,13 @@ import { afterEach, describe, it, expect, vi } from 'vitest';
 import {
   CHAT_LIMIT,
   SUBMIT_LIMIT,
+  PREVIEW_CONTACT_CORS_HEADERS,
+  PREVIEW_CONTACT_ORIGIN,
   ctEq,
   isRateLimited,
-  isSameOrigin,
+  isContactOriginAllowed,
+  isValidPreviewContactPreflight,
+  previewContactCorsHeaders,
   resetRateLimits,
   TURNSTILE_EXPECTED_ACTION,
   verifyTurnstile,
@@ -16,10 +20,19 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-const reqWithHeaders = (headers: Record<string, string | null>) =>
-  ({
-    headers: { get: (n: string) => headers[n.toLowerCase()] ?? null },
+const reqWithHeaders = (headers: Record<string, string | null>, method = 'POST') => {
+  const normalized = Object.fromEntries(
+    Object.entries(headers).map(([name, value]) => [name.toLowerCase(), value]),
+  );
+  return ({
+    method,
+    headers: {
+      get: (name: string) => normalized[name.toLowerCase()] ?? null,
+      has: (name: string) => normalized[name.toLowerCase()] !== undefined
+        && normalized[name.toLowerCase()] !== null,
+    },
   }) as unknown as Request;
+};
 
 describe('ctEq — 定数時間比較', () => {
   it('一致', () => expect(ctEq('abc', 'abc')).toBe(true));
@@ -57,26 +70,110 @@ describe('isRateLimited — IP単位レート制限', () => {
   });
 });
 
-describe('isSameOrigin — CORSを開けず cor-jp.com のみ許可', () => {
+describe('問い合わせAPI Origin / Preview CORS境界', () => {
+  const production = { CONTACT_SITE_ENV: 'production' } as Env;
+  const preview = { CONTACT_SITE_ENV: 'preview' } as Env;
+
   it('Origin が無ければ許可（同一オリジンfetch）', () => {
-    expect(isSameOrigin(reqWithHeaders({ origin: null }))).toBe(true);
+    expect(isContactOriginAllowed(reqWithHeaders({ origin: null }), production)).toBe(true);
+    expect(isContactOriginAllowed(reqWithHeaders({ origin: null }), preview)).toBe(true);
   });
   it.each(['https://cor-jp.com', 'https://www.cor-jp.com'])('自オリジン(%s)を許可', (o) => {
-    expect(isSameOrigin(reqWithHeaders({ origin: o }))).toBe(true);
+    expect(isContactOriginAllowed(reqWithHeaders({ origin: o }), production)).toBe(true);
   });
+
+  it('Previewはchecked-in exact originだけを許可して固定CORSを返す', () => {
+    const request = reqWithHeaders({ origin: PREVIEW_CONTACT_ORIGIN });
+    expect(isContactOriginAllowed(request, preview)).toBe(true);
+    expect(previewContactCorsHeaders(request, preview)).toEqual(PREVIEW_CONTACT_CORS_HEADERS);
+    expect(PREVIEW_CONTACT_CORS_HEADERS['access-control-allow-origin']).toBe(PREVIEW_CONTACT_ORIGIN);
+    expect(PREVIEW_CONTACT_CORS_HEADERS).not.toHaveProperty('access-control-allow-credentials');
+  });
+
   it.each([
     'https://evil.example',
     'https://cor-jp.com.evil.com',
     'http://cor-jp.com',
     'https://cor-jp.com:8443',
     'https://user@cor-jp.com',
+    'https://cor-jp.com/path',
+    'https://cor-jp.com?query=1',
+    'https://cor-jp.com#fragment',
+    '*',
     'null',
   ])(
-    '別オリジン(%s)を拒否',
+    'productionは不正・別origin(%s)を拒否',
     (o) => {
-      expect(isSameOrigin(reqWithHeaders({ origin: o }))).toBe(false);
+      expect(isContactOriginAllowed(reqWithHeaders({ origin: o }), production)).toBe(false);
     },
   );
+
+  it.each([
+    'http://codex-cloudia-grift-uat.cloudia-contact.pages.dev',
+    'https://user@codex-cloudia-grift-uat.cloudia-contact.pages.dev',
+    'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev:443',
+    'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev/path',
+    'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev?query=1',
+    'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev#fragment',
+    'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev.evil.example',
+    'https://evil-codex-cloudia-grift-uat.cloudia-contact.pages.dev',
+    'https://*.cloudia-contact.pages.dev',
+    '*',
+    'null',
+  ])('Previewはexactでないorigin(%s)を拒否', (origin) => {
+    const request = reqWithHeaders({ origin });
+    expect(isContactOriginAllowed(request, preview)).toBe(false);
+    expect(previewContactCorsHeaders(request, preview)).toBeNull();
+  });
+
+  it('productionはPreview originを無視しCORSを返さない', () => {
+    const request = reqWithHeaders({ origin: PREVIEW_CONTACT_ORIGIN });
+    expect(isContactOriginAllowed(request, production)).toBe(false);
+    expect(previewContactCorsHeaders(request, production)).toBeNull();
+  });
+
+  it.each([undefined, '', 'staging', 'PREVIEW', 'production '])(
+    'runtime環境が未知値(%s)ならOrigin有無にかかわらずfail closed',
+    (value) => {
+      const env = { CONTACT_SITE_ENV: value } as unknown as Env;
+      expect(isContactOriginAllowed(reqWithHeaders({ origin: PREVIEW_CONTACT_ORIGIN }), env)).toBe(false);
+      expect(isContactOriginAllowed(reqWithHeaders({ origin: null }), env)).toBe(false);
+      expect(previewContactCorsHeaders(reqWithHeaders({ origin: PREVIEW_CONTACT_ORIGIN }), env)).toBeNull();
+    },
+  );
+
+  it('Preview preflightはPOSTとContent-Typeだけを許可する', () => {
+    const request = reqWithHeaders({
+      origin: PREVIEW_CONTACT_ORIGIN,
+      'access-control-request-method': 'POST',
+      'access-control-request-headers': 'content-type',
+    }, 'OPTIONS');
+    expect(isValidPreviewContactPreflight(request, preview)).toBe(true);
+  });
+
+  it.each([
+    { method: 'GET', headers: 'content-type' },
+    { method: 'POST', headers: 'authorization' },
+    { method: 'POST', headers: 'content-type, authorization' },
+    { method: 'POST', headers: 'content-type, content-type' },
+  ])('Preview preflightの追加権限を拒否: $method / $headers', ({ method, headers }) => {
+    const request = reqWithHeaders({
+      origin: PREVIEW_CONTACT_ORIGIN,
+      'access-control-request-method': method,
+      'access-control-request-headers': headers,
+    }, 'OPTIONS');
+    expect(isValidPreviewContactPreflight(request, preview)).toBe(false);
+  });
+
+  it('private-network preflightを拒否する', () => {
+    const request = reqWithHeaders({
+      origin: PREVIEW_CONTACT_ORIGIN,
+      'access-control-request-method': 'POST',
+      'access-control-request-headers': 'content-type',
+      'access-control-request-private-network': 'true',
+    }, 'OPTIONS');
+    expect(isValidPreviewContactPreflight(request, preview)).toBe(false);
+  });
 });
 
 describe('verifyTurnstile', () => {
