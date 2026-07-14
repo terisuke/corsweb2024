@@ -1,17 +1,12 @@
 ---
 import { getCurrentLocale, getLocalizedUrl } from '../../utils/i18n';
 
-interface Props {
-  showMobile?: boolean;
-}
-
-const { showMobile = false } = Astro.props;
-
 const currentLocale = getCurrentLocale(Astro.url);
 const chatUrl = new URL('/contact/chat/', Astro.url);
-chatUrl.searchParams.set('source', 'corsweb-contact-launcher');
+chatUrl.searchParams.set('source', 'corsweb-launcher');
 chatUrl.searchParams.set('locale', currentLocale);
-const chatPath = `${chatUrl.pathname}${chatUrl.search}`;
+const incomingIntent = Astro.url.searchParams.get('intent');
+if (incomingIntent) chatUrl.searchParams.set('intent', incomingIntent);
 const embedChatUrl = new URL(chatUrl);
 embedChatUrl.searchParams.set('embed', '1');
 const embedChatPath = `${embedChatUrl.pathname}${embedChatUrl.search}`;
@@ -35,7 +30,7 @@ const copy = currentLocale === 'ja'
 
 <aside
   id="cloudia-launcher"
-  class="fixed bottom-5 right-5 z-40 hidden w-[min(24rem,calc(100vw-2rem))] md:block"
+  class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40 w-[min(24rem,calc(100vw-2rem))] sm:right-5"
   data-chat-path={embedChatPath}
 >
   <div
@@ -54,7 +49,7 @@ const copy = currentLocale === 'ja'
         <span aria-hidden="true" class="text-xl leading-none">×</span>
       </button>
     </div>
-    <div class="relative h-[min(38rem,70vh)] bg-primary-950/5 dark:bg-primary-50/5">
+    <div class="relative h-[min(38rem,70dvh)] max-h-[70dvh] bg-primary-950/5 dark:bg-primary-50/5">
       <iframe
         id="cloudia-launcher-frame"
         title={copy.title}
@@ -87,13 +82,6 @@ const copy = currentLocale === 'ja'
   </button>
 </aside>
 
-{showMobile && (
-  <a
-    href={chatPath}
-    class="fixed bottom-4 left-4 right-4 z-40 inline-flex min-h-12 items-center justify-center rounded-full bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 md:hidden"
-  >{copy.label}</a>
-)}
-
 <script is:inline>
   (() => {
     const launcher = document.getElementById('cloudia-launcher');
@@ -107,6 +95,20 @@ const copy = currentLocale === 'ja'
     let opened = false;
     let frameReady = false;
     let fallbackTimer;
+
+    const applyIncomingContext = () => {
+      const incoming = new URLSearchParams(window.location.search);
+      const intent = incoming.get('intent');
+      const source = incoming.get('source');
+      if (!intent && !source) return;
+      const target = new URL(frame.src, window.location.href);
+      if (intent) target.searchParams.set('intent', intent);
+      if (source) target.searchParams.set('source', source);
+      frame.src = target.toString();
+      launcher.dataset.chatPath = `${target.pathname}${target.search}`;
+    };
+
+    applyIncomingContext();
 
     const showFallback = () => {
       if (!frameReady) fallback.classList.remove('hidden');
@@ -131,6 +133,7 @@ const copy = currentLocale === 'ja'
       panel.classList.remove('hidden');
       panel.setAttribute('aria-hidden', 'false');
       openButton.setAttribute('aria-expanded', 'true');
+      closeButton.focus();
       window.clearTimeout(fallbackTimer);
       fallbackTimer = window.setTimeout(showFallback, 8000);
       inspectFrame();

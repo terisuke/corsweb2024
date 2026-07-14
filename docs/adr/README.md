@@ -16,10 +16,13 @@
 | [ADR-0006](./ADR-0006-i18n-single-source.md) | i18n source of truth を `src/utils/i18n.ts` に一本化（`*.json` 廃止） | Accepted (2026-06-13) |
 | [ADR-0007](./ADR-0007-external-expression-guardrails.md) | 対外表現ガードレール（ISMS・旧事業・社名・証拠ルール） | Accepted (2026-06-13) / rev 2026-07-10 |
 | [ADR-0008](./ADR-0008-yomimono-ai-workflow.md) | 読みもの AI 支援ワークフロー | Proposed |
-| [ADR-0009](./ADR-0009-news-cases-cms-expansion.md) | news/cases CMS 拡張 + OGP PNG | Proposed |
+| [ADR-0009](./ADR-0009-news-cases-cms-expansion.md) | news/cases CMS 拡張 + プレスリリース運用 + OGP PNG | Accepted (2026-07-14) |
 | [ADR-0010](./ADR-0010-cross-site-cta-env-and-intent.md) | Cor↔Grift CTA 環境変数・intent・Preview noindex | Accepted (2026-07-10) |
 | [ADR-0011](./ADR-0011-paid-entry-and-nav-ia.md) | 有料入口 CTA・Header IA・050 表示方針 | Accepted (2026-07-10) |
 | [ADR-0012](./ADR-0012-cloudia-integration-and-org-transfer.md) | Cloudia を Contact フォーム代用として統合（org 移管・CF） | Accepted (2026-07-10) |
+| [ADR-0013](./ADR-0013-contact-consolidation-cloudia.md) | 問い合わせ一極集中（Cloudia UI + contact-chat） | Accepted (2026-07-11) |
+| [ADR-0014](./ADR-0014-intent-7keys-and-routing.md) | intent 正本の 7 キー化と intent ルーティング | Accepted (2026-07-11) |
+| [ADR-0015](./ADR-0015-cross-repo-adr-canon.md) | 横断 ADR の正本配置と参照方式 | Accepted (2026-07-11) |
 
 ## フェーズ対応
 

@@ -1,6 +1,6 @@
 # ADR-0009 yomimono CMS の news/cases 拡張 + 非エンジニア向けUI改善 + OGP PNG化
 
-## ステータス: Proposed (2026-07-08)
+## ステータス: Accepted (2026-07-14)
 
 ## 背景
 ADR-0008 で確立した「静的＋記事bot（DBなし）」の読みものCMS基盤（yomimono Worker / `cor-yomimono-bot`）は**ブログ単機能で稼働中**。これを取り巻く4つの課題がある:
@@ -21,7 +21,7 @@ ADR-0008 の「静的＋記事bot・DBなし・Cloudflare Worker」アーキテ�
 1. **yomimono Worker を blog/news/cases の3コレクションに拡張（DBレス・同 GitHub App・静的）**:
    - Worker 1つ・route 1つ（`/blog-admin*`）のまま、`body.collection`（`'blog'|'news'|'cases'`・既定 `'blog'`）でコレクションを切替。別 Worker/別 route は Cloudflare 設定・シークレット再登録コストが高いため採用しない。
    - 同一の GitHub App（`cor-yomimono-bot`・`contents:write`・パス制限なし）が `src/content/{blog/ja,news,cases}/` 配下にコミット。**DB・SSR 化なし・既存の push→Firebase SSG デプロイでそのまま公開**。
-   - `src/content/config.ts` に `newsCollection` を追加（本文 ja 専用・cases と同じ `availableLocales={['ja']}` 方針・5カテゴリ: info/media/update/event/award・`externalUrl` 設定時は個別ページ生成せず外部遷移）。
+   - `src/content/config.ts` に `newsCollection` を追加（本文 ja 専用・cases と同じ `availableLocales={['ja']}` 方針・6カテゴリ: info/media/update/event/award/press・`externalUrl` 設定時は個別ページ生成せず外部遷移）。
    - cases はフラット配置（`cases/<slug>.md`）を維持（URL 破壊を回避）。
 2. **全 CMS UI の非エンジニア向けフル改善（blog/news/cases 共通）**:
    - `ui-shared.ts` に共通改善モジュールを新設し、3画面（`ui-manual.ts`/`ui-manual-news.ts`/`ui-manual-cases.ts`）で共有。note/Qiita 級の書きやすさを実現:
@@ -46,7 +46,7 @@ ADR-0008 の「静的＋記事bot・DBなし・Cloudflare Worker」アーキテ�
 - **Milestone 構成（1PR=1意図・ワークツリー分岐）**:
   - **M1: yomimono collection 基盤 + UI改善基盤** — I1（collection 対応基盤）/ I2（UI改善基盤・共通）/ I3（既存記事編集）。**M1-I1 は PR #221 で develop マージ済**（test 172 緑・blog 回帰なし・`contentDir`/`normalizeArticle`/`buildMarkdown` の collection 分岐）。
   - **M2: cases CMS** — I4（cases 投稿UI・改善版）。`/manual/cases` から `body.collection='cases'` で `src/content/cases/<slug>.md` へ投稿する経路を追加済み。
-  - **M3: news 機能**（★news は M3 で有効化）— I5（news コレクション+投稿UI）/ I6（一覧・個別・NewsCard・SEO）/ I7（i18n+nav+sitemap+RSS）。
+  - **M3: news 機能**（★news は M3 で有効化）— I5（news コレクション+投稿UI）/ I6（一覧・個別・NewsCard・SEO）/ I7（i18n+nav+sitemap+RSS）。プレスリリースは `press` カテゴリと `/news/press/` の専用導線で公開する。
   - **M4: OGP PNG化**（★news リリース前完了推奨・先輩の直接要件）— I10（SVG→PNG・全ページ共通）。
 - **ADR-0008 からの進化**: ADR-0008「ブログ単機能」を「blog/news/cases の3コレクション・DBレス同 bot・非エンジニア向けUI」に拡張。ADR-0008 本体は温存し、本 ADR で拡張する関係（詳細は ADR-0008 末尾の追記参照）。
 - Worker は既存の `routes=cor-jp.com/blog-admin*`・シークレット群を再利用（`NEWS_DIR`/`CASES_DIR` の `[vars]` 追加のみ・シークレット再登録不要）。
@@ -66,5 +66,13 @@ ADR-0008 の「静的＋記事bot・DBなし・Cloudflare Worker」アーキテ�
 - 整合: ADR-0006（i18n 単一正本・news は ja 専用）/ ADR-0007（対外表現ガードレール・news/cases 本文にも適用）
 - 実装計画（Epic #220）: M1〜M4 の Milestone/Issue 構成・Critical Files
 - 既存資産（再利用）: `docs/blog-style-guide.md` / `scripts/generate-blog-draft.mjs` / `scripts/blog-guardrails.mjs` / `workers/yomimono/src/{guardrails,generate,validate}.ts`
+
+## プレスリリース運用
+
+- 新規の外部API、PR TIMES自動取込、DBは導入せず、既存の `news` コレクションと Yomimono CMS で管理する。
+- `category: press`、既存の `externalUrl`、`source` を使用し、公式発表または掲載許諾を確認できた内容だけを公開する。
+- `/news/press/`、ホームのニュース欄、日本語Header、ニュース一覧から導線を提供する。RSS・OGP・JSON-LD・外部リンクの `noopener noreferrer` は既存実装を継承する。
+- 公開責任者は担当者（初期は `terisuke`）とし、公開前に内容・日付・出典・リンク先・社名表記を校正する。公開後の訂正は新しい更新日と理由を記録する。
+- 取材・登壇・掲載相談の入口は `press-speaking-other` とし、プレスリリースの公開と問い合わせ受付を混同しない。
 
 Co-Authored-By: Claude <noreply@anthropic.com>
