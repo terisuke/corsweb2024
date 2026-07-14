@@ -2,6 +2,7 @@ import { afterEach, describe, it, expect, vi } from 'vitest';
 import worker, { extractJsonObject, parseChatResult } from '../index';
 import { resetRateLimits } from '../security';
 import type { Env } from '../types';
+import { decryptText, encryptText } from '../storage';
 import { PRESS_FIXTURES, PRESS_INTENT } from './press-fixtures';
 
 afterEach(() => {
@@ -439,6 +440,65 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect(second.text).toContain('相談です');
     expect((await res.json() as { receiptId?: string }).receiptId).toMatch(/^COR-/);
   });
+
+  it('submit: D1 sessionのstructuredLeadを正本としてbrowser payloadを上書きする', async () => {
+    const calls: Array<{ sql: string; bindings: unknown[] }> = [];
+    const trustedLead = {
+      purpose: '社内AI基盤のPoC',
+      discoverySource: '検索',
+      contactReason: '導入相談',
+    };
+    const encryptedEmptyExcerpt = await encryptText('storage-secret', '');
+    const db = {
+      prepare(sql: string) {
+        return {
+          bind(...bindings: unknown[]) {
+            calls.push({ sql, bindings });
+            return {
+              first: async <T>() => {
+                if (sql.includes('SELECT summary_text, structured_lead_json')) {
+                  return {
+                    summary_text: 'server summary',
+                    structured_lead_json: JSON.stringify(trustedLead),
+                  } as T;
+                }
+                if (sql.includes('SELECT session_id, conversation_excerpt_ciphertext')) {
+                  return { session_id: 'session-1', conversation_excerpt_ciphertext: encryptedEmptyExcerpt } as T;
+                }
+                return null as T;
+              },
+              run: async () => ({ meta: { changes: 1 } }),
+            };
+          },
+        };
+      },
+      batch: async () => undefined,
+    };
+    const queueSend = vi.fn(async () => undefined);
+    const env = {
+      ...ENV,
+      RESEND_API_KEY: 're_test',
+      PII_ENCRYPTION_KEY: 'storage-secret',
+      PII_HMAC_KEY: 'hmac-secret',
+      DB: db,
+      CONTACT_NOTIFICATIONS: { send: queueSend },
+    } as unknown as Env;
+    const res = await worker.fetch(post('/api/contact/submit', {
+      sessionId: 'session-1',
+      idempotencyKey: 'idempotency-session-lead',
+      name: '太郎',
+      email: 'taro@example.com',
+      message: '相談です',
+      summaryText: 'browser forged summary',
+      structuredLead: { discoverySource: 'browser', contactReason: 'forged' },
+    }, { 'cf-connecting-ip': '198.51.100.21' }), env);
+    expect(res.status).toBe(200);
+    const insert = calls.find((call) => call.sql.includes('INSERT INTO submission_intake'));
+    expect(insert).toBeDefined();
+    expect(JSON.parse(String(insert?.bindings[13]))).toEqual(trustedLead);
+    await expect(decryptText('storage-secret', String(insert?.bindings[8]))).resolves.toBe('server summary');
+    expect(queueSend).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('parseChatResult — intent / structuredLead (#250)', () => {
@@ -448,12 +508,19 @@ describe('parseChatResult — intent / structuredLead (#250)', () => {
       classification: 'genuine',
       readyForContact: true,
       intent: 'contract-dev',
-      structuredLead: { purpose: '受託開発', stage: 'exploring' },
+      structuredLead: {
+        purpose: '受託開発',
+        stage: 'exploring',
+        discoverySource: '検索',
+        contactReason: '業務改善の相談',
+      },
     });
     const r = parseChatResult(raw);
     expect(r.intent).toBe('contract-dev');
     expect(r.structuredLead?.purpose).toBe('受託開発');
     expect(r.structuredLead?.stage).toBe('exploring');
+    expect(r.structuredLead?.discoverySource).toBe('検索');
+    expect(r.structuredLead?.contactReason).toBe('業務改善の相談');
   });
   it('未知 intent は落とす（fallback を維持）', () => {
     const raw = '{"reply":"x","classification":"genuine","readyForContact":false,"intent":"evil"}';

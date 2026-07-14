@@ -71,15 +71,19 @@ describe('encrypted contact storage primitives', () => {
       source: 'cloudia',
       stage: 'qualifying',
       turnCount: 2,
-      structuredLead: {},
       missingFields: [],
       classification: 'genuine',
       summary: '相談目的: contract-dev',
       conversationExcerpt: '訪問者: 相談です [redacted-email]',
+      structuredLead: {
+        discoverySource: '検索',
+        contactReason: '業務改善の相談',
+      },
     };
     await upsertContactSession({ DB: db, PII_ENCRYPTION_KEY: 'secret' } as unknown as Env, state);
     const call = db.calls[0];
     expect(call.sql).toContain('conversation_excerpt_ciphertext');
+    expect(call.sql).toContain('json_patch(contact_sessions.structured_lead_json, excluded.structured_lead_json)');
     await expect(decryptText('secret', String(call.bindings[11]))).resolves.toBe(state.conversationExcerpt);
   });
 
@@ -100,7 +104,10 @@ describe('encrypted contact storage primitives', () => {
       classification: 'genuine',
       intent: 'contract-dev',
       source: 'cloudia',
-      structuredLead: {},
+      structuredLead: {
+        discoverySource: '紹介',
+        contactReason: 'PoCの相談',
+      },
       utm: {},
     };
     await createSubmission(
@@ -111,6 +118,10 @@ describe('encrypted contact storage primitives', () => {
     const call = db.calls.find((entry) => entry.sql.includes('INSERT INTO submission_intake'));
     expect(call).toBeDefined();
     await expect(decryptText('secret', String(call?.bindings[9]))).resolves.toBe('訪問者: 相談です');
+    expect(JSON.parse(String(call?.bindings[13]))).toEqual({
+      discoverySource: '紹介',
+      contactReason: 'PoCの相談',
+    });
   });
 
   it('internal通知だけ会話抜粋を復号し、receiptでは復号しない', async () => {
@@ -136,7 +147,7 @@ describe('encrypted contact storage primitives', () => {
       conversation_excerpt_ciphertext: encrypted.excerpt,
       intent: 'contract-dev',
       source: 'cloudia',
-      structured_lead_json: '{}',
+      structured_lead_json: JSON.stringify({ discoverySource: '検索', contactReason: '導入相談' }),
       utm_json: '{}',
       classification: 'genuine',
     };
@@ -144,7 +155,9 @@ describe('encrypted contact storage primitives', () => {
     const env = { DB: db, PII_ENCRYPTION_KEY: secret } as unknown as Env;
     const internal = await getSubmissionForNotification(env, 'submission-1', 'internal');
     expect(internal?.inquiry.conversationExcerpt).toBe('訪問者: 相談です');
+    expect(internal?.inquiry.structuredLead).toEqual({ discoverySource: '検索', contactReason: '導入相談' });
     const receipt = await getSubmissionForNotification(env, 'submission-1', 'receipt');
     expect(receipt?.inquiry.conversationExcerpt).toBeUndefined();
+    expect(receipt?.inquiry.structuredLead).toEqual({ discoverySource: '検索', contactReason: '導入相談' });
   });
 });

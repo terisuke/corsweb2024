@@ -46,9 +46,21 @@ describe('mode prompt', () => {
     const prompt = buildSystemPrompt({ mode: 'intake', locale: 'ja' });
     expect(prompt).toContain('Cor.株式会社');
     expect(prompt).toContain('コー株式会社');
-    expect(prompt).toContain('brand: Cor.inc');
+    expect(prompt).toContain('brand is "Cor.inc"');
+    expect(prompt).toContain('Do not volunteer the Japanese reading or the brand name');
     expect(prompt).toContain('Never call the company "コア株式会社"');
     expect(prompt).not.toContain('Cor. (コア株式会社 / Cor.inc)');
+  });
+
+  it('marketing fields are structured non-PII fields with explicit boundaries', () => {
+    const prompt = buildSystemPrompt({ mode: 'intake', locale: 'ja' });
+    expect(prompt).toContain('"discoverySource"?: string');
+    expect(prompt).toContain('"contactReason"?: string');
+    expect(prompt).toContain('how they found Cor.');
+    expect(prompt).toContain('why they are contacting Cor. now');
+    expect(prompt).toContain('never put names, emails, phone numbers');
+    expect(prompt).toContain('Do not force a fixed question order');
+    expect(prompt).toContain('if the visitor declines, do not block the inquiry handoff');
   });
 
   it.each(['ja', 'en'] as const)('%s intakeは検索とPIIを禁止', (locale) => {

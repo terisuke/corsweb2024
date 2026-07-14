@@ -62,6 +62,8 @@ function redactStructuredLead(lead: StructuredLead | undefined): StructuredLead 
     dataSensitivity: redactMetadataValue(lead.dataSensitivity),
     stage: redactMetadataValue(lead.stage),
     timingBudget: redactMetadataValue(lead.timingBudget),
+    discoverySource: redactMetadataValue(lead.discoverySource),
+    contactReason: redactMetadataValue(lead.contactReason),
   };
 }
 
@@ -161,7 +163,9 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
     ON CONFLICT(session_id) DO UPDATE SET
       intent=excluded.intent, mode=excluded.mode, locale=excluded.locale,
       source=excluded.source, stage=excluded.stage, turn_count=excluded.turn_count,
-      structured_lead_json=excluded.structured_lead_json,
+      -- JSON1 merge keeps fields collected in earlier turns when the model
+      -- omits them from a later partial structuredLead response.
+      structured_lead_json=json_patch(contact_sessions.structured_lead_json, excluded.structured_lead_json),
       missing_fields_json=excluded.missing_fields_json,
       classification=excluded.classification, summary_text=excluded.summary_text,
       conversation_excerpt_ciphertext=excluded.conversation_excerpt_ciphertext, status='active',

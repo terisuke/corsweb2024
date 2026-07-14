@@ -258,6 +258,14 @@ describe('normalizeInquiry — /submit 検証＋ハニーポット', () => {
       expect(r.inquiry.conversationSummary).toBe(r.inquiry.summaryText);
     }
   });
+  it('流入経路と連絡理由を非PII structuredLeadへ正規化する', () => {
+    const r = normalizeStructuredLead({
+      discoverySource: '検索',
+      contactReason: 'AI導入の相談',
+      email: 'user@example.com',
+    });
+    expect(r).toEqual({ discoverySource: '検索', contactReason: 'AI導入の相談' });
+  });
   it('構造化リードに混入したPIIも決定的fallbackへ再出力しない', () => {
     const r = normalizeInquiry({
       ...base,
@@ -326,6 +334,19 @@ describe('normalizeIntent / structuredLead / utm (#250)', () => {
       expect(r.inquiry.source).toBe('header-ai-dev');
       expect(r.inquiry.structuredLead.purpose).toBe('受託');
       expect(r.inquiry.utm.utm_source).toBe('nav');
+    }
+  });
+  it('決定的要約へ流入経路と連絡理由を含める', () => {
+    const r = normalizeInquiry({
+      name: '山田太郎',
+      email: 'taro@example.com',
+      message: '相談です',
+      structuredLead: { discoverySource: '紹介', contactReason: 'PoCの相談' },
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.inquiry.summaryText).toContain('流入経路: 紹介');
+      expect(r.inquiry.summaryText).toContain('連絡理由: PoCの相談');
     }
   });
   it('未知 intent でも submit は成功し intent は空', () => {

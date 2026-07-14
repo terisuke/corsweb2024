@@ -38,7 +38,8 @@ describe('chat start contract', () => {
     expect(response.status).toBe(200);
     const body = await response.json() as Record<string, unknown>;
     expect(body.reply).toContain('Cor.株式会社');
-    expect(body.reply).toContain('コー株式会社');
+    expect(body.reply).not.toContain('コー株式会社');
+    expect(body.reply).not.toContain('Cor.inc');
     expect(body.reply).toContain('ご質問があればお聞かせください');
     expect(body.reply).not.toContain('おっす');
     expect(body.reply).not.toContain('全部知っとう');
