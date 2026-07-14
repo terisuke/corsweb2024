@@ -324,8 +324,20 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
   const result = parseChatResult(raw, initialIntent, locale);
   const sessionId = normalizeSessionId(body.sessionId) || newSessionId();
   result.sessionId = sessionId;
-  result.stage = resultStage(result);
   result.missingFields = leadMissingFields(result.structuredLead);
+  // Keep the model free to choose its questioning path, but do not leave the
+  // visitor stranded when every non-PII intake field is already present and
+  // the model under-reports readiness. This is a completeness gate, not a
+  // fixed question count; press-specific flows can still hand off earlier.
+  if (
+    !result.readyForContact
+    && Boolean(initialIntent)
+    && Boolean(result.structuredLead && Object.keys(result.structuredLead).length > 0)
+    && result.missingFields.length === 0
+  ) {
+    result.readyForContact = true;
+  }
+  result.stage = resultStage(result);
   try {
     await upsertContactSession(env, {
       sessionId,
