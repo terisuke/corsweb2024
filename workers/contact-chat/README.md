@@ -34,6 +34,7 @@ HP本体（静的・Firebase）には一切触れず、`cor-jp.com/api/contact/*
   - 新規クライアントは `summaryText` を正本として送る。形式は `{ version: 1, locale: "ja"|"en", intent, classification, readyForContact, stage, structuredLead, text }`（`text` はPIIなしの要約本文）。`summaryText` が無い場合のみ旧 `conversationSummary` を受理する。
   - roleラベル付き会話全文やPIIを含む要約は保存・メール本文への採用を拒否し、構造化フィールドから決定的fallbackを生成する。
   - `intent` / `source` / `structuredLead` / `utm`: 構造化リード（非PII）。メール件名・本文に載る。PII ではない。
+  - `structuredLead.discoverySource`（どこで知ったか）と`structuredLead.contactReason`（連絡理由）は非PIIの任意項目。D1のセッションJSONへ保持し、internal通知と正本要約へ反映する。本人向けreceiptでは安全な要約の範囲だけに限定する。
   - `website` は **ハニーポット**。人間は空のまま。値が入っていれば bot とみなし、200を返して握り潰す（送信しない）。
 - レスポンス: `{ "ok": true, "receiptId": string, "status": "queued"|"sent", "duplicate"?: boolean }`
 - 検証: name 必須 / email 形式チェック / message 必須 / 各長さ上限 / サニタイズ。

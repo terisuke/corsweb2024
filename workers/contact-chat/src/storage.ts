@@ -9,7 +9,7 @@ import type {
   NotificationMessage,
   NotificationType,
 } from './types';
-import { MAX_CONVERSATION_EXCERPT_LEN } from './validate';
+import { MAX_CONVERSATION_EXCERPT_LEN, normalizeStructuredLead } from './validate';
 
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SUBMISSION_TTL_SECONDS = 90 * 24 * 60 * 60;
@@ -62,6 +62,8 @@ function redactStructuredLead(lead: StructuredLead | undefined): StructuredLead 
     dataSensitivity: redactMetadataValue(lead.dataSensitivity),
     stage: redactMetadataValue(lead.stage),
     timingBudget: redactMetadataValue(lead.timingBudget),
+    discoverySource: redactMetadataValue(lead.discoverySource),
+    contactReason: redactMetadataValue(lead.contactReason),
   };
 }
 
@@ -161,7 +163,9 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
     ON CONFLICT(session_id) DO UPDATE SET
       intent=excluded.intent, mode=excluded.mode, locale=excluded.locale,
       source=excluded.source, stage=excluded.stage, turn_count=excluded.turn_count,
-      structured_lead_json=excluded.structured_lead_json,
+      -- JSON1 merge keeps fields collected in earlier turns when the model
+      -- omits them from a later partial structuredLead response.
+      structured_lead_json=json_patch(contact_sessions.structured_lead_json, excluded.structured_lead_json),
       missing_fields_json=excluded.missing_fields_json,
       classification=excluded.classification, summary_text=excluded.summary_text,
       conversation_excerpt_ciphertext=excluded.conversation_excerpt_ciphertext, status='active',
@@ -339,7 +343,7 @@ export async function getSubmissionForNotification(
   ]);
   let structuredLead: StructuredLead = {};
   let utm: Record<string, string> = {};
-  try { structuredLead = JSON.parse(row.structured_lead_json) as StructuredLead; } catch { /* safe default */ }
+  try { structuredLead = normalizeStructuredLead(JSON.parse(row.structured_lead_json)); } catch { /* safe default */ }
   try { utm = JSON.parse(row.utm_json) as Record<string, string>; } catch { /* safe default */ }
   return {
     submissionId: row.submission_id,

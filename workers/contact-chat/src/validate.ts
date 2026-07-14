@@ -167,6 +167,8 @@ const LEAD_KEYS = [
   'dataSensitivity',
   'stage',
   'timingBudget',
+  'discoverySource',
+  'contactReason',
 ] as const;
 
 export function normalizeStructuredLead(raw: unknown): StructuredLead {
@@ -232,6 +234,8 @@ export function buildDeterministicSummary(
   if (lead.dataSensitivity) parts.push(`データ感度: ${safeLead(lead.dataSensitivity)}`);
   if (lead.stage) parts.push(`進捗段階: ${safeLead(lead.stage)}`);
   if (lead.timingBudget) parts.push(`時期・予算: ${safeLead(lead.timingBudget)}`);
+  if (lead.discoverySource) parts.push(`流入経路: ${safeLead(lead.discoverySource)}`);
+  if (lead.contactReason) parts.push(`連絡理由: ${safeLead(lead.contactReason)}`);
   return parts.length ? parts.join(' / ') : '要約未生成（受付内容を担当者が確認します）';
 }
 
