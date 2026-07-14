@@ -453,13 +453,14 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
   const workerReceivedAt = new Date().toISOString();
   const body = await readJsonBody(req);
   if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
-  const handoffConsent = normalizeHandoffConsent(body.handoffConsent, workerReceivedAt);
 
-  // Turnstile（シークレットがあれば検証）。
+  // Turnstile は normalize/storage/email/Grift より前に完了させる。required-on では
+  // Siteverify の success + action + hostname + freshness を満たさない限り先へ進めない。
   const ip = clientIp(req);
   const ts = await verifyTurnstile(env, body.turnstileToken, ip);
   if (!ts.ok) return json({ error: ts.error }, ts.status);
 
+  const handoffConsent = normalizeHandoffConsent(body.handoffConsent, workerReceivedAt);
   const norm = normalizeInquiry(body as InquiryInput);
   if (!norm.ok) {
     // ハニーポット命中時は bot に成功を装って 200（実際には送信しない）。

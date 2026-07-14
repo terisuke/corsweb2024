@@ -10,7 +10,9 @@ import { fileURLToPath } from 'node:url';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const workerDir = resolve(scriptDir, '..');
 const configPath = join(workerDir, 'wrangler.toml');
+const securityPath = join(workerDir, 'src', 'security.ts');
 const migrationName = '0005_submission_payload_fingerprint.sql';
+const expectedTurnstileAction = 'contact-submit';
 const schemaQuery =
   "SELECT COUNT(*) AS column_count FROM pragma_table_info('submission_intake') WHERE name='payload_fingerprint'";
 const outboxQuery =
@@ -22,12 +24,14 @@ const specs = {
     workerName: 'cor-contact-chat',
     healthUrl: 'https://cor-jp.com/api/contact/health',
     queues: ['cor-contact-notifications', 'cor-contact-notifications-dlq'],
+    turnstileAllowedHostnames: 'cor-jp.com,www.cor-jp.com',
   },
   preview: {
     wranglerEnv: ['--env', 'preview'],
     workerName: 'cor-contact-chat-preview',
     healthUrl: null,
     queues: ['cor-contact-notifications-preview', 'cor-contact-notifications-preview-dlq'],
+    turnstileAllowedHostnames: 'cloudia-contact.pages.dev',
   },
 };
 
@@ -40,6 +44,8 @@ const requiredSecrets = [
 ];
 const optionalSecrets = ['ANTHROPIC_API_KEY'];
 const targetVars = new Set([
+  'TURNSTILE_REQUIRED',
+  'TURNSTILE_ALLOWED_HOSTNAMES',
   'GRIFT_HANDOFF_ENABLED',
   'GRIFT_API_ORIGIN',
   'GRIFT_PUBLIC_URL_ORIGINS',
@@ -80,7 +86,7 @@ Options:
 
 This command permits only Wrangler dry-run and read-only subcommands. Child output
 is captured and never printed verbatim, so secret values and PII are not emitted.
-Manual WAF, Grift tenant/base-URL, and Nagi UAT gates remain mandatory.`);
+Manual Turnstile widget hostname/action, WAF, Grift tenant/base-URL, and Nagi UAT gates remain mandatory.`);
 }
 
 function parseArgs(argv) {
@@ -235,6 +241,24 @@ function extractTargetVars(data) {
   return found;
 }
 
+function sourceTurnstileAction() {
+  const source = readFileSync(securityPath, 'utf8');
+  const match = /export const TURNSTILE_EXPECTED_ACTION\s*=\s*['"]([^'"]+)['"]/.exec(source);
+  return match?.[1] || null;
+}
+
+function inspectSourceTurnstileContract() {
+  try {
+    if (sourceTurnstileAction() === expectedTurnstileAction) {
+      pass('Turnstile action parity', `exact ${expectedTurnstileAction}`);
+    } else {
+      block('Turnstile action parity', `source must require exact ${expectedTurnstileAction}`);
+    }
+  } catch {
+    block('Turnstile action parity', 'security.ts unreadable');
+  }
+}
+
 function healthUrl(base) {
   const url = new URL(base);
   if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) {
@@ -328,14 +352,26 @@ function inspectTargetVars(environment, versionId) {
     ...specs[environment].wranglerEnv,
   ]);
   if (!result.ok) {
-    warn(`${environment} deployed Grift vars`, 'version details unreadable; raw output withheld');
+    warn(`${environment} deployed config vars`, 'version details unreadable; raw output withheld');
     return;
   }
   try {
     const vars = extractTargetVars(parseJson(result.stdout));
+    const turnstileRequired = vars.get('TURNSTILE_REQUIRED');
+    const turnstileHostnames = vars.get('TURNSTILE_ALLOWED_HOSTNAMES');
     const enabled = vars.get('GRIFT_HANDOFF_ENABLED');
     const apiOrigin = vars.get('GRIFT_API_ORIGIN');
     const publicOrigins = vars.get('GRIFT_PUBLIC_URL_ORIGINS');
+    if (turnstileRequired === 'true') {
+      pass(`${environment} deployed TURNSTILE_REQUIRED`, 'true');
+    } else {
+      block(`${environment} deployed TURNSTILE_REQUIRED`, 'must be exact true before release');
+    }
+    if (turnstileHostnames === specs[environment].turnstileAllowedHostnames) {
+      pass(`${environment} deployed TURNSTILE_ALLOWED_HOSTNAMES`, 'exact allowlist matches');
+    } else {
+      block(`${environment} deployed TURNSTILE_ALLOWED_HOSTNAMES`, 'exact allowlist missing or mismatched');
+    }
     info(
       `${environment} deployed GRIFT_HANDOFF_ENABLED`,
       enabled === 'true' ? 'true' : 'false-or-absent'
@@ -346,7 +382,7 @@ function inspectTargetVars(environment, versionId) {
       publicOrigins ? 'configured' : 'empty-or-absent'
     );
   } catch {
-    warn(`${environment} deployed Grift vars`, 'JSON parse failed; raw output withheld');
+    warn(`${environment} deployed config vars`, 'JSON parse failed; raw output withheld');
   }
 }
 
@@ -503,9 +539,20 @@ function runSelfTest() {
   );
   assert.deepEqual([...secretNames([{ name: 'RESEND_API_KEY' }])], ['RESEND_API_KEY']);
   const vars = extractTargetVars({
-    bindings: [{ name: 'GRIFT_HANDOFF_ENABLED', type: 'plain_text', text: 'false' }],
+    bindings: [
+      { name: 'GRIFT_HANDOFF_ENABLED', type: 'plain_text', text: 'false' },
+      { name: 'TURNSTILE_REQUIRED', type: 'plain_text', text: 'true' },
+      {
+        name: 'TURNSTILE_ALLOWED_HOSTNAMES',
+        type: 'plain_text',
+        text: 'cor-jp.com,www.cor-jp.com',
+      },
+    ],
   });
   assert.equal(vars.get('GRIFT_HANDOFF_ENABLED'), 'false');
+  assert.equal(vars.get('TURNSTILE_REQUIRED'), 'true');
+  assert.equal(vars.get('TURNSTILE_ALLOWED_HOSTNAMES'), 'cor-jp.com,www.cor-jp.com');
+  assert.equal(sourceTurnstileAction(), expectedTurnstileAction);
   assert.equal(
     healthUrl('https://preview.example.test/'),
     'https://preview.example.test/api/contact/health'
@@ -542,6 +589,7 @@ async function main() {
   }
 
   info('safety mode', 'Wrangler dry-run/read-only commands and HTTP GET only');
+  inspectSourceTurnstileContract();
   for (const environment of options.environments) runDryRun(environment);
 
   if (!options.localOnly) {
@@ -573,7 +621,7 @@ async function main() {
   console.log('');
   info(
     'manual gates',
-    'WAF/Turnstile dashboard, Grift public URL and Cor tenant isolation, and Nagi browser UAT are not automated here'
+    'Turnstile widget hostname + exact action contact-submit, WAF, Grift public URL and Cor tenant isolation, and Nagi browser UAT are not automated here'
   );
   if (blockers > 0) {
     console.log(`[RESULT] NOT READY: blockers=${blockers}, warnings=${warnings}`);

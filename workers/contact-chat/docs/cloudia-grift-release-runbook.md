@@ -12,6 +12,7 @@
 - Bearer は Cloudia route 専用とし、他の internal API 用 token を再利用しない。同じ approved source から Worker と Grift へ設定する。
 - Worker は Grift に `tenant_id` を送らない。Grift の `CLOUDIA_HANDOFF_TENANT_ID` が Cor tenant を固定する。
 - Grift 障害や設定不一致はメール受付を維持して `handoff.status=fallback` にする。成功表示へ読み替えない。
+- Cloudia explicit widget と Worker のTurnstile actionはexact `contact-submit`の1値だけを正本とする。旧actionや複数action許容で移行しない。
 - production の Turnstile / WAF / Grift public URL / Cor tenant isolation / Nagi UAT のいずれかが未確認なら production handoff を有効化しない。
 - Worker rollback は D1 migration、Queue、WAF、Turnstile、Grift の状態を巻き戻さない。各面を別々に扱う。
 
@@ -39,12 +40,13 @@
 | D1 0005                   | pending、列なし                         | pending、列なし                         |
 | handoff secret            | missing                                 | missing                                 |
 | Turnstile secret          | missing                                 | missing                                 |
+| deployed Turnstile vars   | absent（sourceはrequired=false）         | absent（sourceはrequired=false）         |
 | Vertex / Resend secrets   | names present                           | names present                           |
 | Anthropic rollback secret | missing                                 | missing                                 |
 | Queue / DLQ               | 2つとも存在                             | 2つとも存在                             |
 | deployed Grift vars       | handoff var は absent、実質 feature-off | handoff var は absent、実質 feature-off |
 
-production / Preview の primary Queue は各 Worker の producer / consumer を持つ。DLQ は存在し、consumer なしである。WAF rule、Turnstile widget の hostname/action、Grift tenant/public URL、Nagi UAT は Wrangler だけでは確認できないため、現 snapshot では production gate 未達である。
+production / Preview の primary Queue は各 Worker の producer / consumer を持つ。DLQ は存在し、consumer なしである。sourceのserver-side allowlistはproduction `cor-jp.com,www.cor-jp.com`、Preview `cloudia-contact.pages.dev`、actionはexact `contact-submit` だが未deployである。widget側hostname制限、secret、WAF rule、Grift tenant/public URL、Nagi UAT は未確認のため、現 snapshotではproduction gate未達である。
 
 ## 安全な自動確認
 
@@ -70,7 +72,7 @@ node scripts/verify-release-readiness.mjs \
 - Queue / DLQ の metadata 参照
 - health の HTTPS `GET`
 
-child command の生出力は表示しない。`[BLOCK]` が1件でもあれば昇格しない。`AUTOMATED CHECKS PASS` でも、WAF、Turnstile、Grift、Nagi の manual gate は別途必須である。
+child command の生出力は表示しない。source actionがexact `contact-submit`かを常に検査し、read-only監査ではdeployed `TURNSTILE_REQUIRED=true`、環境別`TURNSTILE_ALLOWED_HOSTNAMES` exact match、secret名の存在を検査する。`[BLOCK]` が1件でもあれば昇格しない。`AUTOMATED CHECKS PASS` でも、widget側hostname/action、WAF、Grift、Nagiのmanual gateは別途必須である。
 
 ## Preview リリース
 
@@ -79,8 +81,9 @@ child command の生出力は表示しない。`[BLOCK]` が1件でもあれば�
 1. 対象 merge commit、Worker source commit、migration checksum を記録する。
 2. `wrangler.toml` の Preview D1 / Queue / DLQ が Preview 専用品であることを確認する。
 3. Preview の `GRIFT_API_ORIGIN` は Grift dev/staging の HTTPS origin のみ、`GRIFT_PUBLIC_URL_ORIGINS` は Preview で実際に返す public portal origin のみとする。path、query、fragment、userinfo、IP literal を含めない。
-4. `GRIFT_HANDOFF_ENABLED="false"` を確認する。production vars はこの段階で変更しない。
-5. dry-run と通常テストを実行する。
+4. code-only段階では`TURNSTILE_REQUIRED="false"`、Preview server allowlistはexact `cloudia-contact.pages.dev`であることを確認する。widget/secretを別の承認作業で整合させるまでtrueへ変更しない。
+5. `GRIFT_HANDOFF_ENABLED="false"` を確認する。production vars はこの段階で変更しない。
+6. dry-run と通常テストを実行する。
 
 ```bash
 cd workers/contact-chat
@@ -192,8 +195,10 @@ feature-off E2E と positive E2E を同じ「E2E済み」にまとめない。�
 | feature off / auth不一致 / Grift 4xx・5xx・timeout / URL契約違反     | HTTP 200 の `fallback`、メール・Queue 継続                                     |
 | 同じ idempotency key、同じ payload                                   | duplicate replay、case増加なし                                                 |
 | 同じ idempotency key、異なる payload                                 | 409、Grift未呼出し                                                             |
-| Turnstile 成功 token                                                 | `/submit` 成功                                                                 |
-| Turnstile 欠落・失敗・再利用                                         | `/submit` 拒否。token は1回ごとに新規発行                                      |
+| Turnstile success＋exact `contact-submit`＋allowlisted hostname＋fresh timestamp | `/submit` 成功。メール/Queue完了後だけGrift判定へ進む                   |
+| Turnstile token/secret欠落、失敗、action/hostname不一致               | `/submit` 拒否。D1・Queue・メール・Griftへ進まない                              |
+| 2049文字、malformed/HTTP error/8秒timeout                             | 400または503でfail closed。token/secret/IPをログへ出さない                     |
+| 300秒超過・同じtoken再利用（`timeout-or-duplicate`）                  | `/submit` 拒否。widgetをresetし、送信ごとに新tokenを発行                        |
 | Queue consumer 一時失敗                                              | retry 後に送信、上限超過時は DLQ。本文は見ない                                 |
 
 ## production の明示ゲート
@@ -202,11 +207,16 @@ feature-off E2E と positive E2E を同じ「E2E済み」にまとめない。�
 
 ### Turnstile
 
-- production 専用 widget で `cor-jp.com` / `www.cor-jp.com` の必要 hostname だけを許可する。
-- Cloudia の production sitekey と Worker `TURNSTILE_SECRET` が同じ widget pair である。
-- server-side Siteverify を `/submit` で通し、成功・失敗・期限切れ・再利用を実ブラウザで確認する。
-- `/chat` には token を再利用しない。Turnstile token は単回使用・短時間有効である。
-- 現実装は secret 不在時に Turnstile だけ fail-open なので、運用ゲートは fail-closed とし、secret name 不在なら production deploy / enable を停止する。
+- production専用widgetで必要な`cor-jp.com` / `www.cor-jp.com`だけを許可する。Cloudflareのwidget hostname設定は親hostnameからsubdomainも許可しうるため、Worker側は公開var `TURNSTILE_ALLOWED_HOSTNAMES="cor-jp.com,www.cor-jp.com"` のexact matchを追加で強制する。
+- Previewは別widget/secretを使い、server allowlistはexact `cloudia-contact.pages.dev`とする。productionと混用しない。
+- Cloudia explicit widgetは`action: "contact-submit"`を指定する。Worker定数もexact `contact-submit`であり、旧`turnstile-spin-v1`を含む複数actionを許可しない。
+- Cloudiaのproduction sitekeyとWorker `TURNSTILE_SECRET`が同じwidget pairであることを確認してから、承認済み変更で`TURNSTILE_REQUIRED=true`にする。true時のsecret欠落は503、token欠落は400でfail closedする。
+- Siteverifyは`success`だけでなく、空の`error-codes`、exact action、環境別exact hostname、ISO `challenge_ts`の300秒freshnessを検査する。tokenは最大2048文字、単回使用、8秒timeoutである。
+- 成功・invalid・期限切れ・再利用・malformed・timeoutを実ブラウザ/安全なsynthetic testで確認する。期限切れ/再利用はwidgetをresetし、新しいtokenで再送する。
+- Cloudflare公式ダミー鍵は固定のtest metadata（例: `hostname=example.com`、`action=test`、またはaction省略）を返しうる。これはwidget描画・失敗経路の自動試験にだけ使い、exact `contact-submit` / 環境別hostnameの通過証跡にはしない。production/Previewのallowlistやactionをダミー鍵向けに広げず、最終成功経路は環境ごとの実widget pairで確認する。
+- `/chat`にTurnstileを適用しない。chatは別ゲートのsame-origin、Worker内best-effort rate limit、Cloudflare WAF rate limitで守る。
+- token、secret、remote IP、Siteverify生応答、例外messageをWorker logs/Issue/PR/証跡に出さない。
+- 現時点ではwidget hostname制限、production secret、WAF、E2Eが未完で、sourceは意図的に`TURNSTILE_REQUIRED=false`である。コード実装だけをproduction-readyと判定しない。
 
 ### WAF
 
@@ -300,7 +310,10 @@ health、deployment/version、D1、Queue/DLQ、secret names を read-only script
 | 異常                                                                        | 外向き挙動                         | リリース判断                                              |
 | --------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------- |
 | Resend 未設定、D1保存失敗、Queue未設定/登録失敗                             | `/submit` を 5xx、成功を装わない   | fail closed、即停止                                       |
-| Turnstile production secret 不在                                            | 現実装は検証skip                   | 運用ゲートで fail closed、deploy/enable禁止               |
+| `TURNSTILE_REQUIRED=true`でsecret不在 / 設定不正 / Siteverify timeout・malformed | `/submit`を503、後続処理なし       | fail closed、原因解消まで公開・enable禁止                 |
+| token欠落・2049文字・invalid・expired・duplicate                             | `/submit`を400、後続処理なし       | widget reset後のfresh tokenだけ再試行                     |
+| action / hostname不一致                                                      | `/submit`を403、後続処理なし       | frontend/widget/config parityを復旧するまで停止            |
+| `TURNSTILE_REQUIRED=false`                                                   | secret不在時は互換skip             | code-only移行用。production readinessはBLOCK              |
 | Grift flag false、config/secret不足、auth/network/4xx/5xx/timeout、不正応答 | メール受付を維持し `fallback`      | handoff feature-off、原因解消まで再enable禁止             |
 | public URL origin/path/expiry/submission相関違反                            | `fallback`、URL非公開              | security incident として停止                              |
 | Queue retry 増加 / DLQ backlog                                              | handoffとは独立して通知遅延        | Worker false、通知復旧を優先                              |
@@ -435,5 +448,7 @@ decision: PASS / BLOCK / ROLLED_BACK
 - [D1 Wrangler migration commands](https://developers.cloudflare.com/d1/wrangler-commands/)
 - [Queues dead-letter queues](https://developers.cloudflare.com/queues/configuration/dead-letter-queues/)
 - [Turnstile server-side validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)
+- [Turnstile explicit rendering](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)
+- [Turnstile hostname management](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/)
 - [Turnstile testing](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
 - [WAF rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)

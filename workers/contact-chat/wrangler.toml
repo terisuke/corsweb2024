@@ -27,6 +27,10 @@ VERTEX_MODEL = "gemini-3.5-flash"
 CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
 CONTACT_CC_EMAILS = "company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
+# コード先行リリース中は false。widget hostname制限・secret・WAF・E2E完了後の承認変更でのみ true にする。
+TURNSTILE_REQUIRED = "false"
+# Siteverify response の hostname をこの値と完全一致で照合する（wildcard/suffix matchなし）。
+TURNSTILE_ALLOWED_HOSTNAMES = "cor-jp.com,www.cor-jp.com"
 # ADR-0016 Grift handoff。API originはデプロイ先確定後に設定し、両系の検証完了までfalseを維持する。
 GRIFT_HANDOFF_ENABLED = "false"
 GRIFT_API_ORIGIN = ""
@@ -70,6 +74,8 @@ VERTEX_MODEL = "gemini-3.5-flash"
 CONTACT_TO_EMAIL = "cloudia@cor-jp.com"
 CONTACT_CC_EMAILS = "company@cor-jp.com,k.isayama@cor-jp.com,nagisa.terada@cor-jp.com"
 CONTACT_FROM_EMAIL = "noreply@cor-jp.com"
+TURNSTILE_REQUIRED = "false"
+TURNSTILE_ALLOWED_HOSTNAMES = "cloudia-contact.pages.dev"
 GRIFT_HANDOFF_ENABLED = "false"
 GRIFT_API_ORIGIN = ""
 GRIFT_PUBLIC_URL_ORIGINS = "https://app.griftai.org"
@@ -96,7 +102,7 @@ dead_letter_queue = "cor-contact-notifications-preview-dlq"
 #   VERTEX_GATEWAY_URL  ... Cloud Run Gatewayの /generateContent URL
 #   VERTEX_GATEWAY_SECRET ... Gatewayと共有するHMAC secret
 #   RESEND_API_KEY      ... Resend のAPIキー（/submit の送信に必須。未設定なら 503 fail closed）
-#   TURNSTILE_SECRET    ... Cloudflare Turnstile のシークレット（任意。未設定なら検証スキップ＝fail open）
+#   TURNSTILE_SECRET    ... Cloudflare Turnstile のシークレット（TURNSTILE_REQUIRED=true では必須）
 #   CLOUDIA_HANDOFF_AUTH_TOKEN ... Cloudia→Grift Bearer token（handoff有効時に必須）
 # ↑ 選択したプロバイダの認証情報が未設定だと /chat を拒否（fail closed）。
 #   RESEND_API_KEY 未設定だと /submit を 503（本物の問い合わせを握り潰さない）。

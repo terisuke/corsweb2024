@@ -2,7 +2,7 @@ export interface Env {
   // secrets（wrangler secret put で登録）
   ANTHROPIC_API_KEY: string; // LLM_PROVIDER=anthropic のとき必須。未設定なら /chat を fail closed。
   RESEND_API_KEY: string; // /submit のメール送信に必須。未設定なら 503（本物の問い合わせを握り潰さない）。
-  TURNSTILE_SECRET: string; // Cloudflare Turnstile。任意。未設定なら検証スキップ（turnstileのみ fail open）。
+  TURNSTILE_SECRET?: string; // Turnstile secret。TURNSTILE_REQUIRED=true のとき必須（値はログ禁止）。
   CLOUDIA_HANDOFF_AUTH_TOKEN?: string; // Cloudia→Grift Bearer token。値はsecretとしてのみ登録する。
   // vars（公開可・非シークレット）
   LLM_PROVIDER: string; // 既定 'vertex-gemini'。'anthropic' でロールバック可能。
@@ -17,6 +17,8 @@ export interface Env {
   /** カンマ区切りの社内CC宛先。コード側で配列へ正規化する。 */
   CONTACT_CC_EMAILS?: string;
   CONTACT_FROM_EMAIL: string; // 問い合わせメールの差出人。
+  TURNSTILE_REQUIRED?: string; // 'true' で /submit を fail closed。未設定/'false' は後方互換。
+  TURNSTILE_ALLOWED_HOSTNAMES?: string; // Siteverify hostname のカンマ区切り exact allowlist。
   GRIFT_HANDOFF_ENABLED?: string; // 'true' のときだけ対象4 intentの同期handoffを試行する。
   GRIFT_API_ORIGIN?: string; // Grift内部APIのHTTPS origin。pathや認証情報は含めない。
   GRIFT_PUBLIC_URL_ORIGINS?: string; // browserへ返せる公開portal originのカンマ区切りallowlist。
