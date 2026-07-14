@@ -1,5 +1,6 @@
 import type {
   ChatLocale,
+  ChatMessage,
   ChatMode,
   ChatResult,
   Classification,
@@ -103,6 +104,23 @@ function isSafeChatSummary(candidate: string): boolean {
     && !SUMMARY_ROLE_LINE.test(candidate)
     && !SUMMARY_SECRET_RE.test(candidate)
     && candidate === maskSensitiveContent(candidate);
+}
+
+const COMPANY_DETAIL_TERMS = /(?:コー株式会社|Cor\.inc|ブランド|読み|ふりがな|正式名称|read\s+as|pronounc|legal\s+name|brand)/i;
+const COMPANY_DETAIL_QUESTION = /(?:[?？]|教えて|知りたい|とは|どう読む|読み方|what|how|which|tell me)/i;
+
+/**
+ * Keep ordinary model replies on the short company name even when the model
+ * volunteers a parenthetical reading/brand explanation. Details remain
+ * available when the visitor explicitly asks about the company name.
+ */
+export function normalizeCompanyNameReply(reply: string, messages: ChatMessage[]): string {
+  const latestUser = [...messages].reverse().find((message) => message.role === 'user')?.content || '';
+  const allowsDetail = COMPANY_DETAIL_TERMS.test(latestUser) && COMPANY_DETAIL_QUESTION.test(latestUser);
+  if (allowsDetail) return reply;
+  return reply.replace(/\bCor(?:\.株式会社|\.\s*Inc\.?)\s*[（(]([^）)]{0,180})[）)]/gi, (whole, detail: string) => {
+    return COMPANY_DETAIL_TERMS.test(detail) ? 'Cor.株式会社' : whole;
+  });
 }
 
 // 文字列リテラルを尊重しながら、最初のトップレベル `{...}` を抜き出す。
@@ -322,6 +340,7 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
   }
 
   const result = parseChatResult(raw, initialIntent, locale);
+  result.reply = normalizeCompanyNameReply(result.reply, norm.messages);
   const sessionId = normalizeSessionId(body.sessionId) || newSessionId();
   result.sessionId = sessionId;
   result.missingFields = leadMissingFields(result.structuredLead);

@@ -1,5 +1,5 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import worker, { extractJsonObject, parseChatResult } from '../index';
+import worker, { extractJsonObject, normalizeCompanyNameReply, parseChatResult } from '../index';
 import { resetRateLimits } from '../security';
 import type { Env } from '../types';
 import { decryptText, encryptText } from '../storage';
@@ -542,5 +542,19 @@ describe('parseChatResult — intent / structuredLead (#250)', () => {
     const raw = '{"reply":"x","classification":"genuine","readyForContact":false}';
     const r = parseChatResult(raw, 'grift-team-beta');
     expect(r.intent).toBe('grift-team-beta');
+  });
+});
+
+describe('normalizeCompanyNameReply — 通常表示は短く、質問時だけ詳細', () => {
+  it('通常の相談文に混ざった読み方・ブランド名の括弧を除去する', () => {
+    const reply = 'Cor.株式会社（コー株式会社）の導入支援についてご案内します。';
+    expect(normalizeCompanyNameReply(reply, [{ role: 'user', content: '導入方法を相談したいです' }]))
+      .toBe('Cor.株式会社の導入支援についてご案内します。');
+  });
+
+  it('読み方を明示的に尋ねた場合は詳細を保持する', () => {
+    const reply = 'Cor.株式会社（コー株式会社、ブランド名：Cor.inc）です。';
+    expect(normalizeCompanyNameReply(reply, [{ role: 'user', content: '会社名の読み方とブランド名を教えてください。' }]))
+      .toBe(reply);
   });
 });
