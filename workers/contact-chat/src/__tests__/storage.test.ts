@@ -147,7 +147,12 @@ describe('encrypted contact storage primitives', () => {
       conversation_excerpt_ciphertext: encrypted.excerpt,
       intent: 'contract-dev',
       source: 'cloudia',
-      structured_lead_json: JSON.stringify({ discoverySource: '検索', contactReason: '導入相談' }),
+      // Unknown legacy keys must not reach either notification body.
+      structured_lead_json: JSON.stringify({
+        discoverySource: '検索',
+        contactReason: '導入相談',
+        legacyNote: 'attacker@example.com',
+      }),
       utm_json: '{}',
       classification: 'genuine',
     };

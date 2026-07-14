@@ -9,7 +9,7 @@ import type {
   NotificationMessage,
   NotificationType,
 } from './types';
-import { MAX_CONVERSATION_EXCERPT_LEN } from './validate';
+import { MAX_CONVERSATION_EXCERPT_LEN, normalizeStructuredLead } from './validate';
 
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SUBMISSION_TTL_SECONDS = 90 * 24 * 60 * 60;
@@ -343,7 +343,7 @@ export async function getSubmissionForNotification(
   ]);
   let structuredLead: StructuredLead = {};
   let utm: Record<string, string> = {};
-  try { structuredLead = JSON.parse(row.structured_lead_json) as StructuredLead; } catch { /* safe default */ }
+  try { structuredLead = normalizeStructuredLead(JSON.parse(row.structured_lead_json)); } catch { /* safe default */ }
   try { utm = JSON.parse(row.utm_json) as Record<string, string>; } catch { /* safe default */ }
   return {
     submissionId: row.submission_id,
