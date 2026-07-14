@@ -97,15 +97,12 @@ export async function verifyTurnstile(
 
 // --- 同一オリジンチェック（CORSを開けず、cor-jp.com 上のウィジェットのみ許可） ---
 // Origin ヘッダが付いていて別オリジンなら拒否。同一オリジン fetch は Origin が無いか自オリジン。
-const ALLOWED_HOSTS = new Set(['cor-jp.com', 'www.cor-jp.com']);
+const ALLOWED_ORIGINS = new Set(['https://cor-jp.com', 'https://www.cor-jp.com']);
 
 export function isSameOrigin(req: Request): boolean {
   const origin = req.headers.get('Origin');
   if (!origin) return true; // 同一オリジンの fetch は Origin を付けない場合がある（許可）
-  try {
-    const host = new URL(origin).hostname;
-    return ALLOWED_HOSTS.has(host);
-  } catch {
-    return false;
-  }
+  // Origin is a serialized origin, not a general URL. Exact matching rejects
+  // HTTP, custom ports, userinfo and parser-confusion variants fail closed.
+  return ALLOWED_ORIGINS.has(origin);
 }

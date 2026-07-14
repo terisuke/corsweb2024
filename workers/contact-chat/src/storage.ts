@@ -8,8 +8,17 @@ import type {
   ChatLocale,
   NotificationMessage,
   NotificationType,
+  HandoffConsent,
 } from './types';
-import { MAX_CONVERSATION_EXCERPT_LEN, normalizeStructuredLead } from './validate';
+import {
+  MAX_CONVERSATION_EXCERPT_LEN,
+  buildDeterministicSummary,
+  canonicalizeSummaryText,
+  maskSensitiveContent,
+  normalizeIntent,
+  normalizeSource,
+  normalizeStructuredLead,
+} from './validate';
 
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SUBMISSION_TTL_SECONDS = 90 * 24 * 60 * 60;
@@ -31,6 +40,17 @@ export interface SessionState {
   conversationExcerpt: string;
 }
 
+/** Active D1 state restored at submit time; browser session fields are never authoritative. */
+export interface TrustedContactSession {
+  sessionId: string;
+  intent: ContactIntent | '';
+  locale: ChatLocale;
+  source: string;
+  classification: Classification;
+  summary: string;
+  structuredLead: StructuredLead;
+}
+
 export interface StoredSubmission {
   inquiry: NormalizedInquiry;
   submissionId: string;
@@ -43,6 +63,17 @@ export interface CreateSubmissionResult {
   submissionId: string;
   receiptId: string;
   duplicate: boolean;
+  /** First accepted Worker timestamp is reused for exact idempotent replays. */
+  handoffConsent: HandoffConsent | null;
+}
+
+export class SubmissionConflictError extends Error {
+  readonly code = 'IDEMPOTENCY_PAYLOAD_CONFLICT';
+
+  constructor() {
+    super('idempotency payload conflict');
+    this.name = 'SubmissionConflictError';
+  }
 }
 
 const nowSeconds = (): number => Math.floor(Date.now() / 1000);
@@ -139,11 +170,74 @@ export async function decryptText(secret: string | undefined, encoded: string): 
   return new TextDecoder().decode(plaintext);
 }
 
-async function emailHmac(secret: string | undefined, email: string): Promise<string> {
+async function hmacHex(secret: string | undefined, value: string): Promise<string> {
   if (!secret) throw new Error('PII storage is not configured');
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const digest = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(email.toLowerCase()));
+  const digest = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value));
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function emailHmac(secret: string | undefined, email: string): Promise<string> {
+  return hmacHex(secret, email.toLowerCase());
+}
+
+function stableJson(value: unknown): string {
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') {
+    return JSON.stringify(value) ?? 'null';
+  }
+  if (typeof value === 'number') return Number.isFinite(value) ? (JSON.stringify(value) ?? 'null') : 'null';
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`;
+  if (value && typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, entryValue]) => entryValue !== undefined)
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+    return `{${entries.map(([key, entryValue]) => `${JSON.stringify(key)}:${stableJson(entryValue)}`).join(',')}}`;
+  }
+  return 'null';
+}
+
+async function submissionPayloadFingerprint(
+  secret: string | undefined,
+  inquiry: NormalizedInquiry,
+  sessionId: string | null,
+  trustedSession: TrustedContactSession | null,
+  consent: HandoffConsent | null,
+): Promise<string> {
+  // The canonical input is transient. D1 receives only this keyed digest, never
+  // a plaintext copy of PII or consent data for idempotency comparison.
+  const canonical = stableJson({
+    version: 1,
+    sessionId,
+    session: trustedSession ? {
+      sessionId: trustedSession.sessionId,
+      intent: trustedSession.intent,
+      locale: trustedSession.locale,
+      source: trustedSession.source,
+      classification: trustedSession.classification,
+      structuredLead: trustedSession.structuredLead,
+    } : null,
+    inquiry: {
+      name: inquiry.name,
+      email: inquiry.email,
+      company: inquiry.company,
+      message: inquiry.message,
+      summary: inquiry.conversationSummary,
+      classification: inquiry.classification,
+      intent: inquiry.intent,
+      source: inquiry.source,
+      structuredLead: inquiry.structuredLead,
+      utm: inquiry.utm,
+    },
+    consent: consent ? {
+      accepted: true,
+      version: consent.version,
+      browserAcceptedAt: consent.browserAcceptedAt,
+      summaryConfirmed: consent.summaryConfirmed,
+      // acceptedAt is deliberately excluded: it is generated anew by the
+      // Worker on transport retries. The original value is restored from audit.
+    } : null,
+  });
+  return hmacHex(secret, `submission-payload:v1:${canonical}`);
 }
 
 export async function upsertContactSession(env: Env, state: SessionState): Promise<void> {
@@ -189,35 +283,161 @@ export async function upsertContactSession(env: Env, state: SessionState): Promi
   ).run();
 }
 
+interface TrustedContactSessionRow {
+  session_id: string;
+  intent: string;
+  locale: string;
+  source: string;
+  classification: string;
+  summary_text: string;
+  structured_lead_json: string;
+}
+
+export async function getTrustedContactSession(
+  env: Env,
+  sessionId: string | null,
+): Promise<TrustedContactSession | null> {
+  if (!env.DB || !sessionId) return null;
+  const row = await env.DB.prepare(`
+    SELECT session_id, intent, locale, source, classification,
+      summary_text, structured_lead_json
+    FROM contact_sessions
+    WHERE session_id = ? AND status = 'active' AND expires_at > ?
+    LIMIT 1
+  `).bind(sessionId, nowSeconds()).first<TrustedContactSessionRow>();
+  if (!row || row.session_id !== sessionId) return null;
+  if (row.locale !== 'ja' && row.locale !== 'en') return null;
+  if (row.classification !== 'genuine' && row.classification !== 'sales' && row.classification !== 'spam') {
+    return null;
+  }
+  const intent = normalizeIntent(row.intent);
+  if (row.intent && !intent) return null;
+  const structuredLead = normalizeStructuredLeadJson(row.structured_lead_json);
+  const canonicalSummary = canonicalizeSummaryText(typeof row.summary_text === 'string' ? row.summary_text : '');
+  const summary = canonicalSummary
+    ? maskSensitiveContent(canonicalSummary)
+    : buildDeterministicSummary({ classification: row.classification, intent, structuredLead });
+  return {
+    sessionId: row.session_id,
+    intent,
+    locale: row.locale,
+    source: normalizeSource(row.source),
+    classification: row.classification,
+    summary,
+    structuredLead,
+  };
+}
+
+function normalizeStructuredLeadJson(value: string): StructuredLead {
+  try {
+    return normalizeStructuredLead(JSON.parse(value));
+  } catch {
+    return {};
+  }
+}
+
+interface ExistingSubmissionRow {
+  submission_id: string;
+  receipt_id: string;
+  payload_fingerprint: string;
+  metadata_json: string | null;
+}
+
+async function findExistingSubmission(env: Env, idempotencyKey: string): Promise<ExistingSubmissionRow | null> {
+  if (!env.DB) return null;
+  return env.DB.prepare(`
+    SELECT s.submission_id, s.receipt_id, s.payload_fingerprint,
+      (SELECT a.metadata_json
+       FROM audit_events a
+       WHERE a.submission_id = s.submission_id AND a.event_type = 'submission_queued'
+       ORDER BY a.created_at ASC
+       LIMIT 1) AS metadata_json
+    FROM submission_intake s
+    WHERE s.idempotency_key = ?
+    LIMIT 1
+  `).bind(idempotencyKey).first<ExistingSubmissionRow>();
+}
+
+function restoreStoredHandoffConsent(metadataJson: string | null): HandoffConsent | null {
+  if (!metadataJson) return null;
+  try {
+    const metadata = JSON.parse(metadataJson) as { handoff_consent?: Record<string, unknown> };
+    const consent = metadata.handoff_consent;
+    if (
+      !consent
+      || consent.accepted !== true
+      || consent.version !== 'cloudia-grift-v1'
+      || consent.summary_confirmed !== true
+      || typeof consent.accepted_at !== 'string'
+      || typeof consent.browser_accepted_at !== 'string'
+      || !Number.isFinite(Date.parse(consent.accepted_at))
+      || !Number.isFinite(Date.parse(consent.browser_accepted_at))
+    ) return null;
+    return {
+      accepted: true,
+      version: 'cloudia-grift-v1',
+      acceptedAt: new Date(consent.accepted_at).toISOString(),
+      browserAcceptedAt: new Date(consent.browser_accepted_at).toISOString(),
+      summaryConfirmed: true,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function replayResult(existing: ExistingSubmissionRow, fingerprint: string): CreateSubmissionResult {
+  if (existing.payload_fingerprint !== fingerprint) throw new SubmissionConflictError();
+  return {
+    submissionId: existing.submission_id,
+    receiptId: existing.receipt_id,
+    duplicate: true,
+    handoffConsent: restoreStoredHandoffConsent(existing.metadata_json),
+  };
+}
+
 export async function createSubmission(
   env: Env,
   inquiry: NormalizedInquiry,
-  options: { idempotencyKey: string; sessionId?: string | null },
+  options: {
+    idempotencyKey: string;
+    sessionId?: string | null;
+    trustedSession?: TrustedContactSession | null;
+    handoffConsent?: HandoffConsent | null;
+  },
 ): Promise<CreateSubmissionResult> {
   if (!env.DB) throw new Error('D1 is not configured');
-  const existing = await env.DB.prepare(
-    'SELECT submission_id, receipt_id FROM submission_intake WHERE idempotency_key = ? LIMIT 1',
-  ).bind(options.idempotencyKey).first<{ submission_id: string; receipt_id: string }>();
-  if (existing) return { submissionId: existing.submission_id, receiptId: existing.receipt_id, duplicate: true };
-
-  const submissionId = crypto.randomUUID();
-  const receiptId = newReceiptId();
   const now = nowSeconds();
   // Copy the already encrypted session excerpt into the submission row. This
   // avoids decrypting/re-encrypting chat content during handoff and prevents a
   // browser from injecting an arbitrary transcript at submit time.
-  let sessionId = options.sessionId || null;
+  let trustedSession: TrustedContactSession | null = options.trustedSession?.sessionId === options.sessionId
+    ? (options.trustedSession ?? null)
+    : null;
+  let sessionId = trustedSession?.sessionId || null;
   let conversationExcerptCiphertext = '';
   if (sessionId) {
     const session = await env.DB.prepare(
-      'SELECT session_id, conversation_excerpt_ciphertext FROM contact_sessions WHERE session_id = ? LIMIT 1',
-    ).bind(sessionId).first<{ session_id: string; conversation_excerpt_ciphertext?: string }>();
+      "SELECT session_id, conversation_excerpt_ciphertext FROM contact_sessions WHERE session_id = ? AND status = 'active' AND expires_at > ? LIMIT 1",
+    ).bind(sessionId, now).first<{ session_id: string; conversation_excerpt_ciphertext?: string }>();
     if (!session) {
       sessionId = null;
+      trustedSession = null;
     } else {
       conversationExcerptCiphertext = session.conversation_excerpt_ciphertext || '';
     }
   }
+  const fingerprint = await submissionPayloadFingerprint(
+    env.PII_HMAC_KEY,
+    inquiry,
+    sessionId,
+    trustedSession,
+    options.handoffConsent || null,
+  );
+  const existing = await findExistingSubmission(env, options.idempotencyKey);
+  if (existing) return replayResult(existing, fingerprint);
+
+  const submissionId = crypto.randomUUID();
+  const receiptId = newReceiptId();
   if (!conversationExcerptCiphertext) {
     conversationExcerptCiphertext = await encryptText(
       env.PII_ENCRYPTION_KEY,
@@ -234,19 +454,31 @@ export async function createSubmission(
   ]);
   const [name, email, company, message, summary, emailHash] = pii;
   const outboxId = crypto.randomUUID();
+  const auditMetadata = options.handoffConsent
+    ? {
+        handoff_consent: {
+          accepted: true,
+          version: options.handoffConsent.version,
+          accepted_at: options.handoffConsent.acceptedAt,
+          browser_accepted_at: options.handoffConsent.browserAcceptedAt,
+          summary_confirmed: options.handoffConsent.summaryConfirmed,
+        },
+      }
+    : {};
   const statements = [
     env.DB.prepare(`
       INSERT INTO submission_intake
-        (submission_id, idempotency_key, session_id, receipt_id,
+        (submission_id, idempotency_key, payload_fingerprint, session_id, receipt_id,
          name_ciphertext, email_ciphertext, company_ciphertext,
          message_ciphertext, summary_ciphertext, conversation_excerpt_ciphertext,
          email_hmac, intent, source,
          structured_lead_json, utm_json, classification, status,
          created_at, updated_at, expires_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?)
     `).bind(
       submissionId,
       options.idempotencyKey,
+      fingerprint,
       sessionId,
       receiptId,
       name,
@@ -279,20 +511,23 @@ export async function createSubmission(
     `).bind(crypto.randomUUID(), submissionId, now, now, now),
     env.DB.prepare(`
       INSERT INTO audit_events (event_id, event_type, submission_id, session_id, metadata_json, created_at)
-      VALUES (?, 'submission_queued', ?, ?, '{}', ?)
-    `).bind(crypto.randomUUID(), submissionId, sessionId, now),
+      VALUES (?, 'submission_queued', ?, ?, ?, ?)
+    `).bind(crypto.randomUUID(), submissionId, sessionId, JSON.stringify(auditMetadata), now),
   ];
   try {
     await env.DB.batch(statements);
   } catch (error) {
     // A concurrent retry may have won the unique idempotency key race.
-    const raced = await env.DB.prepare(
-      'SELECT submission_id, receipt_id FROM submission_intake WHERE idempotency_key = ? LIMIT 1',
-    ).bind(options.idempotencyKey).first<{ submission_id: string; receipt_id: string }>();
-    if (raced) return { submissionId: raced.submission_id, receiptId: raced.receipt_id, duplicate: true };
+    const raced = await findExistingSubmission(env, options.idempotencyKey);
+    if (raced) return replayResult(raced, fingerprint);
     throw error;
   }
-  return { submissionId, receiptId, duplicate: false };
+  return {
+    submissionId,
+    receiptId,
+    duplicate: false,
+    handoffConsent: options.handoffConsent || null,
+  };
 }
 
 interface SubmissionRow {
@@ -311,6 +546,7 @@ interface SubmissionRow {
   structured_lead_json: string;
   utm_json: string;
   classification: Classification | '';
+  metadata_json: string | null;
 }
 
 export async function getSubmissionForNotification(
@@ -324,7 +560,12 @@ export async function getSubmissionForNotification(
       s.name_ciphertext, s.email_ciphertext,
       s.company_ciphertext, s.message_ciphertext, s.summary_ciphertext,
       s.conversation_excerpt_ciphertext,
-      s.intent, s.source, s.structured_lead_json, s.utm_json, s.classification
+      s.intent, s.source, s.structured_lead_json, s.utm_json, s.classification,
+      (SELECT a.metadata_json
+       FROM audit_events a
+       WHERE a.submission_id = s.submission_id AND a.event_type = 'submission_queued'
+       ORDER BY a.created_at ASC
+       LIMIT 1) AS metadata_json
     FROM submission_intake s
     JOIN notification_outbox o ON o.submission_id = s.submission_id
     WHERE s.submission_id = ? AND o.message_type = ? AND o.status IN ('pending', 'processing')
@@ -357,6 +598,7 @@ export async function getSubmissionForNotification(
       message,
       summaryText: conversationSummary,
       conversationSummary,
+      ...(restoreStoredHandoffConsent(row.metadata_json) ? { summaryConfirmed: true as const } : {}),
       classification: row.classification,
       intent: row.intent,
       source: row.source,

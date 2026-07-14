@@ -63,7 +63,14 @@ describe('isSameOrigin — CORSを開けず cor-jp.com のみ許可', () => {
   it.each(['https://cor-jp.com', 'https://www.cor-jp.com'])('自オリジン(%s)を許可', (o) => {
     expect(isSameOrigin(reqWithHeaders({ origin: o }))).toBe(true);
   });
-  it.each(['https://evil.example', 'https://cor-jp.com.evil.com', 'null'])(
+  it.each([
+    'https://evil.example',
+    'https://cor-jp.com.evil.com',
+    'http://cor-jp.com',
+    'https://cor-jp.com:8443',
+    'https://user@cor-jp.com',
+    'null',
+  ])(
     '別オリジン(%s)を拒否',
     (o) => {
       expect(isSameOrigin(reqWithHeaders({ origin: o }))).toBe(false);

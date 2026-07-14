@@ -3,15 +3,17 @@ import {
   createSubmission,
   decryptText,
   encryptText,
+  getTrustedContactSession,
   getSubmissionForNotification,
   newReceiptId,
   newSessionId,
   normalizeIdempotencyKey,
   queueMessage,
+  SubmissionConflictError,
   upsertContactSession,
 } from '../storage';
 import type { Env, NormalizedInquiry } from '../types';
-import type { SessionState } from '../storage';
+import type { SessionState, TrustedContactSession } from '../storage';
 
 interface DbCall {
   sql: string;
@@ -59,6 +61,13 @@ describe('encrypted contact storage primitives', () => {
 
   it('creates a non-PII receipt identifier', () => {
     expect(newReceiptId()).toMatch(/^COR-\d{8}-[A-F0-9]{8}$/);
+  });
+
+  it('trusted session queryはactiveかつ現在時刻より後のexpiryだけを許可する', async () => {
+    const db = mockDb();
+    await expect(getTrustedContactSession({ DB: db } as unknown as Env, 'session-1')).resolves.toBeNull();
+    expect(db.calls[0].sql).toContain("status = 'active'");
+    expect(db.calls[0].sql).toContain('expires_at > ?');
   });
 
   it('session excerpt is encrypted before the D1 write', async () => {
@@ -110,19 +119,195 @@ describe('encrypted contact storage primitives', () => {
       },
       utm: {},
     };
+    const trustedSession: TrustedContactSession = {
+      sessionId: 'session-1',
+      intent: 'contract-dev',
+      locale: 'ja',
+      source: 'cloudia',
+      classification: 'genuine',
+      summary: 'D1要約（handoff正本にはしない）',
+      structuredLead: inquiry.structuredLead,
+    };
     await createSubmission(
       { DB: db, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
       inquiry,
-      { idempotencyKey: 'idempotency-1', sessionId: 'session-1' },
+      { idempotencyKey: 'idempotency-1', sessionId: 'session-1', trustedSession },
     );
     const call = db.calls.find((entry) => entry.sql.includes('INSERT INTO submission_intake'));
     expect(call).toBeDefined();
-    await expect(decryptText('secret', String(call?.bindings[9]))).resolves.toBe('訪問者: 相談です');
-    expect(JSON.parse(String(call?.bindings[13]))).toEqual({
+    expect(call?.bindings[2]).toMatch(/^[a-f0-9]{64}$/);
+    expect(String(call?.bindings[2])).not.toContain(inquiry.email);
+    await expect(decryptText('secret', String(call?.bindings[10]))).resolves.toBe('訪問者: 相談です');
+    expect(JSON.parse(String(call?.bindings[14]))).toEqual({
       discoverySource: '紹介',
       contactReason: 'PoCの相談',
     });
   });
+
+  it('handoff同意はWorker受信時刻を正本、browser時刻を監査参考として保存する', async () => {
+    const db = mockDb();
+    const inquiry: NormalizedInquiry = {
+      name: '山田太郎',
+      email: 'taro@example.com',
+      company: '',
+      message: '相談です',
+      conversationSummary: '要約',
+      classification: 'genuine',
+      intent: 'contract-dev',
+      source: 'cloudia',
+      structuredLead: {},
+      utm: {},
+    };
+    await createSubmission(
+      { DB: db, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
+      inquiry,
+      {
+        idempotencyKey: 'idempotency-consent',
+        sessionId: null,
+        handoffConsent: {
+          accepted: true,
+          version: 'cloudia-grift-v1',
+          acceptedAt: '2026-07-14T00:00:01.234Z',
+          browserAcceptedAt: '2026-07-14T00:00:00.000Z',
+          summaryConfirmed: true,
+        },
+      },
+    );
+    const audit = db.calls.find((entry) => entry.sql.includes('INSERT INTO audit_events'));
+    expect(JSON.parse(String(audit?.bindings[3]))).toEqual({
+      handoff_consent: {
+        accepted: true,
+        version: 'cloudia-grift-v1',
+        accepted_at: '2026-07-14T00:00:01.234Z',
+        browser_accepted_at: '2026-07-14T00:00:00.000Z',
+        summary_confirmed: true,
+      },
+    });
+  });
+
+  it('完全一致replayだけを許可し、最初のWorker同意時刻を復元する', async () => {
+    const inquiry: NormalizedInquiry = {
+      name: '山田太郎',
+      email: 'taro@example.com',
+      company: '',
+      message: '相談です',
+      summaryText: '画面で確認した要約',
+      conversationSummary: '画面で確認した要約',
+      classification: 'genuine',
+      intent: 'contract-dev',
+      source: 'cloudia',
+      structuredLead: {},
+      utm: {},
+    };
+    const firstConsent = {
+      accepted: true as const,
+      version: 'cloudia-grift-v1' as const,
+      acceptedAt: '2026-07-14T00:00:01.234Z',
+      browserAcceptedAt: '2026-07-14T00:00:00.000Z',
+      summaryConfirmed: true as const,
+    };
+    const firstDb = mockDb();
+    await createSubmission(
+      { DB: firstDb, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
+      inquiry,
+      { idempotencyKey: 'exact-replay', sessionId: null, handoffConsent: firstConsent },
+    );
+    const insert = firstDb.calls.find((entry) => entry.sql.includes('INSERT INTO submission_intake'));
+    const audit = firstDb.calls.find((entry) => entry.sql.includes('INSERT INTO audit_events'));
+    const existing = {
+      submission_id: String(insert?.bindings[0]),
+      receipt_id: String(insert?.bindings[4]),
+      payload_fingerprint: String(insert?.bindings[2]),
+      metadata_json: String(audit?.bindings[3]),
+    };
+    const replayDb = mockDb((sql) => sql.includes('FROM submission_intake s') ? existing : null);
+    const replay = await createSubmission(
+      { DB: replayDb, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
+      inquiry,
+      {
+        idempotencyKey: 'exact-replay',
+        sessionId: null,
+        handoffConsent: { ...firstConsent, acceptedAt: '2026-07-14T00:05:00.000Z' },
+      },
+    );
+    expect(replay.duplicate).toBe(true);
+    expect(replay.handoffConsent?.acceptedAt).toBe(firstConsent.acceptedAt);
+  });
+
+  it.each(['session', 'email', 'summary', 'consent'] as const)(
+    '同じidempotency keyで%sが異なるpayloadはtyped conflictにする',
+    async (variant) => {
+      const inquiry: NormalizedInquiry = {
+        name: '山田太郎',
+        email: 'taro@example.com',
+        company: '',
+        message: '相談です',
+        summaryText: '画面で確認した要約',
+        conversationSummary: '画面で確認した要約',
+        classification: 'genuine',
+        intent: 'contract-dev',
+        source: 'cloudia',
+        structuredLead: {},
+        utm: {},
+      };
+      const consent = {
+        accepted: true as const,
+        version: 'cloudia-grift-v1' as const,
+        acceptedAt: '2026-07-14T00:00:01.234Z',
+        browserAcceptedAt: '2026-07-14T00:00:00.000Z',
+        summaryConfirmed: true as const,
+      };
+      const firstDb = mockDb();
+      await createSubmission(
+        { DB: firstDb, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
+        inquiry,
+        { idempotencyKey: 'conflict-key', sessionId: null, handoffConsent: consent },
+      );
+      const insert = firstDb.calls.find((entry) => entry.sql.includes('INSERT INTO submission_intake'));
+      const audit = firstDb.calls.find((entry) => entry.sql.includes('INSERT INTO audit_events'));
+      const existing = {
+        submission_id: String(insert?.bindings[0]),
+        receipt_id: String(insert?.bindings[4]),
+        payload_fingerprint: String(insert?.bindings[2]),
+        metadata_json: String(audit?.bindings[3]),
+      };
+      const trustedSession: TrustedContactSession = {
+        sessionId: 'different-session',
+        intent: 'contract-dev',
+        locale: 'ja',
+        source: 'cloudia',
+        classification: 'genuine',
+        summary: 'unused session summary',
+        structuredLead: {},
+      };
+      const replayDb = mockDb((sql) => {
+        if (sql.includes('SELECT session_id, conversation_excerpt_ciphertext')) {
+          return { session_id: trustedSession.sessionId, conversation_excerpt_ciphertext: '' };
+        }
+        return sql.includes('FROM submission_intake s') ? existing : null;
+      });
+      const changedInquiry = {
+        ...inquiry,
+        ...(variant === 'email' ? { email: 'other@example.com' } : {}),
+        ...(variant === 'summary' ? {
+          summaryText: '別の確認済み要約',
+          conversationSummary: '別の確認済み要約',
+        } : {}),
+      };
+      await expect(createSubmission(
+        { DB: replayDb, PII_ENCRYPTION_KEY: 'secret', PII_HMAC_KEY: 'hmac' } as unknown as Env,
+        changedInquiry,
+        {
+          idempotencyKey: 'conflict-key',
+          sessionId: variant === 'session' ? trustedSession.sessionId : null,
+          trustedSession: variant === 'session' ? trustedSession : null,
+          handoffConsent: variant === 'consent'
+            ? { ...consent, browserAcceptedAt: '2026-07-14T00:00:02.000Z' }
+            : consent,
+        },
+      )).rejects.toBeInstanceOf(SubmissionConflictError);
+    },
+  );
 
   it('internal通知だけ会話抜粋を復号し、receiptでは復号しない', async () => {
     const secret = 'secret';
@@ -155,14 +340,25 @@ describe('encrypted contact storage primitives', () => {
       }),
       utm_json: '{}',
       classification: 'genuine',
+      metadata_json: JSON.stringify({
+        handoff_consent: {
+          accepted: true,
+          version: 'cloudia-grift-v1',
+          accepted_at: '2026-07-14T00:00:01.234Z',
+          browser_accepted_at: '2026-07-14T00:00:00.000Z',
+          summary_confirmed: true,
+        },
+      }),
     };
     const db = mockDb((sql) => sql.includes('SELECT o.outbox_id') ? row : null);
     const env = { DB: db, PII_ENCRYPTION_KEY: secret } as unknown as Env;
     const internal = await getSubmissionForNotification(env, 'submission-1', 'internal');
     expect(internal?.inquiry.conversationExcerpt).toBe('訪問者: 相談です');
     expect(internal?.inquiry.structuredLead).toEqual({ discoverySource: '検索', contactReason: '導入相談' });
+    expect(internal?.inquiry.summaryConfirmed).toBe(true);
     const receipt = await getSubmissionForNotification(env, 'submission-1', 'receipt');
     expect(receipt?.inquiry.conversationExcerpt).toBeUndefined();
     expect(receipt?.inquiry.structuredLead).toEqual({ discoverySource: '検索', contactReason: '導入相談' });
+    expect(receipt?.inquiry.summaryConfirmed).toBe(true);
   });
 });

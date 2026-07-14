@@ -289,6 +289,34 @@ export function normalizeConversationSummary(raw: unknown): SummaryValidation {
   return { ok: true, text, schema };
 }
 
+/**
+ * Strict handoff contract: only body.summaryText.text from a versioned envelope
+ * can be treated as the visitor-confirmed canonical summary. Legacy strings and
+ * the nested summaryText alias remain email-compatible but cannot authorize Grift.
+ */
+export function normalizeConfirmedSummaryText(raw: unknown): SummaryValidation {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { ok: false, error: 'Grift引継ぎにはsummaryText.textの確認済み要約が必要です', status: 400 };
+  }
+  const input = raw as Record<string, unknown>;
+  if (
+    typeof input.text !== 'string'
+    || input.text.length > MAX_SUMMARY_LEN
+    || input.summaryText !== undefined
+  ) {
+    return { ok: false, error: 'summaryText.textが不正です', status: 400 };
+  }
+  const normalized = normalizeConversationSummary(input);
+  if (!normalized.ok || !normalized.schema) return normalized;
+  // A confirmed handoff summary is copied verbatim (after canonical whitespace
+  // normalization) to D1, both email paths and Grift. Reject detected PII or
+  // credentials here instead of letting those consumers apply divergent masks.
+  if (normalized.text !== maskSensitiveContent(normalized.text)) {
+    return { ok: false, error: 'summaryText.textに連絡先または秘密情報を含めることはできません', status: 400 };
+  }
+  return normalized;
+}
+
 export type InquiryValidation =
   | { ok: true; inquiry: NormalizedInquiry }
   | { ok: false; error: string; status: number; honeypot?: boolean };

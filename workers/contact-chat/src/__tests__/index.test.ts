@@ -441,7 +441,7 @@ describe('worker.fetch — ハンドラレベル', () => {
     expect((await res.json() as { receiptId?: string }).receiptId).toMatch(/^COR-/);
   });
 
-  it('submit: D1 sessionのstructuredLeadを正本としてbrowser payloadを上書きする', async () => {
+  it('submit: D1 sessionのstructuredLeadは正本にするがbody summaryは上書きしない', async () => {
     const calls: Array<{ sql: string; bindings: unknown[] }> = [];
     const trustedLead = {
       purpose: '社内AI基盤のPoC',
@@ -456,8 +456,13 @@ describe('worker.fetch — ハンドラレベル', () => {
             calls.push({ sql, bindings });
             return {
               first: async <T>() => {
-                if (sql.includes('SELECT summary_text, structured_lead_json')) {
+                if (sql.includes('FROM contact_sessions') && sql.includes("status = 'active'")) {
                   return {
+                    session_id: 'session-1',
+                    intent: 'contract-dev',
+                    locale: 'ja',
+                    source: 'cloudia',
+                    classification: 'genuine',
                     summary_text: 'server summary',
                     structured_lead_json: JSON.stringify(trustedLead),
                   } as T;
@@ -489,14 +494,15 @@ describe('worker.fetch — ハンドラレベル', () => {
       name: '太郎',
       email: 'taro@example.com',
       message: '相談です',
-      summaryText: 'browser forged summary',
+      summaryText: 'browser confirmed summary',
       structuredLead: { discoverySource: 'browser', contactReason: 'forged' },
     }, { 'cf-connecting-ip': '198.51.100.21' }), env);
     expect(res.status).toBe(200);
     const insert = calls.find((call) => call.sql.includes('INSERT INTO submission_intake'));
     expect(insert).toBeDefined();
-    expect(JSON.parse(String(insert?.bindings[13]))).toEqual(trustedLead);
-    await expect(decryptText('storage-secret', String(insert?.bindings[8]))).resolves.toBe('server summary');
+    expect(JSON.parse(String(insert?.bindings[14]))).toEqual(trustedLead);
+    await expect(decryptText('storage-secret', String(insert?.bindings[9])))
+      .resolves.toBe('browser confirmed summary');
     expect(queueSend).toHaveBeenCalledTimes(2);
   });
 });

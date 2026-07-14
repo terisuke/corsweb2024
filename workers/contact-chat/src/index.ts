@@ -7,12 +7,15 @@ import type {
   ContactIntent,
   Env,
   InquiryInput,
+  NormalizedInquiry,
   NotificationMessage,
   NotificationType,
   StructuredLead,
 } from './types';
+import { AUTO_HANDOFF_INTENTS } from './types';
 import {
   normalizeInquiry,
+  normalizeConfirmedSummaryText,
   normalizeIntent,
   normalizeMessages,
   buildDeterministicSummary,
@@ -33,10 +36,12 @@ import {
 } from './security';
 import { buildSystemPrompt, getProvider } from './llm';
 import { getEmailProvider, sendInquiryEmail, sendReceiptEmail } from './email';
+import { handoffToGrift, normalizeHandoffConsent, type BrowserHandoff, type HandoffConsent } from './grift';
 import {
   claimOutbox,
   createSubmission,
   getSubmissionForNotification,
+  getTrustedContactSession,
   markOutboxFailed,
   markOutboxSent,
   newSessionId,
@@ -45,11 +50,31 @@ import {
   newReceiptId,
   purgeExpiredData,
   queueMessage,
+  SubmissionConflictError,
   upsertContactSession,
+  type TrustedContactSession,
 } from './storage';
 
 // 最大リクエストボディサイズ（DoS/暴走入力対策）。会話＋サマリでも十分な余裕。
 const MAX_BODY_BYTES = 64 * 1024;
+
+type WorkerFailureEvent =
+  | 'contact_chat_session_store_failed'
+  | 'contact_chat_llm_failed'
+  | 'contact_chat_email_not_configured'
+  | 'contact_chat_session_restore_failed'
+  | 'contact_chat_submission_store_failed'
+  | 'contact_chat_notification_queue_not_configured'
+  | 'contact_chat_notification_enqueue_failed'
+  | 'contact_chat_email_send_failed'
+  | 'contact_chat_request_failed'
+  | 'contact_chat_retention_cleanup_failed';
+
+function logWorkerFailure(event: WorkerFailureEvent): void {
+  // Fixed enums only. Never include exception messages, request fields, IDs,
+  // provider bodies, URLs, PII, tokens, or secrets in production logs.
+  console.error(JSON.stringify({ event }));
+}
 
 const json = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), {
@@ -66,22 +91,44 @@ const json = (data: unknown, status = 200): Response =>
 // JSON ボディを上限つきで読む。Content-Type が JSON でない／不正JSON／過大は null。
 async function readJsonBody(req: Request): Promise<Record<string, unknown> | null> {
   const ct = req.headers.get('content-type') || '';
-  if (!/application\/json/i.test(ct)) return null;
-  // Content-Length で早期に過大ボディを弾く（無い場合は読み取り後に長さ確認）。
-  const len = Number(req.headers.get('content-length') || '0');
-  if (len > MAX_BODY_BYTES) return null;
-  let text: string;
+  if (!/^application\/json(?:\s*;|$)/i.test(ct)) return null;
+  // Content-Length is only an optimization. A missing or dishonest header must
+  // still be bounded while streaming, before the complete body reaches memory.
+  const declaredLength = req.headers.get('content-length');
+  if (declaredLength !== null) {
+    const length = Number(declaredLength);
+    if (!Number.isSafeInteger(length) || length < 0 || length > MAX_BODY_BYTES) return null;
+  }
+  if (!req.body) return null;
+  const reader = req.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
   try {
-    text = await req.text();
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      total += chunk.value.byteLength;
+      if (total > MAX_BODY_BYTES) {
+        try { await reader.cancel(); } catch { /* rejection path; best effort */ }
+        return null;
+      }
+      chunks.push(chunk.value);
+    }
   } catch {
     return null;
   }
-  // 読み取り後のサイズ確認はバイト数で行う（Content-Length はバイト、text.length は
-  // UTF-16コード単位。CJKでは1文字3バイト等になり、文字数だと上限がザルになる）。
-  if (new TextEncoder().encode(text).length > MAX_BODY_BYTES) return null;
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
   try {
+    const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: false }).decode(bytes);
     const data = JSON.parse(text);
-    return data && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+    return data && typeof data === 'object' && !Array.isArray(data)
+      ? (data as Record<string, unknown>)
+      : null;
   } catch {
     return null;
   }
@@ -308,8 +355,8 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
         summary: result.summary,
         conversationExcerpt: '',
       });
-    } catch (error) {
-      console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
+    } catch {
+      logWorkerFailure('contact_chat_session_store_failed');
       if (env.DB) return json({ error: 'チャットを開始できません。時間をおいて再試行してください' }, 503);
     }
     return json(result);
@@ -334,8 +381,8 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
     // only masked messages to Vertex/Anthropic; the original browser transcript
     // is never persisted by the chat endpoint.
     raw = await provider.chat(system, maskMessagesForLlm(norm.messages));
-  } catch (e) {
-    console.error('contact-chat llm error:', e instanceof Error ? e.message : String(e));
+  } catch {
+    logWorkerFailure('contact_chat_llm_failed');
     return json({ error: 'AIが一時的に利用できません。時間をおいて再試行してください', fallback: true }, 503);
   }
 
@@ -366,23 +413,47 @@ async function handleChat(req: Request, env: Env, forceStart = false): Promise<R
       source,
       stage: result.stage,
       turnCount: norm.messages.length,
-    structuredLead: result.structuredLead || {},
+      structuredLead: result.structuredLead || {},
       missingFields: result.missingFields,
       classification: result.classification,
       summary: result.summary,
       conversationExcerpt: buildConversationExcerpt(norm.messages),
     });
-  } catch (error) {
-    console.error('contact-chat session storage error:', error instanceof Error ? error.message : 'unknown');
+  } catch {
+    logWorkerFailure('contact_chat_session_store_failed');
     if (env.DB) return json({ error: 'チャットを保存できません。時間をおいて再試行してください' }, 503);
   }
   return json(result);
 }
 
-// POST /api/contact/submit — 最終送信。PIIはここで扱い、LLMには絶対渡さずメールにのみ送る。
+async function safeGriftHandoff(
+  env: Env,
+  input: {
+    submissionId: string;
+    inquiry: NormalizedInquiry;
+    session: TrustedContactSession | null;
+    consent: HandoffConsent | null;
+  },
+): Promise<BrowserHandoff | null> {
+  try {
+    return await handoffToGrift(env, input);
+  } catch {
+    // Email/outbox work has already completed. Never turn an unexpected Grift
+    // integration error into a failed contact submission or expose its details.
+    console.error(JSON.stringify({ event: 'contact_chat_grift_handoff_failed', reason: 'unexpected' }));
+    const requested = input.consent
+      && (AUTO_HANDOFF_INTENTS as readonly string[]).includes(input.inquiry.intent);
+    return requested ? { status: 'fallback' } : null;
+  }
+}
+
+// POST /api/contact/submit — 最終送信。PIIはここで扱い、LLMには絶対渡さない。
 async function handleSubmit(req: Request, env: Env): Promise<Response> {
+  // Browser時刻は監査参考に留め、Griftへ渡す同意時刻はWorker受信時刻を正本とする。
+  const workerReceivedAt = new Date().toISOString();
   const body = await readJsonBody(req);
   if (!body) return json({ error: 'リクエストボディが不正なJSONです' }, 400);
+  const handoffConsent = normalizeHandoffConsent(body.handoffConsent, workerReceivedAt);
 
   // Turnstile（シークレットがあれば検証）。
   const ip = clientIp(req);
@@ -395,93 +466,115 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
     if (norm.honeypot) return json({ ok: true });
     return json({ error: norm.error }, norm.status);
   }
+  let confirmedSummaryText: string | null = null;
+  if (handoffConsent) {
+    const confirmedSummary = normalizeConfirmedSummaryText(body.summaryText);
+    if (!confirmedSummary.ok) return json({ error: confirmedSummary.error }, confirmedSummary.status);
+    confirmedSummaryText = confirmedSummary.text;
+  }
 
   // fail closed: メール未設定なら 503（本物の問い合わせを握り潰さない）。
   const emailProvider = getEmailProvider(env);
   if (!emailProvider.ok) {
-    console.error('contact-chat email not configured (RESEND_API_KEY unset)');
+    logWorkerFailure('contact_chat_email_not_configured');
     return json({ error: emailProvider.error }, emailProvider.status);
   }
 
-  // The server-side session summary is the email source of truth. Do not let a
-  // stale or forged browser payload replace it; when the session is unavailable,
-  // fall back to structured fields only. Structured lead fields are restored
-  // from the same server-side session so the browser cannot replace them at
-  // submit time (including discoverySource/contactReason).
-  let inquiry = norm.inquiry;
+  // The exact visitor-confirmed summaryText.text is canonical for D1, both
+  // emails, and Grift. Active D1 state is authoritative only for routing,
+  // locale/classification and structured lead fields; it never replaces it.
+  let inquiry: NormalizedInquiry = {
+    ...norm.inquiry,
+    ...(confirmedSummaryText ? {
+      summaryText: confirmedSummaryText,
+      conversationSummary: confirmedSummaryText,
+      summaryConfirmed: true as const,
+    } : {}),
+  };
+  let trustedSession: TrustedContactSession | null = null;
   if (env.DB) {
     const sessionId = normalizeSessionId(body.sessionId);
-    let trustedSummary = '';
-    let trustedStructuredLead: StructuredLead | undefined;
-    if (sessionId) {
-      const session = await env.DB.prepare(
-        'SELECT summary_text, structured_lead_json FROM contact_sessions WHERE session_id = ? AND status = \'active\' LIMIT 1',
-      ).bind(sessionId).first<{ summary_text?: string; structured_lead_json?: string }>();
-      trustedSummary = typeof session?.summary_text === 'string' ? session.summary_text.trim() : '';
-      if (typeof session?.structured_lead_json === 'string') {
-        try {
-          trustedStructuredLead = normalizeStructuredLead(JSON.parse(session.structured_lead_json));
-        } catch {
-          trustedStructuredLead = {};
-        }
-      }
+    try {
+      trustedSession = await getTrustedContactSession(env, sessionId);
+    } catch {
+      // Session復元だけの障害では既存メール受付を止めない。
+      logWorkerFailure('contact_chat_session_restore_failed');
     }
-    if (!trustedSummary) {
-      trustedSummary = buildDeterministicSummary({
-        classification: norm.inquiry.classification,
-        intent: norm.inquiry.intent,
-        structuredLead: norm.inquiry.structuredLead,
-      });
+    if (trustedSession) {
+      inquiry = {
+        ...inquiry,
+        classification: trustedSession.classification,
+        structuredLead: trustedSession.structuredLead,
+      };
     }
-    inquiry = {
-      ...norm.inquiry,
-      summaryText: trustedSummary,
-      conversationSummary: trustedSummary,
-      ...(trustedStructuredLead ? { structuredLead: trustedStructuredLead } : {}),
-    };
   }
 
   // 本番（D1 bindingあり）は、PIIを暗号化してD1へ保存し、QueueのID payload
   // だけを発行する。メール送信はqueue consumerだけが行う。
   if (env.DB) {
-    const sessionId = normalizeSessionId(body.sessionId);
     const idempotencyKey = normalizeIdempotencyKey(body.idempotencyKey);
     let created;
     try {
-      created = await createSubmission(env, inquiry, { idempotencyKey, sessionId });
+      created = await createSubmission(env, inquiry, {
+        idempotencyKey,
+        sessionId: trustedSession?.sessionId || null,
+        trustedSession,
+        handoffConsent,
+      });
     } catch (error) {
-      console.error('contact-chat submission storage error:', error instanceof Error ? error.message : 'unknown');
+      if (error instanceof SubmissionConflictError) {
+        return json({
+          error: '同じidempotency keyに異なる送信内容は使用できません',
+          code: error.code,
+        }, 409);
+      }
+      logWorkerFailure('contact_chat_submission_store_failed');
       return json({ error: 'お問い合わせを受け付けられません。時間をおいて再試行してください' }, 503);
     }
     if (!env.CONTACT_NOTIFICATIONS) {
-      console.error('contact-chat notification queue not configured');
+      logWorkerFailure('contact_chat_notification_queue_not_configured');
       return json({ error: 'お問い合わせを受け付けられません。時間をおいて再試行してください' }, 503);
     }
     try {
-      // 重複リクエストも同じIDを再送する。consumer側のclaimで送信済みを無害化する。
-      // queue payload は submission ID と種別だけで、名前・メール・本文は含めない。
+      // Griftの成否に先立って既存2通知を必ず登録する。重複Queueはconsumer claimで無害化する。
       await Promise.all([
         env.CONTACT_NOTIFICATIONS.send(queueMessage(created.submissionId, 'internal')),
         env.CONTACT_NOTIFICATIONS.send(queueMessage(created.submissionId, 'receipt')),
       ]);
-    } catch (error) {
-      console.error('contact-chat notification enqueue error:', error instanceof Error ? error.message : 'unknown');
+    } catch {
+      logWorkerFailure('contact_chat_notification_enqueue_failed');
       return json({ error: 'お問い合わせをキューへ登録できません。時間をおいて再試行してください' }, 503);
     }
-    return json({ ok: true, receiptId: created.receiptId, status: 'queued', duplicate: created.duplicate });
+    const handoff = await safeGriftHandoff(env, {
+      submissionId: created.submissionId,
+      inquiry,
+      session: trustedSession,
+      consent: created.handoffConsent,
+    });
+    return json({
+      ok: true,
+      receiptId: created.receiptId,
+      status: 'queued',
+      duplicate: created.duplicate,
+      ...(handoff ? { handoff } : {}),
+    });
   }
 
   try {
     await sendInquiryEmail(env, emailProvider.provider, inquiry);
     const receiptId = newReceiptId();
     await sendReceiptEmail(env, emailProvider.provider, inquiry, receiptId);
-    return json({ ok: true, receiptId, status: 'sent' });
-  } catch (e) {
-    console.error('contact-chat email send error:', e instanceof Error ? e.message : String(e));
+    const handoff = await safeGriftHandoff(env, {
+      submissionId: receiptId,
+      inquiry,
+      session: null,
+      consent: handoffConsent,
+    });
+    return json({ ok: true, receiptId, status: 'sent', ...(handoff ? { handoff } : {}) });
+  } catch {
+    logWorkerFailure('contact_chat_email_send_failed');
     return json({ error: 'お問い合わせの送信に失敗しました。時間をおいて再試行してください' }, 502);
   }
-
-  return json({ ok: true });
 }
 
 export default {
@@ -517,9 +610,9 @@ export default {
       }
 
       return json({ error: 'Not Found' }, 404);
-    } catch (e: unknown) {
+    } catch {
       // 詳細はサーバー側ログのみ。クライアントには汎用メッセージ（内部情報の漏洩防止）。
-      console.error('contact-chat error:', e instanceof Error ? e.message : String(e));
+      logWorkerFailure('contact_chat_request_failed');
       return json({ error: '処理中にエラーが発生しました' }, 500);
     }
   },
@@ -567,8 +660,8 @@ export default {
   async scheduled(_event: ScheduledEvent, env: Env): Promise<void> {
     try {
       await purgeExpiredData(env);
-    } catch (error) {
-      console.error('contact-chat retention cleanup error:', error instanceof Error ? error.message : 'unknown');
+    } catch {
+      logWorkerFailure('contact_chat_retention_cleanup_failed');
     }
   },
 };
