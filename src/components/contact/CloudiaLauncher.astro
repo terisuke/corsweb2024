@@ -3,19 +3,17 @@ import { getCurrentLocale, getLocalizedUrl } from '../../utils/i18n';
 import {
   CLOUDIA_GRIFT_HANDOFF_ALLOWED_ORIGINS,
   CLOUDIA_GRIFT_HANDOFF_MAX_TTL_MS,
-  getCloudiaChatUrl,
-  toCloudiaChatHref,
 } from '../../config/contact';
 
 const currentLocale = getCurrentLocale(Astro.url);
-const chatUrl = getCloudiaChatUrl(Astro.url);
+const chatUrl = new URL('/contact/chat/', Astro.url);
 chatUrl.searchParams.set('source', 'corsweb-launcher');
 chatUrl.searchParams.set('locale', currentLocale);
 const incomingIntent = Astro.url.searchParams.get('intent');
 if (incomingIntent) chatUrl.searchParams.set('intent', incomingIntent);
 const embedChatUrl = new URL(chatUrl);
 embedChatUrl.searchParams.set('embed', '1');
-const embedChatPath = toCloudiaChatHref(embedChatUrl, Astro.url);
+const embedChatPath = `${embedChatUrl.pathname}${embedChatUrl.search}`;
 const fallbackContactPath = getLocalizedUrl('/contact/', currentLocale);
 const fallbackContactUrl = new URL(fallbackContactPath, Astro.url);
 fallbackContactUrl.searchParams.set('locale', currentLocale);
@@ -153,8 +151,7 @@ const copy =
       if (intent) fallbackTarget.searchParams.set('intent', intent);
       if (source) fallbackTarget.searchParams.set('source', source);
       frame.src = target.toString();
-      launcher.dataset.chatPath =
-        target.origin === window.location.origin ? `${target.pathname}${target.search}` : target.toString();
+      launcher.dataset.chatPath = `${target.pathname}${target.search}`;
       fallbackLink.href = `${fallbackTarget.pathname}${fallbackTarget.search}${fallbackTarget.hash}`;
     };
 
@@ -177,23 +174,6 @@ const copy =
       }
       if (opened) window.setTimeout(inspectFrame, 250);
     };
-
-    // preview（Pages 直指し）では iframe が cross-origin になり contentDocument も
-    // postMessage ハンドシェイクも使えないため、load 完了を ready の合図として扱う。
-    // 同一 origin（本番）では従来どおり inspectFrame / メッセージが正となる。
-    frame.addEventListener('load', () => {
-      let sameOrigin = true;
-      try {
-        void frame.contentDocument;
-        sameOrigin = frame.contentDocument !== null;
-      } catch {
-        sameOrigin = false;
-      }
-      if (!sameOrigin) {
-        frameReady = true;
-        fallback.classList.add('hidden');
-      }
-    });
 
     const openPanel = () => {
       opened = true;
