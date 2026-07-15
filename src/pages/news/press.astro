@@ -4,7 +4,14 @@ import { getCollection } from 'astro:content';
 import NewsCard from '../../components/news/NewsCard.astro';
 import Layout from '../../layouts/Layout.astro';
 import { getNewsCategoryLabel } from '../../config/news-categories';
+import { getCloudiaChatUrl, toCloudiaChatHref } from '../../config/contact';
 import { safeJsonLd } from '../../utils/json-ld';
+
+// preview では Cloudia が Pages 直 origin になるため、チャットリンクは共通ヘルパー経由で組み立てる。
+const pressChatUrl = getCloudiaChatUrl(Astro.url);
+pressChatUrl.searchParams.set('intent', 'press-speaking-other');
+pressChatUrl.searchParams.set('source', 'press-page');
+const pressChatHref = toCloudiaChatHref(pressChatUrl, Astro.url);
 
 const pressEntries = (await getCollection('news', ({ data }) => {
   return data.category === 'press' && (import.meta.env.DEV || !data.isDraft);
@@ -60,7 +67,7 @@ const jsonLd = {
     ) : (
       <div class="mx-auto flex max-w-3xl flex-col gap-4 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
         <p class="type-copy text-primary-950/70 dark:text-primary-200/70">現在公開中のプレスリリースはありません。</p>
-        <a href="/contact/chat/?intent=press-speaking-other&source=press-page" class="type-action inline-flex w-fit items-center gap-1 text-sm text-primary-950/60 underline-offset-4 hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100">
+        <a href={pressChatHref} class="type-action inline-flex w-fit items-center gap-1 text-sm text-primary-950/60 underline-offset-4 hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100">
           プレスに関するお問い合わせ
         </a>
       </div>

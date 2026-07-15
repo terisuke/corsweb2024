@@ -1,9 +1,10 @@
 ---
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { getCloudiaChatUrl, toCloudiaChatHref } from '../../config/contact';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
-const cloudiaHref = new URL('/contact/chat/', Astro.url);
+const cloudiaHref = getCloudiaChatUrl(Astro.url);
 cloudiaHref.searchParams.set('locale', currentLocale);
 cloudiaHref.searchParams.set('source', 'corsweb-contact-info');
 const incomingIntent = Astro.url.searchParams.get('intent');
@@ -57,7 +58,7 @@ if (incomingIntent) cloudiaHref.searchParams.set('intent', incomingIntent);
             ></path>
           </svg>
           <a
-            href={`${cloudiaHref.pathname}${cloudiaHref.search}`}
+            href={toCloudiaChatHref(cloudiaHref, Astro.url)}
             data-cloudia-query-link
             class="block no-underline"
           >
