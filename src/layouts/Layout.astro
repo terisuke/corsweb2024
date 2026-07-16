@@ -28,6 +28,8 @@ interface Props {
   ogDescription?: string;
   // Cloudiaのfallbackページ自身ではLauncherを重ねない。
   cloudiaLauncher?: boolean;
+  // iframe 埋め込み専用のページでは計測タグを出さない（Clarity の二重計測を防ぐ）。
+  analytics?: boolean;
 }
 
 const OG_LOCALES: Record<Locale, string> = {
@@ -39,7 +41,7 @@ const OG_LOCALES: Record<Locale, string> = {
 };
 const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
 
-const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp, ogType = 'website', publishedTime, modifiedTime, ogTitle, ogDescription, cloudiaLauncher = true } = Astro.props;
+const { description, title, availableLocales = ALL_LOCALES, ogImage: ogImageProp, ogType = 'website', publishedTime, modifiedTime, ogTitle, ogDescription, cloudiaLauncher = true, analytics = true } = Astro.props;
 const socialTitle = ogTitle || title;
 const socialDescription = ogDescription || description;
 const currentLocale = getCurrentLocale(Astro.url);
@@ -383,7 +385,7 @@ const robotsContent = getRobotsContent();
       /* TailwindのユーティリティクラスはHTMLのclass属性で指定、または@apply推奨 */
     </style>
 
-    <Analytics />
+    <Analytics enabled={analytics} />
   </head>
   <body
     class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-900 dark:text-primary-200"

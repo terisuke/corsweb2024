@@ -48,6 +48,21 @@ export function isProductionSite(): boolean {
   return getSiteEnv() === 'production';
 }
 
+/**
+ * 計測タグ（Analytics.astro）を出力してよいか。ADR-0004。
+ *
+ * - production 以外（preview / develop）では出力しない。社内確認用のチャネルで
+ *   チーム自身の閲覧がセッション録画・計測され、解析データが汚染されるのを防ぐ。
+ * - `enabled=false` は呼び出し側からの明示的な無効化。Cloudia ランチャーが
+ *   /contact/chat/ を同一オリジンで iframe 読み込みするため、埋め込み先ページで
+ *   計測すると同一訪問者に対し Clarity が二重起動し、幻のセッションで解析が汚れる。
+ *
+ * 両者は AND。どちらか一方でも false なら出力しない。
+ */
+export function isAnalyticsEnabled(enabled: boolean): boolean {
+  return enabled && isProductionSite();
+}
+
 /** robots メタタグの値（Layout / BlogSeoMeta 共通） */
 export function getRobotsContent(): string {
   return isProductionSite()

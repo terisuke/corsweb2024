@@ -81,6 +81,46 @@ describe('isProductionSite (ADR-0010 noindex)', () => {
   });
 });
 
+// 計測タグの出力可否（ADR-0004）。Analytics.astro はこの関数の戻り値だけで
+// タグを出す/出さないを決めるため、ここが両条件の AND を守っているかを固定する。
+// 落ちるべき変更: `enabled && isProductionSite()` を `||` にする / どちらかの条件を落とす。
+describe('isAnalyticsEnabled (ADR-0004 計測ゲート)', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it('production かつ enabled のときだけ出力する', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'production');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(true)).toBe(true);
+  });
+
+  it('preview では enabled でも出力しない（社内閲覧で解析が汚れるため）', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'preview');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(true)).toBe(false);
+  });
+
+  it('development でも出力しない', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'development');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(true)).toBe(false);
+  });
+
+  it('enabled=false なら production でも出力しない（iframe 埋め込み先の二重計測防止）', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'production');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(false)).toBe(false);
+  });
+
+  it('preview かつ enabled=false でも出力しない', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'preview');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(false)).toBe(false);
+  });
+});
+
 describe('ContactIntent 7 keys (ADR-0014 / #250)', () => {
   it('exports contract-dev and isContactIntent', async () => {
     const { CONTACT_INTENTS, isContactIntent, AUTO_HANDOFF_INTENTS, getContactUrl } = await loadSite();
