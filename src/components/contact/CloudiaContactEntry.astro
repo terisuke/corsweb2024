@@ -1,9 +1,8 @@
 ---
 import { getCurrentLocale } from '../../utils/i18n';
-import { getCloudiaChatUrl, toCloudiaChatHref } from '../../config/contact';
 
 const currentLocale = getCurrentLocale(Astro.url);
-const chatUrl = getCloudiaChatUrl(Astro.url);
+const chatUrl = new URL('/contact/chat/', Astro.url);
 chatUrl.searchParams.set('source', 'corsweb-contact-primary');
 chatUrl.searchParams.set('locale', currentLocale);
 const incomingIntent = Astro.url.searchParams.get('intent');
@@ -29,7 +28,7 @@ const copy =
         fallbackTitle: 'Use the form or schedule a meeting',
         fallbackDescription: 'Use the fallback form when the AI chat is unavailable or when you prefer to contact us directly.',
       };
-const chatPath = toCloudiaChatHref(chatUrl, Astro.url);
+const chatPath = `${chatUrl.pathname}${chatUrl.search}`;
 ---
 
 <section class="mx-auto max-w-3xl px-4 pb-6 sm:px-6 lg:px-8" aria-labelledby="cloudia-contact-entry-title">
@@ -71,11 +70,7 @@ const chatPath = toCloudiaChatHref(chatUrl, Astro.url);
       const target = new URL(element.href, window.location.href);
       if (intent) target.searchParams.set('intent', intent);
       if (source) target.searchParams.set('source', source);
-      // preview では Cloudia が外部 origin（Pages 直指し）になるため、origin を落とさない。
-      element.href =
-        target.origin === window.location.origin
-          ? `${target.pathname}${target.search}${target.hash}`
-          : target.toString();
+      element.href = `${target.pathname}${target.search}${target.hash}`;
     });
   })();
 </script>
