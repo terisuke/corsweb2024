@@ -1,14 +1,21 @@
 ---
 import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
-import { getContactUrl } from '../../config/site';
+import {
+  getContactUrl,
+  FUKUOKA100_PAGE_URL,
+  isFukuoka100EmblemVisible,
+} from '../../config/site';
 import PenguinWalker from './PenguinWalker.astro';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
-// 福岡100選 2026-2027 の badge は公開可能日まで非表示（正本ガードレール）。
+// 防御的ガード: 万一 i18n に福岡100選のテキスト badge が復活しても、公式エンブレム画像
+// （#276）と重複表示しないよう除外する。現在どのロケールにも該当文言は無く実質 no-op。
 // 根拠のない倍率バッジは i18n 側で削除済み（ADR-0007）。
 const HIDDEN_TRUST_BADGES = ['福岡100選 2026-2027'];
+// 公式エンブレムは運営許諾の掲載期間内のみ表示（条件③）。開始日は config/site.ts で管理。
+const showFukuoka100Emblem = isFukuoka100EmblemVisible();
 const trustBadges = t.homeHero.trustBadges.filter(
   (badge) => !HIDDEN_TRUST_BADGES.includes(badge),
 );
@@ -17,7 +24,7 @@ const trustBadges = t.homeHero.trustBadges.filter(
 const BADGE_HREFS: (string | null)[] = [
   '/works/local-llm-poc', // /works は ja 限定（localized variant なし）→ bare のまま
   getLocalizedUrl('/security', currentLocale), // /security は各言語版あり → ロケール別に
-  'https://madeinlocal.jp/category/companies/fukuoka062',
+  FUKUOKA100_PAGE_URL, // 福岡発バッジ → 100選の特設ページ（エンブレムと同じ遷移先）
 ];
 
 // 主CTA: 機密データAI活用診断 / 副: ローカルLLM PoC（ADR-0011）
@@ -91,6 +98,47 @@ const secondaryHref = getContactUrl(currentLocale, {
               );
             })}
           </ul>
+        )
+      }
+      {
+        showFukuoka100Emblem && (
+          /* 福岡を代表する企業100選 公式エンブレム（#276・運営許諾取得済み）。
+             条件②によりクリックで選出企業の特設ページへ遷移させる。
+             ライト＝通常版 / ダーク＝白版を出し分け（提供素材）。 */
+          /* アクセシブル名は <a> の aria-label で持つ。ライト/ダークで一方の <img> が
+             display:none になるため、alt に名前を持たせるとダーク時に名前が消える。 */
+          <a
+            href={FUKUOKA100_PAGE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t.homeHero.fukuoka100Alt}
+            class="inline-flex rounded-lg transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600"
+            data-reveal
+            style="--reveal-delay:0.5s"
+          >
+            {/* loading="lazy" は必須: display:none 側の先読み取得を防ぎ、表示中の1枚だけを取得させる。
+                eager にすると両方ダウンロードされるため変更しないこと。 */}
+            <img
+              src="/assets/badges/fukuoka100-emblem-wide.png"
+              alt=""
+              aria-hidden="true"
+              width="480"
+              height="120"
+              loading="lazy"
+              decoding="async"
+              class="h-11 w-auto dark:hidden sm:h-12"
+            />
+            <img
+              src="/assets/badges/fukuoka100-emblem-wide-white.png"
+              alt=""
+              aria-hidden="true"
+              width="480"
+              height="120"
+              loading="lazy"
+              decoding="async"
+              class="hidden h-11 w-auto dark:block sm:h-12"
+            />
+          </a>
         )
       }
       {/* ファーストビュー直下の補助文（#175）: 事業内容を一文で補足する控えめなライン。 */}
