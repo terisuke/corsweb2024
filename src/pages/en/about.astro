@@ -6,6 +6,7 @@ import FounderNote from '../../components/about/FounderNote.astro';
 import NextStep from '../../components/common/NextStep.astro';
 import Layout from '../../layouts/Layout.astro';
 import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+import { COMPANY_DECK_URL } from '../../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -22,6 +23,9 @@ const t = getTranslations(currentLocale);
 
   <NextStep
     heading={t.nextStep.about.heading}
-    ctas={[{ label: t.nextStep.about.ctaLabel, href: getLocalizedUrl('/contact', currentLocale), primary: true }]}
+    ctas={[
+      { label: t.nextStep.about.ctaLabel, href: getLocalizedUrl('/contact', currentLocale), primary: true },
+      { label: t.nextStep.about.materialsLabel, href: COMPANY_DECK_URL, isExternal: true },
+    ]}
   />
 </Layout>

@@ -129,3 +129,11 @@ export function resolveExternalHref(
   }
   return href;
 }
+
+/**
+ * 会社紹介資料（Google スライド）の公開 URL（#291）。
+ * 閲覧専用の /preview を使い、共有元 URL の個人アカウント ID（ouid）等は載せない。
+ * 外部リンクとして別タブで開く（利用側で target=_blank / rel=noopener を付与）。
+ */
+export const COMPANY_DECK_URL =
+  'https://docs.google.com/presentation/d/1bl7eyuHc_pohcdyzWzOWibWisz-IQFe3/preview';

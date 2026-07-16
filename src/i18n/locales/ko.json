@@ -1405,7 +1405,8 @@
   "nextStep": {
     "about": {
       "heading": "Cor.에 대해 조금 아셨다면, 프로젝트에 대해 이야기 나눠 보지 않으시겠어요?",
-      "ctaLabel": "문의하기"
+      "ctaLabel": "문의하기",
+      "materialsLabel": "회사 소개 자료 보기"
     },
     "contact": {
       "heading": "문의하기 전에",

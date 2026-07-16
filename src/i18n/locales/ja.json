@@ -1432,7 +1432,8 @@
   "nextStep": {
     "about": {
       "heading": "Cor.のことが少し分かったら、実際の仕事を見てみませんか？",
-      "ctaLabel": "実績・事例を見る"
+      "ctaLabel": "実績・事例を見る",
+      "materialsLabel": "会社紹介資料を見る"
     },
     "contact": {
       "heading": "お問い合わせの前に",

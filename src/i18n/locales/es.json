@@ -1405,7 +1405,8 @@
   "nextStep": {
     "about": {
       "heading": "Ahora que conoces un poco a Cor., ¿hablamos de tu proyecto?",
-      "ctaLabel": "Contáctanos"
+      "ctaLabel": "Contáctanos",
+      "materialsLabel": "Ver el dossier de la empresa"
     },
     "contact": {
       "heading": "Antes de escribirnos",
