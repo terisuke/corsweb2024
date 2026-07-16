@@ -94,3 +94,61 @@ describe('ContactIntent 7 keys (ADR-0014 / #250)', () => {
     );
   });
 });
+
+describe('福岡100選エンブレムの掲載ガード（#276 条件③）', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  // 掲載期間の境界は production の isWithinFukuoka100DisplayPeriod を直接呼んで検証する。
+  // （テスト内でロジックを再実装すると、定数を書き換えても落ちない空虚なテストになる）
+  it('開始前（JST 2026-07-31 23:59:59）は掲載期間外', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-31T23:59:59+09:00'))).toBe(false);
+  });
+
+  it('JST 8/1 0:00 ちょうどから掲載期間内（ホストTZに依存しない）', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    // 2026-07-31T15:00:00Z === JST 2026-08-01 00:00
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-31T15:00:00Z'))).toBe(true);
+  });
+
+  it('掲載最終日（JST 2027-07-31 23:59）は掲載期間内', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2027-07-31T23:59:00+09:00'))).toBe(true);
+  });
+
+  // 終端は「終了日の翌日0時」＝排他的。23:59:59 等に退行すると最終日の末尾が欠けるため固定する。
+  it('掲載最終日の最終秒（JST 2027-07-31 23:59:59.500）も掲載期間内＝終端は翌日0時', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2027-07-31T23:59:59.500+09:00'))).toBe(true);
+  });
+
+  it('1年経過後（JST 2027-08-01 0:00）は掲載期間外＝許諾期間を超えて出さない', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2027-08-01T00:00:00+09:00'))).toBe(false);
+  });
+
+  it('フラグ off の間は掲載期間内でも表示しない（期間内であることを固定した上で検証）', async () => {
+    const { isFukuoka100EmblemVisible, isWithinFukuoka100DisplayPeriod } = await loadSite();
+    const inWindow = new Date('2026-09-01T00:00:00+09:00');
+
+    // false の理由が「期間外」ではなくフラグであることを担保する
+    expect(isWithinFukuoka100DisplayPeriod(inWindow)).toBe(true);
+    expect(isFukuoka100EmblemVisible(inWindow)).toBe(false);
+  });
+
+  // 意図的なトリップワイヤ: 既定で有効化された状態を誤って出荷しないための固定。
+  // IOBI の掲載開始回答を受けて正式に有効化する際は、この期待値を意識的に更新すること。
+  it('[トリップワイヤ] 既定ではフラグが無効（有効化時は本テストを意図的に更新する）', async () => {
+    const { FUKUOKA100_EMBLEM_ENABLED } = await loadSite();
+
+    expect(FUKUOKA100_EMBLEM_ENABLED).toBe(false);
+  });
+});
