@@ -81,6 +81,46 @@ describe('isProductionSite (ADR-0010 noindex)', () => {
   });
 });
 
+// 計測タグの出力可否（ADR-0004）。Analytics.astro はこの関数の戻り値だけで
+// タグを出す/出さないを決めるため、ここが両条件の AND を守っているかを固定する。
+// 落ちるべき変更: `enabled && isProductionSite()` を `||` にする / どちらかの条件を落とす。
+describe('isAnalyticsEnabled (ADR-0004 計測ゲート)', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it('production かつ enabled のときだけ出力する', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'production');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(true)).toBe(true);
+  });
+
+  it('preview では enabled でも出力しない（社内閲覧で解析が汚れるため）', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'preview');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(true)).toBe(false);
+  });
+
+  it('development でも出力しない', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'development');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(true)).toBe(false);
+  });
+
+  it('enabled=false なら production でも出力しない（iframe 埋め込み先の二重計測防止）', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'production');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(false)).toBe(false);
+  });
+
+  it('preview かつ enabled=false でも出力しない', async () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'preview');
+    const { isAnalyticsEnabled } = await loadSite();
+    expect(isAnalyticsEnabled(false)).toBe(false);
+  });
+});
+
 describe('ContactIntent 7 keys (ADR-0014 / #250)', () => {
   it('exports contract-dev and isContactIntent', async () => {
     const { CONTACT_INTENTS, isContactIntent, AUTO_HANDOFF_INTENTS, getContactUrl } = await loadSite();
@@ -92,5 +132,65 @@ describe('ContactIntent 7 keys (ADR-0014 / #250)', () => {
     expect(getContactUrl('ja', { intent: 'contract-dev', source: 'header-ai-dev' })).toBe(
       '/contact?intent=contract-dev&source=header-ai-dev',
     );
+  });
+});
+
+describe('福岡100選エンブレムの掲載ガード（#276 掲載期限）', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  // 掲載期間の境界は production の isWithinFukuoka100DisplayPeriod を直接呼んで検証する。
+  // （テスト内でロジックを再実装すると、定数を書き換えても落ちない空虚なテストになる）
+  it('掲載開始前（JST 2026-07-15 23:59:59）は掲載期間外', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-15T23:59:59+09:00'))).toBe(false);
+  });
+
+  // IOBI 和田様の回答（2026-07-16）「本日からのご掲載で問題ありません」。
+  it('掲載開始日 JST 2026-07-16 0:00 ちょうどから掲載期間内（ホストTZに依存しない）', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    // 2026-07-15T15:00:00Z === JST 2026-07-16 00:00
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-15T15:00:00Z'))).toBe(true);
+  });
+
+  it('掲載最終日（JST 2027-07-31 23:59）は掲載期間内', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2027-07-31T23:59:00+09:00'))).toBe(true);
+  });
+
+  // 終端は「終了日の翌日0時」＝排他的。23:59:59 等に退行すると最終日の末尾が欠けるため固定する。
+  it('掲載最終日の最終秒（JST 2027-07-31 23:59:59.500）も掲載期間内＝終端は翌日0時', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2027-07-31T23:59:59.500+09:00'))).toBe(true);
+  });
+
+  it('掲載期限（2027年7月末）経過後は掲載期間外＝許諾期間を超えて出さない', async () => {
+    const { isWithinFukuoka100DisplayPeriod } = await loadSite();
+
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2027-08-01T00:00:00+09:00'))).toBe(false);
+  });
+
+  // 掲載期限を過ぎたら、フラグを false に戻し忘れても表示されないことを担保する
+  // （本番は main への push でのみ再ビルドされるため、実運用ではフラグ操作が必須。
+  //   ここでは「期間ガードが最後の砦として効く」ことを固定する）。
+  it('掲載期限後はフラグが有効でも表示しない', async () => {
+    const { isFukuoka100EmblemVisible } = await loadSite();
+
+    expect(isFukuoka100EmblemVisible(new Date('2027-08-01T00:00:00+09:00'))).toBe(false);
+  });
+
+  // IOBI より掲載許諾を取得済みのため有効。掲載期限（2027-07-31）到来時は false に戻すこと。
+  it('掲載期間内かつフラグ有効なら表示する', async () => {
+    const { isFukuoka100EmblemVisible, isWithinFukuoka100DisplayPeriod } = await loadSite();
+    const inWindow = new Date('2026-09-01T00:00:00+09:00');
+
+    expect(isWithinFukuoka100DisplayPeriod(inWindow)).toBe(true);
+    expect(isFukuoka100EmblemVisible(inWindow)).toBe(true);
   });
 });

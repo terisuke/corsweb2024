@@ -12,6 +12,7 @@ const nav = t.nav as typeof t.nav & {
   serviceAiDev?: string;
   industries?: string;
   consult?: string;
+  press?: string;
 };
 
 // サービス導線（ADR-0011）: LP 未整備のため intent 付き /contact と Grift
@@ -54,6 +55,7 @@ const baseLinks = [
     ? [
         { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false },
         { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
+        { name: nav.press || 'プレスリリース', href: getLocalizedUrl('/news/press', currentLocale), isExternal: false },
       ]
     : []),
   {
@@ -98,6 +100,7 @@ const quickLinks = [
     ? [
         { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale) },
         { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale) },
+        { name: nav.press || 'プレスリリース', href: getLocalizedUrl('/news/press', currentLocale) },
       ]
     : []),
   { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale) },

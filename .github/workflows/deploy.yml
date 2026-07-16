@@ -44,6 +44,11 @@ jobs:
           PUBLIC_GRIFT_BASE_URL: ${{ vars.PUBLIC_GRIFT_BASE_URL || secrets.PUBLIC_GRIFT_BASE_URL || 'https://griftai.org' }}
           # main のみ production。PR / develop は preview → noindex
           PUBLIC_SITE_ENV: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && 'production' || 'preview' }}
+          # 計測タグ（#51）。未設定なら Analytics.astro は何も出力しない。
+          # Preview / PR ビルドには渡さない: 社内のプレビュー閲覧までセッション録画・計測され
+          # 解析データが汚染されるため（Analytics.astro 側でも production 以外は出力しない）。
+          PUBLIC_CLARITY_ID: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.PUBLIC_CLARITY_ID || '' }}
+          PUBLIC_CF_BEACON_TOKEN: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.PUBLIC_CF_BEACON_TOKEN || '' }}
 
       - name: Debug Firebase service account secret
         run: |

@@ -4,10 +4,28 @@
 // - Microsoft Clarity:        PUBLIC_CLARITY_ID（clarity.microsoft.com のプロジェクトID）
 //
 // どちらも未設定なら何も出力しない（dev / 未設定環境では計測ゼロ）。
-// プライバシー: これらは解析ツールのため、プライバシーポリシーでの開示が必要（#49 で対応）。
-// Clarity は Microsoft（米国）への送信となるため越境の開示も #49 / 弁護士確認の範囲。
-const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN ?? '';
-const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? '';
+// プライバシー: プライバシーポリシー「Cookie等の利用及びアクセス解析ツール」で
+// Microsoft Clarity / Cloudflare Web Analytics を名指しで開示し、Clarity は米国への
+// 越境移転を伴う旨を法第28条の条項に接続して記載している（5言語）。
+//
+// production 以外では出力しない: preview / develop は社内確認用のため、チーム自身の閲覧が
+// セッション録画・計測されて解析データが汚染されるのを防ぐ。CI でも preview へ env を
+// 渡していないが（deploy.yml）、取り違えても計測が漏れないようここでも二重に閉じる。
+// enabled=false で無効化できる（Props）: Cloudia ランチャーは全ページに常駐し
+// /contact/chat/ を同一オリジンで iframe 読み込みするため、埋め込み先ページでも計測すると
+// 同一訪問者に対し Clarity が二重に起動し、幻の /contact/chat/ セッションで解析が汚れる。
+// SSG のためクエリ（embed=1）はビルド時に判定できず、ページ側から明示的に落とす。
+import { isAnalyticsEnabled } from '../../config/site';
+
+interface Props {
+  /** false で計測タグを出力しない（iframe 埋め込み専用ページ等） */
+  enabled?: boolean;
+}
+const { enabled = true } = Astro.props;
+
+const analyticsEnabled = isAnalyticsEnabled(enabled);
+const cfBeaconToken = analyticsEnabled ? (import.meta.env.PUBLIC_CF_BEACON_TOKEN ?? '') : '';
+const clarityId = analyticsEnabled ? (import.meta.env.PUBLIC_CLARITY_ID ?? '') : '';
 ---
 
 {

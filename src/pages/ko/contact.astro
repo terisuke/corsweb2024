@@ -3,9 +3,10 @@ import Calendar from '../../components/contact/Calendar.astro';
 import ContactChat from '../../components/contact/ContactChat.astro';
 import ContactForm from '../../components/contact/ContactForm.astro';
 import ContactInfo from '../../components/contact/ContactInfo.astro';
+import CloudiaContactEntry from '../../components/contact/CloudiaContactEntry.astro';
 import Heading from '../../components/contact/Heading.astro';
 import Layout from '../../layouts/Layout.astro';
-import { CLOUDIA_LAUNCHER_ENABLED, CONTACT_CHAT_ENABLED } from '../../config/contact';
+import { CLOUDIA_CONTACT_PRIMARY_ENABLED, CLOUDIA_LAUNCHER_ENABLED, CONTACT_CHAT_ENABLED } from '../../config/contact';
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
 
 const currentLocale = getCurrentLocale(Astro.url);
@@ -19,12 +20,17 @@ const t = getTranslations(currentLocale);
 <Layout
   description={t.meta.contact.description}
   title={t.meta.contact.title}
-  cloudiaMobileLauncher
 >
   <Heading />
   {
     CONTACT_CHAT_ENABLED ? (
       <ContactChat />
+    ) : CLOUDIA_CONTACT_PRIMARY_ENABLED ? (
+      <CloudiaContactEntry>
+        <ContactInfo />
+        <Calendar />
+        <ContactForm />
+      </CloudiaContactEntry>
     ) : (
       <section id="contact-form-fallback" data-cloudia-fallback={CLOUDIA_LAUNCHER_ENABLED ? 'true' : 'false'}>
         <ContactInfo />

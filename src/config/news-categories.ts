@@ -92,6 +92,23 @@ export const NEWS_CATEGORIES = [
       es: 'Premios, selecciones y otros logros publicables',
     },
   },
+  {
+    id: 'press',
+    label: {
+      ja: 'プレスリリース',
+      en: 'Press release',
+      zh: '新闻稿',
+      ko: '보도자료',
+      es: 'Nota de prensa',
+    },
+    description: {
+      ja: 'Cor.株式会社が公式に発表するプレスリリース',
+      en: 'Official press releases from Cor. Inc.',
+      zh: 'Cor.株式会社的官方新闻稿',
+      ko: 'Cor. 주식회사의 공식 보도자료',
+      es: 'Notas de prensa oficiales de Cor. Inc.',
+    },
+  },
 ] as const satisfies readonly NewsCategoryConfig[];
 
 export const getNewsCategoryConfig = (categoryId: string): NewsCategoryConfig | undefined =>

@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import NewsCard from '../../components/news/NewsCard.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getNewsCategoryLabel } from '../../config/news-categories';
+import { safeJsonLd } from '../../utils/json-ld';
+
+const pressEntries = (await getCollection('news', ({ data }) => {
+  return data.category === 'press' && (import.meta.env.DEV || !data.isDraft);
+}))
+  .filter((entry): entry is CollectionEntry<'news'> => entry.data.category === 'press')
+  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+const pageUrl = new URL('/news/press/', Astro.site).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: getNewsCategoryLabel('press', 'ja'),
+  description: 'Cor.株式会社のプレスリリース一覧',
+  inLanguage: 'ja',
+  url: pageUrl,
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: pressEntries.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: entry.data.title,
+      url: entry.data.externalUrl || new URL(`/news/${entry.slug}/`, Astro.site).toString(),
+    })),
+  },
+};
+---
+
+<Layout
+  description="Cor.株式会社のプレスリリース一覧"
+  title="プレスリリース | Cor.株式会社"
+  availableLocales={['ja']}
+>
+  <main class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
+    <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-10 text-start sm:pb-12">
+      <p class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">Press</p>
+      <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">プレスリリース</h1>
+      <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">
+        Cor.株式会社が公式に発表するプレスリリースを掲載しています。
+      </p>
+      <div class="flex flex-wrap gap-4 text-sm">
+        <a href="/news/" class="text-primary-950/60 underline-offset-4 hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100">ニュース一覧</a>
+        <a href="/news.xml" class="text-primary-950/60 underline-offset-4 hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100">ニュースRSS</a>
+      </div>
+    </div>
+
+    {pressEntries.length > 0 ? (
+      <ul class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {pressEntries.map((entry) => (
+          <li>
+            <NewsCard entry={entry} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="mx-auto flex max-w-3xl flex-col gap-4 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+        <p class="type-copy text-primary-950/70 dark:text-primary-200/70">現在公開中のプレスリリースはありません。</p>
+        <a href="/contact/chat/?intent=press-speaking-other&source=press-page" class="type-action inline-flex w-fit items-center gap-1 text-sm text-primary-950/60 underline-offset-4 hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100">
+          プレスに関するお問い合わせ
+        </a>
+      </div>
+    )}
+  </main>
+
+  <script type="application/ld+json" set:html={safeJsonLd(jsonLd)} is:inline />
+</Layout>

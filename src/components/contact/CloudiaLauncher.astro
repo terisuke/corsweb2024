@@ -1,98 +1,106 @@
 ---
 import { getCurrentLocale, getLocalizedUrl } from '../../utils/i18n';
-
-interface Props {
-  showMobile?: boolean;
-}
-
-const { showMobile = false } = Astro.props;
+import {
+  CLOUDIA_GRIFT_HANDOFF_ALLOWED_ORIGINS,
+  CLOUDIA_GRIFT_HANDOFF_MAX_TTL_MS,
+} from '../../config/contact';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const chatUrl = new URL('/contact/chat/', Astro.url);
-chatUrl.searchParams.set('source', 'corsweb-contact-launcher');
+chatUrl.searchParams.set('source', 'corsweb-launcher');
 chatUrl.searchParams.set('locale', currentLocale);
-const chatPath = `${chatUrl.pathname}${chatUrl.search}`;
+const incomingIntent = Astro.url.searchParams.get('intent');
+if (incomingIntent) chatUrl.searchParams.set('intent', incomingIntent);
 const embedChatUrl = new URL(chatUrl);
 embedChatUrl.searchParams.set('embed', '1');
 const embedChatPath = `${embedChatUrl.pathname}${embedChatUrl.search}`;
 const fallbackContactPath = getLocalizedUrl('/contact/', currentLocale);
-const copy = currentLocale === 'ja'
-  ? {
-      label: 'Cloudiaに相談する',
-      title: 'Cloudiaに相談する',
-      close: '閉じる',
-      fallback: 'チャットを開けない場合は、お問い合わせフォームをご利用ください。',
-      fallbackLink: 'お問い合わせフォームを開く',
-    }
-  : {
-      label: 'Chat with Cloudia',
-      title: 'Chat with Cloudia',
-      close: 'Close',
-      fallback: 'If the chat cannot be opened, please use the contact form instead.',
-      fallbackLink: 'Open the contact form',
-    };
+const fallbackContactUrl = new URL(fallbackContactPath, Astro.url);
+fallbackContactUrl.searchParams.set('locale', currentLocale);
+fallbackContactUrl.searchParams.set(
+  'source',
+  Astro.url.searchParams.get('source') || 'corsweb-launcher-fallback'
+);
+if (incomingIntent) fallbackContactUrl.searchParams.set('intent', incomingIntent);
+const fallbackContactHref = `${fallbackContactUrl.pathname}${fallbackContactUrl.search}`;
+const copy =
+  currentLocale === 'ja'
+    ? {
+        label: 'Cloudiaに相談する',
+        title: 'Cloudiaに相談する',
+        close: '閉じる',
+        fallback: 'チャットを開けない場合は、お問い合わせフォームをご利用ください。',
+        fallbackLink: 'お問い合わせフォームを開く',
+      }
+    : {
+        label: 'Chat with Cloudia',
+        title: 'Chat with Cloudia',
+        close: 'Close',
+        fallback: 'If the chat cannot be opened, please use the contact form instead.',
+        fallbackLink: 'Open the contact form',
+      };
 ---
 
 <aside
   id="cloudia-launcher"
-  class="fixed bottom-5 right-5 z-40 hidden w-[min(24rem,calc(100vw-2rem))] md:block"
+  class="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40 w-[min(24rem,calc(100vw-2rem))] sm:right-5"
   data-chat-path={embedChatPath}
+  data-grift-handoff-origins={JSON.stringify(CLOUDIA_GRIFT_HANDOFF_ALLOWED_ORIGINS)}
+  data-grift-handoff-max-ttl-ms={CLOUDIA_GRIFT_HANDOFF_MAX_TTL_MS}
 >
   <div
     id="cloudia-launcher-panel"
-    class="mb-3 hidden overflow-hidden rounded-2xl bg-primary-50 shadow-2xl ring-1 ring-primary-950/15 dark:bg-primary-950 dark:ring-primary-200/15"
+    class="ring-primary-950/15 dark:ring-primary-200/15 mb-3 hidden overflow-hidden rounded-2xl bg-primary-50 shadow-2xl ring-1 dark:bg-primary-950"
     aria-hidden="true"
   >
-    <div class="flex items-center justify-between gap-3 border-b border-primary-950/10 px-4 py-3 dark:border-primary-200/10">
+    <div
+      class="flex items-center justify-between gap-3 border-b border-primary-950/10 px-4 py-3 dark:border-primary-200/10"
+    >
       <h2 class="text-sm font-semibold text-primary-950 dark:text-primary-100">{copy.title}</h2>
       <button
         type="button"
         id="cloudia-launcher-close"
-        class="inline-flex min-h-9 min-w-9 items-center justify-center rounded-full text-primary-950/70 hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200/70 dark:hover:bg-primary-400/10"
+        class="min-h-9 min-w-9 inline-flex items-center justify-center rounded-full text-primary-950/70 hover:bg-primary-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:text-primary-200/70 dark:hover:bg-primary-400/10"
         aria-label={copy.close}
       >
         <span aria-hidden="true" class="text-xl leading-none">×</span>
       </button>
     </div>
-    <div class="relative h-[min(38rem,70vh)] bg-primary-950/5 dark:bg-primary-50/5">
+    <div class="relative h-[min(38rem,70dvh)] max-h-[70dvh] bg-primary-950/5 dark:bg-primary-50/5">
       <iframe
         id="cloudia-launcher-frame"
         title={copy.title}
         src={embedChatPath}
         class="h-full w-full border-0"
         loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin"
-      ></iframe>
+        referrerpolicy="strict-origin-when-cross-origin"></iframe>
       <div
         id="cloudia-launcher-fallback"
-        class="absolute inset-0 hidden flex-col items-center justify-center gap-3 bg-primary-50 px-6 text-center dark:bg-primary-950"
+        class="absolute inset-0 flex hidden flex-col items-center justify-center gap-3 bg-primary-50 px-6 text-center dark:bg-primary-950"
         role="status"
       >
-        <p class="text-sm leading-relaxed text-primary-950/75 dark:text-primary-200/75">{copy.fallback}</p>
+        <p class="text-sm leading-relaxed text-primary-950/75 dark:text-primary-200/75">
+          {copy.fallback}
+        </p>
         <a
-          href={fallbackContactPath}
-          class="inline-flex min-h-11 items-center justify-center rounded-full bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
-        >{copy.fallbackLink}</a>
+          href={fallbackContactHref}
+          data-cloudia-fallback-link
+          class="min-h-11 inline-flex items-center justify-center rounded-full bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
+          >{copy.fallbackLink}</a
+        >
       </div>
     </div>
   </div>
   <button
     type="button"
     id="cloudia-launcher-open"
-    class="ml-auto inline-flex min-h-12 items-center justify-center rounded-full bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
+    class="min-h-12 ml-auto inline-flex items-center justify-center rounded-full bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
     aria-expanded="false"
     aria-controls="cloudia-launcher-panel"
   >
     {copy.label}
   </button>
 </aside>
-
-{showMobile && (
-  <a
-    href={chatPath}
-    class="fixed bottom-4 left-4 right-4 z-40 inline-flex min-h-12 items-center justify-center rounded-full bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 md:hidden"
-  >{copy.label}</a>
-)}
 
 <script is:inline>
   (() => {
@@ -102,11 +110,52 @@ const copy = currentLocale === 'ja'
     const panel = document.getElementById('cloudia-launcher-panel');
     const frame = document.getElementById('cloudia-launcher-frame');
     const fallback = document.getElementById('cloudia-launcher-fallback');
-    if (!launcher || !openButton || !closeButton || !panel || !frame || !fallback) return;
+    const fallbackLink = launcher?.querySelector('[data-cloudia-fallback-link]');
+    if (
+      !launcher ||
+      !openButton ||
+      !closeButton ||
+      !panel ||
+      !frame ||
+      !fallback ||
+      !(fallbackLink instanceof HTMLAnchorElement)
+    )
+      return;
 
     let opened = false;
     let frameReady = false;
+    let handoffNavigationStarted = false;
     let fallbackTimer;
+
+    const allowedHandoffOrigins = (() => {
+      try {
+        const values = JSON.parse(launcher.dataset.griftHandoffOrigins || '[]');
+        return Array.isArray(values)
+          ? new Set(values.filter((value) => typeof value === 'string'))
+          : new Set();
+      } catch {
+        return new Set();
+      }
+    })();
+    const handoffMaxTtlMs = Number(launcher.dataset.griftHandoffMaxTtlMs);
+
+    const applyIncomingContext = () => {
+      const incoming = new URLSearchParams(window.location.search);
+      const intent = incoming.get('intent');
+      const source = incoming.get('source');
+      if (!intent && !source) return;
+      const target = new URL(frame.src, window.location.href);
+      const fallbackTarget = new URL(fallbackLink.href, window.location.href);
+      if (intent) target.searchParams.set('intent', intent);
+      if (source) target.searchParams.set('source', source);
+      if (intent) fallbackTarget.searchParams.set('intent', intent);
+      if (source) fallbackTarget.searchParams.set('source', source);
+      frame.src = target.toString();
+      launcher.dataset.chatPath = `${target.pathname}${target.search}`;
+      fallbackLink.href = `${fallbackTarget.pathname}${fallbackTarget.search}${fallbackTarget.hash}`;
+    };
+
+    applyIncomingContext();
 
     const showFallback = () => {
       if (!frameReady) fallback.classList.remove('hidden');
@@ -131,6 +180,7 @@ const copy = currentLocale === 'ja'
       panel.classList.remove('hidden');
       panel.setAttribute('aria-hidden', 'false');
       openButton.setAttribute('aria-expanded', 'true');
+      closeButton.focus();
       window.clearTimeout(fallbackTimer);
       fallbackTimer = window.setTimeout(showFallback, 8000);
       inspectFrame();
@@ -144,13 +194,55 @@ const copy = currentLocale === 'ja'
       openButton.focus();
     };
 
+    const parseHandoffUrl = (value) => {
+      if (typeof value !== 'string' || !value.trim() || value.length > 2048) return null;
+      try {
+        const url = new URL(value.trim());
+        if (!allowedHandoffOrigins.has(url.origin)) return null;
+        if (url.protocol !== 'https:' || url.username || url.password) return null;
+        if (!/^\/chat\/portal\/[A-Za-z0-9._~-]{1,512}$/.test(url.pathname)) return null;
+        if (url.search || url.hash) return null;
+        return url.toString();
+      } catch {
+        return null;
+      }
+    };
+
+    const hasValidHandoffExpiry = (value) => {
+      if (typeof value !== 'string' || !Number.isFinite(handoffMaxTtlMs) || handoffMaxTtlMs <= 0)
+        return false;
+      const expiresAt = Date.parse(value);
+      if (!Number.isFinite(expiresAt)) return false;
+      const remainingTtl = expiresAt - Date.now();
+      return remainingTtl > 0 && remainingTtl <= handoffMaxTtlMs;
+    };
+
     openButton.addEventListener('click', openPanel);
     closeButton.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (event) => {
+      if (opened && event.key === 'Escape') closePanel();
+    });
     frame.addEventListener('load', inspectFrame);
     window.addEventListener('message', (event) => {
-      if (event.source !== frame.contentWindow || event.data !== 'cloudia:ready') return;
-      frameReady = true;
-      fallback.classList.add('hidden');
+      if (event.source !== frame.contentWindow || event.origin !== window.location.origin) return;
+      if (event.data === 'cloudia:ready') {
+        frameReady = true;
+        fallback.classList.add('hidden');
+        return;
+      }
+      if (
+        handoffNavigationStarted ||
+        !event.data ||
+        typeof event.data !== 'object' ||
+        event.data.type !== 'cloudia:grift-handoff-ready' ||
+        !hasValidHandoffExpiry(event.data.expiresAt)
+      )
+        return;
+
+      const handoffUrl = parseHandoffUrl(event.data.url);
+      if (!handoffUrl) return;
+      handoffNavigationStarted = true;
+      window.location.assign(handoffUrl);
     });
   })();
 </script>

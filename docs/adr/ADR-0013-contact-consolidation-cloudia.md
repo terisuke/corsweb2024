@@ -22,7 +22,8 @@
 
 ### 公開順序との整合
 - Epic #243 の公開順序「導線の真実性 → 有料入口 → 信頼証拠 → Cloudia → 050 AI 受付 → 背景演出」を維持する。
-- Cloudia 本線化（#254）までは従来フォームが主 UI であり、本 ADR は最終状態（グランドデザイン）を定義するものである。
+- `/contact/` は Cloudia への主導線（`/contact/chat/`、`embed=1`、`source`、`locale`、任意の `intent`）を表示する。従来の SSGFORM と日程調整は `details#contact-form-fallback` 内に残し、Cloudia 障害・JS 無効・a11y の fallback とする。
+- 全ページ右下の Cloudia launcher は同じ iframe 契約で常駐し、スマートフォンでは safe-area を考慮したボトムシートとして開閉する。
 
 ## 影響
 - corsweb: #250（contact-chat 構造化 intent フロー）、#254（Cloudia 埋め込み）、#252（計測）
