@@ -95,7 +95,7 @@ describe('ContactIntent 7 keys (ADR-0014 / #250)', () => {
   });
 });
 
-describe('福岡100選エンブレムの掲載ガード（#276 条件③）', () => {
+describe('福岡100選エンブレムの掲載ガード（#276 掲載期限）', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
     vi.resetModules();
@@ -103,17 +103,18 @@ describe('福岡100選エンブレムの掲載ガード（#276 条件③）', ()
 
   // 掲載期間の境界は production の isWithinFukuoka100DisplayPeriod を直接呼んで検証する。
   // （テスト内でロジックを再実装すると、定数を書き換えても落ちない空虚なテストになる）
-  it('開始前（JST 2026-07-31 23:59:59）は掲載期間外', async () => {
+  it('掲載開始前（JST 2026-07-15 23:59:59）は掲載期間外', async () => {
     const { isWithinFukuoka100DisplayPeriod } = await loadSite();
 
-    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-31T23:59:59+09:00'))).toBe(false);
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-15T23:59:59+09:00'))).toBe(false);
   });
 
-  it('JST 8/1 0:00 ちょうどから掲載期間内（ホストTZに依存しない）', async () => {
+  // IOBI 和田様の回答（2026-07-16）「本日からのご掲載で問題ありません」。
+  it('掲載開始日 JST 2026-07-16 0:00 ちょうどから掲載期間内（ホストTZに依存しない）', async () => {
     const { isWithinFukuoka100DisplayPeriod } = await loadSite();
 
-    // 2026-07-31T15:00:00Z === JST 2026-08-01 00:00
-    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-31T15:00:00Z'))).toBe(true);
+    // 2026-07-15T15:00:00Z === JST 2026-07-16 00:00
+    expect(isWithinFukuoka100DisplayPeriod(new Date('2026-07-15T15:00:00Z'))).toBe(true);
   });
 
   it('掲載最終日（JST 2027-07-31 23:59）は掲載期間内', async () => {
@@ -129,26 +130,27 @@ describe('福岡100選エンブレムの掲載ガード（#276 条件③）', ()
     expect(isWithinFukuoka100DisplayPeriod(new Date('2027-07-31T23:59:59.500+09:00'))).toBe(true);
   });
 
-  it('1年経過後（JST 2027-08-01 0:00）は掲載期間外＝許諾期間を超えて出さない', async () => {
+  it('掲載期限（2027年7月末）経過後は掲載期間外＝許諾期間を超えて出さない', async () => {
     const { isWithinFukuoka100DisplayPeriod } = await loadSite();
 
     expect(isWithinFukuoka100DisplayPeriod(new Date('2027-08-01T00:00:00+09:00'))).toBe(false);
   });
 
-  it('フラグ off の間は掲載期間内でも表示しない（期間内であることを固定した上で検証）', async () => {
+  // 掲載期限を過ぎたら、フラグを false に戻し忘れても表示されないことを担保する
+  // （本番は main への push でのみ再ビルドされるため、実運用ではフラグ操作が必須。
+  //   ここでは「期間ガードが最後の砦として効く」ことを固定する）。
+  it('掲載期限後はフラグが有効でも表示しない', async () => {
+    const { isFukuoka100EmblemVisible } = await loadSite();
+
+    expect(isFukuoka100EmblemVisible(new Date('2027-08-01T00:00:00+09:00'))).toBe(false);
+  });
+
+  // IOBI より掲載許諾を取得済みのため有効。掲載期限（2027-07-31）到来時は false に戻すこと。
+  it('掲載期間内かつフラグ有効なら表示する', async () => {
     const { isFukuoka100EmblemVisible, isWithinFukuoka100DisplayPeriod } = await loadSite();
     const inWindow = new Date('2026-09-01T00:00:00+09:00');
 
-    // false の理由が「期間外」ではなくフラグであることを担保する
     expect(isWithinFukuoka100DisplayPeriod(inWindow)).toBe(true);
-    expect(isFukuoka100EmblemVisible(inWindow)).toBe(false);
-  });
-
-  // 意図的なトリップワイヤ: 既定で有効化された状態を誤って出荷しないための固定。
-  // IOBI の掲載開始回答を受けて正式に有効化する際は、この期待値を意識的に更新すること。
-  it('[トリップワイヤ] 既定ではフラグが無効（有効化時は本テストを意図的に更新する）', async () => {
-    const { FUKUOKA100_EMBLEM_ENABLED } = await loadSite();
-
-    expect(FUKUOKA100_EMBLEM_ENABLED).toBe(false);
+    expect(isFukuoka100EmblemVisible(inWindow)).toBe(true);
   });
 });
