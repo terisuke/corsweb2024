@@ -8,6 +8,7 @@ import TeamIntro from '../components/about/TeamIntro.astro';
 import NextStep from '../components/common/NextStep.astro';
 import Layout from '../layouts/Layout.astro';
 import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../utils/i18n';
+import { COMPANY_DECK_URL } from '../config/site';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -33,6 +34,9 @@ const nextStepHref =
 
   <NextStep
     heading={t.nextStep.about.heading}
-    ctas={[{ label: t.nextStep.about.ctaLabel, href: nextStepHref, primary: true }]}
+    ctas={[
+      { label: t.nextStep.about.ctaLabel, href: nextStepHref, primary: true },
+      { label: t.nextStep.about.materialsLabel, href: COMPANY_DECK_URL, isExternal: true },
+    ]}
   />
 </Layout>
