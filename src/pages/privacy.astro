@@ -90,6 +90,25 @@ const securityUrl = getLocalizedUrl('/security', currentLocale);
               </ul>
             )}
             {Array.isArray(section.bodyAfter) && section.bodyAfter.map((para) => <p class="mb-4">{para}</p>)}
+            {/* 参照リンク（任意）。本文は素のテキストとして描画されるため、オプトアウト等の
+                「実際に到達できる必要がある」導線はここで anchor として出す。
+                label / href とも文字列として扱い、HTML は挿入しない。 */}
+            {Array.isArray(section.links) && (
+              <ul class="mb-4 list-inside list-disc space-y-2">
+                {section.links.map((link) => (
+                  <li>
+                    <a
+                      class="font-medium underline underline-offset-4"
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         ))
       }

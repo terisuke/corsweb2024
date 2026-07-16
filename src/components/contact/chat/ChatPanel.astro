@@ -25,8 +25,14 @@ const { c, isDev, turnstileSiteKey } = Astro.props;
   data-turnstile-sitekey={turnstileSiteKey}
 >
   <!-- メッセージ一覧 -->
+  {/* data-clarity-mask: 相談内容は利用者の入力そのものだが、ここでは input ではなく
+      通常テキストとして描画されるため Clarity の既定マスキング（入力欄のみ）の対象外になる。
+      プライバシーポリシー「Cookie等の利用及びアクセス解析ツール」で「お問い合わせ内容等の
+      機微な情報を記録する目的では使用しません」と明示しているため、その記載を運用ではなく
+      コードで担保する。本属性はダッシュボードのマスキング設定より優先される。 */}
   <div
     id="chat-messages"
+    data-clarity-mask="true"
     class="flex min-h-[18rem] flex-col gap-3 overflow-y-auto p-4 sm:p-6"
     aria-live="polite"
     aria-atomic="false"
