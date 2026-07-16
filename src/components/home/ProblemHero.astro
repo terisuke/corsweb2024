@@ -27,6 +27,20 @@ const BADGE_HREFS: (string | null)[] = [
   FUKUOKA100_PAGE_URL, // 福岡発バッジ → 100選の特設ページ（エンブレムと同じ遷移先）
 ];
 
+// 大画面（2xl≥1536px）でのヒーロー拡大幅は言語で分ける（#298）。
+// 行数の実測（コンテナ = 2xl:max-w-7xl の 1280px）:
+//   ja/zh/ko … 128px でも 2 行（最長 1147px で 1280px に収まる）
+//   en       … 115px 付近で 3 行に増える（"into what we build together." が折り返す）
+//   es       … 128px で 4 行に増える
+// 上限は安全側に倒して CJK=128px / ラテン系=100px とした（en@100px=2行/1144px、es@100px=3行/1094px）。
+// 一律に上げると en/es の構成が崩れ、一律に下げると主要言語の ja が小さいままになる。
+// 注意: h1 の text-balance は Tailwind 3.4 の機能で、本プロジェクト（3.3.3）では CSS が出ない。
+// 折り返しは純粋に font-size とコンテナ幅で決まる（バージョンを上げると上記の実測が変わる）。
+const isCjkLocale = ['ja', 'zh', 'ko'].includes(currentLocale);
+const heroTitleSizeClass = isCjkLocale
+  ? '2xl:text-[clamp(5.75rem,6vw,8rem)]'
+  : '2xl:text-[clamp(5.75rem,6vw,6.25rem)]';
+
 // 主CTA: 機密データAI活用診断 / 副: ローカルLLM PoC（ADR-0011）
 const primaryHref = getContactUrl(currentLocale, {
   intent: 'confidential-ai-assessment',
@@ -41,7 +55,10 @@ const secondaryHref = getContactUrl(currentLocale, {
 <section class="relative isolate flex min-h-[88vh] items-center overflow-hidden pt-20 pb-32 sm:pt-28 sm:pb-36">
   {/* 抽象モーション背景（装飾・読み上げ対象外）。prefers-reduced-motion で静止。 */}
   <div class="motion-bg" aria-hidden="true"></div>
-  <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+  {/* 2xl(≥1536px) の上乗せは外部モニター対策（#298）。h1 の clamp は 7vw が 5.75rem に
+      達する 1314px で頭打ちになり、それ以上いくら画面が広がってもヒーローが一切成長せず、
+      中央の小さな島に見える。ノート内蔵ディスプレイ（〜1440px）は 2xl 未満なので不変。 */}
+  <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 2xl:max-w-[90rem]">
     <div class="flex flex-col items-center gap-8 text-center sm:gap-10" data-hero-content>
       <p
         class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400"
@@ -50,13 +67,21 @@ const secondaryHref = getContactUrl(currentLocale, {
       >
         {t.homeHero.kicker}
       </p>
-      <div class="flex max-w-5xl flex-col items-center gap-6 sm:gap-8">
-        {/* 巨大タイポ＝「視覚で止まる」主役。即描画(LCP死守)のため演出は付けない。 */}
+      <div class="flex max-w-5xl flex-col items-center gap-6 sm:gap-8 2xl:max-w-7xl">
+        {/* 巨大タイポ＝「視覚で止まる」主役。即描画(LCP死守)のため演出は付けない。
+            2xl の 6vw は 1536px 時点で 92.2px ＝ 直前の上限 5.75rem(92px) とほぼ一致させ、
+            ブレークポイントで文字が飛ばないようにしている（変更時はこの連続性を壊さないこと）。
+            上限は言語別（heroTitleSizeClass 参照）。ja の最長行は 128px でも 1123px で、
+            2xl:max-w-7xl(1280px) に収まることを実測して決めている。 */}
         <h1
-          class="text-balance font-semibold leading-[1.05] tracking-tight text-[clamp(2.15rem,7vw,5.75rem)]"
+          class={`text-balance font-semibold leading-[1.05] tracking-tight text-[clamp(2.15rem,7vw,5.75rem)] ${heroTitleSizeClass}`}
           set:html={t.homeHero.title}
         />
-        <p class="max-w-3xl text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl" set:html={t.homeHero.subtitle} data-reveal style="--reveal-delay:0.15s"></p>
+        {/* 2xl では列幅だけ広げ、文字サイズは上げない。theme.fontSize が [size, lineHeight] の
+            タプル指定のため text-2xl は line-height:2rem も出し、後勝ちで leading-relaxed(1.625) を
+            打ち消してしまう（20px/1.70 → 24px/1.33 と字間が詰まって逆に読みにくくなる）。
+            2xl:leading-relaxed で戻すと es の主CTA が 1920×950 でファーストビュー外に落ちる。 */}
+        <p class="max-w-3xl text-pretty text-lg leading-relaxed text-primary-950/70 dark:text-primary-200/70 sm:text-xl 2xl:max-w-4xl" set:html={t.homeHero.subtitle} data-reveal style="--reveal-delay:0.15s"></p>
       </div>
       <div class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:justify-center" data-reveal style="--reveal-delay:0.3s">
         {/* 有料入口: 診断（主）+ ローカルLLM PoC（副）。Grift は GriftBridge / ServiceCtas 側（ADR-0011）。 */}
