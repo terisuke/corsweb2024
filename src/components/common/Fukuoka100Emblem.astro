@@ -1,0 +1,82 @@
+---
+// 福岡を代表する企業100選 公式エンブレム（#276 / #304）。
+//
+// 運営（IOBI・和田様）の許諾条件をこのコンポーネント1箇所で担保する。掲載箇所を増やすときは
+// 必ずこれを使うこと。各ページに <img> を直書きすると、条件を1箇所でも落とした時点で違反になり、
+// 掲載期限が来たときの消し漏れも起きる。
+//   条件②: エンブレムのクリックで選出企業の特設ページへ遷移させる（FUKUOKA100_PAGE_URL）
+//   条件③: 掲載期限は 2027年7月末（isFukuoka100EmblemVisible / config/site.ts）
+//
+// 期限判定は「ビルド時」に評価される。本番は main への push でしか再ビルドされないため、
+// 期限が来ても自動では消えない（config/site.ts の FUKUOKA100_EMBLEM_ENABLED も参照）。
+// 2027年6〜7月にリマインダーを入れて、その時点で再デプロイまたはフラグ落としを行うこと。
+import { FUKUOKA100_PAGE_URL, isFukuoka100EmblemVisible } from '../../config/site';
+import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+
+// HTMLAttributes<'a'> を継承し、配置側から <a> の属性（data-reveal / style 等）をそのまま
+// 通せるようにする。任意キーを何でも許す [key: string] より、<a> に付く属性だけに絞れるため安全。
+// これが無いと data-reveal/style を渡した時点で astro check が失敗し、npm run build
+// （= astro check && astro build）が CI の deploy ジョブで止まる（build 前に短絡）。
+interface Props extends astroHTML.JSX.HTMLAttributes {
+  /** wide=横型（狭い場所向け） / portrait=縦型（余白のある場所向け） */
+  variant?: 'wide' | 'portrait';
+  /** 表示サイズ等の Tailwind クラス。高さのみ指定し、幅は w-auto で比率を保つ。 */
+  imgClass?: string;
+  /** 外側 <a> に足すクラス（配置の調整用） */
+  class?: string;
+}
+
+// rest: data-reveal や style（--reveal-delay）など、配置側の演出属性をそのまま <a> に通す。
+const { variant = 'wide', imgClass = 'h-20 w-auto', class: className = '', ...rest } = Astro.props;
+
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+// 条件③: 掲載期間外なら何も描画しない。
+const visible = isFukuoka100EmblemVisible();
+
+// 提供素材は横型・縦型ともに通常版と白版がある。ライト＝通常 / ダーク＝白。
+// 素材は原本（横 6352x1588 / 縦 2323x3167）から表示サイズの2倍で書き出している。
+const src =
+  variant === 'portrait'
+    ? { light: '/assets/badges/fukuoka100-emblem-portrait.png', dark: '/assets/badges/fukuoka100-emblem-portrait-white.png', w: 293, h: 400 }
+    : { light: '/assets/badges/fukuoka100-emblem-wide.png', dark: '/assets/badges/fukuoka100-emblem-wide-white.png', w: 640, h: 160 };
+---
+
+{
+  visible && (
+    /* アクセシブル名は <a> の aria-label で持つ。ライト/ダークで一方の <img> が display:none に
+       なるため、alt に名前を持たせるとダーク時に名前が消える。 */
+    <a
+      href={FUKUOKA100_PAGE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={t.homeHero.fukuoka100Alt}
+      class={`inline-flex rounded-lg transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600 ${className}`}
+      {...rest}
+    >
+      {/* loading="lazy" は必須: display:none 側の先読み取得を防ぎ、表示中の1枚だけを取得させる。
+          eager にすると両方ダウンロードされるため変更しないこと。 */}
+      <img
+        src={src.light}
+        alt=""
+        aria-hidden="true"
+        width={src.w}
+        height={src.h}
+        loading="lazy"
+        decoding="async"
+        class={`${imgClass} dark:hidden`}
+      />
+      <img
+        src={src.dark}
+        alt=""
+        aria-hidden="true"
+        width={src.w}
+        height={src.h}
+        loading="lazy"
+        decoding="async"
+        class={`hidden ${imgClass} dark:block`}
+      />
+    </a>
+  )
+}
