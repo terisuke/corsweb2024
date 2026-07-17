@@ -27,19 +27,34 @@ const BADGE_HREFS: (string | null)[] = [
   FUKUOKA100_PAGE_URL, // 福岡発バッジ → 100選の特設ページ（エンブレムと同じ遷移先）
 ];
 
-// 大画面（2xl≥1536px）でのヒーロー拡大幅は言語で分ける（#298）。
-// 行数の実測（コンテナ = 2xl:max-w-7xl の 1280px）:
-//   ja/zh/ko … 128px でも 2 行（最長 1147px で 1280px に収まる）
-//   en       … 115px 付近で 3 行に増える（"into what we build together." が折り返す）
-//   es       … 128px で 4 行に増える
-// 上限は安全側に倒して CJK=128px / ラテン系=100px とした（en@100px=2行/1144px、es@100px=3行/1094px）。
-// 一律に上げると en/es の構成が崩れ、一律に下げると主要言語の ja が小さいままになる。
-// 注意: h1 の text-balance は Tailwind 3.4 の機能で、本プロジェクト（3.3.3）では CSS が出ない。
-// 折り返しは純粋に font-size とコンテナ幅で決まる（バージョンを上げると上記の実測が変わる）。
+// CJK（ja/zh/ko）は 7vw で画面幅に自動追従させ、上限に当てない（#302）。
+//
+// 経緯: 元は clamp(2.15rem,7vw,5.75rem) の上限が 1314px で効き、それ以上いくら画面が広くても
+// ヒーローが一切成長しなかった。#298 で 2xl(1536px) に段差を足したが、MacBook 14" の 1512px は
+// 段差の 24px 手前で恩恵ゼロ、外部モニター（2164px・実測）も段差の上限 128px で頭打ちのまま
+// だった。上限そのものが原因なので、CJK は上限を実質廃止して比率を一定にする。
+// 結果、CJK タイトルは画面幅によらず一定比率で表示される（ja 61% / ko 64% / zh 48%）。
+//
+// 枠（max-w-*）は触らないこと。内側の div は items-center 配下の flex item ＝ 既に shrink-to-fit で、
+// h1 は nowrap + text-center。つまり枠の max-width を変えても h1 は同じ位置に着地する
+// （ja@2164/3440 でピクセル一致を実測）。CJK には無意味なうえ、枠を広げると 1536〜1888px で
+// es の行数が増えて主CTA がファーストビューから落ちる退行を生む。
+//
+// ラテン系（en/es）は現状維持（#298 時点と同一の値）。タイトルが折り返すため文字を大きくすると
+// 行が増え、ヒーローが縦に伸びて主CTA が画面外に落ちる。es@1512x982 の CTA 余白は元から +13px
+// しかなく、少しでも育てると破綻する。主CTA は有料入口なので見出しの大きさより優先する。
+// en/es を大きくしたいなら、まずタイトルの文言を短くすること（コード側では解けない）。
+//
+// 15rem(240px) は CJK の安全弁。7vw が 240px に達する 3429px 以上でのみ効く（通常は no-op）。
+//
+// 注意1: h1 の text-balance は Tailwind 3.4 の機能で、本プロジェクト（3.3.3）では CSS が出ない。
+//        折り返しは font-size と枠幅だけで決まる（バージョンを上げるとこの前提が変わる）。
+// 注意2: section に overflow-hidden があるため、横溢れは scrollWidth では検知できない（黙って
+//        切られる）。検証する場合は行の矩形とビューポートを直接比較すること。
 const isCjkLocale = ['ja', 'zh', 'ko'].includes(currentLocale);
 const heroTitleSizeClass = isCjkLocale
-  ? '2xl:text-[clamp(5.75rem,6vw,8rem)]'
-  : '2xl:text-[clamp(5.75rem,6vw,6.25rem)]';
+  ? 'text-[clamp(2.15rem,7vw,15rem)]'
+  : 'text-[clamp(2.15rem,7vw,5.75rem)] 2xl:text-[clamp(5.75rem,6vw,6.25rem)]';
 
 // 主CTA: 機密データAI活用診断 / 副: ローカルLLM PoC（ADR-0011）
 const primaryHref = getContactUrl(currentLocale, {
@@ -69,12 +84,10 @@ const secondaryHref = getContactUrl(currentLocale, {
       </p>
       <div class="flex max-w-5xl flex-col items-center gap-6 sm:gap-8 2xl:max-w-7xl">
         {/* 巨大タイポ＝「視覚で止まる」主役。即描画(LCP死守)のため演出は付けない。
-            2xl の 6vw は 1536px 時点で 92.2px ＝ 直前の上限 5.75rem(92px) とほぼ一致させ、
-            ブレークポイントで文字が飛ばないようにしている（変更時はこの連続性を壊さないこと）。
-            上限は言語別（heroTitleSizeClass 参照）。ja の最長行は 128px でも 1123px で、
-            2xl:max-w-7xl(1280px) に収まることを実測して決めている。 */}
+            サイズは heroTitleSizeClass が全て持つ（ベタ書きの text-[...] を足すと、後勝ちが
+            クラス属性の順ではなく CSS の出力順で決まるため、無言で競合する）。 */}
         <h1
-          class={`text-balance font-semibold leading-[1.05] tracking-tight text-[clamp(2.15rem,7vw,5.75rem)] ${heroTitleSizeClass}`}
+          class={`text-balance font-semibold leading-[1.05] tracking-tight ${heroTitleSizeClass}`}
           set:html={t.homeHero.title}
         />
         {/* 2xl では列幅だけ広げ、文字サイズは上げない。theme.fontSize が [size, lineHeight] の
