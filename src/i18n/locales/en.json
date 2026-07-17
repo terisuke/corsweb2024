@@ -971,7 +971,7 @@
     "title": "CEO Schedule",
     "description": "This is the CEO's public schedule. If you would like to schedule a meeting, please check available time slots and contact us.",
     "ariaLabel": "CEO Schedule Calendar",
-    "note": "* Please contact us through the contact form below for meeting requests."
+    "note": "* If you cannot find a suitable time, please contact us by phone."
   },
   "testimonials": {
     "title": "Technical Expertise",
@@ -1016,9 +1016,11 @@
       "label": "Postal address",
       "value": "810-0001 Fukuoka Prefecture, Fukuoka City\nChuo-ku Tenjin 2-3-10\nTenjin Pine Crest 719"
     },
-    "chat": {
-      "label": "Email",
-      "value": "Chat with AI Cloudia"
+    "phone": {
+      "label": "Phone",
+      "title": "Cor. Inc. Call Center",
+      "value": "+81 50-1792-9351",
+      "notice": "Calls are answered by an automated AI voice system. A member of our team will call you back."
     }
   },
   "valuesData": [
@@ -1142,7 +1144,7 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "lastUpdate": "Effective date: July 17, 2026 (Version 0.2, Draft)",
+    "lastUpdate": "Effective date: July 17, 2026 (Version 0.3, Draft)",
     "note": "The Japanese version is the authoritative text. This English translation is provided for convenience.",
     "intro": "Cor. Inc. (hereinafter referred to as \"the Company\") recognizes the importance of the personal information it handles and, in accordance with the Act on the Protection of Personal Information (hereinafter the \"APPI\") and other relevant laws and regulations and guidelines, as well as the information security management system based on ISO/IEC 27001:2022 (JIS Q 27001:2023), handles the personal information of customers, employees, job applicants, and all other individuals appropriately. The Company protects personal information in accordance with the following policy.",
     "businessTitle": "1. Business Information",
@@ -1324,10 +1326,9 @@
       },
       {
         "label": "How to contact",
-        "value": "Please contact us via the inquiry form."
+        "value": "For requests for disclosure and the like (Section 7), please contact us at company@cor-jp.com, attaching documents that verify your identity. Complaints and consultations regarding the handling of personal information are also accepted via Cloudia (AI chat) or by phone on our contact page."
       }
     ],
-    "inquiryLinkLabel": "inquiry form",
     "revisionTitle": "11. Revision of This Policy",
     "revisionBody": [
       "The Company may revise this Policy due to amendments to laws and regulations, changes in business activities, or other circumstances. When revised, the Company will publish the revised content on the Company's website or by other means. When making important changes, the Company will make them known by appropriate means."
@@ -1335,7 +1336,7 @@
     "securityLinkPrefix": "For our information security framework, see also our ",
     "securityLinkText": "Security",
     "securityLinkSuffix": " page.",
-    "footer": "Version 0.2 (Draft) / Effective date: July 17, 2026 / Prepared by: Cor. Inc. / Responsible: Personal Information Protection Manager (ISMS Management Officer, Nagisa Terada)",
+    "footer": "Version 0.3 (Draft) / Effective date: July 17, 2026 / Prepared by: Cor. Inc. / Responsible: Personal Information Protection Manager (ISMS Management Officer, Nagisa Terada)",
     "footerNote": "* This Policy is a summary and mapping of the internal rule \"Personal Information and Specific Personal Information Handling Regulations\" for the purpose of external publication. Where the content of the two differs, it shall be interpreted in accordance with laws and regulations and the intent of said regulations."
   },
   "security": {
