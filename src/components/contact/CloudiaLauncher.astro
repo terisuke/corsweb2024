@@ -29,15 +29,18 @@ const copy =
         label: 'Cloudiaに相談する',
         title: 'Cloudiaに相談する',
         close: '閉じる',
-        fallback: 'チャットを開けない場合は、お問い合わせフォームをご利用ください。',
-        fallbackLink: 'お問い合わせフォームを開く',
+        // Cloudia が開けないときに出る唯一の導線。ここが実在しない手段を案内すると
+        // 「全部壊れている状況」で行き止まりになる（#290 の再演）。通常時はフォームを
+        // 出さないため、必ず実在する手段（電話・日程調整）があるページへ送る。
+        fallback: 'チャットを開けない場合は、お電話または日程調整からご連絡ください。',
+        fallbackLink: 'お問い合わせページを開く',
       }
     : {
         label: 'Chat with Cloudia',
         title: 'Chat with Cloudia',
         close: 'Close',
-        fallback: 'If the chat cannot be opened, please use the contact form instead.',
-        fallbackLink: 'Open the contact form',
+        fallback: 'If the chat cannot be opened, please call us or schedule a meeting instead.',
+        fallbackLink: 'Open the contact page',
       };
 ---
 
@@ -94,7 +97,7 @@ const copy =
   <button
     type="button"
     id="cloudia-launcher-open"
-    class="min-h-12 ml-auto inline-flex items-center justify-center rounded-full bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
+    class="min-h-[3rem] ml-auto inline-flex items-center justify-center rounded-full bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-400 dark:text-primary-950 dark:hover:bg-primary-300"
     aria-expanded="false"
     aria-controls="cloudia-launcher-panel"
   >

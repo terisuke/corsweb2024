@@ -13,7 +13,9 @@ const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 ---
 
-{!CONTACT_CHAT_ENABLED && (
+{/* reCAPTCHA は ContactForm を描画するときだけ必要。Cloudia 主導線（既定）ではフォームを
+    出さないため読み込まない（不要な外部スクリプトを全訪問者に配らない）。 */}
+{!CONTACT_CHAT_ENABLED && !CLOUDIA_CONTACT_PRIMARY_ENABLED && (
   <script src="https://www.google.com/recaptcha/api.js" async defer is:inline></script>
 )}
 
@@ -26,10 +28,12 @@ const t = getTranslations(currentLocale);
     CONTACT_CHAT_ENABLED ? (
       <ContactChat />
     ) : CLOUDIA_CONTACT_PRIMARY_ENABLED ? (
+      /* 通常時: 導線は Cloudia と電話。フォームは出さない。
+         ContactForm は下の切り戻し分岐（CLOUDIA_CONTACT_PRIMARY_ENABLED=false）に残しており、
+         Cloudia 停止時にフラグ 1 つで非常口として復活させられる（config/contact.ts 参照）。 */
       <CloudiaContactEntry>
         <ContactInfo />
         <Calendar />
-        <ContactForm />
       </CloudiaContactEntry>
     ) : (
       <section id="contact-form-fallback" data-cloudia-fallback={CLOUDIA_LAUNCHER_ENABLED ? 'true' : 'false'}>

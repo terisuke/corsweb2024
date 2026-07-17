@@ -36,7 +36,7 @@
     - **限界1（事後性）**: 観測できた時点で当該訪問の取得は既に起きている。トリガーは「止める」ものではなく「方針を見直す」もの。
     - **限界2（過少報告の可能性・未検証）**: Microsoft は同意シグナルが無い場合 "Without explicit consent, Clarity cookies can't be used. This means that some functionalities, like funnel tracking and session recordings, might be impacted" としており、**EEA 等からの訪問がむしろ過少に見える可能性がある**。国別内訳がこの抑制の影響を受けるかは未検証。初回の月次確認時に確かめること。
   - en / es の露出を強化する、または当該地域を対象とした施策を行う場合。
-  - 弁護士確認の機会が生じた場合。PP が「第0.2版（案）」のままであるため、その確定と併せて行うのが自然。
+  - 弁護士確認の機会が生じた場合。PP が「第0.3版（案）」のままであるため、その確定と併せて行うのが自然。
 
 ### 残タスク（計測の可否とは独立に必要）
 
