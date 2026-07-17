@@ -16,8 +16,8 @@ const copy =
         description:
           '相談モードと雑談モードを切り替えながら、Cor.へのご相談内容を整理できます。日本語・英語に対応しています。',
         cta: 'Cloudiaを開く',
-        fallbackTitle: 'フォーム・日程調整を利用する',
-        fallbackDescription: 'AIチャットを利用できない場合や、直接フォームでご連絡いただく場合はこちらをご利用ください。',
+        fallbackTitle: 'お電話・日程調整を利用する',
+        fallbackDescription: 'AIチャットを利用できない場合は、お電話または日程調整からご連絡ください。',
       }
     : {
         eyebrow: 'Contact with Cloudia',
@@ -25,8 +25,8 @@ const copy =
         description:
           'Use consultation or casual conversation mode to organize your inquiry to Cor. Cloudia supports Japanese and English.',
         cta: 'Open Cloudia',
-        fallbackTitle: 'Use the form or schedule a meeting',
-        fallbackDescription: 'Use the fallback form when the AI chat is unavailable or when you prefer to contact us directly.',
+        fallbackTitle: 'Call us or schedule a meeting',
+        fallbackDescription: 'If the AI chat is unavailable, please call us or book a time that suits you.',
       };
 const chatPath = `${chatUrl.pathname}${chatUrl.search}`;
 ---
@@ -42,13 +42,16 @@ const chatPath = `${chatUrl.pathname}${chatUrl.search}`;
       <a
         href={chatPath}
         data-cloudia-query-link
-        class="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-primary-300 px-5 py-3 text-base font-semibold text-primary-950 transition hover:bg-primary-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-300 dark:bg-primary-700 dark:text-primary-50 dark:hover:bg-primary-800"
+        class="inline-flex min-h-[3rem] shrink-0 items-center justify-center rounded-full bg-primary-300 px-5 py-3 text-base font-semibold text-primary-950 transition hover:bg-primary-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-300 dark:bg-primary-700 dark:text-primary-50 dark:hover:bg-primary-800"
       >{copy.cta}</a>
     </div>
   </div>
 </section>
 
-<details id="contact-form-fallback" class="mx-auto max-w-3xl px-4 pb-12 sm:px-6 lg:px-8">
+{/* open 必須: 中身は「Cloudia が使えないときの代替手段」（電話・日程調整）であり、
+    畳んだままだと Cloudia が開けない人にとって唯一の連絡先が初期状態で不可視になる。
+    以前ここに入っていたのはフォームだったため畳んでいたが、通常時フォームは出さない。 */}
+<details id="contact-form-fallback" open class="mx-auto max-w-3xl px-4 pb-12 sm:px-6 lg:px-8">
   <summary class="cursor-pointer rounded-2xl bg-primary-500/10 px-5 py-4 text-base font-semibold text-primary-950 outline-none transition hover:bg-primary-500/15 focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-400/10 dark:text-primary-100 dark:hover:bg-primary-400/15">
     {copy.fallbackTitle}
   </summary>

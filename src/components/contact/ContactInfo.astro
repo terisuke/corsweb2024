@@ -1,13 +1,9 @@
 ---
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { CALL_CENTER_TEL_HREF } from '../../config/contact';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
-const cloudiaHref = new URL('/contact/chat/', Astro.url);
-cloudiaHref.searchParams.set('locale', currentLocale);
-cloudiaHref.searchParams.set('source', 'corsweb-contact-info');
-const incomingIntent = Astro.url.searchParams.get('intent');
-if (incomingIntent) cloudiaHref.searchParams.set('intent', incomingIntent);
 ---
 
 <section class="py-16 sm:py-20">
@@ -40,11 +36,12 @@ if (incomingIntent) cloudiaHref.searchParams.set('intent', incomingIntent);
         </dd>
       </div>
 
-      {/* Chat */}
+      {/* 電話（AI 自動応対のコールセンター）。
+          以前はここに Cloudia への導線を置いていたが、ページ上部の CloudiaContactEntry に
+          同じ導線があり二重になっていたため差し替えた。 */}
       <div class="rounded-3xl bg-primary-500/10 px-6 py-8 dark:bg-primary-400/10">
-        <dt class="sr-only">{t.contactInfo.chat.label}</dt>
+        <dt class="sr-only">{t.contactInfo.phone.label}</dt>
         <dd class="flex h-full flex-col justify-between gap-6">
-          {/* h-6 w-6 から h-8 w-8 に変更 */}
           <svg
             class="h-8 w-8 text-primary-600 dark:text-primary-400"
             xmlns="http://www.w3.org/2000/svg"
@@ -53,16 +50,29 @@ if (incomingIntent) cloudiaHref.searchParams.set('intent', incomingIntent);
             aria-hidden="true"
           >
             <path
-              d="M7.29117 20.8242L2 22L3.17581 16.7088C2.42544 15.3056 2 13.7025 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C10.2975 22 8.6944 21.5746 7.29117 20.8242ZM7.58075 18.711L8.23428 19.0605C9.38248 19.6745 10.6655 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 13.3345 4.32549 14.6175 4.93949 15.7657L5.28896 16.4192L4.63416 19.3658L7.58075 18.711Z"
+              d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00203C8.34435 5.41407 8.75753 6.75378 9.34335 7.98216C9.4501 8.20602 9.38136 8.47426 9.1795 8.62205L7.02335 10.1614C8.33805 13.2138 10.7862 15.6619 13.8386 16.9766L15.3764 14.8241C15.5259 14.6218 15.7963 14.5525 16.0223 14.6602C17.2506 15.2452 18.5902 15.6584 20.0018 15.8607C20.1406 15.8806 20.3239 15.9019 20.5502 15.9251C20.8056 15.9508 21 16.1658 21 16.42Z"
             ></path>
           </svg>
-          <a
-            href={`${cloudiaHref.pathname}${cloudiaHref.search}`}
-            data-cloudia-query-link
-            class="block no-underline"
-          >
-            <p class="text-base font-medium">{t.contactInfo.chat.value}</p>
-          </a>
+          <div class="flex flex-col gap-2">
+            <p class="text-sm font-medium text-primary-950/70 dark:text-primary-200/70">
+              {t.contactInfo.phone.title}
+            </p>
+            {/* tel: リンク。スマホではタップで発信画面（確認あり）、PC では通話アプリの選択になる。
+                aria-describedby: リンク送りで移動する読み上げ利用者は周囲の <p> を読まないため、
+                これが無いと番号だけ聞いて発信し、AI が出て初めて気づくことになる（DOM 順に依らず解決する）。
+                min-h-[3rem](48px): タップして発信するのがこの機能の本体。ContactForm 等と同じ最小高に合わせる。 */}
+            <a
+              href={CALL_CENTER_TEL_HREF}
+              aria-describedby="call-center-notice"
+              class="inline-flex min-h-[3rem] items-center text-base font-medium no-underline hover:underline"
+            >
+              {t.contactInfo.phone.value}
+            </a>
+            {/* AI が応対する旨は発信前に伝える必要がある（掛けてから気づく体験を避ける）。 */}
+            <p id="call-center-notice" class="text-sm leading-6 text-primary-950/65 dark:text-primary-200/65">
+              {t.contactInfo.phone.notice}
+            </p>
+          </div>
         </dd>
       </div>
     </dl>

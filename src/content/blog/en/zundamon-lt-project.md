@@ -165,6 +165,6 @@ In the end, maybe engineering is all about "how seriously you take doing absurd 
 
 ---
 
-*If you have any ideas for interesting technology experiments, please feel free to share them through the [Contact](/contact) form!*
+*If you have any ideas for interesting technology experiments, please feel free to share them via [Contact](/contact)!*
 
 *Ideas like "I want Zundamon to rap" or "I want Hatsune Miku to review code" – those kinds of absurd ideas are what make the world more interesting.*
