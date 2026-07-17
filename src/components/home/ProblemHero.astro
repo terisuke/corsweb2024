@@ -70,9 +70,10 @@ const secondaryHref = getContactUrl(currentLocale, {
 <section class="relative isolate flex min-h-[88vh] items-center overflow-hidden pt-20 pb-32 sm:pt-28 sm:pb-36">
   {/* 抽象モーション背景（装飾・読み上げ対象外）。prefers-reduced-motion で静止。 */}
   <div class="motion-bg" aria-hidden="true"></div>
-  {/* 2xl(≥1536px) の上乗せは外部モニター対策（#298）。h1 の clamp は 7vw が 5.75rem に
-      達する 1314px で頭打ちになり、それ以上いくら画面が広がってもヒーローが一切成長せず、
-      中央の小さな島に見える。ノート内蔵ディスプレイ（〜1440px）は 2xl 未満なので不変。 */}
+  {/* 2xl(≥1536px) の枠の上乗せは #298 の名残。h1 は shrink-to-fit + nowrap + text-center の
+      ため、この枠は h1 の見た目には影響しない（heroTitleSizeClass のコメント参照）。効くのは
+      枠内で折り返す要素＝字幕・CTA・バッジ側。h1 の頭打ちは heroTitleSizeClass で解消済みで、
+      1314px の上限が残るのはラテン系（en/es）だけ。 */}
   <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 2xl:max-w-[90rem]">
     <div class="flex flex-col items-center gap-8 text-center sm:gap-10" data-hero-content>
       <p
