@@ -48,6 +48,21 @@ const usesGeneratedOgImage = !ogImage;
 const estimatedReadingTime = estimateReadingTime(description);
 const keywords = generateKeywords(tags, category, currentLocale);
 
+// 検索結果に出るタイトル。会社名表記をロケール別の正式表記に統一（#306）。ブログは全5言語で
+// 出力されるため、日本語ブランドを全言語に固定してはいけない（英語記事に全角日本語が混入する）。
+// i18n の meta タイトルと同じ規約: CJK は全角｜、ラテンは半角パイプ。
+// なお全角｜を <title> のテンプレートに直書きすると astro-compress が誤動作しサフィックスが
+// </head> の外へ漏れるため、必ず1つの文字列変数として組み立ててから {pageTitle} で描画する。
+const BLOG_BRAND: Record<string, string> = {
+  ja: 'Cor.株式会社',
+  zh: 'Cor.株式会社',
+  ko: 'Cor.주식회사',
+  en: 'Cor.Inc.',
+  es: 'Cor.Inc.',
+};
+const brandSep = currentLocale === 'en' || currentLocale === 'es' ? ' | ' : '｜';
+const pageTitle = `${title}${brandSep}${BLOG_BRAND[currentLocale] ?? 'Cor.株式会社'}`;
+
 ---
 
 <!doctype html>
@@ -104,7 +119,8 @@ const keywords = generateKeywords(tags, category, currentLocale);
     <!-- KaTeX CSS for math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
     
-    <title>{title} | Cor.inc Blog</title>
+    {/* pageTitle は frontmatter で組み立て済み（全角｜直書きは圧縮ツールで壊れるため）。 */}
+    <title>{pageTitle}</title>
     <ViewTransitions />
     
     <!-- Include critical CSS from parent layout -->

@@ -27,7 +27,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 };
 
 const { page } = Astro.props;
-const pageTitle = 'ブログ | Cor.inc';
+const pageTitle = 'ブログ｜Cor.株式会社';
 const pageDescription = 'AI活用、開発、経営の現場で得た知見を、専門外の方にも読みやすい形でまとめています。';
 const countLabel = page.total > page.size
   ? `${page.total}記事中 ${page.start + 1}-${page.end + 1}記事を表示`

@@ -520,39 +520,39 @@
       "description": "Explore our products and insights page showcasing our innovative IT solutions and media outreach. This page offers detailed information about our product portfolio, development services, and strategic insights. Discover our cutting-edge technology solutions, read about our innovative approaches, and learn how we can help transform your digital presence. Ideal for businesses seeking comprehensive IT services and product solutions."
     },
     "privacy": {
-      "title": "個人情報保護方針 | Cor.inc",
+      "title": "個人情報保護方針｜Cor.株式会社",
       "description": "Cor.株式会社の個人情報保護方針（プライバシーポリシー）。取得する個人情報と利用目的、第三者提供・委託、安全管理措置、開示等の請求、お問い合わせ窓口について。"
     },
     "security": {
-      "title": "セキュリティ方針 | Cor.inc",
+      "title": "セキュリティ方針｜Cor.株式会社",
       "description": "機密データAI・ローカルLLMを扱うパートナーとしての、Cor.株式会社のセキュリティ方針。入力データと権限の設計、人間承認プロセス、保存・削除の整理、ISO/IEC 27001取得を目標としたISMS運用整備について。"
     },
     "works": {
-      "title": "実績 | Cor.株式会社",
+      "title": "実績｜Cor.株式会社",
       "description": "Cor.株式会社の実績紹介。お客様の業務課題を、課題・設計・実装・運用の軸で解決した事例を掲載。機密データAI・ローカルLLM・Griftを軸に、AIを使う前の情報設計から伴走します。"
     },
     "news": {
-      "title": "ニュース | Cor.株式会社",
+      "title": "ニュース｜Cor.株式会社",
       "description": "Cor.株式会社からのお知らせ、サービス更新、外部掲載、イベント情報を掲載しています。"
     },
     "industryMedical": {
-      "title": "医療・ヘルスケア向けAI伴走 | Cor.inc",
+      "title": "医療・ヘルスケア向けAI伴走｜Cor.株式会社",
       "description": "医療現場の課題——院内データ活用、患者対応、情報セキュリティ、AI活用方針、見積もりの整理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。"
     },
     "industryShigyo": {
-      "title": "士業向けAI伴走 | Cor.inc",
+      "title": "士業向けAI伴走｜Cor.株式会社",
       "description": "士業の課題——契約書精査、申請・登記、期日管理、補助金申請——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。"
     },
     "industryConstruction": {
-      "title": "建設向けAI伴走 | Cor.inc",
+      "title": "建設向けAI伴走｜Cor.株式会社",
       "description": "建設現場の課題——労務管理、設計変更、安全確認、ノウハウ継承——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。"
     },
     "industryManufacturing": {
-      "title": "製造向けAI伴走 | Cor.inc",
+      "title": "製造向けAI伴走｜Cor.株式会社",
       "description": "製造現場の課題——目視検査、ノウハウ継承、設備保全、在庫管理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。"
     },
     "industryEducation": {
-      "title": "教育向けAI伴走 | Cor.inc",
+      "title": "教育向けAI伴走｜Cor.株式会社",
       "description": "教育現場の課題——テスト作業、保護者連絡、調査報告、ICT名簿管理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。"
     }
   },
