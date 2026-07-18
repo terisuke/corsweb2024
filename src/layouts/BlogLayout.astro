@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import WebVitals from '../components/performance/WebVitals.astro';
 import Analytics from '../components/analytics/Analytics.astro';
-import { getCurrentLocale } from '../utils/i18n';
+import { getCurrentLocale, type Locale } from '../utils/i18n';
 import { generateKeywords, estimateReadingTime } from '../utils/blog-seo';
 import BlogSeoMeta from '../components/blog/seo/BlogSeoMeta.astro';
 import BlogOgp from '../components/blog/seo/BlogOgp.astro';
@@ -53,7 +53,8 @@ const keywords = generateKeywords(tags, category, currentLocale);
 // i18n の meta タイトルと同じ規約: CJK は全角｜、ラテンは半角パイプ。
 // なお全角｜を <title> のテンプレートに直書きすると astro-compress が誤動作しサフィックスが
 // </head> の外へ漏れるため、必ず1つの文字列変数として組み立ててから {pageTitle} で描画する。
-const BLOG_BRAND: Record<string, string> = {
+// Record<Locale,...> にして全ロケール網羅を型で強制する（6言語目を足したら型エラーで気づける）。
+const BLOG_BRAND: Record<Locale, string> = {
   ja: 'Cor.株式会社',
   zh: 'Cor.株式会社',
   ko: 'Cor.주식회사',
@@ -61,7 +62,7 @@ const BLOG_BRAND: Record<string, string> = {
   es: 'Cor.Inc.',
 };
 const brandSep = currentLocale === 'en' || currentLocale === 'es' ? ' | ' : '｜';
-const pageTitle = `${title}${brandSep}${BLOG_BRAND[currentLocale] ?? 'Cor.株式会社'}`;
+const pageTitle = `${title}${brandSep}${BLOG_BRAND[currentLocale]}`;
 
 ---
 
