@@ -1,6 +1,13 @@
 ---
-import { getCurrentLocale, getTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCurrentLocale, getTranslations, getLocalizedUrl, type Locale } from '../../utils/i18n';
 import { getContactUrl, getGriftUrl } from '../../config/site';
+
+// このページが存在するロケール。言語切替が「同一ページの翻訳版」へ飛ぶか、翻訳が無い言語で
+// ホームへフォールバックするかの判定に使う。未指定なら全言語ありとみなす（従来の暗黙の挙動）。
+interface Props {
+  availableLocales?: readonly Locale[];
+}
+const { availableLocales = ['ja', 'en', 'zh', 'ko', 'es'] } = Astro.props;
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
@@ -137,9 +144,10 @@ const langOptions = localeOrder.map((loc) => ({
   loc,
   name: langNames[loc],
   flag: langFlags[loc],
-  // ja は現在ページを維持。非ja は翻訳済みサブページが未整備のため各言語ホームへ（404回避）。
-  // 5言語展開（#60）後に同一パス遷移へ切り替える。
-  href: loc === 'ja' ? langBasePath : `/${loc}`,
+  // このページが対象言語に存在すれば「同一ページの翻訳版」へ、無ければその言語のホームへ
+  // （404回避）。従来は非ja を一律ホームに飛ばしていたため、翻訳済みページでも言語切替で
+  // トップに戻される不具合があった（CEO 報告 #307）。availableLocales で正しく出し分ける。
+  href: availableLocales.includes(loc) ? getLocalizedUrl(langBasePath, loc) : `/${loc}`,
   isCurrent: loc === currentLocale,
 }));
 ---

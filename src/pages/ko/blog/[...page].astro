@@ -2,6 +2,7 @@
 import type { GetStaticPaths, Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { blogIndexLocales } from '../../../utils/blog-i18n';
 import BlogArchiveHeader from '../../../components/blog/BlogArchiveHeader.astro';
 import BlogCategoryNav from '../../../components/blog/BlogCategoryNav.astro';
 import PostCard from '../../../components/blog/PostCard.astro';
@@ -27,14 +28,17 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 };
 
 const { page } = Astro.props;
-const pageTitle = '블로그 | Cor.inc';
+const pageTitle = '블로그｜Cor.주식회사';
 const pageDescription = 'AI, 제품, 엔지니어링 현장에서 얻은 배움을 의사결정에 필요한 내용부터 읽기 쉽게 정리합니다.';
 const countLabel = page.total > page.size
   ? `총 ${page.total}개 중 ${page.start + 1}-${page.end + 1}개 글 표시`
   : `총 ${page.total}개 글`;
+
+// 言語切替の飛び先を、そのページ番号/タグ/カテゴリが存在する言語だけに限定する（#307）。
+const availableLocales = await blogIndexLocales(() => true, page.currentPage);
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} availableLocales={availableLocales}>
   <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     <BlogArchiveHeader
       eyebrow="Cor.inc Blog"
