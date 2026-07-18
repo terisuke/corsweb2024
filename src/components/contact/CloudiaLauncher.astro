@@ -106,7 +106,10 @@ const copy =
 </aside>
 
 <script is:inline>
-  (() => {
+  // ViewTransitions ではページ遷移で body（＝このランチャー）ごと DOM が差し替わるが、is:inline
+  // スクリプトは初回しか実行されない。関数化して astro:page-load（初回＋遷移後に必ず発火）で
+  // 毎回束縛し直さないと、サイト内リンクで移動した後にボタンが無反応になる（#307・CEO 報告）。
+  function initCloudiaLauncher() {
     const launcher = document.getElementById('cloudia-launcher');
     const openButton = document.getElementById('cloudia-launcher-open');
     const closeButton = document.getElementById('cloudia-launcher-close');
@@ -220,13 +223,26 @@ const copy =
       return remainingTtl > 0 && remainingTtl <= handoffMaxTtlMs;
     };
 
+    // open/close/frame は遷移のたびに新しい要素になるので、毎回この要素に束縛する。
     openButton.addEventListener('click', openPanel);
     closeButton.addEventListener('click', closePanel);
-    document.addEventListener('keydown', (event) => {
-      if (opened && event.key === 'Escape') closePanel();
-    });
     frame.addEventListener('load', inspectFrame);
-    window.addEventListener('message', (event) => {
+
+    // keydown / message は window/document に付くため遷移で破棄されない。前回のハンドラを外して
+    // から現在のクロージャ（現在の frame / state を参照）で付け直す。これをしないと遷移ごとに
+    // ハンドラが累積し、古い frame を掴んだハンドラが残る。
+    if (window.__cloudiaKeydownHandler) {
+      document.removeEventListener('keydown', window.__cloudiaKeydownHandler);
+    }
+    window.__cloudiaKeydownHandler = (event) => {
+      if (opened && event.key === 'Escape') closePanel();
+    };
+    document.addEventListener('keydown', window.__cloudiaKeydownHandler);
+
+    if (window.__cloudiaMessageHandler) {
+      window.removeEventListener('message', window.__cloudiaMessageHandler);
+    }
+    window.__cloudiaMessageHandler = (event) => {
       if (event.source !== frame.contentWindow || event.origin !== window.location.origin) return;
       if (event.data === 'cloudia:ready') {
         frameReady = true;
@@ -246,6 +262,10 @@ const copy =
       if (!handoffUrl) return;
       handoffNavigationStarted = true;
       window.location.assign(handoffUrl);
-    });
-  })();
+    };
+    window.addEventListener('message', window.__cloudiaMessageHandler);
+  }
+
+  // astro:page-load は初回ロードと ViewTransitions の各遷移後に必ず発火する。
+  document.addEventListener('astro:page-load', initCloudiaLauncher);
 </script>
