@@ -2,6 +2,7 @@
 import type { GetStaticPaths, Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { blogIndexLocales } from '../../../../../utils/blog-i18n';
 import BlogArchiveHeader from '../../../../../components/blog/BlogArchiveHeader.astro';
 import BlogCategoryNav from '../../../../../components/blog/BlogCategoryNav.astro';
 import PostCard from '../../../../../components/blog/PostCard.astro';
@@ -42,9 +43,12 @@ const pageDescription = `标签为"${tag}"的文章，按发布时间从新到�
 const countLabel = page.total > page.size
   ? `显示 ${page.start + 1}-${page.end + 1} / 共 ${page.total} 篇文章`
   : `共 ${page.total} 篇文章`;
+
+// 言語切替の飛び先を、そのページ番号/タグ/カテゴリが存在する言語だけに限定する（#307）。
+const availableLocales = await blogIndexLocales((d) => d.tags.includes(tag), page.currentPage);
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} availableLocales={availableLocales}>
   <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     <BlogArchiveHeader
       eyebrow="标签"

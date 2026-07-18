@@ -9,7 +9,7 @@ import { generateKeywords, estimateReadingTime } from '../utils/blog-seo';
 import BlogSeoMeta from '../components/blog/seo/BlogSeoMeta.astro';
 import BlogOgp from '../components/blog/seo/BlogOgp.astro';
 import BlogStructuredData from '../components/blog/seo/BlogStructuredData.astro';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 type BlogPostData = {
   title: string;
@@ -47,6 +47,16 @@ const usesGeneratedOgImage = !ogImage;
 
 const estimatedReadingTime = estimateReadingTime(description);
 const keywords = generateKeywords(tags, category, currentLocale);
+
+// この記事が翻訳されている言語を算出する（言語切替の飛び先判定用・#307）。記事の slug は
+// "{lang}/{cleanSlug}" 形式。同じ cleanSlug を持つ記事が存在する言語だけを対象にすることで、
+// 未翻訳の言語ではヘッダーの言語切替がホームにフォールバックし、404 を避ける。
+const ALL_LOCALES = ['ja', 'en', 'zh', 'ko', 'es'] as const;
+const cleanSlug = post.slug.replace(/^[a-z]{2}\//, '');
+const allBlogPosts = await getCollection('blog', ({ data }) => !data.isDraft);
+const articleLocales = ALL_LOCALES.filter((loc) =>
+  allBlogPosts.some((p) => p.data.lang === loc && p.slug.replace(/^[a-z]{2}\//, '') === cleanSlug)
+);
 
 // 検索結果に出るタイトル。会社名表記をロケール別の正式表記に統一（#306）。ブログは全5言語で
 // 出力されるため、日本語ブランドを全言語に固定してはいけない（英語記事に全角日本語が混入する）。
@@ -450,7 +460,7 @@ const pageTitle = `${title}${brandSep}${BLOG_BRAND[currentLocale]}`;
     <Analytics />
   </head>
   <body class="bg-primary-50 text-primary-950 antialiased transition dark:bg-primary-950 dark:text-primary-200">
-    <Header />
+    <Header availableLocales={articleLocales} />
     <main>
       <slot />
     </main>
