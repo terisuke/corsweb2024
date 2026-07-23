@@ -40,3 +40,4 @@ playwright-report/
 # .harness-worktrees
 .harness-worktrees/
 .worktrees/
+.claude/
