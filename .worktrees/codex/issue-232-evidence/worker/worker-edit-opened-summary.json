@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-07-09T01:45:13.974Z",
+  "state": {
+    "bodyChars": 5424,
+    "bodyLabel": "本文",
+    "category": "lab",
+    "date": "2025-10-16",
+    "description": "Claude Code MCPが使えなくなったので新しくCodex CLIのMCPを導入。エラー続きの設定地獄から、Warp AIの助言で抜け出すまでの実録トラブルシューティング",
+    "draftChecked": false,
+    "featuredChecked": true,
+    "formTitle": "ブログを修正する",
+    "formVisible": true,
+    "message": "ブログを読み込みました",
+    "slug": "codex-mcp-troubleshooting",
+    "title": "Claude DesktopでCodex MCPを使うための設定方法",
+    "updateButton": "",
+    "url": "https://cor-jp.com/blog-admin/edit"
+  },
+  "screenshot": "/Users/teradakousuke/Developer/corsweb/.worktrees/codex/unified-content-cms-agent/evidence/issue-232/worker/cms-edit-blog-opened-dom-confirmed.png"
+}

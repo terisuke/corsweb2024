@@ -639,7 +639,7 @@
     "serviceLocalLlm": "LLM local / PoC de IA segura",
     "serviceAiDev": "Plataforma de IA y desarrollo por contrato",
     "industries": "Sectores",
-    "consult": "Consultar con Cloudia"
+    "consult": "Contactar"
   },
   "hero": {
     "title": "Más rápido que cualquiera, más allá del horizonte.",
@@ -1019,8 +1019,8 @@
     "phone": {
       "label": "Teléfono",
       "title": "Centro de llamadas de Cor. Inc.",
-      "value": "+81 50-1792-9351",
-      "notice": "Un sistema de voz con IA atiende las llamadas automáticamente. Un miembro del equipo le devolverá la llamada."
+      "value": "+81 70-8561-1659",
+      "notice": "Contacta con nosotros por teléfono. Un miembro del equipo le devolverá la llamada."
     }
   },
   "valuesData": [

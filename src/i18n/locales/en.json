@@ -639,7 +639,7 @@
     "serviceLocalLlm": "Local LLM / secure AI PoC",
     "serviceAiDev": "AI platform & contract development",
     "industries": "Industries",
-    "consult": "Talk with Cloudia"
+    "consult": "Contact Us"
   },
   "hero": {
     "title": "Beyond Words, Delivering Feelings.",
@@ -1019,8 +1019,8 @@
     "phone": {
       "label": "Phone",
       "title": "Cor. Inc. Call Center",
-      "value": "+81 50-1792-9351",
-      "notice": "Calls are answered by an automated AI voice system. A member of our team will call you back."
+      "value": "+81 70-8561-1659",
+      "notice": "Contact us by phone. A member of our team will call you back."
     }
   },
   "valuesData": [
