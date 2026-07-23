@@ -36,3 +36,7 @@ public/remark-link-card-plus/
 # Playwright artifacts
 test-results/
 playwright-report/
+
+# .harness-worktrees
+.harness-worktrees/
+.worktrees/
