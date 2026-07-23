@@ -639,7 +639,7 @@
     "serviceLocalLlm": "本地 LLM / 安全 AI PoC",
     "serviceAiDev": "AI 基础设施与受托开发",
     "industries": "行业",
-    "consult": "通过 Cloudia 咨询"
+    "consult": "联系我们"
   },
   "hero": {
     "title": "比任何人都更快，超越地平线。",
@@ -1019,8 +1019,8 @@
     "phone": {
       "label": "电话咨询",
       "title": "Cor.股份有限公司 呼叫中心",
-      "value": "+81 50-1792-9351",
-      "notice": "由 AI 语音自动应答。稍后将由负责人回电。"
+      "value": "+81 70-8561-1659",
+      "notice": "通过电话联系我们。稍后将由负责人回电。"
     }
   },
   "valuesData": [

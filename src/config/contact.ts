@@ -24,7 +24,7 @@ export const CLOUDIA_CONTACT_PRIMARY_ENABLED =
 // AI 自動音声で応対するコールセンター。表示用の番号は i18n（contactInfo.phone.value）側で
 // ロケール別に持つ（ja は国内表記、他は +81 表記）。href は国際表記で統一し、海外からの
 // 発信でも繋がるようにする。
-export const CALL_CENTER_TEL_HREF = 'tel:+815017929351';
+export const CALL_CENTER_TEL_HREF = 'tel:+817085611659';
 
 // CloudiaLauncher は既存フォームを残したまま、Cloudia への入口だけを追加する。
 // CONTACT_CHAT_ENABLED（旧ContactChat.astroの置換）とは独立して切り替える。

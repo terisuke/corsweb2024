@@ -41,7 +41,7 @@
     "serviceLocalLlm": "ローカルLLM / セキュアAI PoC",
     "serviceAiDev": "AI基盤構築・AI受託",
     "industries": "業種別",
-    "consult": "Cloudiaに相談"
+    "consult": "お問い合わせ"
   },
   "hero": {
     "title": "言葉を超えて、想いを届ける。",
@@ -429,8 +429,8 @@
     "phone": {
       "label": "電話でのお問い合わせ",
       "title": "Cor.株式会社コールセンター",
-      "value": "050-1792-9351",
-      "notice": "AIによる自動音声で応対します。担当者から折り返しご連絡します。"
+      "value": "070-8561-1659",
+      "notice": "電話でのお問い合わせは、担当者から折り返しご連絡します。"
     }
   },
   "valuesData": [

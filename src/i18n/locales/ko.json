@@ -639,7 +639,7 @@
     "serviceLocalLlm": "로컬 LLM / 시큐어 AI PoC",
     "serviceAiDev": "AI 기반 구축・AI 수탁",
     "industries": "업종별",
-    "consult": "Cloudia로 상담"
+    "consult": "문의하기"
   },
   "hero": {
     "title": "누구보다 빠르게, 지평선 너머로.",
@@ -1019,8 +1019,8 @@
     "phone": {
       "label": "전화 문의",
       "title": "Cor. 주식회사 콜센터",
-      "value": "+81 50-1792-9351",
-      "notice": "AI 음성이 자동으로 응대합니다. 담당자가 회신드립니다."
+      "value": "+81 70-8561-1659",
+      "notice": "전화로 문의해 주세요. 담당자가 회신드립니다."
     }
   },
   "valuesData": [
