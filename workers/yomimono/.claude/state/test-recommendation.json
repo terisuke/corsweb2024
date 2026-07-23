@@ -1,7 +1,0 @@
-{
-  "timestamp": "2026-07-08T07:23:37Z",
-  "changed_file": "src/ui-shared.ts",
-  "test_command": "npm test",
-  "related_test": "/Users/teradakousuke/Developer/corsweb/workers/yomimono/src/__tests__/ui-shared.test.ts",
-  "recommendation": "テストの実行を推奨します"
-}
