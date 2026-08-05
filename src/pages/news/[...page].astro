@@ -51,7 +51,7 @@ const itemListJsonLd = {
   availableLocales={['ja']}
 >
   <main class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
-    <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-10 text-start sm:pb-12">
+    <div class="flex max-w-3xl flex-col gap-4 pb-10 sm:pb-12">
       <p class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">
         {t.news.eyebrow}
       </p>
@@ -74,13 +74,13 @@ const itemListJsonLd = {
     </div>
 
     {page.total > page.size && (
-      <p class="mx-auto mb-8 max-w-3xl text-sm text-primary-950/50 dark:text-primary-200/50">
+      <p class="mb-8 max-w-3xl text-sm text-primary-950/50 dark:text-primary-200/50">
         {`${page.total}件中 ${page.start + 1}-${page.end}件を表示 (${page.currentPage}/${page.lastPage}ページ)`}
       </p>
     )}
 
     {page.data.length > 0 ? (
-      <ul class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {page.data.map((entry) => (
           <li>
             <NewsCard entry={entry} />
@@ -88,7 +88,7 @@ const itemListJsonLd = {
         ))}
       </ul>
     ) : (
-      <div class="mx-auto flex max-w-3xl flex-col gap-4 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+      <div class="flex max-w-3xl flex-col gap-4 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
         <p class="type-copy text-primary-950/70 dark:text-primary-200/70">{t.news.empty}</p>
         <a
           href="/blog"
