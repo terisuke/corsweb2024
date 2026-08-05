@@ -35,7 +35,9 @@ const articleJsonLd = {
   '@type': 'NewsArticle',
   headline: data.title,
   description: data.description,
-  inLanguage: currentLocale,
+  // 未翻訳の記事は localizeEntries が ja 本文へフォールバックする。URL のロケールではなく
+  // 実際に描画している本文の言語を申告しないと、構造化データが事実と食い違う。
+  inLanguage: data.lang,
   datePublished: data.publishedAt.toISOString(),
   dateModified: (data.updatedAt || data.publishedAt).toISOString(),
   author: {
