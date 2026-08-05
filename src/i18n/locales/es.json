@@ -1161,11 +1161,11 @@
     },
     "works": {
       "title": "Proyectos | Cor.Inc.",
-      "description": "Proyectos de Cor. Inc.: casos en los que estructuramos, diseñamos, implementamos y operamos soluciones para los retos de negocio de nuestros clientes, con foco en IA con datos confidenciales, LLM locales y Grift."
+      "description": "Proyectos de Cor.Inc.: casos en los que estructuramos, diseñamos, implementamos y operamos soluciones para los retos de negocio de nuestros clientes, con foco en IA con datos confidenciales, LLM locales y Grift."
     },
     "press": {
       "title": "Notas de prensa | Cor.Inc.",
-      "description": "Notas de prensa oficiales de Cor. Inc."
+      "description": "Notas de prensa oficiales de Cor.Inc."
     }
   },
   "privacy": {
@@ -1490,7 +1490,7 @@
   "press": {
     "eyebrow": "Press",
     "title": "Notas de prensa",
-    "intro": "Publicamos las notas de prensa oficiales de Cor. Inc.",
+    "intro": "Publicamos las notas de prensa oficiales de Cor.Inc.",
     "newsListLabel": "Todas las noticias",
     "rssLabel": "RSS de noticias",
     "empty": "Por ahora no hay notas de prensa publicadas.",

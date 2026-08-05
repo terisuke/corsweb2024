@@ -11,6 +11,8 @@ export const getStaticPaths: GetStaticPaths = () =>
   NON_JA_LOCALES.map((lang) => ({ params: { lang } }));
 
 // 社名のロケール別表記は #306 で確定済み（BlogLayout の BLOG_BRAND と同じ値）。
+// zh が ja と同じ「Cor.株式会社」なのは翻訳漏れではなく、登記上の商号をそのまま
+// 用いる判断（中国語圏でも日本法人の商号表記が通用するため）。
 // Record<Locale,...> で全ロケール網羅を型に強制する。
 const BRAND: Record<Locale, string> = {
   ja: 'Cor.株式会社',

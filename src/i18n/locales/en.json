@@ -1161,11 +1161,11 @@
     },
     "works": {
       "title": "Works | Cor.Inc.",
-      "description": "Case studies from Cor. Inc. — how we framed, designed, implemented, and operated solutions for our clients' business challenges, centred on confidential-data AI, local LLMs, and Grift."
+      "description": "Case studies from Cor.Inc. — how we framed, designed, implemented, and operated solutions for our clients' business challenges, centred on confidential-data AI, local LLMs, and Grift."
     },
     "press": {
       "title": "Press releases | Cor.Inc.",
-      "description": "Official press releases from Cor. Inc."
+      "description": "Official press releases from Cor.Inc."
     }
   },
   "privacy": {
@@ -1490,7 +1490,7 @@
   "press": {
     "eyebrow": "Press",
     "title": "Press releases",
-    "intro": "Official press releases published by Cor. Inc.",
+    "intro": "Official press releases published by Cor.Inc.",
     "newsListLabel": "All news",
     "rssLabel": "News RSS",
     "empty": "No press releases are published at the moment.",
