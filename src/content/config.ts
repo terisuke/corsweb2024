@@ -27,6 +27,8 @@ const blogCollection = defineCollection({
 // 実績記事（ケーススタディ）コレクション。/works のカードから個別記事へリンクするための構造化記事。
 // 本文（problem / approach / implementation / result）は markdown body に `## 課題` `## アプローチ`
 // `## 実装` `## 成果` の見出しで執筆する（terisuke が自然に書けるように）。
+// ファイルは blog と同じく `cases/{ja,en,zh,ko,es}/<slug>.md` に言語別ディレクトリで配置する
+// （slug が `<lang>/<slug>` になるため、ルート側で lang フィルタ + 接頭辞の除去が必要）。
 const caseCategories = [
   'grift',
   'confidential-ai',
@@ -61,9 +63,12 @@ const casesCollection = defineCollection({
     relatedSlugs: z.array(z.string()).optional(),
     isDraft: z.boolean().default(false),
     featured: z.boolean().default(false),
+    // 記事の言語。ディレクトリ名（cases/<lang>/）と一致させる。既定は ja。
+    lang: z.enum(['ja', 'en', 'zh', 'ko', 'es']).default('ja'),
   }),
 });
 
+// ニュースコレクション。cases と同じく `news/{ja,en,zh,ko,es}/<slug>.md` に言語別配置する。
 const newsCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -79,7 +84,7 @@ const newsCollection = defineCollection({
     ogImage: z.string().optional(),
     isDraft: z.boolean().default(false),
     featured: z.boolean().default(false),
-    lang: z.enum(['ja']).default('ja'),
+    lang: z.enum(['ja', 'en', 'zh', 'ko', 'es']).default('ja'),
   }),
 });
 

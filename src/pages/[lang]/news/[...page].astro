@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import NewsIndex from '../../../components/news/NewsIndex.astro';
+import Layout from '../../../layouts/Layout.astro';
+import { NON_JA_LOCALES, localizeEntries } from '../../../utils/content-i18n';
+import { getTranslations, type Locale } from '../../../utils/i18n';
+
+interface Props {
+  page: Page<CollectionEntry<'news'>>;
+}
+
+// 非ja のニュース一覧 /[lang]/news。ja はルート直下 (/news) が担当する。
+// 各言語の一覧は ja 版を基準に翻訳記事で差し替える（未翻訳は ja のまま表示）ため、
+// 掲載件数とページ数は全言語で一致する。
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const news = await getCollection('news', ({ data }) => {
+    return import.meta.env.DEV || !data.isDraft;
+  });
+
+  return NON_JA_LOCALES.flatMap((lang) => {
+    const sorted = localizeEntries(news, lang).sort(
+      (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime(),
+    );
+    return paginate(sorted, { pageSize: 12, params: { lang } });
+  });
+};
+
+const { lang } = Astro.params;
+const { page } = Astro.props;
+const t = getTranslations(lang as Locale);
+---
+
+<Layout
+  description={t.meta.news.description}
+  title={t.meta.news.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <NewsIndex page={page} />
+</Layout>

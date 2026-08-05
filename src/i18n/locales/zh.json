@@ -24,7 +24,13 @@
     "rssLabel": "订阅新闻 RSS",
     "empty": "目前没有已发布的新闻。",
     "updatedLabel": "更新",
-    "backToList": "返回新闻列表"
+    "backToList": "返回新闻列表",
+    "pressLink": "查看新闻稿",
+    "prev": "上一页",
+    "next": "下一页",
+    "countTemplate": "共 {total} 条，显示第 {start}-{end} 条（第 {current}/{last} 页）",
+    "externalLabel": "外部链接",
+    "titleSuffix": " | Cor.株式会社 新闻"
   },
   "homeHero": {
     "kicker": "超越想象，与你共同实现。",
@@ -584,43 +590,54 @@
   "works": {
     "title": "用实装说话的 Cor. 实绩。",
     "intro": "我们刊载领域与起步方式各异的实装实绩。不靠自称，而是用代码、运维与数字来呈现。",
-    "note": "※ 贡献率为 git 实测的提交比率。涉及 NDA・机密的案件，会隐去客户名・产品名并将内容抽象化后刊载。",
+    "note": "※ 出于保密考虑，我们隐去客户名・产品名及部分规格，聚焦于课题・设计・实装・运维进行刊载。",
+    "moreLabel": "查看更多实绩",
+    "moreHref": "/blog",
+    "ndaNote": "※ 因 NDA 限制，客户名・产品名及部分规格已作抽象化处理后刊载。",
     "items": [
       {
-        "name": "Engineer Cafe Navigator",
-        "tag": "OSS / 实名公开",
-        "description": "多语言语音 AI 接待的开源项目。182,368 行・8 人贡献，自有贡献率 87.7%（git 实测）。"
-      },
-      {
-        "name": "Grift",
+        "name": "把报价依据转化为公司资产的 AI 报价支援工具『Grift』",
         "tag": "自研产品",
-        "description": "基于 GitHub 实绩与市场行情，生成可解释参考报价的自研 AI 报价・评估基础平台。",
-        "link": "grift"
+        "description": "不把报价全权交给 AI，而是增加人可以负责的依据的验证中产品。课题：受托开发中的报价经验高度依赖个人，依据容易变成黑箱。设计・实装：由 AI 整理过往数据与前提条件，并设计・实装便于人确认・修正的 UI/UX。运维：将原本停留在负责人脑中的经验转化为公司资产，以透明的报价运营为目标，目前正在 Team Beta 验证中。",
+        "href": "grift"
       },
       {
-        "name": "cor-jp.com",
-        "tag": "自主制作",
-        "description": "本企业官网。Astro・5 语言・AI 翻译・高速展示，均由自家实装。"
+        "name": "Engineer Cafe Navigator",
+        "tag": "OSS / 公开实绩",
+        "description": "基于设施信息，以自然对话回答使用者提问的 AI 导览系统。课题：应对设施相关的多样提问成本高，使用者难以找到信息。设计・实装：整理公开信息与 FAQ，设计・实装可生成恰当回答的 AI 聊天机器人基础平台。运维：以开源形式公开，目标是建立可由社区主导持续改进・运维的体制。",
+        "href": "/works/engineer-cafe-navigator"
       },
       {
-        "name": "多模态生成式 AI SaaS",
-        "tag": "受托 / 匿名",
-        "description": "处理图像・语音・文本的生成式 AI SaaS 的投产开发（客户名不公开）。"
+        "name": "复合处理图像・文本的生成式 AI SaaS 基础平台的开发",
+        "tag": "AI 基础平台开发",
+        "description": "组合多个 AI 模型、按目的自动化内容生成的 SaaS 基础平台。课题：结合图像与文本的内容制作耗费大量人力成本。设计・实装：整合多个多模态 AI，设计可按需求稳定生成输出的 API 联动基础平台。运维：提供终端用户可直观操作的界面，构建可持续扩展功能的运维体制。",
+        "href": null,
+        "nda": true,
+        "note": "※ 出于保密考虑，隐去可能导致特定识别的信息后刊载。"
       },
       {
-        "name": "问卷平台的革新",
-        "tag": "受托 / 匿名",
-        "description": "对接手后的问卷平台进行革新・投产化。完成智能体平台迁移、测试与 CI/CD 完善。"
+        "name": "大规模问卷收集・分析基础平台的革新与运维设计",
+        "tag": "核心系统革新",
+        "description": "为安全且实时地处理・分析海量回答数据而进行的系统革新。课题：既有系统性能下降，且到数据分析为止的时滞与运维负担不断增加。设计・实装：设计并重新实装可承受大量访问的负载分散，以及安全的数据保管规则。运维：完善操作日志采集与权限管理，迁移到可减少业务运维顾虑的数据管理体制。",
+        "href": "/works/survey-platform-renewal",
+        "nda": true,
+        "note": "※ 因 NDA，企业名・产品名・部分规格已抽象化后刊载。"
       },
       {
-        "name": "遗留核心系统的上云迁移",
-        "tag": "受托 / NDA",
-        "description": "将教育类核心数据库迁移上云（详情因 NDA 抽象化处理）。"
+        "name": "贴合业务流程的遗留核心系统上云迁移",
+        "tag": "核心系统革新",
+        "description": "从老化的本地环境向着眼于运维的云环境迁移的支援。课题：既有业务流程已趋复杂，若只是单纯上云，预计会给现场带来混乱。设计・实装：迁移前先将现场的业务课题语言化・梳理，剔除不必要的功能后再设计・实装云架构。运维：明确运维时需确认的责任范围，落实现场可以无所迷惑地使用的维护・运维流程。",
+        "href": "/works/legacy-core-system-cloud-migration",
+        "nda": true,
+        "note": "※ 出于保密考虑，隐去可能导致特定识别的信息后刊载。"
       },
       {
-        "name": "建筑图纸・户型生成 AI",
-        "tag": "受托 / NDA",
-        "description": "把处理建筑图纸与户型的 AI 群从 0→1 快速实装（建筑类・因 NDA 抽象化处理）。"
+        "name": "建筑图纸与户型自动生成 AI 的验证实验",
+        "tag": "PoC / 0→1 开发",
+        "description": "将建筑行业的专业知识与 AI 结合，支援设计初期阶段图纸制作的验证。课题：设计初期阶段的户型方案制作耗时，客户提案速度难以提升。设计・实装：定义让 AI 能够处理建筑标准与行业特有设计规则的数据整形规则，并设计・实装原型。运维：制定由人对生成图纸进行最终确认的流程，并判断能否纳入实际业务。",
+        "href": null,
+        "nda": true,
+        "note": "※ 因 NDA，企业名・产品名・部分规格已抽象化后刊载。"
       }
     ]
   },
@@ -631,15 +648,16 @@
     "blog": "博客",
     "contact": "联系我们",
     "security": "安全",
-    "works": "Works",
-    "news": "News",
+    "works": "案例实绩",
+    "news": "新闻",
     "grift": "Grift",
     "services": "服务",
     "serviceAssessment": "机密数据 AI 应用诊断",
     "serviceLocalLlm": "本地 LLM / 安全 AI PoC",
     "serviceAiDev": "AI 基础设施与受托开发",
     "industries": "行业",
-    "consult": "联系我们"
+    "consult": "联系我们",
+    "press": "新闻稿"
   },
   "hero": {
     "title": "比任何人都更快，超越地平线。",
@@ -801,7 +819,7 @@
       "home": "首页",
       "about": "关于Cor.株式会社",
       "products": "产品&洞察",
-      "news": "News",
+      "news": "新闻",
       "contact": "联系我们",
       "privacy": "隐私",
       "security": "安全",
@@ -1140,6 +1158,14 @@
     "news": {
       "title": "新闻｜Cor.株式会社",
       "description": "Cor.株式会社的公告、服务更新、外部报道和活动信息。"
+    },
+    "works": {
+      "title": "实绩｜Cor.株式会社",
+      "description": "Cor.株式会社的实绩介绍。以机密数据 AI、本地 LLM 与 Grift 为轴，刊载从课题・设计・实装到运维的解决案例。"
+    },
+    "press": {
+      "title": "新闻稿 | Cor.株式会社",
+      "description": "Cor.株式会社的官方新闻稿一览"
     }
   },
   "privacy": {
@@ -1454,6 +1480,44 @@
     "security": {
       "heading": "如果觉得可以放心交给我们，不妨先聊一聊？",
       "ctaLabel": "咨询机密数据 AI 应用诊断"
+    },
+    "works": {
+      "heading": "有让您在意的实绩吗？",
+      "lead": "您的课题，也请让我们一起思考。",
+      "ctaLabel": "咨询机密数据 AI 应用诊断"
     }
+  },
+  "press": {
+    "eyebrow": "Press",
+    "title": "新闻稿",
+    "intro": "刊载 Cor.株式会社正式发布的新闻稿。",
+    "newsListLabel": "新闻一览",
+    "rssLabel": "新闻 RSS",
+    "empty": "目前没有已发布的新闻稿。",
+    "contactLabel": "媒体咨询"
+  },
+  "caseStudy": {
+    "breadcrumbWorks": "实绩",
+    "ndaHeading": "※ 因 NDA・机密案件，部分内容已作抽象化处理。",
+    "updatedLabel": "更新",
+    "nextHeading": "想进一步了解这个案例的您",
+    "nextLead": "您现场的课题，也请让我们一起思考。",
+    "relatedHeading": "相关实绩",
+    "categories": {
+      "grift": "Grift",
+      "confidential-ai": "机密数据 AI",
+      "local-llm": "本地 LLM",
+      "ai-contract": "AI 受托开发",
+      "tech-culture": "技术文化"
+    },
+    "ctas": {
+      "grift": "咨询 Grift Team Beta",
+      "confidential-ai": "咨询机密数据 AI 应用诊断",
+      "local-llm": "咨询本地 LLM / AI 基础设施 PoC",
+      "ai-contract": "咨询 AI 受托开发",
+      "techCultureAbout": "查看公司信息",
+      "techCultureContact": "联系我们"
+    },
+    "titleSuffix": "｜Cor.株式会社"
   }
 }

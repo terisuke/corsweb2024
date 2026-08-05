@@ -24,7 +24,13 @@
     "rssLabel": "Subscribe to news RSS",
     "empty": "No news is published yet.",
     "updatedLabel": "Updated",
-    "backToList": "Back to news"
+    "backToList": "Back to news",
+    "pressLink": "See press releases",
+    "prev": "Previous",
+    "next": "Next",
+    "countTemplate": "Showing {start}-{end} of {total} (page {current}/{last})",
+    "externalLabel": "External link",
+    "titleSuffix": " | Cor.Inc. News"
   },
   "homeHero": {
     "kicker": "Building with you, beyond what you imagined.",
@@ -563,43 +569,54 @@
   "works": {
     "title": "Our work speaks for itself.",
     "intro": "We showcase implementation work spanning different domains and different starting points. We show it through code, operations, and numbers — not claims.",
-    "note": "* Contribution rates are commit shares measured via git. For NDA and confidential projects, we withhold client and product names and present the content in abstracted form.",
+    "note": "* For confidentiality, we withhold client names, product names and some specifications, focusing instead on the challenge, design, implementation and operation.",
+    "moreLabel": "See more of our work",
+    "moreHref": "/blog",
+    "ndaNote": "* Under NDA: client names, product names, and some specifications are presented in abstracted form.",
     "items": [
       {
-        "name": "Engineer Cafe Navigator",
-        "tag": "OSS / Publicly named",
-        "description": "Open-source multilingual voice AI reception. 182,368 lines, 8 contributors, our own contribution rate 87.7% (measured via git)."
-      },
-      {
-        "name": "Grift",
+        "name": "Grift — an AI estimation support tool that turns estimate rationale into a company asset",
         "tag": "In-house product",
-        "description": "Our in-house AI estimation and evaluation platform that generates explainable reference estimates from GitHub track records and market rates.",
-        "link": "grift"
+        "description": "A product under validation that does not hand estimation over to AI, but instead increases the rationale that people can take responsibility for. Challenge: in contract development, estimation know-how depends on individuals and the rationale easily becomes a black box. Design & implementation: AI organizes past data and assumptions, and we designed and built a UI/UX that makes them easy for people to review and correct. Operation: currently in Team Beta validation, aiming to turn know-how held in individual heads into a company asset and to run estimation transparently.",
+        "href": "grift"
       },
       {
-        "name": "cor-jp.com",
-        "tag": "In-house build",
-        "description": "This corporate site. Built in-house with Astro, 5 languages, AI translation, and fast page loads."
+        "name": "Engineer Cafe Navigator",
+        "tag": "OSS / Public release",
+        "description": "An AI guidance system that answers visitors' questions in natural dialogue based on facility information. Challenge: responding to the wide range of questions about the facility was costly, and visitors had difficulty finding information. Design & implementation: we organized public information and FAQs and designed and built an AI chatbot platform that generates appropriate answers. Operation: released as open source, aiming for a structure in which the community can lead continuous improvement and operation.",
+        "href": "/works/engineer-cafe-navigator"
       },
       {
-        "name": "Multimodal generative-AI SaaS",
-        "tag": "Contract / Anonymous",
-        "description": "Production development of a generative-AI SaaS handling images, audio, and text (client name undisclosed)."
+        "name": "Development of a generative-AI SaaS platform that handles images and text together",
+        "tag": "AI platform development",
+        "description": "A SaaS platform that combines multiple AI models to automate content generation for each purpose. Challenge: producing content that combines images and text required a large amount of human effort. Design & implementation: we designed an API integration platform that unifies several multimodal AI models and generates output matching the requirements consistently. Operation: we provided an interface that end users can operate intuitively and built an operating structure that allows continuous feature expansion.",
+        "href": null,
+        "nda": true,
+        "note": "* For confidentiality reasons, we withhold information that could identify the project."
       },
       {
-        "name": "Survey-platform renewal",
-        "tag": "Contract / Anonymous",
-        "description": "Renewed and productionized a handed-over survey platform. Covered migration to an agent platform and setting up testing and CI/CD."
+        "name": "Renewal and operational design of a large-scale survey collection and analysis platform",
+        "tag": "Core system renewal",
+        "description": "A system renewal for processing and analyzing a large volume of response data securely and in real time. Challenge: the performance of the existing system had declined, and both the lag before analysis and the operational load were increasing. Design & implementation: we designed and reimplemented load balancing that withstands heavy access, together with secure data storage rules. Operation: we put operation logging and permission management in place and moved to a data management structure that reduces concerns when running it day to day.",
+        "href": "/works/survey-platform-renewal",
+        "nda": true,
+        "note": "* Under NDA, the client name, product name, and some specifications are presented in abstracted form."
       },
       {
-        "name": "Cloud migration of a legacy core system",
-        "tag": "Contract / NDA",
-        "description": "Migrated an education-sector core database to the cloud (details abstracted due to NDA)."
+        "name": "Cloud migration of a legacy core system, aligned with existing workflows",
+        "tag": "Core system renewal",
+        "description": "Support for migrating from an aging on-premises environment to a cloud environment designed with operation in mind. Challenge: the existing workflows had grown complex, and a straightforward move to the cloud was expected to cause confusion on site. Design & implementation: before migrating, we put the operational issues on site into words and organized them, removed unnecessary functions, and then designed and built the cloud architecture. Operation: we clarified the scope of responsibility to check during operation and established maintenance and operation flows the team can follow without hesitation.",
+        "href": "/works/legacy-core-system-cloud-migration",
+        "nda": true,
+        "note": "* For confidentiality reasons, we withhold information that could identify the project."
       },
       {
-        "name": "Architectural drawing & floor-plan generation AI",
-        "tag": "Contract / NDA",
-        "description": "Rapidly built a suite of AI for architectural drawings and floor plans from zero to one (abstracted; architecture-sector, NDA)."
+        "name": "Proof of concept for AI that automatically generates architectural drawings and floor plans",
+        "tag": "PoC / 0→1 development",
+        "description": "A validation combining specialist knowledge from the architecture industry with AI to support drawing work in the early design phase. Challenge: preparing floor-plan proposals in the early design phase took time, which held back the speed of client proposals. Design & implementation: we defined data-shaping rules so that AI could work with building standards and industry-specific design rules, and designed and built a prototype. Operation: we set out a flow in which people carry out the final check of the generated drawings, and assessed whether it could be incorporated into day-to-day work.",
+        "href": null,
+        "nda": true,
+        "note": "* Under NDA, the client name, product name, and some specifications are presented in abstracted form."
       }
     ]
   },
@@ -639,7 +656,8 @@
     "serviceLocalLlm": "Local LLM / secure AI PoC",
     "serviceAiDev": "AI platform & contract development",
     "industries": "Industries",
-    "consult": "Contact Us"
+    "consult": "Contact Us",
+    "press": "Press releases"
   },
   "hero": {
     "title": "Beyond Words, Delivering Feelings.",
@@ -1140,6 +1158,14 @@
     "news": {
       "title": "News | Cor.Inc.",
       "description": "Company announcements, service updates, external coverage, and event information from Cor. Inc."
+    },
+    "works": {
+      "title": "Works | Cor.Inc.",
+      "description": "Case studies from Cor. Inc. — how we framed, designed, implemented, and operated solutions for our clients' business challenges, centred on confidential-data AI, local LLMs, and Grift."
+    },
+    "press": {
+      "title": "Press releases | Cor.Inc.",
+      "description": "Official press releases from Cor. Inc."
     }
   },
   "privacy": {
@@ -1454,6 +1480,44 @@
     "security": {
       "heading": "If it feels like something you can trust us with, why not start with a conversation?",
       "ctaLabel": "Discuss a confidential-data AI assessment"
+    },
+    "works": {
+      "heading": "See something that resonates?",
+      "lead": "Let us think through your challenges together.",
+      "ctaLabel": "Discuss a confidential-data AI assessment"
     }
+  },
+  "press": {
+    "eyebrow": "Press",
+    "title": "Press releases",
+    "intro": "Official press releases published by Cor. Inc.",
+    "newsListLabel": "All news",
+    "rssLabel": "News RSS",
+    "empty": "No press releases are published at the moment.",
+    "contactLabel": "Press inquiries"
+  },
+  "caseStudy": {
+    "breadcrumbWorks": "Works",
+    "ndaHeading": "* Parts of this case are abstracted due to NDA and confidentiality.",
+    "updatedLabel": "Updated",
+    "nextHeading": "Want to know more about this case?",
+    "nextLead": "Let us think through the challenges on your side, together.",
+    "relatedHeading": "Related work",
+    "categories": {
+      "grift": "Grift",
+      "confidential-ai": "Confidential-data AI",
+      "local-llm": "Local LLM",
+      "ai-contract": "AI contract development",
+      "tech-culture": "Tech culture"
+    },
+    "ctas": {
+      "grift": "Ask about Grift Team Beta",
+      "confidential-ai": "Discuss a confidential-data AI assessment",
+      "local-llm": "Discuss a local LLM / AI platform PoC",
+      "ai-contract": "Discuss AI contract development",
+      "techCultureAbout": "About the company",
+      "techCultureContact": "Contact"
+    },
+    "titleSuffix": " | Cor.Inc."
   }
 }

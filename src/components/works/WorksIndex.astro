@@ -1,0 +1,119 @@
+---
+import NextStep from '../common/NextStep.astro';
+import { getContactUrl, resolveExternalHref } from '../../config/site';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+
+// /works（ja）と /[lang]/works（非ja）で共有する本体。表示言語は URL から判定するため、
+// 呼び出し側は Layout の meta を渡すだけでよい（マークアップの二重管理を避ける）。
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+// works.items のリンクキーは全ロケールで `href` に統一済み（#313）。
+// 逆戻り（非ja だけ `link` に戻る等）は i18n.test.ts のキー検証で弾く。
+type WorkItem = {
+  tag: string;
+  name: string;
+  description: string;
+  href?: string | null;
+  nda?: boolean;
+  note?: string;
+};
+
+// 公開実績: href なしでも NDA 匿名事例は残す。「準備中」バッジは出さない（ADR-0007）。
+// griftai.org / センチネル 'grift' は env 経由に解決（ADR-0010）。
+const workItems = (t.works.items as readonly WorkItem[]).map((item) => {
+  const resolved = resolveExternalHref(item.href ?? null, {
+    intent: 'grift-team-beta',
+    source: 'works',
+  });
+  // href は ja 基準のサイト内パス（/works/<slug>）。翻訳済みの詳細が各言語に存在するため、
+  // 現在ロケールの版へ向ける（ja は素通り）。これをしないと非ja 一覧から ja 詳細へ落ちる。
+  const href = resolved?.startsWith('/') ? getLocalizedUrl(resolved, currentLocale) : resolved;
+  return { ...item, href };
+});
+
+// moreHref は ja 基準のサイト内パス（/blog）。現在ロケールの版へ向ける（ja は素通り）。
+const moreHref = t.works.moreHref.startsWith('/')
+  ? getLocalizedUrl(t.works.moreHref, currentLocale)
+  : t.works.moreHref;
+---
+
+<div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
+  <div class="flex max-w-3xl flex-col gap-4 pb-10 sm:pb-12">
+    <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{t.works.title}</h1>
+    <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">
+      {t.works.intro}
+    </p>
+  </div>
+
+  <p class="type-copy mb-12 max-w-3xl text-sm text-primary-950/50 dark:text-primary-200/50">
+    {t.works.note}
+  </p>
+
+  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      workItems.map((item) => {
+        const isNda = Boolean(item.nda);
+        const tag = (
+          <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
+            {item.tag}
+          </span>
+        );
+        const body = (
+          <>
+            <div class="flex items-center gap-2">{tag}</div>
+            <h2 class="type-heading text-lg font-medium tracking-tight">{item.name}</h2>
+            <p class="type-copy text-base text-primary-950/70 dark:text-primary-200/70">
+              {item.description}
+            </p>
+            {isNda && (
+              <p class="type-copy mt-auto text-xs text-primary-950/50 dark:text-primary-200/50">
+                {item.note || t.works.ndaNote}
+              </p>
+            )}
+          </>
+        );
+
+        return item.href ? (
+          <li>
+            <a
+              class="group relative flex h-full cursor-pointer flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:bg-primary-400/10 dark:focus-visible:ring-offset-primary-950"
+              href={item.href}
+              rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              target={item.href.startsWith('http') ? '_blank' : undefined}
+            >
+              <span
+                aria-hidden="true"
+                class="absolute right-5 top-5 text-primary-950/40 opacity-0 transition group-hover:opacity-100 dark:text-primary-200/40"
+              >
+                ↗
+              </span>
+              {body}
+            </a>
+          </li>
+        ) : (
+          <li class="flex h-full flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+            {body}
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <div class="mt-10">
+    <a
+      class="type-action inline-flex items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+      href={moreHref}
+    >
+      {t.works.moreLabel}
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+
+</div>
+
+<NextStep
+  heading={t.nextStep.works.heading}
+  lead={t.nextStep.works.lead}
+  ctas={[{ label: t.nextStep.works.ctaLabel, href: getContactUrl(currentLocale, { intent: 'confidential-ai-assessment', source: 'works-next' }), primary: true }]}
+/>

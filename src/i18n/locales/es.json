@@ -24,7 +24,13 @@
     "rssLabel": "Suscribirse al RSS de noticias",
     "empty": "Todavía no hay noticias publicadas.",
     "updatedLabel": "Actualizado",
-    "backToList": "Volver a noticias"
+    "backToList": "Volver a noticias",
+    "pressLink": "Ver notas de prensa",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "countTemplate": "Mostrando {start}-{end} de {total} (página {current}/{last})",
+    "externalLabel": "Enlace externo",
+    "titleSuffix": " | Cor.Inc. Noticias"
   },
   "homeHero": {
     "kicker": "Más allá de lo imaginado, lo construimos contigo.",
@@ -563,43 +569,54 @@
   "works": {
     "title": "Hablamos con implementación: los proyectos de Cor.",
     "intro": "Mostramos proyectos de implementación con dominios y orígenes distintos. No lo decimos: lo demostramos con código, operación y cifras.",
-    "note": "* La proporción de contribución es la proporción de commits medida en git. En proyectos bajo NDA o confidenciales ocultamos el nombre del cliente y del producto y publicamos el contenido de forma abstracta.",
+    "note": "* Por confidencialidad, omitimos nombres de clientes, nombres de productos y algunas especificaciones, y nos centramos en el reto, el diseño, la implementación y la operación.",
+    "moreLabel": "Ver más proyectos",
+    "moreHref": "/blog",
+    "ndaNote": "* Bajo NDA: los nombres de cliente y de producto y algunas especificaciones se publican de forma abstracta.",
     "items": [
       {
-        "name": "Engineer Cafe Navigator",
-        "tag": "OSS / Público",
-        "description": "Recepción con IA de voz multilingüe de código abierto. 182.368 líneas, 8 colaboradores, 87,7 % de contribución propia (medición en git)."
-      },
-      {
-        "name": "Grift",
+        "name": "«Grift», una herramienta de presupuestos con IA que convierte la justificación en un activo de la empresa",
         "tag": "Producto propio",
-        "description": "Plataforma propia de presupuestos y evaluación con IA que genera presupuestos de referencia explicables a partir del historial de GitHub y las tarifas del mercado.",
-        "link": "grift"
+        "description": "Un producto en fase de validación que no delega el presupuesto en la IA, sino que amplía la justificación de la que las personas pueden responsabilizarse. Reto: en el desarrollo a medida, el conocimiento sobre presupuestos depende de cada persona y su justificación se convierte fácilmente en una caja negra. Diseño e implementación: la IA organiza los datos anteriores y las premisas, y diseñamos e implementamos una UI/UX que facilita revisarlos y corregirlos. Operación: en validación con Team Beta, con el objetivo de convertir en un activo de la empresa el conocimiento que estaba en la cabeza de cada responsable y de operar los presupuestos con transparencia.",
+        "href": "grift"
       },
       {
-        "name": "cor-jp.com",
-        "tag": "Producción propia",
-        "description": "Este sitio corporativo. Astro, 5 idiomas, traducción con IA y visualización rápida, implementado por nosotros mismos."
+        "name": "Engineer Cafe Navigator",
+        "tag": "OSS / Proyecto público",
+        "description": "Un sistema de guía con IA que responde a las preguntas de los usuarios mediante un diálogo natural a partir de la información de las instalaciones. Reto: atender la gran variedad de preguntas sobre las instalaciones tenía un coste alto y a los usuarios les costaba encontrar la información. Diseño e implementación: organizamos la información pública y las FAQ y diseñamos e implementamos una plataforma de chatbot con IA capaz de generar respuestas adecuadas. Operación: se publicó como código abierto, con el objetivo de una estructura en la que la comunidad pueda liderar la mejora y la operación continuas.",
+        "href": "/works/engineer-cafe-navigator"
       },
       {
-        "name": "SaaS de IA generativa multimodal",
-        "tag": "A medida / Anónimo",
-        "description": "Desarrollo en producción de un SaaS de IA generativa que maneja imagen, voz y texto (nombre del cliente no divulgado)."
+        "name": "Desarrollo de una plataforma SaaS de IA generativa que procesa imagen y texto de forma combinada",
+        "tag": "Desarrollo de plataforma de IA",
+        "description": "Una plataforma SaaS que combina varios modelos de IA para automatizar la generación de contenido según cada objetivo. Reto: producir contenido que combina imagen y texto exigía un coste humano muy alto. Diseño e implementación: diseñamos una plataforma de integración de API que unifica varias IA multimodales y genera de forma estable salidas acordes con los requisitos. Operación: ofrecimos una interfaz que los usuarios finales pueden manejar de forma intuitiva y construimos una estructura de operación que permite ampliar funciones de manera continua.",
+        "href": null,
+        "nda": true,
+        "note": "* Por motivos de confidencialidad, omitimos la información que podría permitir identificar el proyecto."
       },
       {
-        "name": "Renovación de una plataforma de encuestas",
-        "tag": "A medida / Anónimo",
-        "description": "Renovación y puesta en producción de una plataforma de encuestas heredada. Cubrimos la migración a una plataforma de agentes y la preparación de pruebas y CI/CD."
+        "name": "Renovación y diseño operativo de una plataforma de recogida y análisis de encuestas a gran escala",
+        "tag": "Renovación de sistema central",
+        "description": "Una renovación del sistema para procesar y analizar de forma segura y en tiempo real un gran volumen de datos de respuestas. Reto: el rendimiento del sistema existente había bajado y aumentaban tanto la demora hasta el análisis como la carga de operación. Diseño e implementación: diseñamos y reimplementamos un reparto de carga capaz de soportar accesos masivos, junto con reglas seguras de almacenamiento de datos. Operación: preparamos el registro de operaciones y la gestión de permisos, y pasamos a una estructura de gestión de datos que reduce la inquietud al operarla en el día a día.",
+        "href": "/works/survey-platform-renewal",
+        "nda": true,
+        "note": "* Por el NDA, el nombre de la empresa, el del producto y parte de las especificaciones se presentan de forma abstracta."
       },
       {
-        "name": "Migración a la nube de un sistema central heredado",
-        "tag": "A medida / NDA",
-        "description": "Migración a la nube de una base de datos central del ámbito educativo (detalles abstraídos por NDA)."
+        "name": "Migración a la nube de un sistema central heredado, ajustada a los flujos de trabajo",
+        "tag": "Renovación de sistema central",
+        "description": "Acompañamiento en la migración de un entorno on-premise envejecido a un entorno en la nube pensado para su operación. Reto: los flujos de trabajo existentes se habían vuelto complejos y una migración sin más a la nube previsiblemente habría causado confusión en el equipo. Diseño e implementación: antes de migrar, pusimos en palabras y ordenamos los problemas operativos del equipo, retiramos las funciones innecesarias y después diseñamos e implementamos la arquitectura en la nube. Operación: aclaramos los ámbitos de responsabilidad que hay que revisar durante la operación y asentamos flujos de mantenimiento y operación que el equipo puede seguir sin dudas.",
+        "href": "/works/legacy-core-system-cloud-migration",
+        "nda": true,
+        "note": "* Por motivos de confidencialidad, omitimos la información que podría permitir identificar el proyecto."
       },
       {
-        "name": "IA de planos de arquitectura y generación de distribuciones",
-        "tag": "A medida / NDA",
-        "description": "Implementación rápida de 0 a 1 de un conjunto de IA que maneja planos y distribuciones de arquitectura (ámbito de arquitectura, abstraído por NDA)."
+        "name": "Prueba de concepto de una IA que genera automáticamente planos y distribuciones de arquitectura",
+        "tag": "PoC / Desarrollo de 0 a 1",
+        "description": "Una validación que combina el conocimiento especializado del sector de la arquitectura con IA para apoyar la elaboración de planos en la fase inicial de diseño. Reto: preparar propuestas de distribución en la fase inicial de diseño llevaba tiempo y frenaba la rapidez de las propuestas al cliente. Diseño e implementación: definimos reglas de formateo de datos para que la IA pudiera manejar la normativa de edificación y las reglas de diseño propias del sector, y diseñamos e implementamos un prototipo. Operación: establecimos un flujo en el que las personas hacen la revisión final de los planos generados y valoramos si podía incorporarse al trabajo real.",
+        "href": null,
+        "nda": true,
+        "note": "* Por el NDA, el nombre de la empresa, el del producto y parte de las especificaciones se presentan de forma abstracta."
       }
     ]
   },
@@ -631,15 +648,16 @@
     "blog": "Blog",
     "contact": "Contacto",
     "security": "Seguridad",
-    "works": "Works",
-    "news": "News",
+    "works": "Proyectos",
+    "news": "Noticias",
     "grift": "Grift",
     "services": "Servicios",
     "serviceAssessment": "Diagnóstico de IA con datos confidenciales",
     "serviceLocalLlm": "LLM local / PoC de IA segura",
     "serviceAiDev": "Plataforma de IA y desarrollo por contrato",
     "industries": "Sectores",
-    "consult": "Contactar"
+    "consult": "Contactar",
+    "press": "Notas de prensa"
   },
   "hero": {
     "title": "Más rápido que cualquiera, más allá del horizonte.",
@@ -801,7 +819,7 @@
       "home": "Inicio",
       "about": "Sobre Cor.Inc.",
       "products": "Productos&Insights",
-      "news": "News",
+      "news": "Noticias",
       "contact": "Contacto",
       "privacy": "Privacidad",
       "security": "Seguridad",
@@ -1140,6 +1158,14 @@
     "news": {
       "title": "Noticias | Cor.Inc.",
       "description": "Avisos de Cor. Inc., actualizaciones de servicios, menciones externas e información de eventos."
+    },
+    "works": {
+      "title": "Proyectos | Cor.Inc.",
+      "description": "Proyectos de Cor. Inc.: casos en los que estructuramos, diseñamos, implementamos y operamos soluciones para los retos de negocio de nuestros clientes, con foco en IA con datos confidenciales, LLM locales y Grift."
+    },
+    "press": {
+      "title": "Notas de prensa | Cor.Inc.",
+      "description": "Notas de prensa oficiales de Cor. Inc."
     }
   },
   "privacy": {
@@ -1454,6 +1480,44 @@
     "security": {
       "heading": "Si sientes que puedes confiarnos tu proyecto, ¿por qué no empezamos con una conversación?",
       "ctaLabel": "Solicita una consulta gratuita"
+    },
+    "works": {
+      "heading": "¿Le interesó alguno de estos proyectos?",
+      "lead": "Déjenos pensar juntos también sus retos.",
+      "ctaLabel": "Consultar el diagnóstico de IA con datos confidenciales"
     }
+  },
+  "press": {
+    "eyebrow": "Press",
+    "title": "Notas de prensa",
+    "intro": "Publicamos las notas de prensa oficiales de Cor. Inc.",
+    "newsListLabel": "Todas las noticias",
+    "rssLabel": "RSS de noticias",
+    "empty": "Por ahora no hay notas de prensa publicadas.",
+    "contactLabel": "Consultas de prensa"
+  },
+  "caseStudy": {
+    "breadcrumbWorks": "Proyectos",
+    "ndaHeading": "* Parte de este caso se presenta de forma abstracta por NDA y confidencialidad.",
+    "updatedLabel": "Actualizado",
+    "nextHeading": "¿Quiere saber más sobre este caso?",
+    "nextLead": "Déjenos pensar juntos también los retos de su equipo.",
+    "relatedHeading": "Proyectos relacionados",
+    "categories": {
+      "grift": "Grift",
+      "confidential-ai": "IA con datos confidenciales",
+      "local-llm": "LLM local",
+      "ai-contract": "Desarrollo de IA por contrato",
+      "tech-culture": "Cultura tecnológica"
+    },
+    "ctas": {
+      "grift": "Preguntar por Grift Team Beta",
+      "confidential-ai": "Consultar el diagnóstico de IA con datos confidenciales",
+      "local-llm": "Consultar un PoC de LLM local / plataforma de IA",
+      "ai-contract": "Consultar desarrollo de IA por contrato",
+      "techCultureAbout": "Ver información de la empresa",
+      "techCultureContact": "Contacto"
+    },
+    "titleSuffix": " | Cor.Inc."
   }
 }

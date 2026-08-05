@@ -8,6 +8,7 @@ summary: 'ある教育機関で約25年運用されてきた基幹データベ�
 securityNote: '本案件はNDAのため、お客様名・システム名など特定につながる情報を抽象化して掲載しています。'
 isDraft: false
 featured: false
+lang: 'ja'
 ---
 
 ## 課題

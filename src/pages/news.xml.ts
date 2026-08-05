@@ -2,9 +2,12 @@ import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import { getNewsCategoryLabel } from '../config/news-categories';
+import { toCleanSlug } from '../utils/content-i18n';
 
+// ニュース RSS は ja のみ配信する。記事は news/ja/<slug>.md に置かれ slug が `ja/<slug>` に
+// なるため、link / guid では言語ディレクトリ接頭辞を外して既存の URL を維持する。
 export async function GET(context: APIContext) {
-  const news = await getCollection('news', ({ data }) => !data.isDraft);
+  const news = await getCollection('news', ({ data }) => data.lang === 'ja' && !data.isDraft);
   const sortedNews = news.sort(
     (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime(),
   );
@@ -14,7 +17,8 @@ export async function GET(context: APIContext) {
     description: 'Cor.株式会社からのお知らせ、サービス更新、外部掲載、イベント情報をお届けします。',
     site: context.site ?? 'https://cor-jp.com',
     items: sortedNews.map((entry) => {
-      const link = entry.data.externalUrl || `/news/${entry.slug}/`;
+      const slug = toCleanSlug(entry.slug);
+      const link = entry.data.externalUrl || `/news/${slug}/`;
       return {
         title: entry.data.title,
         description: entry.data.description,
@@ -22,7 +26,7 @@ export async function GET(context: APIContext) {
         author: entry.data.author,
         categories: [getNewsCategoryLabel(entry.data.category, 'ja'), ...entry.data.tags],
         link,
-        guid: entry.data.externalUrl || `https://cor-jp.com/news/${entry.slug}/`,
+        guid: entry.data.externalUrl || `https://cor-jp.com/news/${slug}/`,
       };
     }),
     customData: `

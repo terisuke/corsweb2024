@@ -2,16 +2,19 @@
 import { getCollection } from 'astro:content';
 import { getNewsCategoryLabel } from '../../config/news-categories';
 import { getCurrentLocale, getTranslations } from '../../utils/i18n';
+import { toCleanSlug } from '../../utils/content-i18n';
 import { safeJsonLd } from '../../utils/json-ld';
 
 const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
+// トップのニュースレールは ja のみ（非ja のトップは構成が異なるため据え置き）。
+// 記事は news/ja/<slug>.md に置かれるため lang で絞り、URL では言語ディレクトリ接頭辞を外す。
 const news =
   currentLocale === 'ja'
     ? (
         await getCollection('news', ({ data }) => {
-          return import.meta.env.DEV || !data.isDraft;
+          return data.lang === 'ja' && (import.meta.env.DEV || !data.isDraft);
         })
       )
         .sort((a, b) => {
@@ -29,7 +32,7 @@ const itemListJsonLd = {
     '@type': 'ListItem',
     position: index + 1,
     name: entry.data.title,
-    url: entry.data.externalUrl || new URL(`/news/${entry.slug}/`, Astro.site).toString(),
+    url: entry.data.externalUrl || new URL(`/news/${toCleanSlug(entry.slug)}/`, Astro.site).toString(),
   })),
 };
 ---
@@ -73,7 +76,7 @@ const itemListJsonLd = {
           >
             {news.map((entry, index) => {
               const data = entry.data;
-              const href = data.externalUrl || `/news/${entry.slug}/`;
+              const href = data.externalUrl || `/news/${toCleanSlug(entry.slug)}/`;
               const isExternal = Boolean(data.externalUrl);
               const categoryLabel = getNewsCategoryLabel(data.category, 'ja');
               const formattedDate = new Date(data.publishedAt).toLocaleDateString('ja-JP', {

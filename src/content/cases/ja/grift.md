@@ -12,6 +12,7 @@ summary: '見積もりの根拠が属人化しがちな受託開発の現場で�
 # relatedSlugs: ['confidential-ai-poc']
 isDraft: false
 featured: true
+lang: 'ja'
 ---
 
 <!--
