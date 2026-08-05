@@ -24,7 +24,13 @@
     "rssLabel": "ニュースRSSを購読",
     "empty": "現在公開中のニュースはありません。",
     "updatedLabel": "更新",
-    "backToList": "ニュース一覧へ戻る"
+    "backToList": "ニュース一覧へ戻る",
+    "pressLink": "プレスリリースを見る",
+    "prev": "前へ",
+    "next": "次へ",
+    "countTemplate": "{total}件中 {start}-{end}件を表示 ({current}/{last}ページ)",
+    "externalLabel": "外部リンク",
+    "titleSuffix": " | Cor.株式会社 ニュース"
   },
   "nav": {
     "home": "ホーム",
@@ -41,7 +47,8 @@
     "serviceLocalLlm": "ローカルLLM / セキュアAI PoC",
     "serviceAiDev": "AI基盤構築・AI受託",
     "industries": "業種別",
-    "consult": "お問い合わせ"
+    "consult": "お問い合わせ",
+    "press": "プレスリリース"
   },
   "hero": {
     "title": "言葉を超えて、想いを届ける。",
@@ -554,6 +561,10 @@
     "industryEducation": {
       "title": "教育向けAI伴走｜Cor.株式会社",
       "description": "教育現場の課題——テスト作業、保護者連絡、調査報告、ICT名簿管理——をCor.が一緒に進めます。AI受託開発・AI顧問・ローカルLLM・Griftで伴走。"
+    },
+    "press": {
+      "title": "プレスリリース | Cor.株式会社",
+      "description": "Cor.株式会社のプレスリリース一覧"
     }
   },
   "privacy": {
@@ -1481,6 +1492,44 @@
     "security": {
       "heading": "安心して任せられそうと感じたら、まずは話してみませんか？",
       "ctaLabel": "機密データAI活用診断を相談す⁠る"
+    },
+    "works": {
+      "heading": "気になる実績がありましたか？",
+      "lead": "あなたの課題も、一緒に考えさせてください。",
+      "ctaLabel": "機密データAI活用診断を相談する"
     }
+  },
+  "press": {
+    "eyebrow": "Press",
+    "title": "プレスリリース",
+    "intro": "Cor.株式会社が公式に発表するプレスリリースを掲載しています。",
+    "newsListLabel": "ニュース一覧",
+    "rssLabel": "ニュースRSS",
+    "empty": "現在公開中のプレスリリースはありません。",
+    "contactLabel": "プレスに関するお問い合わせ"
+  },
+  "caseStudy": {
+    "breadcrumbWorks": "実績",
+    "ndaHeading": "※ NDA・機密案件のため一部を抽象化しています。",
+    "updatedLabel": "更新",
+    "nextHeading": "この事例について、もっと知りたい方へ",
+    "nextLead": "あなたの現場の課題も、一緒に考えさせてください。",
+    "relatedHeading": "関連する実績",
+    "categories": {
+      "grift": "Grift",
+      "confidential-ai": "機密データAI",
+      "local-llm": "ローカルLLM",
+      "ai-contract": "AI受託開発",
+      "tech-culture": "テックカルチャー"
+    },
+    "ctas": {
+      "grift": "Grift Team Beta について聞く",
+      "confidential-ai": "機密データAI活用診断を相談する",
+      "local-llm": "ローカルLLM / AI基盤PoC を相⁠談⁠す⁠る",
+      "ai-contract": "AI受託開発について相談する",
+      "techCultureAbout": "会社情報を見る",
+      "techCultureContact": "お問い合わせ"
+    },
+    "titleSuffix": "｜Cor.株式会社"
   }
 }

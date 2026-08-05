@@ -7,6 +7,7 @@ publishedAt: 2026-07-02
 summary: '福岡市エンジニアカフェの受付を支える多言語音声AIエージェントを、マルチエージェント構成で開発・実運用し、ISCライセンスのOSSとして公開しています。'
 isDraft: false
 featured: true
+lang: 'ja'
 ---
 
 ## 課題

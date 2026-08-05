@@ -8,6 +8,7 @@ summary: '契約書・議事録・顧客情報をAIに使いたいが、外部AI
 relatedSlugs: ['local-llm-poc']
 isDraft: false
 featured: true
+lang: 'ja'
 ---
 
 ## 課題

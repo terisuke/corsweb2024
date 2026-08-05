@@ -17,7 +17,7 @@ const trustBadges = t.homeHero.trustBadges.filter(
 // trustBadges の並び（全言語共通）に対応するリンク先。順: ①ローカルLLM ②セキュリティ体制 ③福岡発。
 // 対応先が無い index は非リンク（span）で表示。
 const BADGE_HREFS: (string | null)[] = [
-  '/works/local-llm-poc', // /works は ja 限定（localized variant なし）→ bare のまま
+  getLocalizedUrl('/works/local-llm-poc', currentLocale), // /works も各言語版あり（#313）→ ロケール別に
   getLocalizedUrl('/security', currentLocale), // /security は各言語版あり → ロケール別に
   FUKUOKA100_PAGE_URL, // 福岡発バッジ → 100選の特設ページ（エンブレムと同じ遷移先）
 ];

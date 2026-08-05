@@ -8,6 +8,7 @@ summary: '機密データがあってクラウドAIに全部は出せない。�
 relatedSlugs: ['confidential-data-ai-assessment']
 isDraft: false
 featured: false
+lang: 'ja'
 ---
 
 ## 課題

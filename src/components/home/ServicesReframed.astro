@@ -6,10 +6,10 @@ const currentLocale = getCurrentLocale(Astro.url);
 const t = getTranslations(currentLocale);
 
 // services2026.items（全言語同一の並び）に対応する関連ページ。
-// /works・/works/<slug> は ja 限定のため bare、/security は各言語版があるため localize、Grift は env 経由（ADR-0010）。
+// /works・/works/<slug>・/security はいずれも各言語版があるため localize、Grift は env 経由（ADR-0010）。
 const SERVICE_HREFS: (string | null)[] = [
-  '/works',                                    // 業務に入るAI開発 → 実績一覧
-  '/works/confidential-data-ai-assessment',    // 判断基準づくり → 機密データAI活用診断
+  getLocalizedUrl('/works', currentLocale),    // 業務に入るAI開発 → 実績一覧
+  getLocalizedUrl('/works/confidential-data-ai-assessment', currentLocale), // 判断基準づくり → 機密データAI活用診断
   getLocalizedUrl('/security', currentLocale),  // 機密データの扱い → セキュリティ設計
   getGriftUrl('/', { intent: 'grift-team-beta', source: 'services-reframed' }), // 見積根拠 → Grift
 ];

@@ -1,0 +1,44 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import NewsArticle from '../../../components/news/NewsArticle.astro';
+import Layout from '../../../layouts/Layout.astro';
+import { NON_JA_LOCALES, localizeEntries, toCleanSlug } from '../../../utils/content-i18n';
+import { getTranslations, type Locale } from '../../../utils/i18n';
+
+// 非ja のニュース記事 /[lang]/news/<slug>。ja はルート直下 (/news/<slug>) が担当する。
+// externalUrl 付きの記事は外部へ飛ばすため詳細ページを生成しない（ja と同じ扱い）。
+// 翻訳が無い言語では ja 版へフォールバックし、URL だけは全言語で必ず生成する。
+export async function getStaticPaths() {
+  const news = await getCollection('news', ({ data }) => {
+    return (import.meta.env.DEV || !data.isDraft) && !data.externalUrl;
+  });
+
+  return NON_JA_LOCALES.flatMap((lang) =>
+    localizeEntries(news, lang).map((entry) => ({
+      params: { lang, slug: toCleanSlug(entry.slug) },
+      props: { entry },
+    })),
+  );
+}
+
+type Props = {
+  entry: CollectionEntry<'news'>;
+};
+
+const { lang } = Astro.params;
+const { entry } = Astro.props as Props;
+const data = entry.data;
+const t = getTranslations(lang as Locale);
+---
+
+<Layout
+  title={`${data.title}${t.news.titleSuffix}`}
+  description={data.description}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+  ogImage={data.ogImage}
+  ogType="article"
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={data.updatedAt?.toISOString()}
+>
+  <NewsArticle entry={entry} />
+</Layout>

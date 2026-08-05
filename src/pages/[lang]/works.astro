@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import WorksIndex from '../../components/works/WorksIndex.astro';
+import { getTranslations, type Locale } from '../../utils/i18n';
+import { NON_JA_LOCALES } from '../../utils/content-i18n';
+
+// ja はルート直下 (/works) が担当。ここは非ja の言語ルートを生成する（/industries と同じ方式）。
+export function getStaticPaths() {
+  return NON_JA_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = getTranslations(lang as Locale);
+---
+
+<Layout
+  description={t.meta.works.description}
+  title={t.meta.works.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <WorksIndex />
+</Layout>

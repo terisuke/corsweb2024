@@ -1,0 +1,135 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Page } from 'astro';
+import NewsCard from './NewsCard.astro';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+import { toCleanSlug } from '../../utils/content-i18n';
+import { safeJsonLd } from '../../utils/json-ld';
+
+// /news（ja）と /[lang]/news（非ja）で共有するニュース一覧本体。
+interface Props {
+  page: Page<CollectionEntry<'news'>>;
+}
+
+const { page } = Astro.props;
+const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
+
+// RSS は言語別に配信する（ja=/news.xml、非ja=/<lang>/news.xml）。各言語のラベルで案内し
+// ながら日本語フィードへ送ると、購読した中身が表示言語と食い違うため。
+const rssHref = getLocalizedUrl('/news.xml', currentLocale);
+const pressHref = getLocalizedUrl('/news/press/', currentLocale);
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: t.news.title,
+  description: t.meta.news.description,
+  inLanguage: currentLocale,
+  url: pageUrl,
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: page.data.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: page.start + index + 1,
+      name: entry.data.title,
+      url:
+        entry.data.externalUrl ||
+        new URL(
+          getLocalizedUrl(`/news/${toCleanSlug(entry.slug)}/`, currentLocale),
+          Astro.site,
+        ).toString(),
+    })),
+  },
+};
+
+// 「N件中 x-y件を表示 (p/qページ)」の言語別テンプレート。
+const countLabel = t.news.countTemplate
+  .replace('{total}', String(page.total))
+  .replace('{start}', String(page.start + 1))
+  .replace('{end}', String(page.end))
+  .replace('{current}', String(page.currentPage))
+  .replace('{last}', String(page.lastPage));
+---
+
+<main class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
+  <div class="flex max-w-3xl flex-col gap-4 pb-10 sm:pb-12">
+    <p class="text-sm font-medium uppercase tracking-widest text-primary-600 dark:text-primary-400">
+      {t.news.eyebrow}
+    </p>
+    <h1 class="type-heading text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{t.news.title}</h1>
+    <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">
+      {t.news.intro}
+    </p>
+    <a
+      href={rssHref}
+      class="type-action inline-flex w-fit items-center gap-2 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+    >
+      {t.news.rssLabel}
+    </a>
+    <a
+      href={pressHref}
+      class="type-action inline-flex w-fit items-center gap-2 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+    >
+      {t.news.pressLink}
+    </a>
+  </div>
+
+  {page.total > page.size && (
+    <p class="mb-8 max-w-3xl text-sm text-primary-950/50 dark:text-primary-200/50">
+      {countLabel}
+    </p>
+  )}
+
+  {page.data.length > 0 ? (
+    <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {page.data.map((entry) => (
+        <li>
+          <NewsCard entry={entry} />
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <div class="flex max-w-3xl flex-col gap-4 rounded-3xl bg-primary-500/10 p-6 dark:bg-primary-400/10">
+      <p class="type-copy text-primary-950/70 dark:text-primary-200/70">{t.news.empty}</p>
+      <a
+        href={getLocalizedUrl('/blog', currentLocale)}
+        class="type-action inline-flex w-fit items-center gap-1 text-sm text-primary-950/60 underline-offset-4 transition hover:text-primary-950 hover:underline dark:text-primary-200/60 dark:hover:text-primary-100"
+      >
+        {t.homeBlog.cta}
+      </a>
+    </div>
+  )}
+
+  {page.lastPage > 1 && (
+    <nav class="mt-12 flex flex-wrap items-center justify-center gap-2" aria-label="Pagination">
+      <a
+        href={page.url.prev || '#'}
+        class:list={[
+          'rounded-full px-4 py-2 text-sm font-medium transition',
+          page.url.prev
+            ? 'bg-primary-500/10 text-primary-950 hover:bg-primary-500/20 dark:bg-primary-400/10 dark:text-primary-200 dark:hover:bg-primary-400/20'
+            : 'pointer-events-none bg-primary-950/5 text-primary-950/30 dark:bg-primary-200/5 dark:text-primary-200/30',
+        ]}
+        aria-disabled={!page.url.prev}
+      >
+        {t.news.prev}
+      </a>
+      <a
+        href={page.url.next || '#'}
+        class:list={[
+          'rounded-full px-4 py-2 text-sm font-medium transition',
+          page.url.next
+            ? 'bg-primary-500/10 text-primary-950 hover:bg-primary-500/20 dark:bg-primary-400/10 dark:text-primary-200 dark:hover:bg-primary-400/20'
+            : 'pointer-events-none bg-primary-950/5 text-primary-950/30 dark:bg-primary-200/5 dark:text-primary-200/30',
+        ]}
+        aria-disabled={!page.url.next}
+      >
+        {t.news.next}
+      </a>
+    </nav>
+  )}
+</main>
+
+<script type="application/ld+json" set:html={safeJsonLd(itemListJsonLd)} is:inline />

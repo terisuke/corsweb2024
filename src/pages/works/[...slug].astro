@@ -1,18 +1,20 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
-import NextStep from '../../components/common/NextStep.astro'
-import { safeJsonLd } from '../../utils/json-ld'
+import CaseArticle from '../../components/works/CaseArticle.astro'
+import { toCleanSlug } from '../../utils/content-i18n'
+import { getJaTranslations } from '../../utils/i18n'
 
-// /works/<slug> の実績記事テンプレート。/works（index）とはルートが衝突しない。
+// /works/<slug> の実績記事テンプレート（ja）。/works（index）とはルートが衝突しない。
+// 記事は cases/ja/<slug>.md に置かれ slug が `ja/<slug>` になるため、公開 URL では接頭辞を外す。
 // 本番ビルドでは下書き（isDraft）を除外。dev では下書きも表示して執筆中プレビューを可能にする。
 export async function getStaticPaths() {
   const cases = await getCollection('cases', ({ data }) => {
-    return import.meta.env.DEV || !data.isDraft
+    return data.lang === 'ja' && (import.meta.env.DEV || !data.isDraft)
   })
 
   return cases.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: toCleanSlug(entry.slug) },
     props: { entry },
   }))
 }
@@ -22,217 +24,20 @@ type Props = {
 }
 
 const { entry } = Astro.props as Props
-const { Content } = await entry.render()
 const data = entry.data
-// OG画像: ogImage 優先、なければ heroImage。og:image と JSON-LD image で共用。
+const t = getJaTranslations()
+// OG画像: ogImage 優先、なければ heroImage。
 const ogImageUrl = data.ogImage ?? data.heroImage?.url
-
-// CTA 出し分け（ctaType > category）。link は /contact（tech-culture のみ /about + /contact）。
-type CtaKey =
-  | 'grift'
-  | 'confidential-ai'
-  | 'local-llm'
-  | 'ai-contract'
-  | 'tech-culture'
-
-interface Cta {
-  label: string
-  href: string
-  isExternal?: boolean
-  primary?: boolean
-}
-
-const CTA_MAP: Record<CtaKey, Cta[]> = {
-  grift: [{ label: 'Grift Team Beta について聞く', href: '/contact', primary: true }],
-  'confidential-ai': [
-    { label: '機密データAI活用診断を相談する', href: '/contact', primary: true },
-  ],
-  'local-llm': [
-    { label: 'ローカルLLM / AI基盤PoC を相⁠談⁠す⁠る', href: '/contact', primary: true },
-  ],
-  'ai-contract': [
-    { label: 'AI受託開発について相談する', href: '/contact', primary: true },
-  ],
-  'tech-culture': [
-    { label: '会社情報を見る', href: '/about', primary: true },
-    { label: 'お問い合わせ', href: '/contact' },
-  ],
-}
-
-const ctaKey = (data.ctaType ?? data.category) as CtaKey
-const ctas = CTA_MAP[ctaKey]
-
-// 関連記事: relatedSlugs があればそれ（実在 + 非下書き）。なければ同カテゴリから最大3件（自身を除く）。
-const allCases = await getCollection('cases', ({ data: d }) => !d.isDraft)
-
-let relatedCases: CollectionEntry<'cases'>[] = []
-if (data.relatedSlugs && data.relatedSlugs.length > 0) {
-  relatedCases = data.relatedSlugs
-    .map((slug) => allCases.find((c) => c.slug === slug))
-    .filter((c): c is CollectionEntry<'cases'> => Boolean(c) && c!.slug !== entry.slug)
-} else {
-  relatedCases = allCases
-    .filter((c) => c.slug !== entry.slug && c.data.category === data.category)
-    .slice(0, 3)
-}
-
-const CATEGORY_LABELS: Record<CtaKey, string> = {
-  grift: 'Grift',
-  'confidential-ai': '機密データAI',
-  'local-llm': 'ローカルLLM',
-  'ai-contract': 'AI受託開発',
-  'tech-culture': 'テックカルチャー',
-}
-const categoryLabel = CATEGORY_LABELS[data.category as CtaKey]
-
-const formatDate = (d: Date) =>
-  new Date(d).toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-
-const formattedPublishedAt = formatDate(data.publishedAt)
-const formattedUpdatedAt = data.updatedAt ? formatDate(data.updatedAt) : null
-
-const fullUrl = new URL(Astro.url.pathname, Astro.site).toString()
-
-// Article/TechArticle JSON-LD（BlogLayout のパターンに準拠）。
-const isTech = data.category === 'ai-contract' || data.category === 'local-llm'
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': isTech ? 'TechArticle' : 'Article',
-  headline: data.title,
-  description: data.description,
-  inLanguage: 'ja',
-  datePublished: data.publishedAt.toISOString(),
-  dateModified: (data.updatedAt || data.publishedAt).toISOString(),
-  author: {
-    '@type': 'Organization',
-    '@id': 'https://cor-jp.com#organization',
-    name: 'Cor.inc',
-    url: 'https://cor-jp.com',
-  },
-  publisher: {
-    '@type': 'Organization',
-    '@id': 'https://cor-jp.com#organization',
-    name: 'Cor.inc',
-    url: 'https://cor-jp.com',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://cor-jp.com/logo.png',
-      width: 400,
-      height: 400,
-    },
-  },
-  mainEntityOfPage: { '@type': 'WebPage', '@id': fullUrl },
-  url: fullUrl,
-  articleSection: data.category,
-  about: data.tags.map((tag) => ({ '@type': 'Thing', name: tag })),
-  ...(ogImageUrl && {
-    image: {
-      '@type': 'ImageObject',
-      url: new URL(ogImageUrl, Astro.site).toString(),
-      ...(!data.ogImage && data.heroImage && { caption: data.heroImage.alt }),
-    },
-  }),
-}
 ---
 
 <Layout
-  title={`${data.title}｜Cor.株式会社`}
+  title={`${data.title}${t.caseStudy.titleSuffix}`}
   description={data.description}
-  availableLocales={['ja']}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
   ogImage={ogImageUrl}
   ogType="article"
   publishedTime={data.publishedAt.toISOString()}
   modifiedTime={data.updatedAt?.toISOString()}
 >
-  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <!-- Breadcrumb -->
-    <nav class="mb-8" aria-label="Breadcrumb">
-      <ol class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-primary-950/60 dark:text-primary-200/60">
-        <li><a href="/" class="hover:text-primary-950 dark:hover:text-primary-100">ホーム</a></li>
-        <li class="before:mx-2 before:content-['/']">
-          <a href="/works" class="hover:text-primary-950 dark:hover:text-primary-100">実績</a>
-        </li>
-        <li class="hidden min-w-0 items-center before:mx-2 before:content-['/'] sm:flex">
-          <span class="block max-w-md truncate text-primary-950 dark:text-primary-100">{data.title}</span>
-        </li>
-      </ol>
-    </nav>
-
-    <!-- Hero -->
-    <header class="mb-10">
-      <div class="mb-4 flex flex-wrap items-center gap-3 text-sm">
-        {categoryLabel && (
-          <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
-            {categoryLabel}
-          </span>
-        )}
-        <time datetime={data.publishedAt.toISOString()} class="text-primary-950/50 dark:text-primary-200/50">
-          {formattedPublishedAt}
-        </time>
-        {formattedUpdatedAt && (
-          <span class="text-primary-950/50 dark:text-primary-200/50">更新: {formattedUpdatedAt}</span>
-        )}
-      </div>
-
-      <h1 class="type-heading mb-4 text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{data.title}</h1>
-      <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">{data.summary}</p>
-    </header>
-
-    <!-- Hero image -->
-    {data.heroImage && (
-      <div class="mb-10 overflow-hidden rounded-3xl">
-        <img src={data.heroImage.url} alt={data.heroImage.alt} class="h-auto w-full" loading="eager" decoding="async" />
-      </div>
-    )}
-
-    <!-- NDA / 機密案件の注記 -->
-    {data.securityNote && (
-      <aside class="mb-10 rounded-2xl bg-primary-950/5 p-5 text-sm text-primary-950/70 dark:bg-primary-200/5 dark:text-primary-200/70">
-        <p class="type-copy font-medium">※ NDA・機密案件のため一部を抽象化しています。</p>
-        <p class="type-copy mt-2">{data.securityNote}</p>
-      </aside>
-    )}
-
-    <!-- 本文（## 課題 / アプローチ / 実装 / 成果） -->
-    <div class="prose prose-lg prose-stone mx-auto max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline dark:prose-a:text-blue-400">
-      <Content />
-    </div>
-
-    <!-- CTA（ctaType/category 出し分け） -->
-    <div class="mt-16">
-      <NextStep
-        heading="この事例について、もっと知りたい方へ"
-        lead="あなたの現場の課題も、一緒に考えさせてください。"
-        ctas={ctas}
-      />
-    </div>
-
-    <!-- 関連記事 -->
-    {relatedCases.length > 0 && (
-      <section class="mt-16 border-t border-primary-950/10 pt-12 dark:border-primary-200/10">
-        <h2 class="type-heading mb-8 text-2xl font-medium tracking-tight">関連する実績</h2>
-        <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {relatedCases.map((c) => (
-            <li>
-              <a
-                href={`/works/${c.slug}`}
-                class="group flex h-full flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-primary-400/10"
-              >
-                <h3 class="type-heading text-lg font-medium tracking-tight group-hover:text-primary-950 dark:group-hover:text-primary-100">
-                  {c.data.title}
-                </h3>
-                <p class="type-copy text-balance text-sm text-primary-950/70 dark:text-primary-200/70">{c.data.summary}</p>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
-  </article>
-
-  <script type="application/ld+json" set:html={safeJsonLd(articleJsonLd)} is:inline />
+  <CaseArticle entry={entry} />
 </Layout>

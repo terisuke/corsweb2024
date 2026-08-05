@@ -15,12 +15,12 @@ const secondaryHref = getGriftUrl('/', {
 });
 
 // homeChallenges.items（全言語同一の並び）に対応する関連ページ。
-// /works・/works/<slug> は ja 限定のため bare、/industries・/blog は各言語版があるため localize。
+// /works/<slug>・/industries・/blog はいずれも各言語版があるため localize（#313）。
 const CHALLENGE_HREFS: (string | null)[] = [
-  '/works/legacy-core-system-cloud-migration',        // 老朽化した基幹システムのクラウド化
-  '/works/engineer-cafe-navigator',                   // 多言語対応のAI受付・チャット
-  '/works/survey-platform-renewal',                   // 生成AIサービスの本番化（近い刷新・本番化事例）
-  '/works/confidential-data-ai-assessment',           // 機密データを外に出さずAI活用
+  getLocalizedUrl('/works/legacy-core-system-cloud-migration', currentLocale), // 老朽化した基幹システムのクラウド化
+  getLocalizedUrl('/works/engineer-cafe-navigator', currentLocale),           // 多言語対応のAI受付・チャット
+  getLocalizedUrl('/works/survey-platform-renewal', currentLocale),           // 生成AIサービスの本番化（近い刷新・本番化事例）
+  getLocalizedUrl('/works/confidential-data-ai-assessment', currentLocale),   // 機密データを外に出さずAI活用
   getLocalizedUrl('/industries/construction', currentLocale), // 業界特化のAIツール（建築）
   getLocalizedUrl('/blog/ai-driven-development-workflow', currentLocale), // AI駆動開発の内製化
 ];

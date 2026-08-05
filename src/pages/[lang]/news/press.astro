@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import PressIndex from '../../../components/news/PressIndex.astro';
+import Layout from '../../../layouts/Layout.astro';
+import { NON_JA_LOCALES, localizeEntries } from '../../../utils/content-i18n';
+import { getTranslations, type Locale } from '../../../utils/i18n';
+
+// 非ja のプレスリリース一覧 /[lang]/news/press。ja はルート直下 (/news/press) が担当する。
+export function getStaticPaths() {
+  return NON_JA_LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const locale = lang as Locale;
+const t = getTranslations(locale);
+
+// ja 版を基準に翻訳記事で差し替える（未翻訳は ja のまま表示）。カテゴリは翻訳側でも press のはず
+// だが、取り違え防止のため差し替え後にもう一度 press だけに絞る。
+const pressEntries = localizeEntries(
+  await getCollection('news', ({ data }) => {
+    return data.category === 'press' && (import.meta.env.DEV || !data.isDraft);
+  }),
+  locale,
+)
+  .filter((entry) => entry.data.category === 'press')
+  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+---
+
+<Layout
+  description={t.meta.press.description}
+  title={t.meta.press.title}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+>
+  <PressIndex entries={pressEntries} />
+</Layout>

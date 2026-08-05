@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getNewsCategoryLabel } from '../../config/news-categories';
-import { getCurrentLocale } from '../../utils/i18n';
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n';
+import { DATE_LOCALES, toCleanSlug } from '../../utils/content-i18n';
 
 interface Props {
   entry: CollectionEntry<'news'>;
@@ -9,11 +10,14 @@ interface Props {
 
 const { entry } = Astro.props;
 const currentLocale = getCurrentLocale(Astro.url);
+const t = getTranslations(currentLocale);
 const data = entry.data;
 const isExternal = Boolean(data.externalUrl);
-const href = data.externalUrl || `/news/${entry.slug}/`;
+// 記事は news/<lang>/<slug>.md に置かれ slug が `<lang>/<slug>` になるため、
+// 内部リンクでは接頭辞を外して現在ロケールの記事 URL に向ける（外部リンクはそのまま）。
+const href = data.externalUrl || getLocalizedUrl(`/news/${toCleanSlug(entry.slug)}/`, currentLocale);
 const categoryLabel = getNewsCategoryLabel(data.category, currentLocale);
-const formattedDate = new Date(data.publishedAt).toLocaleDateString('ja-JP', {
+const formattedDate = new Date(data.publishedAt).toLocaleDateString(DATE_LOCALES[currentLocale], {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -50,7 +54,7 @@ const formattedDate = new Date(data.publishedAt).toLocaleDateString('ja-JP', {
     {data.source && <span>{data.source}</span>}
     {isExternal && (
       <span class="inline-flex items-center gap-1">
-        外部リンク
+        {t.news.externalLabel}
         <span aria-hidden="true">↗</span>
       </span>
     )}
