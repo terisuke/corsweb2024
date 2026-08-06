@@ -1,0 +1,46 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content'
+import Layout from '../../../layouts/Layout.astro'
+import CaseArticle from '../../../components/works/CaseArticle.astro'
+import { NON_JA_LOCALES, localizeEntries, toCleanSlug } from '../../../utils/content-i18n'
+import { getTranslations, type Locale } from '../../../utils/i18n'
+
+// 非ja の実績記事 /[lang]/works/<slug>。ja はルート直下 (/works/<slug>) が担当する。
+// 翻訳記事の整備は ja 記事の追加と非同期に進むため、翻訳が無い言語では ja 版へフォールバックして
+// URL だけは全言語で必ず生成する（言語切替で 404 に落ちない / ビルドが壊れない）。
+export async function getStaticPaths() {
+  const cases = await getCollection('cases', ({ data }) => {
+    return import.meta.env.DEV || !data.isDraft
+  })
+
+  return NON_JA_LOCALES.flatMap((lang) =>
+    localizeEntries(cases, lang).map((entry) => ({
+      params: { lang, slug: toCleanSlug(entry.slug) },
+      props: { entry },
+    })),
+  )
+}
+
+type Props = {
+  entry: CollectionEntry<'cases'>
+}
+
+const { lang } = Astro.params
+const { entry } = Astro.props as Props
+const data = entry.data
+const t = getTranslations(lang as Locale)
+// OG画像: ogImage 優先、なければ heroImage。
+const ogImageUrl = data.ogImage ?? data.heroImage?.url
+---
+
+<Layout
+  title={`${data.title}${t.caseStudy.titleSuffix}`}
+  description={data.description}
+  availableLocales={['ja', 'en', 'zh', 'ko', 'es']}
+  ogImage={ogImageUrl}
+  ogType="article"
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={data.updatedAt?.toISOString()}
+>
+  <CaseArticle entry={entry} />
+</Layout>

@@ -55,16 +55,12 @@ const serviceLinks = [
   },
 ];
 
-// /works・/news は現状 ja ルートのみ。/industries は [lang] ルートで全言語に存在する。
+// /works・/news・/news/press は [lang] ルートで全言語に存在する（#313）。/industries も同様。
 const baseLinks = [
   { name: t.nav.home, href: getLocalizedUrl('/', currentLocale), isExternal: false },
-  ...(currentLocale === 'ja'
-    ? [
-        { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false },
-        { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
-        { name: nav.press || 'プレスリリース', href: getLocalizedUrl('/news/press', currentLocale), isExternal: false },
-      ]
-    : []),
+  { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale), isExternal: false },
+  { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale), isExternal: false },
+  { name: nav.press || 'プレスリリース', href: getLocalizedUrl('/news/press', currentLocale), isExternal: false },
   {
     name: nav.industries || '業種別',
     href: getLocalizedUrl('/industries/medical', currentLocale),
@@ -103,13 +99,9 @@ const isCurrentSection = (href: string) => {
 };
 
 const quickLinks = [
-  ...(currentLocale === 'ja'
-    ? [
-        { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale) },
-        { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale) },
-        { name: nav.press || 'プレスリリース', href: getLocalizedUrl('/news/press', currentLocale) },
-      ]
-    : []),
+  { name: t.nav.works, href: getLocalizedUrl('/works', currentLocale) },
+  { name: t.nav.news, href: getLocalizedUrl('/news', currentLocale) },
+  { name: nav.press || 'プレスリリース', href: getLocalizedUrl('/news/press', currentLocale) },
   { name: t.nav.security, href: getLocalizedUrl('/security', currentLocale) },
   {
     name: nav.consult || t.nav.contact,

@@ -257,23 +257,128 @@ describe('locale JSON key-structure consistency (regression guard M-2)', () => {
     },
   );
 
-  it('freezes the exact set of index-aware keys en has but ja lacks', () => {
+  it('has no index-aware key that en carries but ja lacks', () => {
     const en = keySet('en');
     const ja = keySet('ja');
-    // ja and en diverge in the works.items array: en/zh/ko/es carry a link on
-    // items[1] and a whole extra 7th item (items[6]) that ja does not have.
-    // Freeze that exact difference so any new divergence fails the test.
+    // かつて works.items は ja が `href`・非ja が `link` で、さらに非ja だけ7件目を持つという
+    // 食い違いがあった。#313 で全ロケールを `href` / 6件に統一したため、差分はゼロが正。
     const enNotJa = [...en].filter((k) => !ja.has(k)).sort();
-    expect(enNotJa).toEqual([
-      'works.items[1].link',
-      'works.items[6].description',
-      'works.items[6].name',
-      'works.items[6].tag',
-    ]);
+    expect(enNotJa).toEqual([]);
   });
 
-  it('reflects the ja/en works.items length difference (ja: 6, en: 7)', () => {
-    expect(arrayLengths('ja').get('works.items')).toBe(6);
-    expect(arrayLengths('en').get('works.items')).toBe(7);
+  it('gives works.items the same length in every locale', () => {
+    const jaLength = arrayLengths('ja').get('works.items');
+    expect(jaLength).toBe(6);
+    for (const locale of LOCALES) {
+      expect(arrayLengths(locale).get('works.items')).toBe(jaLength);
+    }
+  });
+
+  it('uses the href key (not link) for every works.items entry in every locale', () => {
+    // `link` が残っていると WorksIndex のフォールバック頼みになり、ロケール毎に挙動がぶれる。
+    for (const locale of LOCALES) {
+      const keys = keySet(locale);
+      expect([...keys].filter((k) => /^works\.items\[\d+\]\.link$/.test(k))).toEqual([]);
+      expect([...keys].filter((k) => /^works\.items\[\d+\]\.href$/.test(k))).toHaveLength(6);
+    }
+  });
+});
+
+// #313: /works・/news・/news/press を全言語で出すために、これらのキーが全ロケールに
+// 揃っていることを保証する。1つでも欠けると当該言語のページが undefined を描画する。
+describe('works / news / press keys required by every locale (#313)', () => {
+  const REQUIRED_PATHS = [
+    'nav.press',
+    'works.title',
+    'works.intro',
+    'works.note',
+    'works.moreLabel',
+    'works.moreHref',
+    'works.ndaNote',
+    'meta.works.title',
+    'meta.works.description',
+    'meta.news.title',
+    'meta.news.description',
+    'meta.press.title',
+    'meta.press.description',
+    'news.title',
+    'news.intro',
+    'news.rssLabel',
+    'news.empty',
+    'news.pressLink',
+    'news.prev',
+    'news.next',
+    'news.countTemplate',
+    'news.externalLabel',
+    'news.titleSuffix',
+    'news.backToList',
+    'news.updatedLabel',
+    'press.title',
+    'press.intro',
+    'press.newsListLabel',
+    'press.rssLabel',
+    'press.empty',
+    'press.contactLabel',
+    'caseStudy.titleSuffix',
+    'caseStudy.breadcrumbWorks',
+    'caseStudy.ndaHeading',
+    'caseStudy.updatedLabel',
+    'caseStudy.nextHeading',
+    'caseStudy.nextLead',
+    'caseStudy.relatedHeading',
+    'caseStudy.categories.grift',
+    'caseStudy.categories.confidential-ai',
+    'caseStudy.categories.local-llm',
+    'caseStudy.categories.ai-contract',
+    'caseStudy.categories.tech-culture',
+    'caseStudy.ctas.grift',
+    'caseStudy.ctas.confidential-ai',
+    'caseStudy.ctas.local-llm',
+    'caseStudy.ctas.ai-contract',
+    'caseStudy.ctas.techCultureAbout',
+    'caseStudy.ctas.techCultureContact',
+    'nextStep.works.heading',
+    'nextStep.works.lead',
+    'nextStep.works.ctaLabel',
+  ];
+
+  const read = (locale: Locale, path: string): unknown =>
+    path
+      .split('.')
+      .reduce<unknown>(
+        (node, key) =>
+          node !== null && typeof node === 'object'
+            ? (node as Record<string, unknown>)[key]
+            : undefined,
+        getTranslations(locale),
+      );
+
+  it.each(LOCALES)('locale %s defines every required key as a non-empty string', (locale) => {
+    const missing = REQUIRED_PATHS.filter((path) => {
+      const value = read(locale, path);
+      return typeof value !== 'string' || value.trim() === '';
+    });
+    expect(missing).toEqual([]);
+  });
+
+  it.each(LOCALES)('locale %s keeps every placeholder in news.countTemplate', (locale) => {
+    // プレースホルダが欠けると「N件中 …」の数字が黙って消える。
+    const template = read(locale, 'news.countTemplate') as string;
+    for (const placeholder of ['{total}', '{start}', '{end}', '{current}', '{last}']) {
+      expect(template).toContain(placeholder);
+    }
+  });
+
+  it.each(LOCALES)('locale %s uses a site-relative works.moreHref', (locale) => {
+    // ページ側で getLocalizedUrl を掛けるため、ja 基準のサイト内パスであることが前提。
+    expect(read(locale, 'works.moreHref')).toBe('/blog');
+  });
+
+  it('translates nav.press away from the ja wording in every other locale', () => {
+    // 「全言語にキーはあるが中身が ja のコピー」という未翻訳の取りこぼしを検出する。
+    const ja = read('ja', 'nav.press');
+    for (const locale of LOCALES.filter((l) => l !== 'ja')) {
+      expect(read(locale, 'nav.press')).not.toBe(ja);
+    }
   });
 });

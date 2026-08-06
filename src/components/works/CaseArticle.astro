@@ -1,0 +1,224 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content'
+import NextStep from '../common/NextStep.astro'
+import { getCurrentLocale, getLocalizedUrl, getTranslations } from '../../utils/i18n'
+import { DATE_LOCALES, localizeEntries, toCleanSlug } from '../../utils/content-i18n'
+import { safeJsonLd } from '../../utils/json-ld'
+
+// /works/<slug>（ja）と /[lang]/works/<slug>（非ja）で共有する実績記事本体。
+// 本文の見出し（## 課題 / アプローチ / 実装 / 成果）は markdown 側にある。
+interface Props {
+  entry: CollectionEntry<'cases'>
+}
+
+const { entry } = Astro.props
+const { Content } = await entry.render()
+const data = entry.data
+const currentLocale = getCurrentLocale(Astro.url)
+const t = getTranslations(currentLocale)
+
+// OG画像: ogImage 優先、なければ heroImage。og:image と JSON-LD image で共用。
+const ogImageUrl = data.ogImage ?? data.heroImage?.url
+
+// CTA 出し分け（ctaType > category）。link は /contact（tech-culture のみ /about + /contact）。
+type CtaKey =
+  | 'grift'
+  | 'confidential-ai'
+  | 'local-llm'
+  | 'ai-contract'
+  | 'tech-culture'
+
+interface Cta {
+  label: string
+  href: string
+  isExternal?: boolean
+  primary?: boolean
+}
+
+const contactHref = getLocalizedUrl('/contact', currentLocale)
+const aboutHref = getLocalizedUrl('/about', currentLocale)
+
+const CTA_MAP: Record<CtaKey, Cta[]> = {
+  grift: [{ label: t.caseStudy.ctas.grift, href: contactHref, primary: true }],
+  'confidential-ai': [
+    { label: t.caseStudy.ctas['confidential-ai'], href: contactHref, primary: true },
+  ],
+  'local-llm': [
+    { label: t.caseStudy.ctas['local-llm'], href: contactHref, primary: true },
+  ],
+  'ai-contract': [
+    { label: t.caseStudy.ctas['ai-contract'], href: contactHref, primary: true },
+  ],
+  'tech-culture': [
+    { label: t.caseStudy.ctas.techCultureAbout, href: aboutHref, primary: true },
+    { label: t.caseStudy.ctas.techCultureContact, href: contactHref },
+  ],
+}
+
+const ctaKey = (data.ctaType ?? data.category) as CtaKey
+const ctas = CTA_MAP[ctaKey]
+
+// 関連記事: relatedSlugs があればそれ（実在 + 非下書き）。なければ同カテゴリから最大3件（自身を除く）。
+// 一覧は現在ロケール版（未翻訳は ja へフォールバック）に揃える。slug は言語ディレクトリを外して比較する。
+const allCases = localizeEntries(
+  await getCollection('cases', ({ data: d }) => !d.isDraft),
+  currentLocale,
+)
+const currentSlug = toCleanSlug(entry.slug)
+
+let relatedCases: CollectionEntry<'cases'>[] = []
+if (data.relatedSlugs && data.relatedSlugs.length > 0) {
+  relatedCases = data.relatedSlugs
+    .map((slug) => allCases.find((c) => toCleanSlug(c.slug) === toCleanSlug(slug)))
+    .filter((c): c is CollectionEntry<'cases'> => Boolean(c) && toCleanSlug(c!.slug) !== currentSlug)
+} else {
+  relatedCases = allCases
+    .filter((c) => toCleanSlug(c.slug) !== currentSlug && c.data.category === data.category)
+    .slice(0, 3)
+}
+
+const categoryLabel = t.caseStudy.categories[data.category as CtaKey]
+
+const formatDate = (d: Date) =>
+  new Date(d).toLocaleDateString(DATE_LOCALES[currentLocale], {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
+const formattedPublishedAt = formatDate(data.publishedAt)
+const formattedUpdatedAt = data.updatedAt ? formatDate(data.updatedAt) : null
+
+const fullUrl = new URL(Astro.url.pathname, Astro.site).toString()
+
+// Article/TechArticle JSON-LD（BlogLayout のパターンに準拠）。
+const isTech = data.category === 'ai-contract' || data.category === 'local-llm'
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': isTech ? 'TechArticle' : 'Article',
+  headline: data.title,
+  description: data.description,
+  // 未翻訳の記事は localizeEntries が ja 本文へフォールバックする。URL のロケールではなく
+  // 実際に描画している本文の言語を申告しないと、構造化データが事実と食い違う。
+  inLanguage: data.lang,
+  datePublished: data.publishedAt.toISOString(),
+  dateModified: (data.updatedAt || data.publishedAt).toISOString(),
+  author: {
+    '@type': 'Organization',
+    '@id': 'https://cor-jp.com#organization',
+    name: 'Cor.inc',
+    url: 'https://cor-jp.com',
+  },
+  publisher: {
+    '@type': 'Organization',
+    '@id': 'https://cor-jp.com#organization',
+    name: 'Cor.inc',
+    url: 'https://cor-jp.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://cor-jp.com/logo.png',
+      width: 400,
+      height: 400,
+    },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': fullUrl },
+  url: fullUrl,
+  articleSection: data.category,
+  about: data.tags.map((tag) => ({ '@type': 'Thing', name: tag })),
+  ...(ogImageUrl && {
+    image: {
+      '@type': 'ImageObject',
+      url: new URL(ogImageUrl, Astro.site).toString(),
+      ...(!data.ogImage && data.heroImage && { caption: data.heroImage.alt }),
+    },
+  }),
+}
+---
+
+<article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+  <!-- Breadcrumb -->
+  <nav class="mb-8" aria-label="Breadcrumb">
+    <ol class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-primary-950/60 dark:text-primary-200/60">
+      <li><a href={getLocalizedUrl('/', currentLocale)} class="hover:text-primary-950 dark:hover:text-primary-100">{t.nav.home}</a></li>
+      <li class="before:mx-2 before:content-['/']">
+        <a href={getLocalizedUrl('/works', currentLocale)} class="hover:text-primary-950 dark:hover:text-primary-100">{t.caseStudy.breadcrumbWorks}</a>
+      </li>
+      <li class="hidden min-w-0 items-center before:mx-2 before:content-['/'] sm:flex">
+        <span class="block max-w-md truncate text-primary-950 dark:text-primary-100">{data.title}</span>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <header class="mb-10">
+    <div class="mb-4 flex flex-wrap items-center gap-3 text-sm">
+      {categoryLabel && (
+        <span class="inline-flex w-fit rounded-full bg-primary-500/15 px-3 py-1 text-xs font-medium text-primary-950/70 dark:bg-primary-400/15 dark:text-primary-200/70">
+          {categoryLabel}
+        </span>
+      )}
+      <time datetime={data.publishedAt.toISOString()} class="text-primary-950/50 dark:text-primary-200/50">
+        {formattedPublishedAt}
+      </time>
+      {formattedUpdatedAt && (
+        <span class="text-primary-950/50 dark:text-primary-200/50">{t.caseStudy.updatedLabel}: {formattedUpdatedAt}</span>
+      )}
+    </div>
+
+    <h1 class="type-heading mb-4 text-3xl font-medium tracking-tight sm:text-4xl md:text-5xl">{data.title}</h1>
+    <p class="type-copy text-lg text-primary-950/70 dark:text-primary-200/70">{data.summary}</p>
+  </header>
+
+  <!-- Hero image -->
+  {data.heroImage && (
+    <div class="mb-10 overflow-hidden rounded-3xl">
+      <img src={data.heroImage.url} alt={data.heroImage.alt} class="h-auto w-full" loading="eager" decoding="async" />
+    </div>
+  )}
+
+  <!-- NDA / 機密案件の注記 -->
+  {data.securityNote && (
+    <aside class="mb-10 rounded-2xl bg-primary-950/5 p-5 text-sm text-primary-950/70 dark:bg-primary-200/5 dark:text-primary-200/70">
+      <p class="type-copy font-medium">{t.caseStudy.ndaHeading}</p>
+      <p class="type-copy mt-2">{data.securityNote}</p>
+    </aside>
+  )}
+
+  <!-- 本文（## 課題 / アプローチ / 実装 / 成果） -->
+  <div class="prose prose-lg prose-stone mx-auto max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline dark:prose-a:text-blue-400">
+    <Content />
+  </div>
+
+  <!-- CTA（ctaType/category 出し分け） -->
+  <div class="mt-16">
+    <NextStep
+      heading={t.caseStudy.nextHeading}
+      lead={t.caseStudy.nextLead}
+      ctas={ctas}
+    />
+  </div>
+
+  <!-- 関連記事 -->
+  {relatedCases.length > 0 && (
+    <section class="mt-16 border-t border-primary-950/10 pt-12 dark:border-primary-200/10">
+      <h2 class="type-heading mb-8 text-2xl font-medium tracking-tight">{t.caseStudy.relatedHeading}</h2>
+      <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        {relatedCases.map((c) => (
+          <li>
+            <a
+              href={getLocalizedUrl(`/works/${toCleanSlug(c.slug)}`, currentLocale)}
+              class="group flex h-full flex-col gap-3 rounded-3xl bg-primary-500/10 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-primary-400/10"
+            >
+              <h3 class="type-heading text-lg font-medium tracking-tight group-hover:text-primary-950 dark:group-hover:text-primary-100">
+                {c.data.title}
+              </h3>
+              <p class="type-copy text-balance text-sm text-primary-950/70 dark:text-primary-200/70">{c.data.summary}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</article>
+
+<script type="application/ld+json" set:html={safeJsonLd(articleJsonLd)} is:inline />

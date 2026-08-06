@@ -8,6 +8,7 @@ summary: '途中から引き継いだアンケート基盤を、テスト・CI/C
 securityNote: '本案件はNDAのため、お客様名・製品名など特定につながる情報を抽象化して掲載しています。'
 isDraft: false
 featured: false
+lang: 'ja'
 ---
 
 ## 課題
